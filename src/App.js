@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/style.scss';
-import { Navbar, Nav, Card, Accordion, Button, Tab, Form} from 'react-bootstrap';
-
+import { Navbar, Nav, Card, Accordion, Button, Tab, Form, ButtonToolbar, ButtonGroup, DropdownButton, Dropdown} from 'react-bootstrap';
+import {faFont, faCode, faFileCode, faBold, faItalic, faAlignLeft, faAlignRight, faAlignJustify, faAlignCenter,
+        faOutdent, faIndent, faUnderline, faStrikethrough, faListUl, faListOl, faTrash, faLink, faUnlink, faUndo, faRedo} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {JsNx} from "./libs/utils/Utils";
 import { Options } from './Options';
 
 
@@ -27,12 +30,50 @@ export default class App extends Component{
 
 class MainView extends Component
 {
+    constructor(props){
+        super(props);
+
+        this.state = {editor: 'wp'};
+    }
+    /*`<section class="C2001" data-version="0.1.1" data-recit-block="1" style="">
+          <div class="C2001a jarallax p-0 p-md-3 p-lg-5 no_borders-row" data-jarallax="" data-speed="1.0" style="background-image: url('https://recitfad.ca/widgets/assets/images/header3.jpg')">
+            <div class="container-fluid p-0 p-md-3 p-lg-5">
+              <div class="C2001b row justify-content-md-center">
+                <div class="C2001c item col-md-12">
+                  <div class=" basic-pale-row text_box1" style="" data-version="0.1.1" data-recit-block="2">
+                    <section class="I604" data-version="0.1.1" data-recit-block="2" style="">
+                      <!-- Item Etape -->
+                      <div class="I604a etapes text-dark">
+                        <span class="I604b border rounded-circle bg_white border_grey">
+                          1
+                        </span>
+    
+                        <div class="G806 " data-version="0.1.1" data-recit-block="2" style="">
+                          <h3 class="G806a text-dark p-2 h5 px-lg-4">
+                            Ton rapport à la lecture
+                          </h3>
+                        </div>
+    
+                        <p class="G001 text-dark text-center p-2 px-lg-4" data-version="0.1.1" data-recit-block="2">
+                          capsule vidéo, questionnaire, réaction et ouverture de ta bibliothèque personnelle
+                        </p>
+                        <div class=" basic-pale-row text_box3" style="" data-version="0.1.1" data-recit-block="2"></div></div>
+                      <!-- fin Item Etape -->
+                    </section>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `*/
 	render(){
 		let main = 
 			<div className="MainView">
 				<AppNarBar/>
-				<VisualBuilder/>
-			</div>;
+                {this.state.editor === "wp" ? <VisualWordProcessor input={"<div></div>"}/> : <VisualHTMLBuilder input={"<div></div>"}/>}
+				
+            </div>;
 		return (main);
 	}
 }
@@ -62,8 +103,130 @@ class AppNarBar extends Component
 	}
 }
 
-class VisualBuilder extends Component
+class VisualWordProcessor extends Component
 {
+    static defaultProps = {
+        input: ""
+    };
+
+    constructor(props){
+        super(props);
+
+        this.applyTypeset = this.applyTypeset.bind(this);
+    }
+
+    render(){
+
+        let main = 
+            <div style={{margin: "1rem", border: "1px solid #efefef"}}>
+                <div style={{backgroundColor: "#fafafa", height: 50, padding: ".5rem"}}>
+                    <ButtonToolbar className="mb-3" aria-label="Toolbar with Button groups">
+                        <ButtonGroup className="mr-2" size="sm" >
+                            <Button variant="secondary"><FontAwesomeIcon icon={faFileCode}/></Button>
+                            <Button  variant="secondary"><FontAwesomeIcon icon={faCode}/></Button>
+                        </ButtonGroup>
+                        <ButtonGroup className="mr-2" size="sm">
+                            <DropdownButton  variant="secondary" as={ButtonGroup} title={<FontAwesomeIcon icon={faFont}/>} onSelect={this.applyTypeset} id="title-dropdown">
+                                <Dropdown.Item eventKey="h3">Titre (grand)</Dropdown.Item>
+                                <Dropdown.Item eventKey="h4">Titre (moyen)</Dropdown.Item>
+                                <Dropdown.Item eventKey="h5">Titre (petit)</Dropdown.Item>
+                                <Dropdown.Item eventKey="pre">Pré-formaté</Dropdown.Item>
+                                <Dropdown.Item eventKey="p">Paragraphe</Dropdown.Item>
+                            </DropdownButton>
+                            <Button variant="secondary" onClick={() => this.applyTypeset("b")}><FontAwesomeIcon icon={faBold}/></Button>
+                            <Button variant="secondary" onClick={() => this.applyTypeset("i")}><FontAwesomeIcon icon={faItalic}/></Button>
+                            <Button variant="secondary" onClick={() => this.applyTypeset("u")}><FontAwesomeIcon icon={faUnderline}/></Button>
+                            <Button variant="secondary" onClick={() => this.applyTypeset("strike")}><FontAwesomeIcon icon={faStrikethrough}/></Button>
+                        </ButtonGroup>
+                        <ButtonGroup className="mr-2" size="sm" >
+                            <Button variant="secondary" onClick={() => this.applyTypeset("ul")}><FontAwesomeIcon icon={faListUl}/></Button>
+                            <Button  variant="secondary" onClick={() => this.applyTypeset("ol")}><FontAwesomeIcon icon={faListOl}/></Button>
+                        </ButtonGroup>
+                        <ButtonGroup className="mr-2" size="sm" >
+                            <Button variant="secondary" onClick={() => this.applyTypeset("al")}><FontAwesomeIcon icon={faAlignLeft}/></Button>
+                            <Button  variant="secondary" onClick={() => this.applyTypeset("ac")}><FontAwesomeIcon icon={faAlignCenter}/></Button>
+                            <Button  variant="secondary" onClick={() => this.applyTypeset("ar")}><FontAwesomeIcon icon={faAlignRight}/></Button>
+                            <Button  variant="secondary" onClick={() => this.applyTypeset("aj")}><FontAwesomeIcon icon={faAlignJustify}/></Button>
+                        </ButtonGroup>
+                        <ButtonGroup className="mr-2" size="sm" >
+                            <Button variant="secondary" onClick={() => this.applyTypeset("outdent")}><FontAwesomeIcon icon={faOutdent}/></Button>
+                            <Button  variant="secondary" onClick={() => this.applyTypeset("indent")}><FontAwesomeIcon icon={faIndent}/></Button>
+                        </ButtonGroup>
+                        <ButtonGroup className="mr-2" size="sm" >
+                            <Button variant="secondary" onClick={() => this.applyTypeset("al")}><FontAwesomeIcon icon={faLink}/></Button>
+                            <Button  variant="secondary" onClick={() => this.applyTypeset("ac")}><FontAwesomeIcon icon={faUnlink}/></Button>
+                        </ButtonGroup>
+                        <ButtonGroup className="mr-2" size="sm" >
+                            <Button variant="secondary" onClick={() => this.applyTypeset("al")}><FontAwesomeIcon icon={faUndo}/></Button>
+                            <Button  variant="secondary" onClick={() => this.applyTypeset("ac")}><FontAwesomeIcon icon={faRedo}/></Button>
+                        </ButtonGroup>
+                        <ButtonGroup className="mr-2" size="sm" >
+                            <Button variant="secondary" onClick={() => this.applyTypeset("al")}><FontAwesomeIcon icon={faTrash}/></Button>
+                        </ButtonGroup>
+                    </ButtonToolbar>
+                </div>
+                <div contentEditable={true} style={{backgroundColor: "#FFF", minHeight: 300, padding: "1rem"}}></div>
+            </div>;
+        
+        return main;
+    }
+
+    applyTypeset(option){
+        let sel = window.getSelection ? window.getSelection() : document.selection;
+        if(!sel){ return; }
+
+        if(sel.rangeCount === 0){ return;}
+
+        let range = sel.getRangeAt(0);
+
+        if(["h3", "h4", "h5", "pre", "p", "b", "i", "u", "strike"].includes(option)){
+            let newNode = document.createElement(option);
+            newNode.appendChild(range.extractContents());
+            //range.deleteContents();
+            range.insertNode(newNode);
+        }
+        else if(["ul", "ol"].includes(option)){
+            let newNode = document.createElement(option);
+            let li = document.createElement("li");
+            newNode.appendChild(li);
+            li.appendChild(range.extractContents());
+            range.insertNode(newNode);
+        }
+        else if(["outdent", "indent"].includes(option)){
+            /*let indent = {outdent: "-30px", indent: "30px"};
+            let newNode = document.createElement("div");
+            newNode.appendChild(range.extractContents());
+            newNode.style.paddingLeft = indent[option];
+            range.insertNode(newNode);*/
+        }
+        else if(["al", "ac", "ar", "aj"].includes(option)){
+            let textAlign = {al: 'left', ac: 'center', ar: 'right', aj: 'justify'}
+            if(range.commonAncestorContainer instanceof HTMLDivElement){
+                range.commonAncestorContainer.style.textAlign = textAlign[option];
+            }
+            else{
+                let newNode = document.createElement('p');
+                newNode.appendChild(range.extractContents());
+                newNode.style.textAlign = textAlign[option];
+                range.deleteContents();
+                range.insertNode(newNode);
+            }
+        }
+
+        /*if (sel.removeAllRanges) {
+            sel.removeAllRanges();
+        } else if (sel.empty) {
+            sel.empty();
+        }*/
+    }
+}
+
+class VisualHTMLBuilder extends Component
+{
+    static defaultProps = {
+        input: ""
+    };
+
     constructor(props){
         super(props);
 
@@ -71,8 +234,10 @@ class VisualBuilder extends Component
         this.onSelectAccordion = this.onSelectAccordion.bind(this);
         this.onAddElement = this.onAddElement.bind(this);
         this.onSelectSlot = this.onSelectSlot.bind(this);
+        this.onDataChange = this.onDataChange.bind(this);
+        this.onSetRoot = this.onSetRoot.bind(this);
 
-        this.state = {selectedSlot: null, draggingElement: null, activeAccordion: "1", activeTab: 0};
+        this.state = {selectedSlot: null, draggingElement: null, activeAccordion: "1", activeTab: 0, rootData: null};
     }
 
 	render(){
@@ -93,7 +258,7 @@ class VisualBuilder extends Component
                         </Card.Header>
                         <Accordion.Collapse eventKey="1">
                             <Card.Body>
-                                <RawElementList  onSelect={this.onAddElement}/>
+                                <RawElementList onSelect={this.onAddElement}/>
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>
@@ -103,7 +268,7 @@ class VisualBuilder extends Component
                         </Card.Header>
                         <Accordion.Collapse eventKey="2">
                             <Card.Body>
-                                <HtmlProperties selectedSlot={this.state.selectedSlot}/>
+                                <HtmlProperties selectedSlot={this.state.selectedSlot} onDataChange={this.onDataChange}/>
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>
@@ -120,11 +285,13 @@ class VisualBuilder extends Component
                         </Nav>
                         <Tab.Content style={{height:"100%"}}>
                             <Tab.Pane eventKey="0" style={{height:"100%"}}>
-                                <VisualEditionMode draggingElement={this.state.draggingElement} selectedSlot={this.state.selectedSlot} 
-                                        onSelectSlot={this.onSelectSlot} onFillInSlot={this.onFillInSlot}/>
+                                <VisualEditionMode>
+                                    <VisualSlot draggingElement={this.state.draggingElement} selectedSlot={this.state.selectedSlot} 
+                                                    onSelect={this.onSelectSlot} onSetRoot={this.onSetRoot}/>
+                                </VisualEditionMode>
                             </Tab.Pane>
                             <Tab.Pane eventKey="1">
-                                Rendu...
+                                <VisualPreview rootNode={this.state.rootNode}/>
                             </Tab.Pane>
                         </Tab.Content>
                     </Tab.Container>
@@ -149,26 +316,47 @@ class VisualBuilder extends Component
     onSelectSlot(slot){
         this.setState({selectedSlot: slot, draggingElement: null, activeAccordion: (slot !== null ? "2" : "1")});
     }
+
+    onDataChange(event, iItem){
+        let selectedSlot = this.state.selectedSlot;
+        selectedSlot.content.properties[iItem].value = event.target.value;
+        this.setState({selectedSlot: selectedSlot});
+    }
+
+    onSetRoot(rootNode){
+        this.setState({rootNode: rootNode});
+    }
+
+    convertInput(){
+        
+    }
 }
 
 class VisualEditionMode extends Component
 {
     static defaultProps = {
-        draggingElement: null,
-        selectedSlot: null,
-        onSelectSlot: null
+        children: null
     };
       
-    constructor(props){
-        super(props);
-
-        this.state = {};
-    }
-	
 	render(){
 		let main = 
             <div className="visual-edition-mode">
-                <VisualSlot draggingElement={this.props.draggingElement} selectedSlot={this.props.selectedSlot} onSelect={this.props.onSelectSlot}/>
+                {this.props.children}
+            </div>;
+
+		return (main);
+    }
+}
+
+class VisualPreview extends Component{
+    static defaultProps = {
+        rootNode: null
+    };
+
+    render(){
+		let main = 
+            <div className="visual-preview">
+               {VisualElement.createElement(this.props.rootNode, null)}
             </div>;
 
 		return (main);
@@ -180,7 +368,8 @@ class VisualSlot extends Component
     static defaultProps = {
         selectedSlot: null,
         draggingElement: null,
-        onSelect: null
+        onSelect: null,
+        onSetRoot: null
     };
     
     constructor(props){
@@ -206,23 +395,8 @@ class VisualSlot extends Component
         return main;
     }
 
-    createContent(){
-        if(this.state.data.content === null){ return null;}
-
-        let result = null;
-
-        switch(this.state.data.content.name){
-            case "div": 
-                result = <DivElement slotProps={this.props}/>;
-                break;
-            case "img":
-                result = <ImgElement />;
-                break;
-            default:
-                result = null;
-        }
-
-        return result;
+    createContent(){        
+        return VisualElement.createElement(this.state.data.content, this.props);
     }
 
     isEmpty(){
@@ -262,6 +436,10 @@ class VisualSlot extends Component
         let data = this.state.data;
         data.content = this.props.draggingElement;
         this.setState({hovering: 0, data: data});
+
+        if(this.props.onSetRoot !== null){
+            this.props.onSetRoot(data.content);
+        }
     } 
     
     onDragOver(event){
@@ -279,19 +457,37 @@ class VisualElement extends Component
 {
     static defaultProps = {
         children: null,
-        slotProps: null
+        editingMode: false,
+        slotProps: null,
+        properties: []
     };
     
+    static createElement(data, slotProps){
+        if(data === null){ return null;}
+
+        let editingMode = (slotProps === null);
+        let result = null;
+
+        switch(data.name){
+            case "div": 
+                result = <DivElement slotProps={slotProps} editingMode={editingMode}/>;
+                break;
+            case "img":
+                result = <ImgElement properties={data.properties}/>;
+                break;
+            default:
+                result = null;
+        }
+
+        return result;
+    }
+
 	render(){
 		return null;
     }
 }
 
 class DivElement extends VisualElement{
-    constructor(props){
-        super(props);
-    }
-
    /* renderChildren() {       
         let that = this;
         return React.Children.map(this.props.children, (child, index) => {
@@ -302,9 +498,9 @@ class DivElement extends VisualElement{
     render(){
         let main =
                 <div>
-                    <VisualSlot {...this.props.slotProps}/>
+                    {this.props.editingMode && <VisualSlot {...this.props.slotProps}/>}
                     {this.props.children}
-                    <VisualSlot onSelect={this.props.slotProps.onSelect} selectedSlot={this.props.slotProps.selectedSlot}  draggingElement={this.props.slotProps.draggingElement}/>
+                    {this.props.editingMode && <VisualSlot {...this.props.slotProps}/>}
                 </div>;
         
         return main;
@@ -314,14 +510,23 @@ class DivElement extends VisualElement{
 class HtmlProperties extends Component{
     static defaultProps = {
         selectedSlot: null,
+        onDataChange: null
     };
+
+    constructor(props){
+        super(props);
+
+        this.onChange = this.onChange.bind(this);
+    }
 
     render(){
         if(this.props.selectedSlot === null){ return null; }
         
         if(this.props.selectedSlot.content === null){ return null; }
         
-        let properties = this.props.selectedSlot.content.properties;
+        let properties = this.props.selectedSlot.content.properties || null;
+
+        if(properties === null){ return null;}
         let main =
                 <Form>
                     {properties.map((item, index) => {
@@ -330,7 +535,7 @@ class HtmlProperties extends Component{
                         let formItem = 
                             <Form.Group size="sm" key={index} controlId={`formitem${index}`}>
                                 <Form.Label>{htmlProp.text}</Form.Label>
-                                <Form.Control type={htmlProp.input.type} placeholder="" value={item.value} />
+                                <Form.Control type={htmlProp.input.type} placeholder="" value={item.value} onChange={(event) => this.onChange(event, index)}/>
                             </Form.Group>;
                     
                         return (formItem);
@@ -338,22 +543,22 @@ class HtmlProperties extends Component{
                 </Form>
         return main;
     }
+
+    onChange(event, iItem){
+        this.props.onDataChange(event, iItem);
+    }
 }
 
 class ImgElement extends VisualElement{
-    static defaultProps = {
-        style: null,
-        src: "",
-        alt: "aa"
-    };
-
     render(){
-        let main = <img style={this.props.style} src={this.props.src} alt={this.props.alt}/>;
+        let src = JsNx.getItem(this.props.properties, 'name', 'src') || "";
+        let alt = JsNx.getItem(this.props.properties, 'name', 'alt');
+
+        let main = <img src={src.value} alt={alt.value}/>;
         
         return main;
     }
 }
-
 
 class RawElementList extends Component{
     static defaultProps = {
@@ -409,8 +614,9 @@ class RawElement extends Component
 }
 
 Data.htmlElemProperties = {
-    alt: {name: "alt", text: "Alt", input:{type: 'text'}}
+    alt: {name: "alt", text: "Alt", input:{type: 'text'}},
+    src: {name: "src", text: "source", input:{type: 'text'}}
 };
 
 
-Data.HtmlElements.push({name: "div"}, {name: "img", properties: [{name: "alt", value: ""}]});
+Data.HtmlElements.push({name: "div"}, {name: "img", properties: [{name: "alt", value: ""}, {name: "src", value: ""}]});

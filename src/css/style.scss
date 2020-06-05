@@ -34,6 +34,9 @@ body {
             .slot[data-selected='1']{border-style: solid;}
         }
         
+        .visual-preview{
+            padding: 1rem;
+        }
     }
     .raw-element-list{
         display: flex; flex-wrap: wrap;
