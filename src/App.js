@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/style.scss';
-import { Navbar, Nav, Card, Accordion, Button, Tab, Form, ButtonToolbar, ButtonGroup, DropdownButton, Dropdown} from 'react-bootstrap';
-import {faFont, faCode, faFileCode, faBold, faItalic, faAlignLeft, faAlignRight, faAlignJustify, faAlignCenter,
-        faOutdent, faIndent, faUnderline, faStrikethrough, faListUl, faListOl, faTrash, faLink, faUnlink, faUndo, faRedo} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Navbar, Nav, Card, Accordion, Button, Tab, Form} from 'react-bootstrap';
 import {JsNx} from "./libs/utils/Utils";
 import { Options } from './Options';
-
+import { VisualWordProcessor } from './views/VisualWordProcessor';
 
 class Data
 {
@@ -101,124 +98,6 @@ class AppNarBar extends Component
 			</Navbar>
 		return (main);
 	}
-}
-
-class VisualWordProcessor extends Component
-{
-    static defaultProps = {
-        input: ""
-    };
-
-    constructor(props){
-        super(props);
-
-        this.applyTypeset = this.applyTypeset.bind(this);
-    }
-
-    render(){
-
-        let main = 
-            <div style={{margin: "1rem", border: "1px solid #efefef"}}>
-                <div style={{backgroundColor: "#fafafa", height: 50, padding: ".5rem"}}>
-                    <ButtonToolbar className="mb-3" aria-label="Toolbar with Button groups">
-                        <ButtonGroup className="mr-2" size="sm" >
-                            <Button variant="secondary"><FontAwesomeIcon icon={faFileCode}/></Button>
-                            <Button  variant="secondary"><FontAwesomeIcon icon={faCode}/></Button>
-                        </ButtonGroup>
-                        <ButtonGroup className="mr-2" size="sm">
-                            <DropdownButton  variant="secondary" as={ButtonGroup} title={<FontAwesomeIcon icon={faFont}/>} onSelect={this.applyTypeset} id="title-dropdown">
-                                <Dropdown.Item eventKey="h3">Titre (grand)</Dropdown.Item>
-                                <Dropdown.Item eventKey="h4">Titre (moyen)</Dropdown.Item>
-                                <Dropdown.Item eventKey="h5">Titre (petit)</Dropdown.Item>
-                                <Dropdown.Item eventKey="pre">Pré-formaté</Dropdown.Item>
-                                <Dropdown.Item eventKey="p">Paragraphe</Dropdown.Item>
-                            </DropdownButton>
-                            <Button variant="secondary" onClick={() => this.applyTypeset("b")}><FontAwesomeIcon icon={faBold}/></Button>
-                            <Button variant="secondary" onClick={() => this.applyTypeset("i")}><FontAwesomeIcon icon={faItalic}/></Button>
-                            <Button variant="secondary" onClick={() => this.applyTypeset("u")}><FontAwesomeIcon icon={faUnderline}/></Button>
-                            <Button variant="secondary" onClick={() => this.applyTypeset("strike")}><FontAwesomeIcon icon={faStrikethrough}/></Button>
-                        </ButtonGroup>
-                        <ButtonGroup className="mr-2" size="sm" >
-                            <Button variant="secondary" onClick={() => this.applyTypeset("ul")}><FontAwesomeIcon icon={faListUl}/></Button>
-                            <Button  variant="secondary" onClick={() => this.applyTypeset("ol")}><FontAwesomeIcon icon={faListOl}/></Button>
-                        </ButtonGroup>
-                        <ButtonGroup className="mr-2" size="sm" >
-                            <Button variant="secondary" onClick={() => this.applyTypeset("al")}><FontAwesomeIcon icon={faAlignLeft}/></Button>
-                            <Button  variant="secondary" onClick={() => this.applyTypeset("ac")}><FontAwesomeIcon icon={faAlignCenter}/></Button>
-                            <Button  variant="secondary" onClick={() => this.applyTypeset("ar")}><FontAwesomeIcon icon={faAlignRight}/></Button>
-                            <Button  variant="secondary" onClick={() => this.applyTypeset("aj")}><FontAwesomeIcon icon={faAlignJustify}/></Button>
-                        </ButtonGroup>
-                        <ButtonGroup className="mr-2" size="sm" >
-                            <Button variant="secondary" onClick={() => this.applyTypeset("outdent")}><FontAwesomeIcon icon={faOutdent}/></Button>
-                            <Button  variant="secondary" onClick={() => this.applyTypeset("indent")}><FontAwesomeIcon icon={faIndent}/></Button>
-                        </ButtonGroup>
-                        <ButtonGroup className="mr-2" size="sm" >
-                            <Button variant="secondary" onClick={() => this.applyTypeset("al")}><FontAwesomeIcon icon={faLink}/></Button>
-                            <Button  variant="secondary" onClick={() => this.applyTypeset("ac")}><FontAwesomeIcon icon={faUnlink}/></Button>
-                        </ButtonGroup>
-                        <ButtonGroup className="mr-2" size="sm" >
-                            <Button variant="secondary" onClick={() => this.applyTypeset("al")}><FontAwesomeIcon icon={faUndo}/></Button>
-                            <Button  variant="secondary" onClick={() => this.applyTypeset("ac")}><FontAwesomeIcon icon={faRedo}/></Button>
-                        </ButtonGroup>
-                        <ButtonGroup className="mr-2" size="sm" >
-                            <Button variant="secondary" onClick={() => this.applyTypeset("al")}><FontAwesomeIcon icon={faTrash}/></Button>
-                        </ButtonGroup>
-                    </ButtonToolbar>
-                </div>
-                <div contentEditable={true} style={{backgroundColor: "#FFF", minHeight: 300, padding: "1rem"}}></div>
-            </div>;
-        
-        return main;
-    }
-
-    applyTypeset(option){
-        let sel = window.getSelection ? window.getSelection() : document.selection;
-        if(!sel){ return; }
-
-        if(sel.rangeCount === 0){ return;}
-
-        let range = sel.getRangeAt(0);
-
-        if(["h3", "h4", "h5", "pre", "p", "b", "i", "u", "strike"].includes(option)){
-            let newNode = document.createElement(option);
-            newNode.appendChild(range.extractContents());
-            //range.deleteContents();
-            range.insertNode(newNode);
-        }
-        else if(["ul", "ol"].includes(option)){
-            let newNode = document.createElement(option);
-            let li = document.createElement("li");
-            newNode.appendChild(li);
-            li.appendChild(range.extractContents());
-            range.insertNode(newNode);
-        }
-        else if(["outdent", "indent"].includes(option)){
-            /*let indent = {outdent: "-30px", indent: "30px"};
-            let newNode = document.createElement("div");
-            newNode.appendChild(range.extractContents());
-            newNode.style.paddingLeft = indent[option];
-            range.insertNode(newNode);*/
-        }
-        else if(["al", "ac", "ar", "aj"].includes(option)){
-            let textAlign = {al: 'left', ac: 'center', ar: 'right', aj: 'justify'}
-            if(range.commonAncestorContainer instanceof HTMLDivElement){
-                range.commonAncestorContainer.style.textAlign = textAlign[option];
-            }
-            else{
-                let newNode = document.createElement('p');
-                newNode.appendChild(range.extractContents());
-                newNode.style.textAlign = textAlign[option];
-                range.deleteContents();
-                range.insertNode(newNode);
-            }
-        }
-
-        /*if (sel.removeAllRanges) {
-            sel.removeAllRanges();
-        } else if (sel.empty) {
-            sel.empty();
-        }*/
-    }
 }
 
 class VisualHTMLBuilder extends Component
