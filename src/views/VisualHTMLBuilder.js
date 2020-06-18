@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-//import { Nav, Card, Accordion, Button, Tab, Form} from 'react-bootstrap';
-//import {JsNx} from "../libs/utils/Utils";
+import { Nav, Card, Accordion, Button, Tab, Form} from 'react-bootstrap';
+import {JsNx} from "../libs/utils/Utils";
 
-/*class Global{
+class Global{
     static lastId = 1;
 
     static getNextId(){ return Global.lastId++; }
@@ -20,36 +20,9 @@ Data.htmlElemProperties = {
 
 
 Data.HtmlElements.push({name: "div"}, {name: "img", properties: [{name: "alt", value: ""}, {name: "src", value: ""}]});
-*/
+
 
 export class VisualHTMLBuilder extends Component
-{
-    constructor(props){
-        super(props);
-
-        this.receiveMessage = this.receiveMessage.bind(this);
-
-        window.addEventListener("message", this.receiveMessage, false);
-
-        window.postMessage({content: "aaaa"});
-    }
-
-    render(){
-        let url = "http://devserver/shared/moodledev2/lib/editor/atto/plugins/vvvebjs/editor/index.php?contextid=88&theme=recit&themerev=1592334128";
-
-        let main = <iframe src={url} title="Vvv EB JS" style={{width: "100%", height: "100%"}}></iframe>;
-
-        return main;
-    }
-    
-    receiveMessage(event){
-        console.log(event);
-
-       // event.source.postMessage("hi there yourself!  the secret response ", event.origin);
-    }
-}
-/*
-class VisualHTMLBuilder2 extends Component
 {
     static defaultProps = {
         input: ""
@@ -432,4 +405,4 @@ class RawElement extends Component
         this.setState({dragging: 0});
         this.props.onSelect(null);
     }
-}*/
+}

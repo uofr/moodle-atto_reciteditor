@@ -16,8 +16,9 @@ require('codemirror/mode/javascript/javascript');
 export class VisualWordProcessor extends Component
 {
     static defaultProps = {
-        input: "",
-        onVisualBuilder: null
+        content: "",
+        onVisualBuilder: null,
+        onChange: null
     };
 
     constructor(props){
@@ -65,6 +66,12 @@ export class VisualWordProcessor extends Component
     componentWillUnmount(){
     }
 
+    componentDidUpdate(prevProps) {
+        if(prevProps.content !== this.props.content){
+            this.editorRef.current.innerHTML = this.props.content;
+        }
+    }
+      
     render(){
         let main = 
             <div style={{margin: "1rem", border: "1px solid #efefef"}} className={(this.state.highlighterOn ? "cursor-highlighter" : "")}>
@@ -177,7 +184,9 @@ export class VisualWordProcessor extends Component
             default:
                 this.setCurrentSelection();
         }
-        this.onUserHighlight();        
+        this.onUserHighlight();
+        
+       // this.props.onChange(this.editorRef.current.innerHTML);
     }
 
     setCurrentSelection(){

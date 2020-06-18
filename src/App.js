@@ -20,8 +20,9 @@ class MainView extends Component
         super(props);
 
         this.onVisualBuilder = this.onVisualBuilder.bind(this);
+        this.onChange = this.onChange.bind(this);
 
-        this.state = {editor: 'wp'};
+        this.state = {editor: 'wp', content: ""};
     }
 
 	render(){
@@ -29,17 +30,45 @@ class MainView extends Component
 			<div className="MainView">
 				<AppNarBar/>
                 {this.state.editor === "wp" ? 
-                    <VisualWordProcessor input={"<div></div>"} onVisualBuilder={this.onVisualBuilder}/> 
+                    <VisualWordProcessor content={this.state.content} onVisualBuilder={this.onVisualBuilder} onChange={this.onChange}/> 
                     : 
-                    <VisualHTMLBuilder input={"<div></div>"}/>
+                    <VisualHTMLBuilder content={this.state.content}/>
                 }
 				
             </div>;
 		return (main);
     }
     
+    onChange(content){
+        this.setState({content: content});
+    }
+
     onVisualBuilder(){
-        this.setState({editor: "vb"});
+        //this.setState({editor: "vb"});
+        let url = M.cfg.wwwroot;
+        url += "/lib/editor/atto/plugins/vvvebjs/editor/index.php";
+        url += "?contextid="+M.cfg.contextid;
+        url += "&theme="+M.cfg.theme;
+        url += "&themerev="+M.cfg.themerev;
+
+        let popup = window.open(url,'VvvEbJs','scrollbars=1');
+
+        if (popup.outerWidth < window.screen.availWidth || popup.outerHeight < window.screen.availHeight)
+        {
+          popup.moveTo(0,0);
+          popup.resizeTo(window.screen.availWidth, window.screen.availHeight);
+        }
+
+        let that = this;
+        popup.getEditorContent = function(){
+            return that.state.content;
+        };
+        
+        popup.onSave = function(frameDocument){
+            let html = frameDocument.body.outerHTML;
+            that.setState({content: html});
+            popup.close();
+        };
     }
 }
 
