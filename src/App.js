@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/style.scss';
-import { Navbar, Nav} from 'react-bootstrap';
+//import { Navbar, Nav} from 'react-bootstrap';
 import { VisualWordProcessor } from './views/VisualWordProcessor';
 import { VisualHTMLBuilder } from './views/VisualHTMLBuilder';
-import {Options} from "./Options";
+//import {Options} from "./Options";
 
 export default class App extends Component{
-	render(){
-		let main = <MainView/>;
+    static defaultProps = {
+        Moodle: {},
+    };
 
-		return (main);
-	}
-}
-
-class MainView extends Component
-{
     constructor(props){
         super(props);
 
@@ -28,7 +23,6 @@ class MainView extends Component
 	render(){
 		let main = 
 			<div className="MainView">
-				<AppNarBar/>
                 {this.state.editor === "wp" ? 
                     <VisualWordProcessor content={this.state.content} onVisualBuilder={this.onVisualBuilder} onChange={this.onChange}/> 
                     : 
@@ -45,11 +39,13 @@ class MainView extends Component
 
     onVisualBuilder(){
         //this.setState({editor: "vb"});
-        let url = M.cfg.wwwroot;
+        let Moodle = this.props.Moodle;
+
+        let url = Moodle.cfg.wwwroot;
         url += "/lib/editor/atto/plugins/vvvebjs/editor/index.php";
-        url += "?contextid="+M.cfg.contextid;
-        url += "&theme="+M.cfg.theme;
-        url += "&themerev="+M.cfg.themerev;
+        url += "?contextid="+Moodle.cfg.contextid;
+        url += "&theme="+Moodle.cfg.theme;
+        url += "&themerev="+Moodle.cfg.themerev;
 
         let popup = window.open(url,'VvvEbJs','scrollbars=1');
 
@@ -72,6 +68,7 @@ class MainView extends Component
     }
 }
 
+/*
 class AppNarBar extends Component
 {
 	render(){
@@ -95,4 +92,4 @@ class AppNarBar extends Component
 			</Navbar>
 		return (main);
 	}
-}
+}*/
