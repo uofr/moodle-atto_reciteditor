@@ -1,9 +1,9 @@
 
 import React, { Component } from 'react';
-import { Button, ButtonToolbar, ButtonGroup, Modal, Form} from 'react-bootstrap';
+import { Button, ButtonToolbar, ButtonGroup, Modal, Form, Dropdown, DropdownButton} from 'react-bootstrap';
 import {faFont, faCode, faFileCode, faBold, faItalic, faAlignLeft, faAlignRight, faAlignJustify, faAlignCenter,
         faOutdent, faIndent, faUnderline, faStrikethrough, faListUl, faListOl, faRemoveFormat, faLink, faUnlink, faUndo, faRedo,
-        faFillDrip, faHighlighter, faHeading} from '@fortawesome/free-solid-svg-icons';
+        faFillDrip, faHighlighter, faHeading } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {Controlled  as CodeMirror} from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
@@ -65,6 +65,7 @@ export class VisualWordProcessor extends Component
 
     componentDidMount(){
         //window.document.execCommand("defaultParagraphSeparator", false, "br");
+        this.editorRef.current.innerHTML = this.props.content;
     }
 
     componentWillUnmount(){
@@ -78,7 +79,7 @@ export class VisualWordProcessor extends Component
       
     render(){        
         let main = 
-            <div style={{margin: "1rem", border: "1px solid #efefef", cursor: (this.state.highlighterOn ? `url(${VisualWordProcessor.Assets.highlighter}),  auto` : 'inherit')}}>
+            <div style={{border: "1px solid #efefef", cursor: (this.state.highlighterOn ? `url(${VisualWordProcessor.Assets.highlighter}),  auto` : 'inherit')}}>
                 <div style={{backgroundColor: "#fafafa", minHeight: 50, padding: ".5rem"}}>
                     <ButtonToolbar aria-label="Toolbar with Button groups">
                         <ButtonGroup className="mr-2 mb-2" size="sm" >
@@ -86,18 +87,16 @@ export class VisualWordProcessor extends Component
                             <Button  variant="secondary" onClick={this.onShowCodeEditor}><FontAwesomeIcon icon={faCode} title="Éditeur code HTML"/></Button>
                         </ButtonGroup>
                         <ButtonGroup className="mr-2 mb-2" size="sm">
-                            <BtnSetCssClass selection={this.state.selection} cssClass="alpha-h3" icon={faHeading} text={<sup>3</sup>} onClick={this.onRefreshEditor} title="h3"/>
-                            <BtnSetCssClass selection={this.state.selection} cssClass="alpha-h4" icon={faHeading} text={<sup>4</sup>} onClick={this.onRefreshEditor} title="h4"/>
-                            <BtnSetCssClass selection={this.state.selection} cssClass="alpha-h5" icon={faHeading} text={<sup>5</sup>} onClick={this.onRefreshEditor} title="h5"/>
-                            <BtnSetCssClass selection={this.state.selection} cssClass="alpha-font-bold" icon={faBold} onClick={this.onRefreshEditor} title="Gras"/>
-                            <BtnSetCssClass selection={this.state.selection} cssClass="alpha-font-italic" icon={faItalic} onClick={this.onRefreshEditor} title="Italique"/>
-                            <BtnSetCssClass selection={this.state.selection} cssClass="alpha-text-underline" icon={faUnderline} onClick={this.onRefreshEditor} title="Souligné"/>
-                            <BtnSetCssClass selection={this.state.selection} cssClass="alpha-text-line-through" icon={faStrikethrough} onClick={this.onRefreshEditor} title="Barré"/>
+                            <DropdownSetCssProp selection={this.state.selection} cssProp="font-size" defaultValue={"12px"} values={["12px", "14px"]} onClick={this.onRefreshEditor} />
+                            <BtnSetCssProp selection={this.state.selection} cssProp="font-weight" defaultValue="normal" value="bold"  icon={faBold} onClick={this.onRefreshEditor} title="Gras"/>
+                            <BtnSetCssProp selection={this.state.selection} cssProp="font-style" defaultValue="normal" value="italic" icon={faItalic} onClick={this.onRefreshEditor} title="Italique"/>
+                            <BtnSetCssProp selection={this.state.selection} cssProp="text-decoration" defaultValue="normal" value="underline" icon={faUnderline} onClick={this.onRefreshEditor} title="Souligné"/>
+                            <BtnSetCssProp selection={this.state.selection} cssProp="text-decoration" defaultValue="normal" value="line-through" icon={faStrikethrough} onClick={this.onRefreshEditor} title="Barré"/>
                         </ButtonGroup>
                         <ButtonGroup className="mr-2 mb-2" size="sm">
-                            <BtnSetCssProp selection={this.state.selection} cssProp="backgroundColor" icon={faFillDrip} defaultValue="#FFFFFF" onClick={this.onRefreshEditor}  title="Couleur d'arrière-plan"/>
+                            <BtnColorPicker selection={this.state.selection} cssProp="backgroundColor" icon={faFillDrip} defaultValue="#FFFFFF" onClick={this.onRefreshEditor}  title="Couleur d'arrière-plan"/>
                             <BtnUnsetCssProp selection={this.state.selection} cssProp="backgroundColor" icon={faRemoveFormat} defaultValue="#FFFFFF" onClick={this.onRefreshEditor}/>
-                            <BtnSetCssProp selection={this.state.selection} cssProp="color" icon={faFont} defaultValue="#000000" onClick={this.onRefreshEditor} title="Couleur de la police"/>
+                            <BtnColorPicker selection={this.state.selection} cssProp="color" icon={faFont} defaultValue="#000000" onClick={this.onRefreshEditor} title="Couleur de la police"/>
                             <BtnUnsetCssProp selection={this.state.selection} cssProp="color" icon={faRemoveFormat} defaultValue="#000000" onClick={this.onRefreshEditor}/>
                         </ButtonGroup>
                         <ButtonGroup className="mr-2 mb-2" size="sm" >
@@ -134,7 +133,7 @@ export class VisualWordProcessor extends Component
                 
                 <div style={{display: (this.state.showCodeEditor ? 'none' : 'block')}}>
                     <div ref={this.editorRef} contentEditable={true} style={{backgroundColor: "#FFF", minHeight: 300, padding: "1rem", resize: 'vertical', overflow: 'auto'}}
-                        onKeyUp={this.onRefreshEditor} onClick={this.onRefreshEditor}>
+                        onKeyUp={this.onRefreshEditor} onClick={this.onRefreshEditor} data-recit-editor='content'>
                     </div>
 
                     <div style={{minHeight: 30, backgroundColor: "#efefef", padding: ".5rem"}}>{this.state.statusBar.toString()}</div>
@@ -171,7 +170,9 @@ export class VisualWordProcessor extends Component
         }
     }
 
-    onRefreshEditor(event){
+    onRefreshEditor(event, clearSelection){
+        clearSelection = (typeof clearSelection === "undefined" ? false : clearSelection);
+
         let type = (event ? event.type : "");
 
         switch(type){
@@ -189,7 +190,24 @@ export class VisualWordProcessor extends Component
                 this.setCurrentSelection();
         }
         this.onUserHighlight();
-        
+
+        // remove empty tags
+        let elements = this.editorRef.current.querySelectorAll('div, p, span, strong');
+        for (let el of elements) {
+            if((el.innerHTML === '&nbsp;' || el.innerHTML === '')){
+                el.parentNode.removeChild(el);
+            }
+        }
+
+        if(clearSelection){
+            //clear selection
+            if (window.getSelection().empty) {  // Chrome
+                window.getSelection().empty();
+            } else if (window.getSelection().removeAllRanges) {  // Firefox
+                window.getSelection().removeAllRanges();
+            }
+        }
+
        // this.props.onChange(this.editorRef.current.innerHTML);
     }
 
@@ -367,7 +385,142 @@ export class VisualWordProcessor extends Component
     }
 }
 
+class DropdownSetCssProp extends Component{
+    static defaultProps = {
+        selection: null,
+        icon: null,
+        cssProp: "",
+        defaultValue: "",
+        values: "",
+        onClick: null,
+        title: ""
+    };
+
+    constructor(props){
+        super(props);
+
+        this.onClick = this.onClick.bind(this);
+    }
+
+    render(){
+        let value = this.getCurrentValue();
+
+        let main = 
+            <DropdownButton variant="outline-secondary" as={ButtonGroup} title={value}>
+                {this.props.values.map((item, index) =>
+                    <Dropdown.Item key={index} onClick={(event) => this.onClick(event, item)}>{item}</Dropdown.Item>
+                )}
+                
+            </DropdownButton>
+
+        return main;
+            
+    }
+  
+    getCurrentValue(){
+        let sel = this.props.selection;
+        if(sel === null){ 
+            return this.props.defaultValue; 
+        }
+
+        let currentValue = sel.node.style[this.props.cssProp] || "";
+
+        currentValue = (currentValue.length === 0 ? this.props.defaultValue : currentValue);
+
+        return currentValue;
+    }
+
+    onClick(event, value){
+        let sel = this.props.selection;
+        
+        if(sel === null){ return; }
+        
+        let prop = this.props.cssProp;
+        
+        if(this.getCurrentValue() === this.props.defaultValue){
+            let newNode = document.createElement("span");
+            newNode.appendChild(sel.range.extractContents());
+            newNode.style[prop] = value;
+            sel.range.insertNode(newNode);
+            
+        }
+        else{
+            sel.node.outerHTML = sel.node.innerHTML;
+        }
+
+        if(this.props.onClick){
+            this.props.onClick(event, true);
+        }
+    }
+}
+
 class BtnSetCssProp extends Component{
+    static defaultProps = {
+        selection: null,
+        icon: null,
+        cssProp: "",
+        defaultValue: "",
+        value: "",
+        onClick: null,
+        title: ""
+    };
+
+    constructor(props){
+        super(props);
+
+        this.onClick = this.onClick.bind(this);
+    }
+
+    render(){
+        let variant = (this.getCurrentValue() === this.props.value ? "outline-secondary" : "secondary");
+
+        let main = 
+            <Button variant={variant} title={this.props.title} onClick={this.onClick}>
+                <FontAwesomeIcon icon={this.props.icon}/>{" "}
+            </Button>;
+
+        return main;
+            
+    }
+  
+    getCurrentValue(){
+        let sel = this.props.selection;
+        if(sel === null){ 
+            return this.props.defaultValue; 
+        }
+
+        let currentValue = sel.node.style[this.props.cssProp] || "";
+
+        currentValue = (currentValue.length === 0 ? this.props.defaultValue : currentValue);
+
+        return currentValue;
+    }
+
+    onClick(event){
+        let sel = this.props.selection;
+        
+        if(sel === null){ return; }
+        
+        let prop = this.props.cssProp;
+        
+        if(this.getCurrentValue() === this.props.defaultValue){
+            let newNode = document.createElement("span");
+            newNode.appendChild(sel.range.extractContents());
+            newNode.style[prop] = this.props.value;
+            sel.range.insertNode(newNode);
+            
+        }
+        else{
+            sel.node.outerHTML = sel.node.innerHTML;
+        }
+
+        if(this.props.onClick){
+            this.props.onClick(event, true);
+        }
+    }
+}
+
+class BtnColorPicker extends Component{
     static defaultProps = {
         selection: null,
         icon: null,

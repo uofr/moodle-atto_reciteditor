@@ -2,11 +2,11 @@
   "name": "recit_editor",
   "version": "1.0.0",
   "description": "Éditeur RÉCIT",
-  "main": "index.js",
+  "main": "alpha.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "parcel ./src/index.js --out-dir build",
-    "build": "parcel build ./src/index.js --out-dir build"
+    "start": "parcel ./src/alpha.js --out-dir build",
+    "build": "parcel build ./src/alpha.js --out-dir build"
   },
   "keywords": [],
   "author": "",

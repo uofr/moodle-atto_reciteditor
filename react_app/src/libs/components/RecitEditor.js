@@ -4,7 +4,7 @@ import { VisualHTMLBuilder } from './VisualHTMLBuilder';
 
 export class RecitEditor extends Component{
     static defaultProps = {
-        Moodle: {},
+        content: ""
     };
 
     constructor(props){
@@ -13,7 +13,7 @@ export class RecitEditor extends Component{
         this.onVisualBuilder = this.onVisualBuilder.bind(this);
         this.onChange = this.onChange.bind(this);
 
-        this.state = {editor: 'wp', content: ""};
+        this.state = {editor: 'wp', content: props.content};
     }
 
 	render(){
@@ -35,7 +35,7 @@ export class RecitEditor extends Component{
 
     onVisualBuilder(){
         //this.setState({editor: "vb"});
-        let Moodle = this.props.Moodle;
+        let Moodle = M || {}; // M = Moodle global variable
 
         let url = Moodle.cfg.wwwroot;
         url += "/lib/editor/atto/plugins/vvvebjs/editor/index.php";
