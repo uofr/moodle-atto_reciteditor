@@ -5,7 +5,7 @@ export class Options
     /*static companyName = "Prologic+";
     static companyPhone = "+1 (418) 227-4303";
     static companyEmail = "service@prologicplus.com";*/
-    static brandImage = require('./assets/logo.png');
+    //static brandImage = require('./assets/logo.png');
     //static companyLogoEmail = require('../assets/prologic-email.jpg');
   /*  static companyColor1 = "#000";
     static companyColor2 = "#F00";
@@ -14,7 +14,7 @@ export class Options
     static mailerFromName = Options.companyName + " " + $i18n.tags.sas;*/
     
         
-    static appName(){ return "Alpha"; }//$i18n.tags.sas }
+    static appName(){ return packageJson.description; }//$i18n.tags.sas }
     
     static appVersion(){ return packageJson.version; }
 

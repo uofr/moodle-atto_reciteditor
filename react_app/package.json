@@ -1,12 +1,12 @@
 {
-  "name": "recit_editor",
-  "version": "1.0.0",
-  "description": "Éditeur RÉCIT",
-  "main": "alpha.js",
+  "name": "recit_rich_editor",
+  "version": "0.1.0",
+  "description": "RÉCIT Rich Editor",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "parcel ./src/alpha.js --out-dir build",
-    "build": "parcel build ./src/alpha.js --out-dir build"
+    "start": "parcel ./src/index.js --out-dir build",
+    "build": "parcel build ./src/index.js --out-dir build"
   },
   "keywords": [],
   "author": "",
