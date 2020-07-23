@@ -36,6 +36,7 @@ export class VisualWordProcessor extends Component
 
         this.setCurrentSelection = this.setCurrentSelection.bind(this);
         this.onRefreshEditor = this.onRefreshEditor.bind(this);
+        this.onMouseMove = this.onMouseMove.bind(this);
 
         this.applyNumerationTypeset = this.applyNumerationTypeset.bind(this);
         this.applyIndentTypeset = this.applyIndentTypeset.bind(this);
@@ -140,12 +141,16 @@ export class VisualWordProcessor extends Component
                 
                 <div style={{display: (this.state.showCodeEditor ? 'none' : 'block')}}>
                     <div ref={this.editorRef} contentEditable={true} style={{backgroundColor: "#FFF", minHeight: 300, padding: "1rem", resize: 'vertical', overflow: 'auto'}}
-                        onKeyUp={this.onRefreshEditor} onClick={this.onRefreshEditor} data-recit-rich-editor='content'>
+                        onKeyUp={this.onRefreshEditor} onClick={this.onRefreshEditor} onMouseDown={this.onMouseMove} onMouseDown={this.onMouseMove} onMouseOut={this.onMouseMove} data-recit-rich-editor='content'>
                     </div>
 
-                    <div style={{minHeight: 30, borderTop: style.border, backgroundColor: style.backgroundColor, padding: ".5rem", display: "flex", justifyContent: "space-between"}}>
-                        {this.state.statusBar.toString()}
+                    <div style={{minHeight: 30, borderTop: style.border, backgroundColor: style.backgroundColor, padding: ".5rem", display: "flex"}}>
                         <div>
+                            <b>HTML: </b>{this.state.statusBar.toString()}
+                            {" | "}
+                            <b>Sélection: </b>{this.state.selection !== null ? `${this.state.selection.sel.toString()} (${this.state.selection.sel.type})` : ""}
+                        </div>
+                        <div style={{marginLeft: "auto"}}>
                             <img src={VisualWordProcessor.Assets.brand} width="20" height="20"></img>
                         </div>
                     </div>
@@ -159,6 +164,18 @@ export class VisualWordProcessor extends Component
             </div>;
                 
         return main;
+    }
+
+    onMouseMove(event){        
+        switch(event.type){
+            case 'mousedown':
+                break;
+            case 'mouseup':
+                break;
+            case 'mouseout':
+                this.onRefreshEditor();
+                break;
+        }
     }
 
     onHighlighter(){
@@ -228,7 +245,11 @@ export class VisualWordProcessor extends Component
     setCurrentSelection(){
         let result = {};
         result.sel = window.getSelection ? window.getSelection() : document.selection;
-        if(!result.sel){ return null; }
+        
+        if(!result.sel){ 
+            this.setState({selection: null});
+            return null; 
+        }
 
         if(result.sel.rangeCount === 0){ return null;}
 //        if(result.sel.extentOffset - result.sel.anchorOffset === 0){ return null;}
@@ -622,7 +643,8 @@ class BtnColorPicker extends Component{
             let newNode = document.createElement("span");
             newNode.appendChild(sel.range.extractContents());
             newNode.style[prop] = color
-            sel.node.appendChild(newNode);
+            //sel.node.appendChild(newNode);
+            sel.range.insertNode(newNode);
         }
         else{
             sel.node.style[prop] = color
@@ -658,8 +680,10 @@ class BtnUnsetCssProp extends Component{
         let sel = this.props.selection;
         
         if(sel === null){ return; }
+        if(sel.isNodeRoot){ return; }
 
         sel.node.style[this.props.cssProp] = this.props.defaultValue;
+        //sel.node.outerHTML = sel.node.innerHTML;
 
         if(this.props.onClick){
             this.props.onClick(event);

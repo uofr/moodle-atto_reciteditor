@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './libs/components/css/components.scss';
 import {RecitRichEditor} from './libs/components/RecitRichEditor';
 import {Options} from './Options';
-//ReactDOM.render(<RecitEditor />, document.getElementById('root'));
 
 // Find all DOM containers
 /*document.addEventListener('DOMContentLoaded', function(){ 
@@ -17,9 +16,14 @@ import {Options} from './Options';
         ReactDOM.render(<RecitRichEditor ref={(instance) => {window.name = instance}} content={placeholder.innerHTML}/>, placeholder);
     }
 }, false);*/
-
-window.RecitRichEditorCreateInstance = function(placeholder, onChange){
-    let name = placeholder.getAttribute("id") || `recit_rich_editor_${Date.now()}`;
-    console.log(`${Options.appName()} - v:${Options.appVersion()}`, name); 
-    ReactDOM.render(<RecitRichEditor name={name} content={placeholder.innerHTML} onChange={onChange}/>, placeholder);
+if(process.env.NODE_ENV === "development"){    
+    ReactDOM.render(<RecitRichEditor />, document.getElementById('root'));
 }
+else{
+    window.RecitRichEditorCreateInstance = function(placeholder, onChange){
+        let name = placeholder.getAttribute("id") || `recit_rich_editor_${Date.now()}`;
+        console.log(`${Options.appName()} - v:${Options.appVersion()}`, name); 
+        ReactDOM.render(<RecitRichEditor name={name} content={placeholder.innerHTML} onChange={onChange}/>, placeholder);
+    }
+}
+
