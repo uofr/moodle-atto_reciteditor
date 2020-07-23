@@ -4,7 +4,9 @@ import { VisualHTMLBuilder } from './VisualHTMLBuilder';
 
 export class RecitRichEditor extends Component{
     static defaultProps = {
-        content: ""
+        name: "",
+        content: "",
+        onChange: null
     };
 
     constructor(props){
@@ -13,16 +15,19 @@ export class RecitRichEditor extends Component{
         this.onVisualBuilder = this.onVisualBuilder.bind(this);
         this.onChange = this.onChange.bind(this);
 
-        this.state = {editor: 'wp', content: props.content};
+        this.state = {editor: 'wp'};
+
+        // the content is not in the state because we don't want to refresh the component every time the user types something. This moves the caret to the beginning of the content.
+        this.content = props.content; 
     }
 
 	render(){
 		let main = 
 			<div>
                 {this.state.editor === "wp" ? 
-                    <VisualWordProcessor content={this.state.content} onVisualBuilder={this.onVisualBuilder} onChange={this.onChange}/> 
+                    <VisualWordProcessor content={this.content} onVisualBuilder={this.onVisualBuilder} onChange={this.onChange}/> 
                     : 
-                    <VisualHTMLBuilder content={this.state.content}/>
+                    <VisualHTMLBuilder content={this.content}/>
                 }
 				
             </div>;
@@ -30,11 +35,14 @@ export class RecitRichEditor extends Component{
     }
     
     onChange(content){
-        this.setState({content: content});
+        this.content = content;
+
+        if(this.props.onChange){
+            this.props.onChange({target:{value: this.content, name: this.props.name}});
+        }
     }
 
     onVisualBuilder(){
-        //this.setState({editor: "vb"});
         let Moodle = M || {}; // M = Moodle global variable
 
         let url = Moodle.cfg.wwwroot;
@@ -53,12 +61,12 @@ export class RecitRichEditor extends Component{
 
         let that = this;
         popup.getEditorContent = function(){
-            return that.state.content;
+            return that.content;
         };
         
         popup.onSave = function(frameDocument){
             let html = frameDocument.body.outerHTML;
-            that.setState({content: html});
+            that.content = html;
             popup.close();
         };
     }

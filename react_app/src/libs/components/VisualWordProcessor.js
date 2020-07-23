@@ -220,7 +220,9 @@ export class VisualWordProcessor extends Component
             }
         }
 
-       // this.props.onChange(this.editorRef.current.innerHTML);
+        if((this.props.onChange) && (this.props.content !== this.editorRef.current.innerHTML)){
+            this.props.onChange(this.editorRef.current.innerHTML);
+        }
     }
 
     setCurrentSelection(){

@@ -6,13 +6,20 @@ import {RecitRichEditor} from './libs/components/RecitRichEditor';
 import {Options} from './Options';
 //ReactDOM.render(<RecitEditor />, document.getElementById('root'));
 
-console.log(`${Options.appName()} - v:${Options.appVersion()}`);
-
 // Find all DOM containers
-document.addEventListener('DOMContentLoaded', function(){ 
+/*document.addEventListener('DOMContentLoaded', function(){ 
     let items = document.querySelectorAll("[data-recit-rich-editor='placeholder']");
-    for(let placeholder of items){
+    for(let i = 0; i < items.length; i++){
         //const reciteditorid = parseInt(domContainer.dataset.reciteditorid, 10);
-        ReactDOM.render(<RecitRichEditor content={placeholder.innerHTML}/>, placeholder);
+        let placeholder = items[i];
+        let name = placeholder.getAttribute("id") || `recitRichEditor${i}`;
+        console.log(name);
+        ReactDOM.render(<RecitRichEditor ref={(instance) => {window.name = instance}} content={placeholder.innerHTML}/>, placeholder);
     }
-}, false);
+}, false);*/
+
+window.RecitRichEditorCreateInstance = function(placeholder, onChange){
+    let name = placeholder.getAttribute("id") || `recit_rich_editor_${Date.now()}`;
+    console.log(`${Options.appName()} - v:${Options.appVersion()}`, name); 
+    ReactDOM.render(<RecitRichEditor name={name} content={placeholder.innerHTML} onChange={onChange}/>, placeholder);
+}
