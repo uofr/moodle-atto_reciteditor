@@ -1,0 +1,42 @@
+{
+  "name": "recit_rich_editor",
+  "version": "0.1.2",
+  "description": "RÉCIT Rich Editor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel ./src/index.js --out-dir build",
+    "build": "parcel build ./src/index.js --out-dir ../src/js/recit_rich_editor/build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "1.2.25",
+    "@fortawesome/free-solid-svg-icons": "5.11.2",
+    "@fortawesome/react-fontawesome": "0.1.7",
+    "bootstrap": "4.3.1",
+    "codemirror": "5.55.0",
+    "date-fns": "2.7.0",
+    "html2canvas": "^1.0.0-rc.5",
+    "iink-js": "^1.4.2",
+    "lib": "4.2.0",
+    "myscript": "^4.3.0",
+    "pretty": "2.0.0",
+    "react": "16.11.0",
+    "react-bootstrap": "1.0.0-beta.14",
+    "react-codemirror2": "7.2.1",
+    "react-datepicker": "2.9.6",
+    "react-dom": "16.11.0",
+    "react-mathjax": "^1.0.1",
+    "react-select": "3.0.8"
+  },
+  "devDependencies": {
+    "babel-core": "6.26.3",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-preset-env": "1.7.0",
+    "babel-preset-react": "6.24.1",
+    "node-sass": "4.13.0",
+    "parcel-bundler": "1.12.4"
+  }
+}
