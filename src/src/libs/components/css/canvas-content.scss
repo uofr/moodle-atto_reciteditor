@@ -1,3 +1,5 @@
+$border-onhover-element: 1px solid rgb(0, 153, 255);
+
 html.canvas-content{
     margin: 0; padding: 0;
 
@@ -5,12 +7,13 @@ html.canvas-content{
         margin:0; padding: 0;
 
         &:hover{
-            border: 1px solid rgb(0, 153, 255);
+            border: $border-onhover-element;
         }
 
-        & > *:hover{
-            border: 1px solid #F00;
-            
+        h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover{
+            border: $border-onhover-element;
         }
+
+        *[data-selected="1"]{border: $border-onhover-element;}
     }
 }
