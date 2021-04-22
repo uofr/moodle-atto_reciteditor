@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
-import { Nav, Card, Button, Navbar, Form, Collapse, ToggleButtonGroup, ToggleButton, Row, Col  } from 'react-bootstrap';
-import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight} from '@fortawesome/free-solid-svg-icons';
+import { Nav, Card, Navbar, Form, Collapse, Row, Col  } from 'react-bootstrap';
+import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
+import { ToggleButtons} from './Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-/*Data.htmlElemProperties = {
-    alt: {name: "alt", text: "Alt", input:{type: 'text'}},
-    src: {name: "src", text: "source", input:{type: 'text'}}
-};*/
 
 export class VisualHTMLBuilder extends Component
 {
@@ -17,12 +13,40 @@ export class VisualHTMLBuilder extends Component
     constructor(props){
         super(props);
 
-        this.onSelectAccordion = this.onSelectAccordion.bind(this);
         this.onNavbarSelect = this.onNavbarSelect.bind(this);
         this.onSelectElement = this.onSelectElement.bind(this);
         this.onCollapse = this.onCollapse.bind(this);
 
         this.state = {device: 'xl', collapsed: ['0', '1', '2'], selectedElement: null};
+
+        this.canvas = React.createRef();
+    }
+
+    componentDidMount(){
+        let window = this.canvas.current.contentWindow || this.canvas.current.contentDocument;
+        let head = window.document.head;
+        let body = window.document.body;
+
+        let el = document.createElement("link");
+		el.setAttribute("href", `canvas-content.css?v=${Math.floor(Math.random() * 100)}`);
+		el.setAttribute("rel", "stylesheet");
+		head.appendChild(el);
+
+        el = document.createElement("link");
+		el.setAttribute("href", `bootstrap.min.c9ac70f5.css`);
+		el.setAttribute("rel", "stylesheet");
+		head.appendChild(el);
+
+        body.parentElement.classList.add("canvas-content");
+
+        let content = "<div>a</div>";                
+
+        // pure JS
+        new CanvasElement(body, this.onSelectElement);
+
+        // React JS
+        //body.appendChild(doc.firstChild);
+        //ReactDOM.render(<CanvasElement dom={doc.firstChild} parent={body}/>, body);
     }
 
 	render(){
@@ -49,13 +73,9 @@ export class VisualHTMLBuilder extends Component
                 <div className="main">
                     <div className="left-area">
                         <Card>
-                            <Card.Header onClick={() => this.onCollapse('0')}>
-                                Composants
-                            </Card.Header>
+                            <Card.Header onClick={() => this.onCollapse('0')}>Composants</Card.Header>
                             <Collapse in={this.state.collapsed.includes('0')}>
-                                <Card.Body>
-                                    <VisualComponentList/>
-                                </Card.Body>
+                                <Card.Body><VisualComponentList/></Card.Body>
                             </Collapse>
                         </Card>
 
@@ -71,13 +91,15 @@ export class VisualHTMLBuilder extends Component
                         <Card>
                             <Card.Header  onClick={() => this.onCollapse('2')}>Arborescence</Card.Header>
                             <Collapse in={this.state.collapsed.includes('2')}>
-                                <Card.Body></Card.Body>
+                                <Card.Body><TreeStructure canvas={this.canvas} /></Card.Body>
                             </Collapse>
                         </Card>
                     </div>
                     
                     <div className="center-area" >
-                        <VisualEditionMode device={this.state.device} onSelectElement={this.onSelectElement}></VisualEditionMode>
+                        <Canvas>
+                            <iframe ref={this.canvas} className="canvas" style={this.getDeviceDimension()}></iframe>
+                        </Canvas>
                     </div>
                 </div>
             </div>;
@@ -99,69 +121,30 @@ export class VisualHTMLBuilder extends Component
         this.setState({collapsed: data});
     }
 
-    onSelectAccordion(eventKey){
-        this.setState({activeAccordion: eventKey});
-    }
-
     onNavbarSelect(eventKey){
         this.setState({device: eventKey});
     }
 
     onSelectElement(el){
-        if(this.state.selectedElement){
-            this.state.selectedElement.setAttribute('data-selected', "0");
+        if(this.state.selectedElement){            
+            this.state.selectedElement.removeAttribute('data-selected');
         }
 
-        if(el.getAttribute('data-selected') === '0'){
-            el.setAttribute('data-selected', '1');
+        if(el.getAttribute('data-selected') === '1'){
+            el.removeAttribute('data-selected');
+
         }
         else{
-            el.setAttribute('data-selected', '0');
+            el.setAttribute('data-selected', '1');
         }
 
         this.setState({selectedElement: el});
     }
-}
 
-class VisualEditionMode extends Component
-{
-    static defaultProps = {
-        device: null,
-        onSelectElement: null
-    };
-      
-    constructor(props){
-        super(props);
-
-        this.iFrame = React.createRef();
-    }
-
-    componentDidMount(){
-        let window = this.iFrame.current.contentWindow || this.iFrame.current.contentDocument;
-        let head = window.document.head;
-        let body = window.document.body;
-
-        let el = document.createElement("link");
-		el.setAttribute("href", `canvas-content.css?v=${Math.floor(Math.random() * 100)}`);
-		el.setAttribute("rel", "stylesheet");
-		head.appendChild(el);
-
-        body.parentElement.classList.add("canvas-content");
-
-        let content = "<div>a</div>";                
-
-        // pure JS
-        new CanvasElement(body, this.props.onSelectElement);
-
-        // React JS
-        //body.appendChild(doc.firstChild);
-        //ReactDOM.render(<CanvasElement dom={doc.firstChild} parent={body}/>, body);
-    }
-
-	render(){
+    getDeviceDimension(){
         let device = null;
 
-        switch(this.props.device){
+        switch(this.state.device){
             case 'xs': device = {width: 360, height: 1050}; break;
             case 'sm': device = {width: 576, height: 1050}; break;
             case 'md': device = {width: 768, height: 1050}; break;
@@ -170,9 +153,20 @@ class VisualEditionMode extends Component
             default: device = {width: 1200, height: 1050}; 
         }
 
+        return device;
+    }
+}
+
+class Canvas extends Component
+{
+    static defaultProps = {
+        children: null
+    };      
+
+	render(){        
 		let main = 
             <div style={{margin: "auto", display: "flex"}}>
-                <iframe ref={this.iFrame} className="visual-edition-mode" style={device}></iframe>
+                {this.props.children}
             </div>; 
 
 		return (main);
@@ -184,17 +178,24 @@ class CanvasElement{
         this.onDragOver = this.onDragOver.bind(this);
         this.onDrop = this.onDrop.bind(this);
         this.onClick = this.onClick.bind(this);
+        this.onDbClick = this.onDbClick.bind(this);
 
         this.onSelectElement = onSelectElement;
         this.dom = dom;
         this.dom.ondragover = this.onDragOver;
         this.dom.ondrop = this.onDrop;
         this.dom.onclick = this.onClick;
+        this.dom.ondblclick = this.onDbClick;
     }
 
     onClick(event){        
         event.stopPropagation();
         this.onSelectElement(this.dom);
+    }
+
+    onDbClick(event){
+        event.stopPropagation();
+        this.dom.setAttribute("contenteditable", "true");
     }
     
     onDrop(event){
@@ -226,8 +227,7 @@ class CanvasElement{
 
 class ComponentProperties extends Component{
     static defaultProps = {
-        element: null,
-        onDataChange: null
+        element: null
     };
 
     static data = [
@@ -235,26 +235,52 @@ class ComponentProperties extends Component{
             name: 'text', description: 'Text Options', 
             children: [
                 {
-                    name: 'Alignment', 
+                    name: 'alignment', 
+                    text: 'Alignement',
                     input: { 
                         type: 'radio', 
                         options:[
-                            {text: 'Default', value:'default', fontAwesomeIcon: faRemoveFormat},
-                            {text: 'Left', value:'text-left', fontAwesomeIcon: faAlignLeft},
-                            {text: 'Center', value:'text-center', fontAwesomeIcon: faAlignCenter},
-                            {text: 'Right', value:'text-right', fontAwesomeIcon: faAlignRight}
+                            {text: <FontAwesomeIcon icon={faRemoveFormat} title="Défaut"/>, value:'default'},
+                            {text: <FontAwesomeIcon icon={faAlignLeft} title="Left"/>, value:'text-left' },
+                            {text: <FontAwesomeIcon icon={faAlignCenter} title="Center"/>, value:'text-center' },
+                            {text: <FontAwesomeIcon icon={faAlignRight} title="Right"/>, value:'text-right' }
                         ],
-                        defaultValue: ["default"]
+                        defaultValue: ['default'],
+                        onChange: function(el, value, data){
+                            if(el.classList.length > 0){
+                                for(let option of data.input.options){
+                                    el.classList.remove(option.value);
+                                }
+                            }
+                            
+                            if(data.input.defaultValue.join() === value){
+                                return;
+                            }
+
+                            el.classList.add(value)
+                        }
                     }
                 }
             ]
         }
     ];
-    
+
     constructor(props){
         super(props);
 
-        this.onChange = this.onChange.bind(this);
+        this.onDataChange = this.onDataChange.bind(this);
+
+        this.state = {properties: {}};
+    }
+
+    componentDidUpdate(prevProps, prevState){
+        if((this.props.element === null) || (prevProps.element === null)){
+            return;
+        }
+
+        if(this.props.element.tagName !== prevProps.element.tagName){
+            this.setState({properties: {}});
+        }
     }
 
     render(){
@@ -276,7 +302,7 @@ class ComponentProperties extends Component{
                         {item.children.map((item2, index2) => {
                             let formItem = 
                                 <Form.Group size="sm" key={index2} as={Row}  controlId={`formitem${index2}`}>
-                                    <Form.Label column sm="4">{item2.name}</Form.Label>
+                                    <Form.Label column sm="4">{item2.text}</Form.Label>
                                     <Col sm="8">
                                         {this.createFormControl(item2)}
                                     </Col>
@@ -294,23 +320,22 @@ class ComponentProperties extends Component{
 
     createFormControl(data){
         let result = null;
-
+        
         switch(data.input.type){
             case 'radio':
-                result = 
-                <ToggleButtonGroup type="radio" name={data.name} defaultValue={data.input.defaultValue}>
-                    {data.input.options.map((item, index) => {
-                        return <ToggleButton key={index} value={item.value}><FontAwesomeIcon icon={item.fontAwesomeIcon} title={item.text}/></ToggleButton>;
-                    })}
-                </ToggleButtonGroup>;
+                let value = (this.state.properties[data.name] ? this.state.properties[data.name] : data.input.defaultValue);
+                result = <ToggleButtons type="radio" name={data.name} defaultValue={value} 
+                                options={data.input.options} onChange={(event) => this.onDataChange(event, data, this.props.element)}/>;
                 break;
         }
 
         return result;
     }
 
-    onChange(event, iItem){
-        this.props.onDataChange(event, iItem);
+    onDataChange(event, componentData, element){
+        let properties = this.state.properties;
+        properties[event.target.name] = event.target.value;
+        this.setState({properties: properties}, componentData.input.onChange(this.props.element, event.target.value, componentData));
     }
 }
 
@@ -324,10 +349,10 @@ class VisualComponentList extends Component{
             {name: "Paragraph", type: 'native', tagName: 'p', properties: ['text']}
         ]},
         {name: 'Controls', children: [
-            {name: "Button", type: 'native', tagName: 'button', classList: ['btn', 'btn-primary']}
+            {name: "Button", type: 'native', tagName: 'button', classList: ['btn', 'btn-primary'], properties: []}
         ]},
         {name: 'Containers', children: [
-            {name: "Div", type: 'native', tagName: 'div'}
+            {name: "Div", type: 'native', tagName: 'div', properties: []}
         ]},
     ];
 
@@ -392,5 +417,92 @@ class ComponentItem extends Component
     
     onDragEnd(event){
         console.log('dragend');
+    }
+}
+
+class TreeStructure extends Component{
+    static defaultProps = {
+        canvas: null
+    };
+    
+    constructor(props){
+        super(props);
+
+        this.onCollapse = this.onCollapse.bind(this);
+
+        this.state = {collapsed: {}};
+    }
+
+    render(){
+        if(this.props.canvas === null){ return null; }
+        if(this.props.canvas.current === null){ return null; }
+
+        let window = this.props.canvas.current.contentWindow || this.props.canvas.current.contentDocument;
+        let body = window.document.body;
+
+        let treeView = this.createTreeViewData(body);
+
+        let main = <ul>{this.renderTreeView(treeView, 0)}</ul>;
+
+        return main;
+    }
+
+    renderTreeView(node, key){
+        key = key++;
+
+        let id = `id${key}`;
+
+        let result = null;
+            
+        if(node.children.length > 0){
+            result = 
+                <li key={key}>
+                    <span onClick={(event) => this.onCollapse(event, id)}>
+                        {this.state.collapsed[id] ? <FontAwesomeIcon icon={faAngleRight}/> : <FontAwesomeIcon icon={faAngleDown}/>}
+                        {` ${node.text}`}
+                    </span>
+                    {!this.state.collapsed[id] &&
+                        <ul>
+                            {node.children.map((item, index) => {
+                                return this.renderTreeView(item, key);
+                            })}
+                        </ul>
+                    }
+                </li>
+        }
+        else{
+            result = <li key={key}>
+                        <span>{`${node.text}`}</span>
+                    </li>;
+        }
+            
+        return result;
+    }
+
+    createTreeViewData(root){
+        let result = {text: root.tagName.toLowerCase(), children: []};
+
+        for(let child of root.children){
+            let obj = null;
+            if(child.children.length > 0){
+                obj = this.createTreeViewData(child);
+            }
+            else{
+                obj = {text: child.tagName.toLowerCase(), children: []};
+            }
+            result.children.push(obj);
+        }
+
+        return result;
+    }
+
+    onCollapse(event, id){
+        event.stopPropagation();
+        event.preventDefault();
+        console.log(event.currentTarget, id)
+
+        let collapsed = this.state.collapsed;
+        collapsed[id] = !collapsed[id] || false;
+        this.setState({collapsed: collapsed});
     }
 }

@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './libs/components/css/components.scss';
-//import './libs/components/css/canvas-content.scss';
-import {RecitRichEditor} from './libs/components/RecitRichEditor';
+import {RecitRichEditor} from './libs/components/Components';
 import {Options} from './Options';
  
 // Find all DOM containers

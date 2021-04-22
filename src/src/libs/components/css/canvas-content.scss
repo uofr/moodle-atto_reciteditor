@@ -6,14 +6,19 @@ html.canvas-content{
     body{
         margin:0; padding: 0;
 
-        &:hover{
+        .element-focus{
             border: $border-onhover-element;
+            opacity: .5;
+        }
+
+        &:hover{
+            @extend .element-focus;
         }
 
         h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover{
-            border: $border-onhover-element;
+            @extend .element-focus;
         }
 
-        *[data-selected="1"]{border: $border-onhover-element;}
+        *[data-selected="1"]{@extend .element-focus;}
     }
 }
