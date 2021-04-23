@@ -8,17 +8,20 @@ html.canvas-content{
 
         .element-focus{
             border: $border-onhover-element;
-            opacity: .5;
+            transform: scale(0.97);
+            padding: 3px;
         }
 
         &:hover{
             @extend .element-focus;
         }
 
-        h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover{
+        h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover, button:hover, p:hover{
             @extend .element-focus;
         }
 
         *[data-selected="1"]{@extend .element-focus;}
     }
+    .dropping-zone{border: 1px dashed  #32c35dfd; height: 50px; width: 50px;  transform: scale(0.97); 
+        display: inline-flex; margin-left: .5rem; margin-right: .5rem; margin-top: .5rem;}
 }

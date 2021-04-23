@@ -17,6 +17,7 @@ export class VisualHTMLBuilder extends Component
         this.onSelectElement = this.onSelectElement.bind(this);
         this.onDropElement = this.onDropElement.bind(this);
         this.onCollapse = this.onCollapse.bind(this);
+        this.htmlCleaning = this.htmlCleaning.bind(this);
 
         this.state = {device: 'xl', collapsed: ['0', '1', '2'], selectedElement: null};
 
@@ -127,10 +128,7 @@ export class VisualHTMLBuilder extends Component
     }
 
     onSelectElement(el){
-        console.log(el)
-        if(this.state.selectedElement){            
-            this.state.selectedElement.removeAttribute('data-selected');
-        }
+        this.htmlCleaning();
 
         if(el.getAttribute('data-selected') === '1'){
             el.removeAttribute('data-selected');
@@ -144,6 +142,7 @@ export class VisualHTMLBuilder extends Component
     }
 
     onDropElement(el){
+        this.htmlCleaning();
         this.forceUpdate();
     }    
 
@@ -160,6 +159,22 @@ export class VisualHTMLBuilder extends Component
         }
 
         return device;
+    }
+
+    htmlCleaning(){
+        // deselect the element if it is the case
+        if(this.state.selectedElement){            
+            this.state.selectedElement.removeAttribute('data-selected');
+        }
+
+        // remove the class dropping-zone of all elements
+        let canvas = this.canvas.current.contentWindow || this.canvas.current.contentDocument;
+        let items = canvas.document.querySelectorAll('.dropping-zone');
+
+        items.forEach(function(item) {
+            //item.classList.remove('dropping-zone');
+            item.remove();
+        });
     }
 }
 
@@ -182,18 +197,24 @@ class Canvas extends Component
 class CanvasElement{
     constructor(dom, onSelectCallback, onDropCallback){
         this.onDragOver = this.onDragOver.bind(this);
+        this.onDragEnter = this.onDragEnter.bind(this);
+        this.onDragLeave = this.onDragLeave.bind(this);
         this.onDrop = this.onDrop.bind(this);
         this.onClick = this.onClick.bind(this);
-        this.onDbClick = this.onDbClick.bind(this);
 
         this.onSelectCallback = onSelectCallback;
         this.onDropCallback = onDropCallback;
 
         this.dom = dom;
         this.dom.ondragover = this.onDragOver;
+        this.dom.ondragenter = this.onDragEnter;
+        this.dom.ondragleave = this.onDragLeave;
         this.dom.ondrop = this.onDrop;
         this.dom.onclick = this.onClick;
-        this.dom.ondblclick = this.onDbClick;
+
+        this.dragging
+        this.droppingZoneAfter = document.createElement("div");
+        this.droppingZoneAfter.classList.add("dropping-zone");
     }
 
     onClick(event){        
@@ -201,11 +222,6 @@ class CanvasElement{
         this.onSelectCallback(this.dom);
     }
 
-    onDbClick(event){
-        event.stopPropagation();
-        this.dom.setAttribute("contenteditable", "true");
-    }
-    
     onDrop(event){
         // it needs to stop propagation otherwise it will dispatch onFillInSlot in cascade. We want just assign a section to one single slot.
         event.stopPropagation();   
@@ -220,18 +236,59 @@ class CanvasElement{
                 el.classList.add(...componentData.classList); // add multiple classes using spread syntax
             }
             new CanvasElement(el, this.onSelectCallback, this.onDropCallback);
-            this.dom.appendChild(el);
+            
+            if(event.target.classList.contains('dropping-zone')){
+                event.target.replaceWith(el);
+            }
+            else if(event.currentTarget.tagName.toLowerCase() === "body"){
+                //this.dom.appendChild(el);
+                event.currentTarget.appendChild(el);
+            }
+            else{
+                console.log(`Fail to drop: `, event.target);
+            }
         }
         
         //let el = React.createElement(component.element, {});
         //ReactDOM.render(el, this.dom);
 
-        this.onDropCallback(this.dom);
+        this.onDropCallback(this.dom);     
+
+        return false;
     } 
     
     onDragOver(event){
         event.preventDefault(); // Necessary to allows us to drop.
-        console.log("hover")
+
+/*        if(!this.dom.classList.contains('dropping-zone')){
+            this.dom.classList.add('dropping-zone');
+        }*/
+        return false;
+    }
+
+    onDragEnter(event){
+        //console.log('enter')
+        //this.dom.classList.add('dropping-zone');
+
+        let elems = this.dom.querySelectorAll(".dropping-zone");
+        if(elems.length === 0){
+            if(this.dom.children.length > 0){
+                this.dom.insertBefore(this.createDroppingZone(), this.dom.firstChild);    
+            }
+
+            this.dom.appendChild(this.createDroppingZone());
+        }
+    }
+
+    onDragLeave(event){
+        //console.log('leave')
+        //this.dom.classList.remove('dropping-zone');
+    }
+
+    createDroppingZone(pos){
+        let el = document.createElement("div");
+        el.classList.add("dropping-zone");
+        return el;
     }
 }
 
@@ -459,25 +516,24 @@ class TreeStructure extends Component{
     }
 
     renderTreeView(node, key){
-        key = key + 1;
-
         let id = `id${key}`;
 
         let result = null;
             
-        let btn = <Button variant="link" onClick={() => this.props.onSelect(node.dom)}>{` ${node.text}`}</Button>;
+        let btn = <Button variant="link" className="p-0" onClick={() => this.props.onSelect(node.dom)}>{` ${node.text}`}</Button>;
         let icon = (this.state.collapsed[id] ? faAngleRight : faAngleDown);
 
         if(node.children.length > 0){
             result = 
                 <li key={key}>
                     <span >
-                        <FontAwesomeIcon icon={icon} onClick={(event) => this.onCollapse(event, id)}/>
+                        <FontAwesomeIcon className="mr-1" icon={icon} onClick={(event) => this.onCollapse(event, id)}/>
                         {btn}
                     </span>
                     {!this.state.collapsed[id] &&
                         <ul>
                             {node.children.map((item, index) => {
+                                key = key + 1
                                 return this.renderTreeView(item, key);
                             })}
                         </ul>

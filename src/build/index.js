@@ -97252,6 +97252,7 @@ function (_Component) {
     _this.onSelectElement = _this.onSelectElement.bind(_assertThisInitialized(_this));
     _this.onDropElement = _this.onDropElement.bind(_assertThisInitialized(_this));
     _this.onCollapse = _this.onCollapse.bind(_assertThisInitialized(_this));
+    _this.htmlCleaning = _this.htmlCleaning.bind(_assertThisInitialized(_this));
     _this.state = {
       device: 'xl',
       collapsed: ['0', '1', '2'],
@@ -97402,11 +97403,7 @@ function (_Component) {
   }, {
     key: "onSelectElement",
     value: function onSelectElement(el) {
-      console.log(el);
-
-      if (this.state.selectedElement) {
-        this.state.selectedElement.removeAttribute('data-selected');
-      }
+      this.htmlCleaning();
 
       if (el.getAttribute('data-selected') === '1') {
         el.removeAttribute('data-selected');
@@ -97421,6 +97418,7 @@ function (_Component) {
   }, {
     key: "onDropElement",
     value: function onDropElement(el) {
+      this.htmlCleaning();
       this.forceUpdate();
     }
   }, {
@@ -97466,6 +97464,22 @@ function (_Component) {
       }
 
       return device;
+    }
+  }, {
+    key: "htmlCleaning",
+    value: function htmlCleaning() {
+      // deselect the element if it is the case
+      if (this.state.selectedElement) {
+        this.state.selectedElement.removeAttribute('data-selected');
+      } // remove the class dropping-zone of all elements
+
+
+      var canvas = this.canvas.current.contentWindow || this.canvas.current.contentDocument;
+      var items = canvas.document.querySelectorAll('.dropping-zone');
+      items.forEach(function (item) {
+        //item.classList.remove('dropping-zone');
+        item.remove();
+      });
     }
   }]);
 
@@ -97518,16 +97532,21 @@ function () {
     _classCallCheck(this, CanvasElement);
 
     this.onDragOver = this.onDragOver.bind(this);
+    this.onDragEnter = this.onDragEnter.bind(this);
+    this.onDragLeave = this.onDragLeave.bind(this);
     this.onDrop = this.onDrop.bind(this);
     this.onClick = this.onClick.bind(this);
-    this.onDbClick = this.onDbClick.bind(this);
     this.onSelectCallback = onSelectCallback;
     this.onDropCallback = onDropCallback;
     this.dom = dom;
     this.dom.ondragover = this.onDragOver;
+    this.dom.ondragenter = this.onDragEnter;
+    this.dom.ondragleave = this.onDragLeave;
     this.dom.ondrop = this.onDrop;
     this.dom.onclick = this.onClick;
-    this.dom.ondblclick = this.onDbClick;
+    this.dragging;
+    this.droppingZoneAfter = document.createElement("div");
+    this.droppingZoneAfter.classList.add("dropping-zone");
   }
 
   _createClass(CanvasElement, [{
@@ -97535,12 +97554,6 @@ function () {
     value: function onClick(event) {
       event.stopPropagation();
       this.onSelectCallback(this.dom);
-    }
-  }, {
-    key: "onDbClick",
-    value: function onDbClick(event) {
-      event.stopPropagation();
-      this.dom.setAttribute("contenteditable", "true");
     }
   }, {
     key: "onDrop",
@@ -97561,19 +97574,59 @@ function () {
         }
 
         new CanvasElement(el, this.onSelectCallback, this.onDropCallback);
-        this.dom.appendChild(el);
+
+        if (event.target.classList.contains('dropping-zone')) {
+          event.target.replaceWith(el);
+        } else if (event.currentTarget.tagName.toLowerCase() === "body") {
+          //this.dom.appendChild(el);
+          event.currentTarget.appendChild(el);
+        } else {
+          console.log("Fail to drop: ", event.target);
+        }
       } //let el = React.createElement(component.element, {});
       //ReactDOM.render(el, this.dom);
 
 
       this.onDropCallback(this.dom);
+      return false;
     }
   }, {
     key: "onDragOver",
     value: function onDragOver(event) {
       event.preventDefault(); // Necessary to allows us to drop.
 
-      console.log("hover");
+      /*        if(!this.dom.classList.contains('dropping-zone')){
+                  this.dom.classList.add('dropping-zone');
+              }*/
+
+      return false;
+    }
+  }, {
+    key: "onDragEnter",
+    value: function onDragEnter(event) {
+      //console.log('enter')
+      //this.dom.classList.add('dropping-zone');
+      var elems = this.dom.querySelectorAll(".dropping-zone");
+
+      if (elems.length === 0) {
+        if (this.dom.children.length > 0) {
+          this.dom.insertBefore(this.createDroppingZone(), this.dom.firstChild);
+        }
+
+        this.dom.appendChild(this.createDroppingZone());
+      }
+    }
+  }, {
+    key: "onDragLeave",
+    value: function onDragLeave(event) {//console.log('leave')
+      //this.dom.classList.remove('dropping-zone');
+    }
+  }, {
+    key: "createDroppingZone",
+    value: function createDroppingZone(pos) {
+      var el = document.createElement("div");
+      el.classList.add("dropping-zone");
+      return el;
     }
   }]);
 
@@ -97965,12 +98018,12 @@ function (_Component6) {
     value: function renderTreeView(node, key) {
       var _this8 = this;
 
-      key = key + 1;
       var id = "id".concat(key);
       var result = null;
 
       var btn = _react.default.createElement(_reactBootstrap.Button, {
         variant: "link",
+        className: "p-0",
         onClick: function onClick() {
           return _this8.props.onSelect(node.dom);
         }
@@ -97982,11 +98035,13 @@ function (_Component6) {
         result = _react.default.createElement("li", {
           key: key
         }, _react.default.createElement("span", null, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
+          className: "mr-1",
           icon: icon,
           onClick: function onClick(event) {
             return _this8.onCollapse(event, id);
           }
         }), btn), !this.state.collapsed[id] && _react.default.createElement("ul", null, node.children.map(function (item, index) {
+          key = key + 1;
           return _this8.renderTreeView(item, key);
         })));
       } else {
@@ -98508,7 +98563,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52156" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53757" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
