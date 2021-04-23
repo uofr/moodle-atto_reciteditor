@@ -17,7 +17,7 @@ html {
     grid-row-gap: 5px;
     background-color: #212529;
     height: calc(100% - 56px);
-    grid-template-columns: minmax(auto, 20%) auto;
+    grid-template-columns: minmax(350px, 20%) auto;
     grid-template-rows: auto; }
   .visual-builder .left-area {
     grid-column-start: 1;
@@ -47,6 +47,12 @@ html {
       display: inline-flex;
       font-weight: 500;
       border-radius: 6px; }
+  .visual-builder .tree-view {
+    list-style: none;
+    padding-left: 0; }
+    .visual-builder .tree-view ul {
+      list-style: none;
+      padding-left: 1rem; }
 
 /*****************
  * SCREEN CAPTURE

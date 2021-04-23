@@ -97250,6 +97250,7 @@ function (_Component) {
     _this = _super.call(this, props);
     _this.onNavbarSelect = _this.onNavbarSelect.bind(_assertThisInitialized(_this));
     _this.onSelectElement = _this.onSelectElement.bind(_assertThisInitialized(_this));
+    _this.onDropElement = _this.onDropElement.bind(_assertThisInitialized(_this));
     _this.onCollapse = _this.onCollapse.bind(_assertThisInitialized(_this));
     _this.state = {
       device: 'xl',
@@ -97277,7 +97278,7 @@ function (_Component) {
       body.parentElement.classList.add("canvas-content");
       var content = "<div>a</div>"; // pure JS
 
-      new CanvasElement(body, this.onSelectElement); // React JS
+      new CanvasElement(body, this.onSelectElement, this.onDropElement); // React JS
       //body.appendChild(doc.firstChild);
       //ReactDOM.render(<CanvasElement dom={doc.firstChild} parent={body}/>, body);
     }
@@ -97360,7 +97361,8 @@ function (_Component) {
       }, "Arborescence"), _react.default.createElement(_reactBootstrap.Collapse, {
         "in": this.state.collapsed.includes('2')
       }, _react.default.createElement(_reactBootstrap.Card.Body, null, _react.default.createElement(TreeStructure, {
-        canvas: this.canvas
+        canvas: this.canvas,
+        onSelect: this.onSelectElement
       }))))), _react.default.createElement("div", {
         className: "center-area"
       }, _react.default.createElement(Canvas, null, _react.default.createElement("iframe", {
@@ -97400,6 +97402,8 @@ function (_Component) {
   }, {
     key: "onSelectElement",
     value: function onSelectElement(el) {
+      console.log(el);
+
       if (this.state.selectedElement) {
         this.state.selectedElement.removeAttribute('data-selected');
       }
@@ -97413,6 +97417,11 @@ function (_Component) {
       this.setState({
         selectedElement: el
       });
+    }
+  }, {
+    key: "onDropElement",
+    value: function onDropElement(el) {
+      this.forceUpdate();
     }
   }, {
     key: "getDeviceDimension",
@@ -97505,14 +97514,15 @@ Canvas.defaultProps = {
 var CanvasElement =
 /*#__PURE__*/
 function () {
-  function CanvasElement(dom, onSelectElement) {
+  function CanvasElement(dom, onSelectCallback, onDropCallback) {
     _classCallCheck(this, CanvasElement);
 
     this.onDragOver = this.onDragOver.bind(this);
     this.onDrop = this.onDrop.bind(this);
     this.onClick = this.onClick.bind(this);
     this.onDbClick = this.onDbClick.bind(this);
-    this.onSelectElement = onSelectElement;
+    this.onSelectCallback = onSelectCallback;
+    this.onDropCallback = onDropCallback;
     this.dom = dom;
     this.dom.ondragover = this.onDragOver;
     this.dom.ondrop = this.onDrop;
@@ -97524,7 +97534,7 @@ function () {
     key: "onClick",
     value: function onClick(event) {
       event.stopPropagation();
-      this.onSelectElement(this.dom);
+      this.onSelectCallback(this.dom);
     }
   }, {
     key: "onDbClick",
@@ -97550,11 +97560,13 @@ function () {
 
         }
 
-        new CanvasElement(el, this.onSelectElement);
+        new CanvasElement(el, this.onSelectCallback, this.onDropCallback);
         this.dom.appendChild(el);
       } //let el = React.createElement(component.element, {});
       //ReactDOM.render(el, this.dom);
 
+
+      this.onDropCallback(this.dom);
     }
   }, {
     key: "onDragOver",
@@ -97627,7 +97639,7 @@ function (_Component3) {
       var main = properties.map(function (item, index) {
         var form = _react.default.createElement(_reactBootstrap.Form, {
           key: index
-        }, _react.default.createElement("h4", null, item.description), item.children.map(function (item2, index2) {
+        }, _react.default.createElement("h6", null, item.description), item.children.map(function (item2, index2) {
           var formItem = _react.default.createElement(_reactBootstrap.Form.Group, {
             size: "sm",
             key: index2,
@@ -97942,7 +97954,9 @@ function (_Component6) {
       var body = window.document.body;
       var treeView = this.createTreeViewData(body);
 
-      var main = _react.default.createElement("ul", null, this.renderTreeView(treeView, 0));
+      var main = _react.default.createElement("ul", {
+        className: "tree-view"
+      }, this.renderTreeView(treeView, 0));
 
       return main;
     }
@@ -97951,41 +97965,48 @@ function (_Component6) {
     value: function renderTreeView(node, key) {
       var _this8 = this;
 
-      key = key++;
+      key = key + 1;
       var id = "id".concat(key);
       var result = null;
+
+      var btn = _react.default.createElement(_reactBootstrap.Button, {
+        variant: "link",
+        onClick: function onClick() {
+          return _this8.props.onSelect(node.dom);
+        }
+      }, " ".concat(node.text));
+
+      var icon = this.state.collapsed[id] ? _freeSolidSvgIcons.faAngleRight : _freeSolidSvgIcons.faAngleDown;
 
       if (node.children.length > 0) {
         result = _react.default.createElement("li", {
           key: key
-        }, _react.default.createElement("span", {
+        }, _react.default.createElement("span", null, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
+          icon: icon,
           onClick: function onClick(event) {
             return _this8.onCollapse(event, id);
           }
-        }, this.state.collapsed[id] ? _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
-          icon: _freeSolidSvgIcons.faAngleRight
-        }) : _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
-          icon: _freeSolidSvgIcons.faAngleDown
-        }), " ".concat(node.text)), !this.state.collapsed[id] && _react.default.createElement("ul", null, node.children.map(function (item, index) {
+        }), btn), !this.state.collapsed[id] && _react.default.createElement("ul", null, node.children.map(function (item, index) {
           return _this8.renderTreeView(item, key);
         })));
       } else {
         result = _react.default.createElement("li", {
           key: key
-        }, _react.default.createElement("span", null, "".concat(node.text)));
+        }, _react.default.createElement("span", null, btn));
       }
 
       return result;
     }
   }, {
     key: "createTreeViewData",
-    value: function createTreeViewData(root) {
+    value: function createTreeViewData(node) {
       var result = {
-        text: root.tagName.toLowerCase(),
+        text: node.tagName.toLowerCase(),
+        dom: node,
         children: []
       };
 
-      var _iterator4 = _createForOfIteratorHelper(root.children),
+      var _iterator4 = _createForOfIteratorHelper(node.children),
           _step4;
 
       try {
@@ -97998,6 +98019,7 @@ function (_Component6) {
           } else {
             obj = {
               text: child.tagName.toLowerCase(),
+              dom: child,
               children: []
             };
           }
@@ -98030,7 +98052,8 @@ function (_Component6) {
 }(_react.Component);
 
 TreeStructure.defaultProps = {
-  canvas: null
+  canvas: null,
+  onSelect: null
 };
 },{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","@fortawesome/free-solid-svg-icons":"../node_modules/@fortawesome/free-solid-svg-icons/index.es.js","./Components":"libs/components/Components.js","@fortawesome/react-fontawesome":"../node_modules/@fortawesome/react-fontawesome/index.es.js"}],"libs/components/RecitRichEditor.js":[function(require,module,exports) {
 "use strict";
@@ -98485,7 +98508,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58079" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52156" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -15,7 +15,7 @@ html{
     height: 100%;
     .main{
         padding: 10px; display: grid; grid-column-gap: 5px; grid-row-gap: 5px; background-color: #212529; height: calc(100% - 56px);
-        grid-template-columns: minmax(auto, 20%) auto; grid-template-rows: auto;
+        grid-template-columns: minmax(350px, 20%) auto; grid-template-rows: auto;
     }
     .left-area{ 
         grid-column-start: 1; grid-column-end: 1; 
@@ -34,6 +34,11 @@ html{
                  font-weight: 500; border-radius: 6px;
             }
         }
+    }
+
+    .tree-view{
+        list-style: none; padding-left: 0;
+        ul{list-style: none; padding-left: 1rem; }
     }
 }
 

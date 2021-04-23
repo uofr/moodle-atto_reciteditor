@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Nav, Card, Navbar, Form, Collapse, Row, Col  } from 'react-bootstrap';
+import { Nav, Card, Navbar, Form, Collapse, Row, Col, Button  } from 'react-bootstrap';
 import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
 import { ToggleButtons} from './Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,6 +15,7 @@ export class VisualHTMLBuilder extends Component
 
         this.onNavbarSelect = this.onNavbarSelect.bind(this);
         this.onSelectElement = this.onSelectElement.bind(this);
+        this.onDropElement = this.onDropElement.bind(this);
         this.onCollapse = this.onCollapse.bind(this);
 
         this.state = {device: 'xl', collapsed: ['0', '1', '2'], selectedElement: null};
@@ -42,7 +43,7 @@ export class VisualHTMLBuilder extends Component
         let content = "<div>a</div>";                
 
         // pure JS
-        new CanvasElement(body, this.onSelectElement);
+        new CanvasElement(body, this.onSelectElement, this.onDropElement);
 
         // React JS
         //body.appendChild(doc.firstChild);
@@ -91,7 +92,7 @@ export class VisualHTMLBuilder extends Component
                         <Card>
                             <Card.Header  onClick={() => this.onCollapse('2')}>Arborescence</Card.Header>
                             <Collapse in={this.state.collapsed.includes('2')}>
-                                <Card.Body><TreeStructure canvas={this.canvas} /></Card.Body>
+                                <Card.Body><TreeStructure canvas={this.canvas} onSelect={this.onSelectElement} /></Card.Body>
                             </Collapse>
                         </Card>
                     </div>
@@ -126,6 +127,7 @@ export class VisualHTMLBuilder extends Component
     }
 
     onSelectElement(el){
+        console.log(el)
         if(this.state.selectedElement){            
             this.state.selectedElement.removeAttribute('data-selected');
         }
@@ -140,6 +142,10 @@ export class VisualHTMLBuilder extends Component
 
         this.setState({selectedElement: el});
     }
+
+    onDropElement(el){
+        this.forceUpdate();
+    }    
 
     getDeviceDimension(){
         let device = null;
@@ -174,13 +180,15 @@ class Canvas extends Component
 }
 
 class CanvasElement{
-    constructor(dom, onSelectElement){
+    constructor(dom, onSelectCallback, onDropCallback){
         this.onDragOver = this.onDragOver.bind(this);
         this.onDrop = this.onDrop.bind(this);
         this.onClick = this.onClick.bind(this);
         this.onDbClick = this.onDbClick.bind(this);
 
-        this.onSelectElement = onSelectElement;
+        this.onSelectCallback = onSelectCallback;
+        this.onDropCallback = onDropCallback;
+
         this.dom = dom;
         this.dom.ondragover = this.onDragOver;
         this.dom.ondrop = this.onDrop;
@@ -190,7 +198,7 @@ class CanvasElement{
 
     onClick(event){        
         event.stopPropagation();
-        this.onSelectElement(this.dom);
+        this.onSelectCallback(this.dom);
     }
 
     onDbClick(event){
@@ -211,12 +219,14 @@ class CanvasElement{
             if(componentData.classList){
                 el.classList.add(...componentData.classList); // add multiple classes using spread syntax
             }
-            new CanvasElement(el, this.onSelectElement);
+            new CanvasElement(el, this.onSelectCallback, this.onDropCallback);
             this.dom.appendChild(el);
         }
         
         //let el = React.createElement(component.element, {});
         //ReactDOM.render(el, this.dom);
+
+        this.onDropCallback(this.dom);
     } 
     
     onDragOver(event){
@@ -298,7 +308,7 @@ class ComponentProperties extends Component{
                 properties.map((item, index) => {
                     let form = 
                     <Form key={index}>
-                        <h4>{item.description}</h4>
+                        <h6>{item.description}</h6>
                         {item.children.map((item2, index2) => {
                             let formItem = 
                                 <Form.Group size="sm" key={index2} as={Row}  controlId={`formitem${index2}`}>
@@ -422,7 +432,8 @@ class ComponentItem extends Component
 
 class TreeStructure extends Component{
     static defaultProps = {
-        canvas: null
+        canvas: null,
+        onSelect: null
     };
     
     constructor(props){
@@ -442,24 +453,27 @@ class TreeStructure extends Component{
 
         let treeView = this.createTreeViewData(body);
 
-        let main = <ul>{this.renderTreeView(treeView, 0)}</ul>;
+        let main = <ul className='tree-view'>{this.renderTreeView(treeView, 0)}</ul>;
 
         return main;
     }
 
     renderTreeView(node, key){
-        key = key++;
+        key = key + 1;
 
         let id = `id${key}`;
 
         let result = null;
             
+        let btn = <Button variant="link" onClick={() => this.props.onSelect(node.dom)}>{` ${node.text}`}</Button>;
+        let icon = (this.state.collapsed[id] ? faAngleRight : faAngleDown);
+
         if(node.children.length > 0){
             result = 
                 <li key={key}>
-                    <span onClick={(event) => this.onCollapse(event, id)}>
-                        {this.state.collapsed[id] ? <FontAwesomeIcon icon={faAngleRight}/> : <FontAwesomeIcon icon={faAngleDown}/>}
-                        {` ${node.text}`}
+                    <span >
+                        <FontAwesomeIcon icon={icon} onClick={(event) => this.onCollapse(event, id)}/>
+                        {btn}
                     </span>
                     {!this.state.collapsed[id] &&
                         <ul>
@@ -471,24 +485,22 @@ class TreeStructure extends Component{
                 </li>
         }
         else{
-            result = <li key={key}>
-                        <span>{`${node.text}`}</span>
-                    </li>;
+            result = <li key={key}><span>{btn}</span></li>;
         }
             
         return result;
     }
 
-    createTreeViewData(root){
-        let result = {text: root.tagName.toLowerCase(), children: []};
+    createTreeViewData(node){
+        let result = {text: node.tagName.toLowerCase(), dom: node, children: []};
 
-        for(let child of root.children){
+        for(let child of node.children){
             let obj = null;
             if(child.children.length > 0){
                 obj = this.createTreeViewData(child);
             }
             else{
-                obj = {text: child.tagName.toLowerCase(), children: []};
+                obj = {text: child.tagName.toLowerCase(),  dom: child, children: []};
             }
             result.children.push(obj);
         }
