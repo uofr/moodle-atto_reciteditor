@@ -11,11 +11,11 @@ html{
     }
 }
 
-.visual-builder{
+.layout-builder{
     height: 100%;
     .main{
         padding: 10px; display: grid; grid-column-gap: 5px; grid-row-gap: 5px; background-color: #212529; height: calc(100% - 56px);
-        grid-template-columns: minmax(350px, 20%) auto; grid-template-rows: auto;
+        grid-template-columns: minmax(450px, 20%) auto; grid-template-rows: auto;
     }
     .left-area{ 
         grid-column-start: 1; grid-column-end: 1; 
@@ -23,18 +23,23 @@ html{
     }
     .center-area{ 
         grid-column-start: 2; grid-column-end: 2; 
-        .canvas{margin: auto; background-color: #FFF; border: 0; }
+        .canvas{
+            margin: auto; background-color: #FFF; border: 0; 
+        }        
     }
     .component-list{
+        .tab-content{padding: .5rem;}
         ul{list-style: none; padding-left: 0;
             .component-section{ font-weight: 500;}
-            .component-item{
-                background-color: #007bff; color: #FFF; border: 1px solid #007bff;
-                 margin: 3px; padding: 4px; text-align: center; cursor: grab; display: inline-flex;
+            .token{
+                background-color: #343a40; color: #FFF;
+                 margin: 3px; padding: 5px; text-align: center; cursor: grab; display: inline-flex;
                  font-weight: 500; border-radius: 6px;
             }
         }
     }
+    
+    .floating-menu{ position:absolute;}
 
     .tree-view{
         list-style: none; padding-left: 0;

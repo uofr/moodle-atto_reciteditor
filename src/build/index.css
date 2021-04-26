@@ -8,49 +8,52 @@ html {
     html body #root {
       height: 100%; }
 
-.visual-builder {
+.layout-builder {
   height: 100%; }
-  .visual-builder .main {
+  .layout-builder .main {
     padding: 10px;
     display: grid;
     grid-column-gap: 5px;
     grid-row-gap: 5px;
     background-color: #212529;
     height: calc(100% - 56px);
-    grid-template-columns: minmax(350px, 20%) auto;
+    grid-template-columns: minmax(450px, 20%) auto;
     grid-template-rows: auto; }
-  .visual-builder .left-area {
+  .layout-builder .left-area {
     grid-column-start: 1;
     grid-column-end: 1; }
-    .visual-builder .left-area .card {
+    .layout-builder .left-area .card {
       margin-bottom: 1rem; }
-  .visual-builder .center-area {
+  .layout-builder .center-area {
     grid-column-start: 2;
     grid-column-end: 2; }
-    .visual-builder .center-area .canvas {
+    .layout-builder .center-area .canvas {
       margin: auto;
       background-color: #FFF;
       border: 0; }
-  .visual-builder .component-list ul {
+  .layout-builder .component-list .tab-content {
+    padding: .5rem; }
+  .layout-builder .component-list ul {
     list-style: none;
     padding-left: 0; }
-    .visual-builder .component-list ul .component-section {
+    .layout-builder .component-list ul .component-section {
       font-weight: 500; }
-    .visual-builder .component-list ul .component-item {
-      background-color: #007bff;
+    .layout-builder .component-list ul .token {
+      background-color: #343a40;
       color: #FFF;
-      border: 1px solid #007bff;
       margin: 3px;
-      padding: 4px;
+      padding: 5px;
       text-align: center;
       cursor: grab;
       display: inline-flex;
       font-weight: 500;
       border-radius: 6px; }
-  .visual-builder .tree-view {
+  .layout-builder .floating-menu {
+    position: absolute; }
+  .layout-builder .tree-view {
     list-style: none;
     padding-left: 0; }
-    .visual-builder .tree-view ul {
+    .layout-builder .tree-view ul {
       list-style: none;
       padding-left: 1rem; }
 

@@ -17,7 +17,7 @@ export class VisualWordProcessor extends Component
 {
     static defaultProps = {
         content: "",
-        onVisualBuilder: null,
+        onSelectBuilder: null,
         onChange: null
     };
 
@@ -60,7 +60,7 @@ export class VisualWordProcessor extends Component
                         buttonsBar={<ButtonsBar selection={this.state.selection} history={this.state.history} onUndo={this.undoHistory} onRedo={this.redoHistory}
                                 flags={this.state.flags} onHighlighter={() => this.onSetFlag('highlighter')} onCodeSource={this.onCodeSource}
                                 onMathFormula={() => this.onSetFlag('mathFormula')} onScreenCapture={this.onScreenCapture} onMyScript={this.onMyScript}
-                                    onShowHtmlEditor={this.props.onVisualBuilder}/>} 
+                                    onShowHtmlEditor={() => this.props.onSelectBuilder('layout')}/>} 
                         workArea={this.getWorkArea()}
                         footerBar={<StatusBar selection={this.state.selection} />}>
                         {this.state.flags.mathFormula && (this.state.selection !== null) &&

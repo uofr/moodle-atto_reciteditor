@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { VisualWordProcessor } from './VisualWordProcessor';
-import { VisualHTMLBuilder } from './VisualHTMLBuilder';
+import { LayoutBuilder } from './layout-builder/LayoutBuilder';
 
 export class RecitRichEditor extends Component{
     static defaultProps = {
@@ -12,10 +12,10 @@ export class RecitRichEditor extends Component{
     constructor(props){
         super(props);
 
-        this.onVisualBuilder = this.onVisualBuilder.bind(this);
+        this.onSelectBuilder = this.onSelectBuilder.bind(this);
         this.onChange = this.onChange.bind(this);
 
-        this.state = {editor: '1'};
+        this.state = {builder: 'layout'};
 
         // the content is not in the state because we don't want to refresh the component every time the user types something. This moves the caret to the beginning of the content.
         this.content = props.content; 
@@ -23,10 +23,10 @@ export class RecitRichEditor extends Component{
 
 	render(){
 		let main = 
-                this.state.editor === "0" ? 
-                    <VisualWordProcessor content={this.content} onVisualBuilder={this.onVisualBuilder} onChange={this.onChange}/> 
+                this.state.builder === "word" ? 
+                    <VisualWordProcessor content={this.content} onSelectBuilder={this.onSelectBuilder} onChange={this.onChange}/> 
                     : 
-                    <VisualHTMLBuilder content={this.content}/>
+                    <LayoutBuilder content={this.content} onSelectBuilder={this.onSelectBuilder}/>
 		return (main);
     }
     
@@ -40,6 +40,10 @@ export class RecitRichEditor extends Component{
         if(forceUpdate){
             this.forceUpdate();
         }
+    }
+
+    onSelectBuilder(option){
+        this.setState({builder: option});
     }
 
     onVisualBuilder(){
