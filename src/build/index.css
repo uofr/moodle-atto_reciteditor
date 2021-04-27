@@ -36,7 +36,7 @@ html {
   .layout-builder .component-list ul {
     list-style: none;
     padding-left: 0; }
-    .layout-builder .component-list ul .component-section {
+    .layout-builder .component-list ul .token-section {
       font-weight: 500; }
     .layout-builder .component-list ul .token {
       background-color: #343a40;

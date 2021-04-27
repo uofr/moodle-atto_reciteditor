@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { ButtonToolbar, ButtonGroup, Button, Modal  } from 'react-bootstrap';
-import {faObjectGroup, faEdit, faArrowsAlt, faArrowUp,faArrowDown, faTrashAlt, faClone} from '@fortawesome/free-solid-svg-icons';
+import { ButtonToolbar, ButtonGroup, Button, Modal, Form, Col } from 'react-bootstrap';
+import {faObjectGroup, faEdit, faArrowsAlt, faArrowUp,faArrowDown, faTrashAlt, faClone, faSave, faTimes} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export class Canvas extends Component
@@ -37,12 +37,16 @@ export class CanvasElement{
         this.dom.ondrop = this.onDrop;
         this.dom.onclick = this.onClick;
 
-        this.dragging
         this.droppingZoneAfter = document.createElement("div");
         this.droppingZoneAfter.classList.add("dropping-zone");
+
+        for(let child of this.dom.childNodes){
+            new CanvasElement(child, this.onSelectCallback, this.onDropCallback);
+        }
     }
 
     onClick(event){        
+        console.log("a")
         event.stopPropagation();
         this.onSelectCallback(this.dom);
     }
@@ -53,15 +57,22 @@ export class CanvasElement{
 
         let componentData = JSON.parse(event.dataTransfer.getData("componentData"));
 
-        //let doc = new DOMParser().parseFromString(content, "text/xml");
+        let el = null;
         if(componentData.type === 'native'){
-            let el = document.createElement(componentData.tagName);
+            el = document.createElement(componentData.tagName);
             el.innerText = componentData.name;
             if(componentData.classList){
                 el.classList.add(...componentData.classList); // add multiple classes using spread syntax
             }
+        }
+        else if(componentData.type === 'custom'){
+            el = new DOMParser().parseFromString(componentData.htmlString, "text/html");
+            el = el.body.firstChild;
+        }
+        
+        if(el !== null){
             new CanvasElement(el, this.onSelectCallback, this.onDropCallback);
-            
+
             if(event.target.classList.contains('dropping-zone')){
                 event.target.replaceWith(el);
             }
@@ -84,25 +95,19 @@ export class CanvasElement{
     
     onDragOver(event){
         event.preventDefault(); // Necessary to allows us to drop.
-
-/*        if(!this.dom.classList.contains('dropping-zone')){
-            this.dom.classList.add('dropping-zone');
-        }*/
         return false;
     }
 
     onDragEnter(event){
-        //console.log('enter')
-        //this.dom.classList.add('dropping-zone');
-
-        let elems = this.dom.querySelectorAll(".dropping-zone");
-        if(elems.length === 0){
-            if(this.dom.children.length > 0){
-                this.dom.insertBefore(this.createDroppingZone(), this.dom.firstChild);    
-            }
-
-            this.dom.appendChild(this.createDroppingZone());
+        if((this.dom.firstElementChild !== null) && (this.dom.firstElementChild.classList.contains("dropping-zone"))){
+            return;
         }
+
+        if(this.dom.children.length > 0){
+            this.dom.insertBefore(this.createDroppingZone(), this.dom.firstChild);    
+        }
+
+        this.dom.appendChild(this.createDroppingZone());
     }
 
     onDragLeave(event){
@@ -123,7 +128,7 @@ export class FloatingMenu extends Component{
         selectedElement: null,
         onDeleteElement: null,
         onRefresh: null,
-        onCreateComponent: null,
+        onCreateCustomComponent: null,
         onCreateCanvasElement: null
     };      
 
@@ -134,9 +139,10 @@ export class FloatingMenu extends Component{
         this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
-        this.onCreateComponent = this.onCreateComponent.bind(this);
+        this.showModal = this.showModal.bind(this);
+        this.onCreateCustomComponent = this.onCreateCustomComponent.bind(this);
 
-        this.state = {showNewComponent: false};
+        this.state = {showModal: false};
     }
 
     render(){
@@ -157,27 +163,14 @@ export class FloatingMenu extends Component{
                     <ButtonGroup size="sm">
                         <Button onClick={this.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
                         <Button><FontAwesomeIcon icon={faArrowsAlt} title="Glisser / déposer"/></Button>
-                        <Button onClick={() => this.onCreateComponent(true)}><FontAwesomeIcon icon={faObjectGroup} title="Créer un composant"/></Button>
+                        <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faObjectGroup} title="Créer un composant"/></Button>
                         <Button onClick={this.onMoveNodeUp}  disabled={this.props.selectedElement.previousSibling === null}><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
                         <Button onClick={this.onMoveNodeDown} disabled={this.props.selectedElement.nextSibling === null}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>
                         <Button onClick={this.onCloneNode}><FontAwesomeIcon icon={faClone} title="Dupliquer"/></Button>
                         <Button onClick={() => this.props.onDeleteElement()}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                     </ButtonGroup>
                 </ButtonToolbar>
-
-                <Modal show={this.state.showNewComponent} onHide={() => this.onCreateComponent(false)} backdrop="static" keyboard={false} >
-                    <Modal.Header closeButton>
-                        <Modal.Title>Modal title</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                    I will not close if you click outside me. Don't even try to press
-                    escape key.
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => this.onCreateComponent(false)}>Close</Button>
-                        <Button variant="primary">Understood</Button>
-                    </Modal.Footer>
-                </Modal>
+                {this.state.showModal && <CustomComponentForm onClose={() => this.showModal(false)} onSave={this.onCreateCustomComponent}/>}
             </div>
         return main;
     }
@@ -209,7 +202,64 @@ export class FloatingMenu extends Component{
         this.props.onCreateCanvasElement(el);
     }
 
-    onCreateComponent(show){
-        this.setState({showNewComponent: show});
+    showModal(show){
+        this.setState({showModal: show});
+    }
+
+    onCreateCustomComponent(data){
+        this.props.onCreateCustomComponent(data);
+        this.showModal(false);
+    }
+}
+
+class CustomComponentForm extends Component{
+    static defaultProps = {
+        onClose: null,
+        onSave: null
+    };    
+
+    constructor(props){
+        super(props);
+
+        this.onDataChange = this.onDataChange.bind(this);
+
+        this.state = {data: {section: "", name: ""}};
+    }
+
+    render(){
+        let main = 
+            <Modal show={true} onHide={this.props.onClose} backdrop="static" keyboard={false} >
+                <Modal.Header closeButton>
+                    <Modal.Title>Créer un nouveau composant</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form >
+                        <Form.Row>
+                            <Form.Group as={Col}>
+                                <Form.Label>{"Section"}</Form.Label>
+                                <Form.Control type="text" required value={this.state.data.section} name="section" onChange={this.onDataChange}/>
+                            </Form.Group>                           
+                        </Form.Row>
+                        <Form.Row>
+                            <Form.Group as={Col}>
+                                <Form.Label>{"Nom"}</Form.Label>
+                                <Form.Control type="text" required value={this.state.data.name} name="name" onChange={this.onDataChange}/>
+                            </Form.Group>
+                        </Form.Row>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={this.props.onClose}><FontAwesomeIcon  icon={faTimes} title="Annuler"/>{" "}Annuler</Button>
+                    <Button variant="success" onClick={() => this.props.onSave(this.state.data)}><FontAwesomeIcon  icon={faSave} title="Enregistrer"/>{" "}Enregistrer</Button>
+                </Modal.Footer>
+            </Modal>
+
+        return main;
+    }
+
+    onDataChange(event){
+        let data = this.state.data;
+        data[event.target.name] = event.target.value;
+        this.setState({data: data});
     }
 }

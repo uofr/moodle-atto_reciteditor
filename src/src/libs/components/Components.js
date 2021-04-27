@@ -5,6 +5,8 @@
 import "./css/components.scss";
 
 export * from './ToggleButtons';
+export * from './InputNumber';
+export * from './ComboBox';
 export * from './RecitRichEditor';
 
 export default class Components{

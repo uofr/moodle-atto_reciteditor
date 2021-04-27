@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Form, Row, Col, Nav, Tab  } from 'react-bootstrap';
-import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight} from '@fortawesome/free-solid-svg-icons';
+import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button  } from 'react-bootstrap';
+import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faEdit, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 import { ToggleButtons} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -120,10 +120,11 @@ export class ComponentProperties extends Component{
 
 export class VisualComponentList extends Component{
     static defaultProps = {
+        customHtmlComponentList: [],
         onDragEnd: null
     };
 
-    static data = [
+    static htmlElementList = [
         {name: 'Text', children: [
             {name: "Heading", type: 'native', tagName: 'h1', properties: ['text']},
             {name: "Paragraph", type: 'native', tagName: 'p', properties: ['text']}
@@ -137,7 +138,7 @@ export class VisualComponentList extends Component{
     ];
 
     static getComponent(tagName){
-        for(let section of VisualComponentList.data){
+        for(let section of VisualComponentList.htmlElementList){
             for(let item of section.children){
                 if(item.tagName === tagName){
                     return item;
@@ -171,19 +172,9 @@ export class VisualComponentList extends Component{
                     </Nav.Item>
                 </Nav>
                 <br/>
-                {this.state.tab === "0" &&
-                    VisualComponentList.data.map((item, index) => {
-                        let branch = 
-                            <ul key={index}>
-                                <li key={index} className='component-section'>{item.name}</li>
-                                {item.children.map((item2, index2) => {
-                                    return (<Token data={item2} key={index2} onDragEnd={this.props.onDragEnd}/>);
-                                })}
-                            </ul>
+                {this.state.tab === "0" && <TokenList dataProvider={VisualComponentList.htmlElementList} onDragEnd={this.props.onDragEnd}/>}
 
-                        return (branch);
-                    })
-                }
+                {this.state.tab === "1" && <TokenList dataProvider={this.props.customHtmlComponentList} onDragEnd={this.props.onDragEnd}/>}
             </div>;
 
         return main;
@@ -191,6 +182,62 @@ export class VisualComponentList extends Component{
 
     onSelectTab(k){
         this.setState({tab: k});
+    }
+}
+
+class TokenList extends Component{
+    static defaultProps = {
+        dataProvider: [],
+        onDragEnd: null
+    };
+
+    constructor(props){
+        super(props);
+
+        this.onEdit = this.onEdit.bind(this);
+        this.onDelete = this.onDelete.bind(this);
+        this.onHover = this.onHover.bind(this);
+
+        this.state = {showMenu: -1};
+    }
+
+    render(){
+        let main =
+            this.props.dataProvider.map((item, index) => {
+                let branch = 
+                    <ul key={index}>
+                        <li key={index} className='token-section' onMouseEnter={() => this.onHover(index)} onMouseLeave={() => this.onHover(-1)}>
+                            {item.name}
+                            {this.state.showMenu === index &&
+                                <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
+                                    <ButtonGroup size="sm">
+                                        <Button onClick={this.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
+                                        <Button onClick={this.onDelete}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                                    </ButtonGroup>
+                                </ButtonToolbar>
+                            }   
+                        </li>
+                        {item.children.map((item2, index2) => {
+                            return (<Token data={item2} key={index2} onDragEnd={this.props.onDragEnd}/>);
+                        })}
+                    </ul>
+
+                return (branch);
+            });
+
+        return main;
+    }
+
+    onHover(index){
+        this.setState({showMenu: index});
+    }
+
+    onEdit(){
+
+    }
+
+    onDelete(){
+
     }
 }
 
@@ -211,7 +258,7 @@ class Token extends Component
 	render(){
 		let main = 
             <li className="token" draggable="true" onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}>
-                {this.props.data.name}
+                {this.props.data.name}                
             </li>;
 
 		return main;

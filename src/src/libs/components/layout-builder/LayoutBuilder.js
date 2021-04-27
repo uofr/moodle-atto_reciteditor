@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {TreeView} from './TreeView';
 import {Canvas, CanvasElement, FloatingMenu} from './Canvas';
 import {ComponentProperties, VisualComponentList} from './ComponentsCollection';
+import {Cookies} from '../../utils/Cookies';
 
 export class LayoutBuilder extends Component
 {
@@ -24,10 +25,10 @@ export class LayoutBuilder extends Component
         this.onDragEnd = this.onDragEnd.bind(this);
         this.onCollapse = this.onCollapse.bind(this);
         this.htmlCleaning = this.htmlCleaning.bind(this);
-        this.onCreateComponent = this.onCreateComponent.bind(this);
+        this.onCreateCustomComponent = this.onCreateCustomComponent.bind(this);
         this.onCreateCanvasElement = this.onCreateCanvasElement.bind(this);
 
-        this.state = {device: 'xl', collapsed: ['0', '1', '2'], selectedElement: null};
+        this.state = {device: 'xl', collapsed: ['0', '1', '2'], selectedElement: null, data: {customHtmlComponentList: []}};
 
         this.canvas = React.createRef();
     }
@@ -49,14 +50,18 @@ export class LayoutBuilder extends Component
 
         body.parentElement.classList.add("canvas-content");
 
-        let content = "<div>a</div>";                
-
         // pure JS
         this.onCreateCanvasElement(body);
 
         // React JS
         //body.appendChild(doc.firstChild);
         
+        let tmp = Cookies.get('appData', null);
+        if(tmp !== null){
+            tmp = JSON.parse(tmp);
+            let data = {customHtmlComponentList: tmp.customHtmlComponentList};
+            this.setState({data: data})
+        }
     }
 
 	render(){
@@ -87,7 +92,7 @@ export class LayoutBuilder extends Component
                         <Card>
                             <Card.Header onClick={() => this.onCollapse('0')}>Composants</Card.Header>
                             <Collapse in={this.state.collapsed.includes('0')}>
-                                <Card.Body><VisualComponentList onDragEnd={this.onDragEnd}/></Card.Body>
+                                <Card.Body><VisualComponentList customHtmlComponentList={this.state.data.customHtmlComponentList} onDragEnd={this.onDragEnd}/></Card.Body>
                             </Collapse>
                         </Card>
 
@@ -112,7 +117,7 @@ export class LayoutBuilder extends Component
                         <Canvas>
                             <iframe ref={this.canvas} className="canvas" style={this.getDeviceDimension()}></iframe>
                             <FloatingMenu canvas={this.canvas} selectedElement={this.state.selectedElement} onDeleteElement={this.onDeleteElement} onRefresh={this.onRefresh}
-                                        onCreateComponent={this.onCreateComponent} onCreateCanvasElement={this.onCreateCanvasElement}/>
+                                        onCreateCustomComponent={this.onCreateCustomComponent} onCreateCanvasElement={this.onCreateCanvasElement}/>
                         </Canvas>
                     </div>
                 </div>
@@ -148,7 +153,6 @@ export class LayoutBuilder extends Component
         // if the selected element receives another click then it ignores it
         if((Object.is(el, this.state.selectedElement)) && (this.state.selectedElement !== null)){ return; }
 
-        console.log(el)
         this.htmlCleaning();
 
         if(el.tagName.toLowerCase() === 'body'){ 
@@ -163,7 +167,7 @@ export class LayoutBuilder extends Component
                 el.setAttribute('data-selected', '1');
             }
         }
-
+console.log(el)
         this.setState({selectedElement: el});
     }
 
@@ -220,8 +224,26 @@ export class LayoutBuilder extends Component
         this.forceUpdate();
     }
 
-    onCreateComponent(){
+    onCreateCustomComponent(data){
+        let tmp = this.state.data;
+        let section = null;
 
+        for(let s of tmp.customHtmlComponentList){
+            if(s === data.section){
+                section = s;
+                break;
+            }
+        }
+
+        if(section === null){
+            section = {name: data.section, children: []};
+            tmp.customHtmlComponentList.push(section);
+        }
+
+        this.htmlCleaning();
+        section.children.push({name: data.name, type: 'custom', tagName: '', htmlString: this.state.selectedElement.outerHTML, properties: []});
+
+        this.setState({data: tmp}, () => Cookies.set('appData', JSON.stringify(this.state.data)));
     }
 
     onCreateCanvasElement(el){
