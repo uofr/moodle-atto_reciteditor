@@ -46,7 +46,6 @@ export class CanvasElement{
     }
 
     onClick(event){        
-        console.log("a")
         event.stopPropagation();
         this.onSelectCallback(this.dom);
     }
@@ -128,7 +127,7 @@ export class FloatingMenu extends Component{
         selectedElement: null,
         onDeleteElement: null,
         onRefresh: null,
-        onCreateCustomComponent: null,
+        onSaveCustomComponent: null,
         onCreateCanvasElement: null
     };      
 
@@ -140,7 +139,7 @@ export class FloatingMenu extends Component{
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
         this.showModal = this.showModal.bind(this);
-        this.onCreateCustomComponent = this.onCreateCustomComponent.bind(this);
+        this.onSaveCustomComponent = this.onSaveCustomComponent.bind(this);
 
         this.state = {showModal: false};
     }
@@ -170,7 +169,7 @@ export class FloatingMenu extends Component{
                         <Button onClick={() => this.props.onDeleteElement()}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                     </ButtonGroup>
                 </ButtonToolbar>
-                {this.state.showModal && <CustomComponentForm onClose={() => this.showModal(false)} onSave={this.onCreateCustomComponent}/>}
+                {this.state.showModal && <CustomComponentForm onClose={() => this.showModal(false)} onSave={this.onSaveCustomComponent}/>}
             </div>
         return main;
     }
@@ -206,8 +205,8 @@ export class FloatingMenu extends Component{
         this.setState({showModal: show});
     }
 
-    onCreateCustomComponent(data){
-        this.props.onCreateCustomComponent(data);
+    onSaveCustomComponent(data){
+        this.props.onSaveCustomComponent(data);
         this.showModal(false);
     }
 }

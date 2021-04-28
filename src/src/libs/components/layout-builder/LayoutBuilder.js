@@ -6,6 +6,7 @@ import {TreeView} from './TreeView';
 import {Canvas, CanvasElement, FloatingMenu} from './Canvas';
 import {ComponentProperties, VisualComponentList} from './ComponentsCollection';
 import {Cookies} from '../../utils/Cookies';
+import { JsNx } from '../../utils/Utils';
 
 export class LayoutBuilder extends Component
 {
@@ -25,7 +26,9 @@ export class LayoutBuilder extends Component
         this.onDragEnd = this.onDragEnd.bind(this);
         this.onCollapse = this.onCollapse.bind(this);
         this.htmlCleaning = this.htmlCleaning.bind(this);
-        this.onCreateCustomComponent = this.onCreateCustomComponent.bind(this);
+        this.onSaveCustomComponent = this.onSaveCustomComponent.bind(this);
+        this.onDeleteCustomComponent = this.onDeleteCustomComponent.bind(this);
+        this.onAfterSaveCustomComponent = this.onAfterSaveCustomComponent.bind(this);
         this.onCreateCanvasElement = this.onCreateCanvasElement.bind(this);
 
         this.state = {device: 'xl', collapsed: ['0', '1', '2'], selectedElement: null, data: {customHtmlComponentList: []}};
@@ -92,7 +95,8 @@ export class LayoutBuilder extends Component
                         <Card>
                             <Card.Header onClick={() => this.onCollapse('0')}>Composants</Card.Header>
                             <Collapse in={this.state.collapsed.includes('0')}>
-                                <Card.Body><VisualComponentList customHtmlComponentList={this.state.data.customHtmlComponentList} onDragEnd={this.onDragEnd}/></Card.Body>
+                                <Card.Body><VisualComponentList onDeleteCustomComponent={this.onDeleteCustomComponent}  
+                                                customHtmlComponentList={this.state.data.customHtmlComponentList} onDragEnd={this.onDragEnd}/></Card.Body>
                             </Collapse>
                         </Card>
 
@@ -117,7 +121,7 @@ export class LayoutBuilder extends Component
                         <Canvas>
                             <iframe ref={this.canvas} className="canvas" style={this.getDeviceDimension()}></iframe>
                             <FloatingMenu canvas={this.canvas} selectedElement={this.state.selectedElement} onDeleteElement={this.onDeleteElement} onRefresh={this.onRefresh}
-                                        onCreateCustomComponent={this.onCreateCustomComponent} onCreateCanvasElement={this.onCreateCanvasElement}/>
+                                        onSaveCustomComponent={this.onSaveCustomComponent} onCreateCanvasElement={this.onCreateCanvasElement}/>
                         </Canvas>
                     </div>
                 </div>
@@ -167,7 +171,7 @@ export class LayoutBuilder extends Component
                 el.setAttribute('data-selected', '1');
             }
         }
-console.log(el)
+
         this.setState({selectedElement: el});
     }
 
@@ -224,16 +228,9 @@ console.log(el)
         this.forceUpdate();
     }
 
-    onCreateCustomComponent(data){
+    onSaveCustomComponent(data){
         let tmp = this.state.data;
-        let section = null;
-
-        for(let s of tmp.customHtmlComponentList){
-            if(s === data.section){
-                section = s;
-                break;
-            }
-        }
+        let section = JsNx.getItem(tmp.customHtmlComponentList, 'name', data.section, null);
 
         if(section === null){
             section = {name: data.section, children: []};
@@ -243,7 +240,28 @@ console.log(el)
         this.htmlCleaning();
         section.children.push({name: data.name, type: 'custom', tagName: '', htmlString: this.state.selectedElement.outerHTML, properties: []});
 
-        this.setState({data: tmp}, () => Cookies.set('appData', JSON.stringify(this.state.data)));
+        this.setState({data: tmp}, this.onAfterSaveCustomComponent);
+    }
+
+    onAfterSaveCustomComponent(){
+        Cookies.set('appData', JSON.stringify(this.state.data), 43200)
+    }
+
+    onDeleteCustomComponent(item, type){
+        if(!window.confirm("Êtes-vous sur de vouloir supprimer l'item ?")){ return; }
+
+        let tmp = this.state.data;
+
+        if(type === 's'){
+            JsNx.removeItem(tmp.customHtmlComponentList, 'name', item.name);
+        }
+        else{
+            for(let section of tmp.customHtmlComponentList){
+                JsNx.removeItem(section.children, 'name', item.name);
+            }
+        }
+        
+        this.setState({data: tmp}, this.onAfterSaveCustomComponent);
     }
 
     onCreateCanvasElement(el){

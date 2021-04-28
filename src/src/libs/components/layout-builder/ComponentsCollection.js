@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button  } from 'react-bootstrap';
-import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faEdit, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
+import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faUpload, faDownload, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 import { ToggleButtons} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -121,6 +121,7 @@ export class ComponentProperties extends Component{
 export class VisualComponentList extends Component{
     static defaultProps = {
         customHtmlComponentList: [],
+        onDeleteCustomComponent: null,
         onDragEnd: null
     };
 
@@ -154,7 +155,7 @@ export class VisualComponentList extends Component{
 
         this.onSelectTab = this.onSelectTab.bind(this);
 
-        this.state = {tab: '0'};
+        this.state = {tab: '1'};
     }
 
     render(){
@@ -171,10 +172,12 @@ export class VisualComponentList extends Component{
                         <Nav.Link eventKey="2">Mes gabarits</Nav.Link>
                     </Nav.Item>
                 </Nav>
-                <br/>
+                
                 {this.state.tab === "0" && <TokenList dataProvider={VisualComponentList.htmlElementList} onDragEnd={this.props.onDragEnd}/>}
 
-                {this.state.tab === "1" && <TokenList dataProvider={this.props.customHtmlComponentList} onDragEnd={this.props.onDragEnd}/>}
+                {this.state.tab === "1" && 
+                                <TokenList dataProvider={this.props.customHtmlComponentList} onDeleteCustomComponent={this.props.onDeleteCustomComponent} 
+                                        onDragEnd={this.props.onDragEnd} showMenu={true}/>}
             </div>;
 
         return main;
@@ -188,56 +191,60 @@ export class VisualComponentList extends Component{
 class TokenList extends Component{
     static defaultProps = {
         dataProvider: [],
-        onDragEnd: null
+        onDragEnd: null,
+        onDeleteCustomComponent: null,
+        showMenu: false
     };
 
     constructor(props){
         super(props);
 
-        this.onEdit = this.onEdit.bind(this);
-        this.onDelete = this.onDelete.bind(this);
-        this.onHover = this.onHover.bind(this);
+        this.showMenu = this.showMenu.bind(this);
 
-        this.state = {showMenu: -1};
+        this.state = {showMenu: false};
     }
 
     render(){
         let main =
-            this.props.dataProvider.map((item, index) => {
-                let branch = 
-                    <ul key={index}>
-                        <li key={index} className='token-section' onMouseEnter={() => this.onHover(index)} onMouseLeave={() => this.onHover(-1)}>
-                            {item.name}
-                            {this.state.showMenu === index &&
-                                <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
-                                    <ButtonGroup size="sm">
-                                        <Button onClick={this.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
-                                        <Button onClick={this.onDelete}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
-                                    </ButtonGroup>
-                                </ButtonToolbar>
-                            }   
-                        </li>
-                        {item.children.map((item2, index2) => {
-                            return (<Token data={item2} key={index2} onDragEnd={this.props.onDragEnd}/>);
-                        })}
-                    </ul>
+            <div>
+                <br/>
+                {this.props.showMenu && 
+                    <ButtonToolbar style={{justifyContent: 'flex-end'}}>
+                        <ButtonGroup >
+                            <Button ><FontAwesomeIcon  icon={faUpload} title="Importer la collection"/></Button>
+                            <Button ><FontAwesomeIcon  icon={faDownload} title="Exporter la collection"/></Button>
+                            <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                        </ButtonGroup>
+                    </ButtonToolbar>
+                }
+                <br/>
+                {this.props.dataProvider.map((item, index) => {
+                    let branch = 
+                        <ul key={index}>
+                            <li key={index} className='token-section'>
+                                {item.name}
+                                {this.state.showMenu &&
+                                    <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
+                                        <ButtonGroup size="sm">
+                                            <Button onClick={() => this.props.onDeleteCustomComponent(item, 's')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                                        </ButtonGroup>
+                                    </ButtonToolbar>
+                                }
+                            </li>
+                            {item.children.map((item2, index2) => {
+                                return (<Token showMenu={this.state.showMenu} data={item2} key={index2} onDragEnd={this.props.onDragEnd} onDeleteCustomComponent={this.props.onDeleteCustomComponent}/>);
+                            })}
+                        </ul>
 
-                return (branch);
-            });
+                    return (branch);
+                })}
+            </div>;
 
         return main;
     }
 
-    onHover(index){
-        this.setState({showMenu: index});
-    }
-
-    onEdit(){
-
-    }
-
-    onDelete(){
-
+    showMenu(show){
+        this.setState({showMenu: show});
     }
 }
 
@@ -245,7 +252,9 @@ class Token extends Component
 {
     static defaultProps = {
         data: null,
-        onDragEnd: null
+        onDragEnd: null,
+        onDeleteCustomComponent: null,
+        showMenu: false
     };
     
     constructor(props){
@@ -258,7 +267,14 @@ class Token extends Component
 	render(){
 		let main = 
             <li className="token" draggable="true" onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}>
-                {this.props.data.name}                
+                {this.props.data.name}   
+                {this.props.showMenu && 
+                    <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
+                        <ButtonGroup size="sm">
+                            <Button onClick={() => this.props.onDeleteCustomComponent(this.props.data)}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                        </ButtonGroup>
+                    </ButtonToolbar>
+                }             
             </li>;
 
 		return main;
