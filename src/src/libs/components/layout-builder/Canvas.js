@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ButtonToolbar, ButtonGroup, Button, Modal, Form, Col } from 'react-bootstrap';
 import {faObjectGroup, faEdit, faArrowsAlt, faArrowUp,faArrowDown, faTrashAlt, faClone, faSave, faTimes} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { VisualComponentList } from './ComponentsCollection';
+import {HTMLElementData} from './HTMLElementData';
 
 export class Canvas extends Component
 {
@@ -60,7 +60,7 @@ export class CanvasElement{
         let el = null;
         if(componentData.type === 'native'){
             el = document.createElement(componentData.tagName);
-            var component = VisualComponentList.getComponent(componentData.tagName);
+            var component = HTMLElementData.getElement(componentData.tagName);
             if (component.init){
                 component.init(el);
             }

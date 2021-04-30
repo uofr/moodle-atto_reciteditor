@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {TreeView} from './TreeView';
 import {Canvas, CanvasElement, FloatingMenu} from './Canvas';
 import {ComponentProperties, VisualComponentList} from './ComponentsCollection';
+import {HTMLElementData} from './HTMLElementData';
 import {Cookies} from '../../utils/Cookies';
 import { JsNx } from '../../utils/Utils';
 

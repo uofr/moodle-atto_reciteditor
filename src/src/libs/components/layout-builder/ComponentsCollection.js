@@ -1,206 +1,14 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button  } from 'react-bootstrap';
-import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faUpload, faDownload, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
+import { faUpload, faDownload, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 import { ToggleButtons, InputNumber, InputText} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {HTMLElementData} from './HTMLElementData';
 
 export class ComponentProperties extends Component{
     static defaultProps = {
         element: null
     };
-
-    static data = [
-        {
-            name: 'text', description: 'Text Options', 
-            children: [
-                {
-                    name: 'alignment', 
-                    text: 'Alignment',
-                    input: { 
-                        type: 'radio', 
-                        options:[
-                            {text: <FontAwesomeIcon icon={faRemoveFormat} title="Défaut"/>, value:'default'},
-                            {text: <FontAwesomeIcon icon={faAlignLeft} title="Left"/>, value:'text-left' },
-                            {text: <FontAwesomeIcon icon={faAlignCenter} title="Center"/>, value:'text-center' },
-                            {text: <FontAwesomeIcon icon={faAlignRight} title="Right"/>, value:'text-right' }
-                        ],
-                        defaultValue: ['default'],
-                        onChange: function(el, value, data){
-                            if(el.classList.length > 0){
-                                for(let option of data.input.options){
-                                    el.classList.remove(option.value);
-                                }
-                            }
-                            
-                            if(data.input.defaultValue.join() === value){
-                                return;
-                            }
-
-                            el.classList.add(value)
-                        }
-                    },
-                    getValue: function(el, data){
-                        for(let option of data.input.options){
-                            if (el.classList.contains(option)){
-                                return option;
-                            }
-                        }
-                        return false;
-                    }
-                },
-            ]
-        },
-        {
-            name: 'link', description: 'Link Options', 
-            children: [
-                {
-                    name: 'href', 
-                    text: 'Link',
-                    input: { 
-                        type: 'text', 
-                        defaultValue: ['#'],
-                        onCommit: function(el, value, data){
-                            el.href = value;
-                        }
-                    },
-                    getValue: function(el){
-                        return el.href;
-                    }
-                },
-                {
-                    name: 'target', 
-                    text: 'Action du lien',
-                    input: { 
-                        type: 'radio', 
-                        options:[
-                            {text: "Même page", value:'_self'},
-                            {text: "Nouvelle onglet", value:'_blank' },
-                        ],
-                        defaultValue: ['_self'],
-                        onChange: function(el, value, data){
-                            el.target = value;
-                        }
-                    },
-                    getValue: function(el){
-                        return el.target;
-                    }
-                },
-            ]
-        },
-        {
-            name: 'audio', description: 'Audio Options', 
-            children: [
-                {
-                    name: 'src', 
-                    text: 'Source de l\'audio',
-                    input: { 
-                        type: 'text', 
-                        defaultValue: [''],
-                        onCommit: function(el, value, data){
-                            el.src = value;
-                        }
-                    },
-                    getValue: function(el){
-                        return el.src;
-                    }
-                },
-            ]
-        },
-        {
-            name: 'image', description: 'Image Options', 
-            children: [
-                {
-                    name: 'src', 
-                    text: 'Source de l\'image',
-                    input: { 
-                        type: 'text', 
-                        defaultValue: [''],
-                        onCommit: function(el, value, data){
-                            el.src = value;
-                        }
-                    },
-                    getValue: function(el){
-                        return el.src;
-                    }
-                },
-                {
-                    name: 'height', 
-                    text: 'Hauteur de l\'image',
-                    input: { 
-                        type: 'number', 
-                        defaultValue: [''],
-                        onChange: function(el, value, data){
-                            el.height = value;
-                        }
-                    },
-                    getValue: function(el){
-                        return el.height;
-                    }
-                },
-                {
-                    name: 'width', 
-                    text: 'Largeur de l\'image',
-                    input: { 
-                        type: 'number', 
-                        defaultValue: [''],
-                        onChange: function(el, value, data){
-                            el.width = value;
-                        }
-                    },
-                    getValue: function(el){
-                        return el.width;
-                    }
-                },
-            ]
-        },
-        {
-            name: 'video', description: 'Video Options', 
-            children: [
-                {
-                    name: 'src', 
-                    text: 'Source du vidéo',
-                    input: { 
-                        type: 'text', 
-                        defaultValue: [''],
-                        onCommit: function(el, value, data){
-                            el.src = value;
-                        }
-                    },
-                    getValue: function(el){
-                        return el.src;
-                    }
-                },
-                {
-                    name: 'height', 
-                    text: 'Hauteur du vidéo',
-                    input: { 
-                        type: 'number', 
-                        defaultValue: [''],
-                        onChange: function(el, value, data){
-                            el.height = value;
-                        }
-                    },
-                    getValue: function(el){
-                        return el.height;
-                    }
-                },
-                {
-                    name: 'width', 
-                    text: 'Largeur du vidéo',
-                    input: { 
-                        type: 'number', 
-                        defaultValue: [''],
-                        onChange: function(el, value, data){
-                            el.width = value;
-                        }
-                    },
-                    getValue: function(el){
-                        return el.width;
-                    }
-                },
-            ]
-        },
-    ];
 
     constructor(props){
         super(props);
@@ -223,11 +31,11 @@ export class ComponentProperties extends Component{
     render(){
         if(this.props.element === null){ return null; }
         
-        let componentData = VisualComponentList.getComponent(this.props.element.tagName.toLowerCase());
+        let componentData = HTMLElementData.getElement(this.props.element.tagName.toLowerCase());
 
         if(componentData === null){ return null;}
 
-        let properties = ComponentProperties.data.filter(item => componentData.properties.includes(item.name));
+        let properties = HTMLElementData.propertyList.filter(item => componentData.properties.includes(item.name));
 
         if((properties === null) || (properties.length === 0)){ return null; }
 
@@ -305,66 +113,14 @@ export class VisualComponentList extends Component{
         onImportCustomComponent: null,
         onDragEnd: null
     };
-
-    static htmlElementList = [
-        {name: 'Text', children: [
-            {name: "Heading", type: 'native', tagName: 'h1', init:function(el){
-                el.innerText = el.tagName.toLowerCase();
-            }, properties: ['text']},
-
-            {name: "Paragraph", type: 'native', tagName: 'p', init:function(el){
-                el.innerText = el.tagName.toLowerCase();
-            }, properties: ['text']}
-        ]},
-        {name: 'Controls', children: [
-            {name: "Button", type: 'native', tagName: 'button', init:function(el){
-                el.innerText = el.tagName.toLowerCase();
-                el.classList.add('btn');
-                el.classList.add('btn-primary');
-            }, properties: ['text']},
-
-            {name: "Link", type: 'native', tagName: 'a', init:function(el){
-                el.innerText = el.tagName.toLowerCase();
-                el.href = '#';
-            }, properties: ['text', 'link']},
-
-            {name: "Audio", type: 'native', tagName: 'audio', init:function(el){
-                el.setAttribute('controls', '1')
-            }, properties: ['audio']},
-        ]},
-        {name: 'Containers', children: [
-            {name: "Div", type: 'native', tagName: 'div', properties: []},
-            {name: "Séparateur", type: 'native', tagName: 'hr', properties: []}
-        ]},
-        {name: 'Images', children: [
-            {name: "Image", type: 'native', tagName: 'img', init:function(el){
-                el.setAttribute('src', 'https://recitfad.ca/moodledocs/images/image206.png');
-            }, properties: ['image']},
-            {name: "Video", type: 'native', tagName: 'video', init:function(el){
-                //el.setAttribute('src', 'https://recitfad.ca/moodledocs/images/image206.png'); //video placeholder?
-            }, properties: ['video']},
-        ]},
-    ];
-
-    static getComponent(tagName){
-        for(let section of VisualComponentList.htmlElementList){
-            for(let item of section.children){
-                if(item.tagName === tagName){
-                    return item;
-                }
-            }
-        }
-
-        return null;
-    }
-
+  
     constructor(props){
         super(props);
 
 
         this.onSelectTab = this.onSelectTab.bind(this);
 
-        this.state = {tab: '1'};
+        this.state = {tab: '0'};
     }
 
     render(){
@@ -382,7 +138,7 @@ export class VisualComponentList extends Component{
                     </Nav.Item>
                 </Nav>
                 
-                {this.state.tab === "0" && <TokenList dataProvider={VisualComponentList.htmlElementList} onDragEnd={this.props.onDragEnd}/>}
+                {this.state.tab === "0" && <TokenList dataProvider={HTMLElementData.elementList} onDragEnd={this.props.onDragEnd}/>}
 
                 {this.state.tab === "1" && 
                                 <TokenList dataProvider={this.props.customHtmlComponentList} onDeleteCustomComponent={this.props.onDeleteCustomComponent} 
