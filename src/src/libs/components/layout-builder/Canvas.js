@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ButtonToolbar, ButtonGroup, Button, Modal, Form, Col } from 'react-bootstrap';
 import {faObjectGroup, faEdit, faArrowsAlt, faArrowUp,faArrowDown, faTrashAlt, faClone, faSave, faTimes} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { VisualComponentList } from './ComponentsCollection';
 
 export class Canvas extends Component
 {
@@ -59,9 +60,9 @@ export class CanvasElement{
         let el = null;
         if(componentData.type === 'native'){
             el = document.createElement(componentData.tagName);
-            el.innerText = componentData.name;
-            if(componentData.classList){
-                el.classList.add(...componentData.classList); // add multiple classes using spread syntax
+            var component = VisualComponentList.getComponent(componentData.tagName);
+            if (component.init){
+                component.init(el);
             }
         }
         else if(componentData.type === 'custom'){
