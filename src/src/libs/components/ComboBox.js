@@ -48,5 +48,5 @@ export class ComboBox extends Component {
         }
 
         this.props.onChange({target:{name: this.props.name, value: value, text: text, data: data, index: selectedIndex}});
-    }   
+    }
 }
