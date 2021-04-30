@@ -106,6 +106,100 @@ export class ComponentProperties extends Component{
                 },
             ]
         },
+        {
+            name: 'image', description: 'Image Options', 
+            children: [
+                {
+                    name: 'src', 
+                    text: 'Source de l\'image',
+                    input: { 
+                        type: 'text', 
+                        defaultValue: [''],
+                        onCommit: function(el, value, data){
+                            el.src = value;
+                        }
+                    },
+                    getValue: function(el){
+                        return el.src;
+                    }
+                },
+                {
+                    name: 'height', 
+                    text: 'Hauteur de l\'image',
+                    input: { 
+                        type: 'number', 
+                        defaultValue: [''],
+                        onChange: function(el, value, data){
+                            el.height = value;
+                        }
+                    },
+                    getValue: function(el){
+                        return el.height;
+                    }
+                },
+                {
+                    name: 'width', 
+                    text: 'Largeur de l\'image',
+                    input: { 
+                        type: 'number', 
+                        defaultValue: [''],
+                        onChange: function(el, value, data){
+                            el.width = value;
+                        }
+                    },
+                    getValue: function(el){
+                        return el.width;
+                    }
+                },
+            ]
+        },
+        {
+            name: 'video', description: 'Video Options', 
+            children: [
+                {
+                    name: 'src', 
+                    text: 'Source du vidéo',
+                    input: { 
+                        type: 'text', 
+                        defaultValue: [''],
+                        onCommit: function(el, value, data){
+                            el.src = value;
+                        }
+                    },
+                    getValue: function(el){
+                        return el.src;
+                    }
+                },
+                {
+                    name: 'height', 
+                    text: 'Hauteur du vidéo',
+                    input: { 
+                        type: 'number', 
+                        defaultValue: [''],
+                        onChange: function(el, value, data){
+                            el.height = value;
+                        }
+                    },
+                    getValue: function(el){
+                        return el.height;
+                    }
+                },
+                {
+                    name: 'width', 
+                    text: 'Largeur du vidéo',
+                    input: { 
+                        type: 'number', 
+                        defaultValue: [''],
+                        onChange: function(el, value, data){
+                            el.width = value;
+                        }
+                    },
+                    getValue: function(el){
+                        return el.width;
+                    }
+                },
+            ]
+        },
     ];
 
     constructor(props){
@@ -172,7 +266,11 @@ export class ComponentProperties extends Component{
                 break;
             case 'text':
                 result = <InputText name={data.name} value={value} 
-                                options={data.input.options} onChange={(event) => this.onDataChange(event, data, this.props.element)} onCommit={(event) => this.onDataCommit(event, data, this.props.element)}/>;
+                                onChange={(event) => this.onDataChange(event, data, this.props.element)} onCommit={(event) => this.onDataCommit(event, data, this.props.element)}/>;
+                break;
+            case 'number':
+                result = <InputNumber name={data.name} value={value} 
+                                onChange={(event) => this.onDataChange(event, data, this.props.element)} onCommit={(event) => this.onDataCommit(event, data, this.props.element)}/>;
                 break;
         }
 
@@ -236,6 +334,14 @@ export class VisualComponentList extends Component{
         {name: 'Containers', children: [
             {name: "Div", type: 'native', tagName: 'div', properties: []},
             {name: "Séparateur", type: 'native', tagName: 'hr', properties: []}
+        ]},
+        {name: 'Images', children: [
+            {name: "Image", type: 'native', tagName: 'img', init:function(el){
+                el.setAttribute('src', 'https://recitfad.ca/moodledocs/images/image206.png');
+            }, properties: ['image']},
+            {name: "Video", type: 'native', tagName: 'video', init:function(el){
+                //el.setAttribute('src', 'https://recitfad.ca/moodledocs/images/image206.png'); //video placeholder?
+            }, properties: ['video']},
         ]},
     ];
 
