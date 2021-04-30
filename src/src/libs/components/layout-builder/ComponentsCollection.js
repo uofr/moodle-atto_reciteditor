@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button  } from 'react-bootstrap';
 import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faUpload, faDownload, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
-import { ToggleButtons} from '../Components';
+import { ToggleButtons, InputNumber, InputText} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export class ComponentProperties extends Component{
@@ -15,7 +15,7 @@ export class ComponentProperties extends Component{
             children: [
                 {
                     name: 'alignment', 
-                    text: 'Alignement',
+                    text: 'Alignment',
                     input: { 
                         type: 'radio', 
                         options:[
@@ -38,10 +38,74 @@ export class ComponentProperties extends Component{
 
                             el.classList.add(value)
                         }
+                    },
+                    getValue: function(el, data){
+                        for(let option of data.input.options){
+                            if (el.classList.contains(option)){
+                                return option;
+                            }
+                        }
+                        return false;
                     }
-                }
+                },
             ]
-        }
+        },
+        {
+            name: 'link', description: 'Link Options', 
+            children: [
+                {
+                    name: 'href', 
+                    text: 'Link',
+                    input: { 
+                        type: 'text', 
+                        defaultValue: ['#'],
+                        onCommit: function(el, value, data){
+                            el.href = value;
+                        }
+                    },
+                    getValue: function(el){
+                        return el.href;
+                    }
+                },
+                {
+                    name: 'target', 
+                    text: 'Action du lien',
+                    input: { 
+                        type: 'radio', 
+                        options:[
+                            {text: "Même page", value:'_self'},
+                            {text: "Nouvelle onglet", value:'_blank' },
+                        ],
+                        defaultValue: ['_self'],
+                        onChange: function(el, value, data){
+                            el.target = value;
+                        }
+                    },
+                    getValue: function(el){
+                        return el.target;
+                    }
+                },
+            ]
+        },
+        {
+            name: 'audio', description: 'Audio Options', 
+            children: [
+                {
+                    name: 'src', 
+                    text: 'Source de l\'audio',
+                    input: { 
+                        type: 'text', 
+                        defaultValue: [''],
+                        onCommit: function(el, value, data){
+                            el.src = value;
+                        }
+                    },
+                    getValue: function(el){
+                        return el.src;
+                    }
+                },
+            ]
+        },
     ];
 
     constructor(props){
@@ -99,12 +163,16 @@ export class ComponentProperties extends Component{
 
     createFormControl(data){
         let result = null;
+        let value = (data.getValue(this.props.element, data) ? data.getValue(this.props.element, data) : data.input.defaultValue);
         
         switch(data.input.type){
             case 'radio':
-                let value = (this.state.properties[data.name] ? this.state.properties[data.name] : data.input.defaultValue);
-                result = <ToggleButtons type="radio" name={data.name} defaultValue={value} 
+                result = <ToggleButtons type="radio" name={data.name} value={value} 
                                 options={data.input.options} onChange={(event) => this.onDataChange(event, data, this.props.element)}/>;
+                break;
+            case 'text':
+                result = <InputText name={data.name} value={value} 
+                                options={data.input.options} onChange={(event) => this.onDataChange(event, data, this.props.element)} onCommit={(event) => this.onDataCommit(event, data, this.props.element)}/>;
                 break;
         }
 
@@ -114,7 +182,21 @@ export class ComponentProperties extends Component{
     onDataChange(event, componentData, element){
         let properties = this.state.properties;
         properties[event.target.name] = event.target.value;
-        this.setState({properties: properties}, componentData.input.onChange(this.props.element, event.target.value, componentData));
+        if (componentData.input.onChange){
+            this.setState({properties: properties}, componentData.input.onChange(this.props.element, event.target.value, componentData));
+        }else{
+            this.setState({properties: properties});
+        }
+    }
+
+    onDataCommit(event, componentData, element){
+        let properties = this.state.properties;
+        properties[event.target.name] = event.target.value;
+        if (componentData.input.onCommit){
+            this.setState({properties: properties}, componentData.input.onCommit(this.props.element, event.target.value, componentData));
+        }else{
+            this.setState({properties: properties});
+        }
     }
 }
 
@@ -127,14 +209,33 @@ export class VisualComponentList extends Component{
 
     static htmlElementList = [
         {name: 'Text', children: [
-            {name: "Heading", type: 'native', tagName: 'h1', properties: ['text']},
-            {name: "Paragraph", type: 'native', tagName: 'p', properties: ['text']}
+            {name: "Heading", type: 'native', tagName: 'h1', init:function(el){
+                el.innerText = el.tagName.toLowerCase();
+            }, properties: ['text']},
+
+            {name: "Paragraph", type: 'native', tagName: 'p', init:function(el){
+                el.innerText = el.tagName.toLowerCase();
+            }, properties: ['text']}
         ]},
         {name: 'Controls', children: [
-            {name: "Button", type: 'native', tagName: 'button', classList: ['btn', 'btn-primary'], properties: []}
+            {name: "Button", type: 'native', tagName: 'button', init:function(el){
+                el.innerText = el.tagName.toLowerCase();
+                el.classList.add('btn');
+                el.classList.add('btn-primary');
+            }, properties: ['text']},
+
+            {name: "Link", type: 'native', tagName: 'a', init:function(el){
+                el.innerText = el.tagName.toLowerCase();
+                el.href = '#';
+            }, properties: ['text', 'link']},
+
+            {name: "Audio", type: 'native', tagName: 'audio', init:function(el){
+                el.setAttribute('controls', '1')
+            }, properties: ['audio']},
         ]},
         {name: 'Containers', children: [
-            {name: "Div", type: 'native', tagName: 'div', properties: []}
+            {name: "Div", type: 'native', tagName: 'div', properties: []},
+            {name: "Séparateur", type: 'native', tagName: 'hr', properties: []}
         ]},
     ];
 
@@ -152,6 +253,7 @@ export class VisualComponentList extends Component{
 
     constructor(props){
         super(props);
+
 
         this.onSelectTab = this.onSelectTab.bind(this);
 
