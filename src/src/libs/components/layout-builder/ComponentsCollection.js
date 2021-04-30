@@ -302,6 +302,7 @@ export class VisualComponentList extends Component{
     static defaultProps = {
         customHtmlComponentList: [],
         onDeleteCustomComponent: null,
+        onImportCustomComponent: null,
         onDragEnd: null
     };
 
@@ -369,7 +370,7 @@ export class VisualComponentList extends Component{
     render(){
         let main =
             <div className='component-list'>
-                <Nav variant="pills" activeKey={this.state.tab} onSelect={this.onSelectTab}>
+                <Nav variant="tabs" activeKey={this.state.tab} onSelect={this.onSelectTab}>
                     <Nav.Item>
                         <Nav.Link eventKey="0">Base HTML</Nav.Link>
                     </Nav.Item>
@@ -385,7 +386,7 @@ export class VisualComponentList extends Component{
 
                 {this.state.tab === "1" && 
                                 <TokenList dataProvider={this.props.customHtmlComponentList} onDeleteCustomComponent={this.props.onDeleteCustomComponent} 
-                                        onDragEnd={this.props.onDragEnd} showMenu={true}/>}
+                                onImportCustomComponent={this.props.onImportCustomComponent} onDragEnd={this.props.onDragEnd} showMenu={true}/>}
             </div>;
 
         return main;
@@ -401,31 +402,38 @@ class TokenList extends Component{
         dataProvider: [],
         onDragEnd: null,
         onDeleteCustomComponent: null,
+        onImportCustomComponent: null,
         showMenu: false
     };
 
     constructor(props){
         super(props);
 
+        this.onImport = this.onImport.bind(this);
+        this.onExport = this.onExport.bind(this);
         this.showMenu = this.showMenu.bind(this);
+        this.showImport = this.showImport.bind(this);
 
-        this.state = {showMenu: false};
+        this.state = {showMenu: false, showImport: false};
+
+        this.fileInput = React.createRef();
     }
 
     render(){
         let main =
-            <div>
-                <br/>
+            <div className="tab-content">
                 {this.props.showMenu && 
+            <div>
                     <ButtonToolbar style={{justifyContent: 'flex-end'}}>
                         <ButtonGroup >
-                            <Button ><FontAwesomeIcon  icon={faUpload} title="Importer la collection"/></Button>
-                            <Button ><FontAwesomeIcon  icon={faDownload} title="Exporter la collection"/></Button>
+                                <Button onClick={() => this.showImport(!this.state.showImport)}><FontAwesomeIcon  icon={faUpload} title="Importer la collection"/></Button>
+                                <Button onClick={this.onExport} ><FontAwesomeIcon  icon={faDownload} title="Exporter la collection"/></Button>
                             <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
+                        {this.state.showImport && <input type="file" onChange={this.onImport} accept=".json"/>}
+                    </div>
                 }
-                <br/>
                 {this.props.dataProvider.map((item, index) => {
                     let branch = 
                         <ul key={index}>
@@ -453,6 +461,35 @@ class TokenList extends Component{
 
     showMenu(show){
         this.setState({showMenu: show});
+    }
+
+    showImport(show){
+        this.setState({showImport: show});
+    }
+
+    onImport(event){
+        let fileCtrl = event.target;
+        
+        if(fileCtrl.length === 0) { return;}
+    
+        let reader = new FileReader();
+        let that = this;
+		reader.addEventListener('load', function(e) {
+            let content = (e.target.result);
+            that.props.onImportCustomComponent(content);
+            that.showImport(false);
+        });
+		reader.readAsText(fileCtrl.files[0]);
+    }
+
+    onExport(){
+        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.props.dataProvider));
+        let node = document.createElement('a');
+        node.setAttribute("href",     dataStr);
+        node.setAttribute("download", "my-collection.json");
+        window.document.body.appendChild(node); // required for firefox
+        node.click();
+        node.remove();
     }
 }
 

@@ -28,6 +28,7 @@ export class LayoutBuilder extends Component
         this.htmlCleaning = this.htmlCleaning.bind(this);
         this.onSaveCustomComponent = this.onSaveCustomComponent.bind(this);
         this.onDeleteCustomComponent = this.onDeleteCustomComponent.bind(this);
+        this.onImportCustomComponent = this.onImportCustomComponent.bind(this);
         this.onAfterSaveCustomComponent = this.onAfterSaveCustomComponent.bind(this);
         this.onCreateCanvasElement = this.onCreateCanvasElement.bind(this);
 
@@ -95,7 +96,7 @@ export class LayoutBuilder extends Component
                         <Card>
                             <Card.Header onClick={() => this.onCollapse('0')}>Composants</Card.Header>
                             <Collapse in={this.state.collapsed.includes('0')}>
-                                <Card.Body><VisualComponentList onDeleteCustomComponent={this.onDeleteCustomComponent}  
+                                <Card.Body><VisualComponentList onDeleteCustomComponent={this.onDeleteCustomComponent}  onImportCustomComponent={this.onImportCustomComponent}
                                                 customHtmlComponentList={this.state.data.customHtmlComponentList} onDragEnd={this.onDragEnd}/></Card.Body>
                             </Collapse>
                         </Card>
@@ -261,6 +262,12 @@ export class LayoutBuilder extends Component
             }
         }
         
+        this.setState({data: tmp}, this.onAfterSaveCustomComponent);
+    }
+
+    onImportCustomComponent(fileContent){
+        let tmp = this.state.data;
+        tmp.customHtmlComponentList = JSON.parse(fileContent);
         this.setState({data: tmp}, this.onAfterSaveCustomComponent);
     }
 

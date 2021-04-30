@@ -32,7 +32,10 @@ html {
       background-color: #FFF;
       border: 0; }
   .layout-builder .component-list .tab-content {
-    padding: .5rem; }
+    border: 1px solid #dee2e6;
+    margin-top: 12px;
+    padding: 1rem;
+    border-radius: 6px; }
   .layout-builder .component-list ul {
     list-style: none;
     padding-left: 0; }
