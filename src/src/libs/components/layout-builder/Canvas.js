@@ -47,6 +47,7 @@ export class CanvasElement{
     }
 
     onClick(event){        
+        event.preventDefault(); // Cancel the default action (in case of href)
         event.stopPropagation();
         this.onSelectCallback(this.dom);
     }
@@ -60,7 +61,7 @@ export class CanvasElement{
         let el = null;
         if(componentData.type === 'native'){
             el = document.createElement(componentData.tagName);
-            var component = HTMLElementData.getElement(componentData.tagName);
+            let component = HTMLElementData.getElement(componentData.tagName);
             if (component.init){
                 component.init(el);
             }
@@ -190,8 +191,23 @@ export class FloatingMenu extends Component{
     }
 
     onEdit(){
-        this.props.selectedElement.setAttribute('contenteditable', 'true')
+        this.props.selectedElement.setAttribute('contenteditable', 'true');
+        this.setCaretToEnd(this.props.selectedElement);
     }
+
+    setCaretToEnd(target) {
+        const range = window.document.createRange();
+        const sel = window.getSelection();
+        range.selectNodeContents(target);
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        target.focus();
+        range.detach(); // optimization
+      
+        // set scroll to the end if multiline
+        target.scrollTop = target.scrollHeight; 
+      }
 
     onCloneNode(){
         let parent = this.props.selectedElement.parentElement;

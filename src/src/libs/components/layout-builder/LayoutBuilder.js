@@ -156,8 +156,12 @@ export class LayoutBuilder extends Component
     }
 
     onSelectElement(el){
-        // if the selected element receives another click then it ignores it
-        if((Object.is(el, this.state.selectedElement)) && (this.state.selectedElement !== null)){ return; }
+        // if the selected element receives another click then it deselects it
+        if((Object.is(el, this.state.selectedElement)) || (this.state.selectedElement !== null)){ 
+            this.htmlCleaning();
+            this.setState({selectedElement: null});
+            return; 
+        }
 
         this.htmlCleaning();
 

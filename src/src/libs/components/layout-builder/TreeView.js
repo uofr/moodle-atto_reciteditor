@@ -38,7 +38,7 @@ export class TreeView extends Component{
         let result = null;
            
         let selected = (this.props.selectedElement === node.dom ? 'disabled btn-warning' : '');
-        let btn = <Button variant="link" className={`p-0 ${selected}`} onClick={() => this.props.onSelect(node.dom)} >{` ${node.text}`}</Button>;
+        let btn = <Button variant="link" className={`p-1 ${selected}`} onClick={() => this.props.onSelect(node.dom)} >{` ${node.text}`}</Button>;
         let icon = (this.state.collapsed[id] ? faAngleRight : faAngleDown);
 
         if(node.children.length > 0){

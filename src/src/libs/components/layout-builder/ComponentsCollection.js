@@ -13,19 +13,8 @@ export class ComponentProperties extends Component{
     constructor(props){
         super(props);
 
+        this.onSubmit = this.onSubmit.bind(this);
         this.onDataChange = this.onDataChange.bind(this);
-
-        this.state = {properties: {}};
-    }
-
-    componentDidUpdate(prevProps, prevState){
-        if((this.props.element === null) || (prevProps.element === null)){
-            return;
-        }
-
-        if(this.props.element.tagName !== prevProps.element.tagName){
-            this.setState({properties: {}});
-        }
     }
 
     render(){
@@ -37,12 +26,13 @@ export class ComponentProperties extends Component{
 
         let properties = HTMLElementData.propertyList.filter(item => componentData.properties.includes(item.name));
 
+        
         if((properties === null) || (properties.length === 0)){ return null; }
-
+        
         let main =
                 properties.map((item, index) => {
                     let form = 
-                    <Form key={index}>
+                    <Form key={index} onSubmit={this.onSubmit}>
                         <h6>{item.description}</h6>
                         {item.children.map((item2, index2) => {
                             let formItem = 
@@ -65,34 +55,35 @@ export class ComponentProperties extends Component{
 
     createFormControl(data){
         let result = null;
-        let value = (data.getValue(this.props.element, data) ? data.getValue(this.props.element, data) : data.input.defaultValue);
+        let value = data.getValue(this.props.element, data);
         
         switch(data.input.type){
             case 'radio':
-                result = <ToggleButtons type="radio" name={data.name} value={value} 
-                                options={data.input.options} onChange={(event) => this.onDataChange(event, data, this.props.element)}/>;
+                result = <ToggleButtons type="radio" name={data.name} value={value} bsSize="sm" defaultValue={value}
+                                options={data.input.options} onChange={(event) => this.onDataChange(event, data)}/>;
                 break;
             case 'text':
-                result = <InputText name={data.name} value={value} 
-                                onChange={(event) => this.onDataChange(event, data, this.props.element)} onCommit={(event) => this.onDataCommit(event, data, this.props.element)}/>;
+                result = <InputText name={data.name} value={value} size="sm"
+                                onChange={(event) => this.onDataChange(event, data)} />;
                 break;
             case 'number':
-                result = <InputNumber name={data.name} value={value} 
-                                onChange={(event) => this.onDataChange(event, data, this.props.element)} onCommit={(event) => this.onDataCommit(event, data, this.props.element)}/>;
+                result = <InputNumber name={data.name} value={value} size="sm"
+                                onChange={(event) => this.onDataChange(event, data)} onCommit={(event) => this.onDataCommit(event, data, this.props.element)}/>;
                 break;
         }
 
         return result;
     }
 
-    onDataChange(event, componentData, element){
-        let properties = this.state.properties;
-        properties[event.target.name] = event.target.value;
+    onDataChange(event, componentData){
         if (componentData.input.onChange){
-            this.setState({properties: properties}, componentData.input.onChange(this.props.element, event.target.value, componentData));
-        }else{
-            this.setState({properties: properties});
+            componentData.input.onChange(this.props.element, event.target.value, componentData);
+            this.forceUpdate();
         }
+    }
+
+    onSubmit(event){
+        event.preventDefault();
     }
 
     onDataCommit(event, componentData, element){

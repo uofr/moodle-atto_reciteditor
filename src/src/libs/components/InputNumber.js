@@ -14,7 +14,8 @@ export class InputNumber extends Component {
         onKeyDown: null,
         autoFocus: false,
         autoSelect: false,
-        disabled: false
+        disabled: false,
+        size: ""
     };
     
     static getDerivedStateFromProps(nextProps, prevState){
@@ -50,7 +51,7 @@ export class InputNumber extends Component {
     render() {       
         let main = <FormControl ref={this.inputRef} autoFocus={this.props.autoFocus} className={"InputNumber"} name={this.props.name} type="text" 
                     value={this.state.value} placeholder={this.props.placeholder} onChange={this.onChange} onBlur={this.onFocusOut} onKeyDown={this.onKeyDown}
-                    disabled={this.props.disabled}/>
+                    disabled={this.props.disabled} size={this.props.size}/>
         return (main);
     }   
     

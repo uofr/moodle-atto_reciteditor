@@ -1,5 +1,5 @@
 import React from 'react';
-import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight} from '@fortawesome/free-solid-svg-icons';
+import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export class HTMLElementData{
@@ -16,7 +16,8 @@ export class HTMLElementData{
                             {text: <FontAwesomeIcon icon={faRemoveFormat} title="Défaut"/>, value:'default'},
                             {text: <FontAwesomeIcon icon={faAlignLeft} title="Left"/>, value:'text-left' },
                             {text: <FontAwesomeIcon icon={faAlignCenter} title="Center"/>, value:'text-center' },
-                            {text: <FontAwesomeIcon icon={faAlignRight} title="Right"/>, value:'text-right' }
+                            {text: <FontAwesomeIcon icon={faAlignRight} title="Right"/>, value:'text-right' },
+                            {text: <FontAwesomeIcon icon={faAlignJustify} title="Justify"/>, value:'text-justify' }
                         ],
                         defaultValue: ['default'],
                         onChange: function(el, value, data){
@@ -35,11 +36,12 @@ export class HTMLElementData{
                     },
                     getValue: function(el, data){
                         for(let option of data.input.options){
-                            if (el.classList.contains(option)){
-                                return option;
+                            if (el.classList.contains(option.value)){
+                                return [option.value];
                             }
                         }
-                        return false;
+                        
+                        return data.input.defaultValue;
                     }
                 },
             ]
@@ -49,16 +51,15 @@ export class HTMLElementData{
             children: [
                 {
                     name: 'href', 
-                    text: 'Link',
+                    text: 'HREF',
                     input: { 
                         type: 'text', 
-                        defaultValue: ['#'],
-                        onCommit: function(el, value, data){
-                            el.href = value;
+                        onChange: function(el, value, data){
+                            el.setAttribute('href', value);
                         }
                     },
                     getValue: function(el){
-                        return el.href;
+                        return el.getAttribute('href');
                     }
                 },
                 {
@@ -70,13 +71,12 @@ export class HTMLElementData{
                             {text: "Même page", value:'_self'},
                             {text: "Nouvelle onglet", value:'_blank' },
                         ],
-                        defaultValue: ['_self'],
                         onChange: function(el, value, data){
-                            el.target = value;
+                            el.setAttribute('target', value);
                         }
                     },
-                    getValue: function(el){
-                        return el.target;
+                    getValue: function(el, data){
+                        return [el.getAttribute('target')];
                     }
                 },
             ]
@@ -86,16 +86,16 @@ export class HTMLElementData{
             children: [
                 {
                     name: 'src', 
-                    text: 'Source de l\'audio',
+                    text: "Source",
                     input: { 
                         type: 'text', 
-                        defaultValue: [''],
-                        onCommit: function(el, value, data){
-                            el.src = value;
+                        defaultValue: '',
+                        onChange: function(el, value, data){
+                            el.setAttribute('src', value);
                         }
                     },
                     getValue: function(el){
-                        return el.src;
+                        return el.getAttribute('src');
                     }
                 },
             ]
@@ -108,7 +108,7 @@ export class HTMLElementData{
                     text: 'Source de l\'image',
                     input: { 
                         type: 'text', 
-                        defaultValue: [''],
+                        defaultValue: '',
                         onCommit: function(el, value, data){
                             el.src = value;
                         }
@@ -122,7 +122,7 @@ export class HTMLElementData{
                     text: 'Hauteur de l\'image',
                     input: { 
                         type: 'number', 
-                        defaultValue: [''],
+                        defaultValue: '',
                         onChange: function(el, value, data){
                             el.height = value;
                         }
@@ -136,7 +136,7 @@ export class HTMLElementData{
                     text: 'Largeur de l\'image',
                     input: { 
                         type: 'number', 
-                        defaultValue: [''],
+                        defaultValue: '',
                         onChange: function(el, value, data){
                             el.width = value;
                         }
@@ -204,29 +204,40 @@ export class HTMLElementData{
                     el.innerText = el.tagName.toLowerCase();
                 },
             },
-            {name: "Paragraph", type: 'native', tagName: 'p', init:function(el){
-                el.innerText = el.tagName.toLowerCase();
-            }, properties: ['text']}
+            {name: "Paragraph", type: 'native', tagName: 'p', properties: ['text'],
+                init:function(el){
+                    el.innerText = "Paragraph";
+                }
+            }
         ]},
         {name: 'Controls', children: [
-            {name: "Button", type: 'native', tagName: 'button', properties: ['text'],
+            {name: "Button", type: 'native', tagName: 'button', properties: [],
                 init:function(el){
                     el.innerText = el.tagName.toLowerCase();
                     el.classList.add('btn');
                     el.classList.add('btn-primary');
                 },
             },
-            {name: "Link", type: 'native', tagName: 'a', init:function(el){
-                el.innerText = el.tagName.toLowerCase();
-                el.href = '#';
-            }, properties: ['text', 'link']},
-
-            {name: "Audio", type: 'native', tagName: 'audio', init:function(el){
-                el.setAttribute('controls', '1')
-            }, properties: ['audio']},
+            {name: "Link", type: 'native', tagName: 'a', properties: ['text', 'link'],
+                init:function(el){
+                    el.innerText = "Link";
+                    el.setAttribute('href', '#');
+                    el.setAttribute('target', '_self');
+                },
+            },
+            {name: "Audio", type: 'native', tagName: 'audio', properties: ['audio'],
+                init:function(el){
+                    el.setAttribute('controls', '');
+                    el.setAttribute('src', '');
+                }, 
+            },
         ]},
         {name: 'Containers', children: [
-            {name: "Div", type: 'native', tagName: 'div', properties: []},
+            {name: "Div", type: 'native', tagName: 'div', properties: [],
+                init:function(el){
+                    el.innerText = "Div";
+                }, 
+            },
             {name: "Séparateur", type: 'native', tagName: 'hr', properties: []}
         ]},
         {name: 'Images', children: [
