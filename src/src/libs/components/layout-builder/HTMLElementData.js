@@ -250,6 +250,7 @@ export class HTMLElementData{
                     el.innerText = "Column";
                     var row = el.parentElement;
                     if (!row.classList.contains('row')){ // Parent is not a row, cancel the column, TODO: show error message
+                        alert("pas de row")
                         el.remove();
                         return;
                     }
@@ -274,10 +275,10 @@ export class HTMLElementData{
         ]},
     ];
 
-    static getElement(tagName){
+    static getElement(name){
         for(let section of HTMLElementData.elementList){
             for(let item of section.children){
-                if(item.tagName === tagName){
+                if(item.name === name){
                     return item;
                 }
             }

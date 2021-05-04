@@ -61,7 +61,7 @@ export class CanvasElement{
         let el = null;
         if(componentData.type === 'native'){
             el = document.createElement(componentData.tagName);
-            let component = HTMLElementData.getElement(componentData.tagName);
+            let component = HTMLElementData.getElement(componentData.name);
             if (component.init){
                 component.init(el);
             }
