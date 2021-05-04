@@ -223,6 +223,28 @@ export default class Utils{
         
         return vars;
     }
+
+    static getColumnsInRow(row){
+        var child = row.children;
+        var cols = [];
+        for (var col of child){
+            for (var classn of col.classList){
+                if (classn.includes('col-')){
+                    cols.push(col);
+                    break;
+                }
+            }
+        }
+        return cols;
+    }
+
+    static removeClassFromPartialClassName(el, partialName){
+        for (var classn of el.classList){
+            if (classn.includes(partialName)){
+                el.classList.remove(classn);
+            }
+        }
+    }
 }
 
 export class UtilsMoodle

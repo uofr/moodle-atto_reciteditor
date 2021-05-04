@@ -1,6 +1,7 @@
 import React from 'react';
 import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {Utils} from '../../utils/Utils';
 
 export class HTMLElementData{
     static propertyList = [
@@ -236,6 +237,29 @@ export class HTMLElementData{
             {name: "Div", type: 'native', tagName: 'div', properties: [],
                 init:function(el){
                     el.innerText = "Div";
+                }, 
+            },
+            {name: "Row", type: 'native', tagName: 'div', properties: [],
+                init:function(el){
+                    el.innerText = "Row";
+                    el.classList.add('row');
+                }, 
+            },
+            {name: "Column", type: 'native', tagName: 'div', properties: [],
+                init:function(el){
+                    el.innerText = "Column";
+                    var row = el.parentElement;
+                    if (!row.classList.contains('row')){ // Parent is not a row, cancel the column, TODO: show error message
+                        el.remove();
+                        return;
+                    }
+
+                    var cols = Utils.getColumnsInRow(row);
+                    var coln = Math.round(12 / cols.length);
+                    for (var col of cols){
+                        Utils.removeClassFromPartialClassName(col, 'col-');
+                        col.classList.add('col-md-'+coln);
+                    }
                 }, 
             },
             {name: "Séparateur", type: 'native', tagName: 'hr', properties: []}
