@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button  } from 'react-bootstrap';
 import { faUpload, faDownload, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
-import { ToggleButtons, InputNumber, InputText} from '../Components';
+import { ToggleButtons, InputColor, InputText} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 
@@ -20,7 +20,7 @@ export class ComponentProperties extends Component{
     render(){
         if(this.props.element === null){ return null; }
         
-        let componentData = HTMLElementData.getElement(this.props.element.tagName.toLowerCase());
+        let componentData = HTMLElementData.getElementData(null, this.props.element);
 
         if(componentData === null){ return null;}
 
@@ -29,6 +29,10 @@ export class ComponentProperties extends Component{
         
         if((properties === null) || (properties.length === 0)){ return null; }
         
+        properties.sort((el1, el2) => { 
+            return componentData.properties.indexOf(el1.name) - componentData.properties.indexOf(el2.name)
+        });
+
         let main =
                 properties.map((item, index) => {
                     let form = 
@@ -37,8 +41,8 @@ export class ComponentProperties extends Component{
                         {item.children.map((item2, index2) => {
                             let formItem = 
                                 <Form.Group size="sm" key={index2} as={Row}  controlId={`formitem${index2}`}>
-                                    <Form.Label column sm="4">{item2.text}</Form.Label>
-                                    <Col sm="8">
+                                    <Form.Label column sm="5">{item2.text}</Form.Label>
+                                    <Col sm="7">
                                         {this.createFormControl(item2)}
                                     </Col>
                                 </Form.Group>;
@@ -66,10 +70,17 @@ export class ComponentProperties extends Component{
                 result = <InputText name={data.name} value={value} size="sm"
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
-            case 'number':
+            case 'color':
+                result = <InputColor name={data.name} value={value} 
+                                onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'button':
+                result = <Button onClick={(event) => data.input.onClick(this.props.element, null, data)}>{data.icon}</Button>;
+                break;
+           /* case 'number':
                 result = <InputNumber name={data.name} value={value} size="sm"
                                 onChange={(event) => this.onDataChange(event, data)} onCommit={(event) => this.onDataCommit(event, data, this.props.element)}/>;
-                break;
+                break;*/
         }
 
         return result;
@@ -107,7 +118,6 @@ export class VisualComponentList extends Component{
   
     constructor(props){
         super(props);
-
 
         this.onSelectTab = this.onSelectTab.bind(this);
 

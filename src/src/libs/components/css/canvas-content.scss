@@ -4,7 +4,7 @@ html.canvas-content{
     margin: 0; padding: 0;
 
     body{
-        margin:0; padding: 0;
+        margin:0; padding: 15px;
 
         .element-focus{
             border: $border-onhover-element;
@@ -25,4 +25,15 @@ html.canvas-content{
     .dropping-zone{border: 1px dashed  #32c35dfd; height: 50px; width: 50px;  transform: scale(0.97); 
         display: inline-flex; margin-left: .5rem; margin-right: .5rem; margin-top: .5rem;}
 
+    .container{
+        border: 1px dashed #000; padding: 1rem!important;
+
+        .row{
+            border: 1px dashed rgb(121, 119, 119);  padding: 1rem;
+
+            .col{
+                border: 1px dashed rgb(201, 197, 197);
+            }
+        }
+    }    
 }

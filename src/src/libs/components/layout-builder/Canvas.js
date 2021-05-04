@@ -58,18 +58,7 @@ export class CanvasElement{
 
         let componentData = JSON.parse(event.dataTransfer.getData("componentData"));
 
-        let el = null;
-        if(componentData.type === 'native'){
-            el = document.createElement(componentData.tagName);
-            let component = HTMLElementData.getElement(componentData.name);
-            if (component.init){
-                component.init(el);
-            }
-        }
-        else if(componentData.type === 'custom'){
-            el = new DOMParser().parseFromString(componentData.htmlString, "text/html");
-            el = el.body.firstChild;
-        }
+        let el = HTMLElementData.createElement(componentData);
         
         if(el !== null){
             new CanvasElement(el, this.onSelectCallback, this.onDropCallback);

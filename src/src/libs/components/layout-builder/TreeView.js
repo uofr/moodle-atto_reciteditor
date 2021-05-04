@@ -66,7 +66,7 @@ export class TreeView extends Component{
     }
 
     createTreeViewData(node){
-        let result = {text: node.tagName.toLowerCase(), dom: node, children: []};
+        let result = {text: this.getNodeDesc(node), dom: node, children: []};
 
         for(let child of node.children){
             let obj = null;
@@ -74,12 +74,24 @@ export class TreeView extends Component{
                 obj = this.createTreeViewData(child);
             }
             else{
-                obj = {text: child.tagName.toLowerCase(),  dom: child, children: []};
+                obj = {text: this.getNodeDesc(child),  dom: child, children: []};
             }
             result.children.push(obj);
         }
 
         return result;
+    }
+
+    getNodeDesc(node){
+        let text = node.tagName.toLowerCase();
+
+        let classList = [...node.classList]; // spread syntax 
+
+        if(classList.length > 0){
+            text = `${text} (${classList.join(", ")})`;
+        }
+
+        return text;
     }
 
     onCollapse(event, id){

@@ -245,6 +245,47 @@ export default class Utils{
             }
         }
     }
+
+    static RGBToHex(rgb) {
+        rgb = rgb || "rgb(0,0,0)";
+
+        // Choose correct separator
+        let sep = rgb.indexOf(",") > -1 ? "," : " ";
+        // Turn "rgb(r,g,b)" into [r,g,b]
+        rgb = rgb.substr(4).split(")")[0].split(sep);
+      
+        
+        // Convert %s to 0–255
+        for (let R in rgb) {
+            let r = rgb[R];
+            if (r.indexOf("%") > -1)
+            rgb[R] = Math.round(r.substr(0,r.length - 1) / 100 * 255);
+            /* Example:
+            75% -> 191
+            75/100 = 0.75, * 255 = 191.25 -> 191
+            */
+        }
+
+        let r = (+rgb[0]).toString(16),
+            g = (+rgb[1]).toString(16),
+            b = (+rgb[2]).toString(16);
+      
+        if (r.length === 1)
+          r = "0" + r;
+        if (g.length === 1)
+          g = "0" + g;
+        if (b.length === 1)
+          b = "0" + b;
+      
+        /*
+            Now we can supply values like either of these:
+            rgb(255,25,2)
+            rgb(255 25 2)
+            rgb(50%,30%,10%)
+            rgb(50% 30% 10%)
+        */
+        return "#" + r + g + b;
+    }
 }
 
 export class UtilsMoodle

@@ -8,6 +8,7 @@ export * from './ToggleButtons';
 export * from './InputNumber';
 export * from './InputText';
 export * from './ComboBox';
+export * from './InputColor';
 export * from './RecitRichEditor';
 
 export default class Components{
