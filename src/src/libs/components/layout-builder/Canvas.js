@@ -184,18 +184,24 @@ export class FloatingMenu extends Component{
         this.setCaretToEnd(this.props.selectedElement);
     }
 
-    setCaretToEnd(target) {
-        const range = window.document.createRange();
-        const sel = window.getSelection();
-        range.selectNodeContents(target);
-        range.collapse(false);
-        sel.removeAllRanges();
-        sel.addRange(range);
-        target.focus();
-        range.detach(); // optimization
+    setCaretToEnd(el) {
+        el.focus();
+        if (typeof window.getSelection != "undefined" && typeof document.createRange != "undefined") {
+            var range = document.createRange();
+            range.selectNodeContents(el);
+            range.collapse(false);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        } else if (typeof document.body.createTextRange != "undefined") {
+            var textRange = document.body.createTextRange();
+            textRange.moveToElementText(el);
+            textRange.collapse(false);
+            textRange.select();
+        }
       
         // set scroll to the end if multiline
-        target.scrollTop = target.scrollHeight; 
+        el.scrollTop = el.scrollHeight; 
       }
 
     onCloneNode(){

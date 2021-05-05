@@ -74,9 +74,6 @@ export class ComponentProperties extends Component{
                 result = <InputColor name={data.name} value={value} 
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
-            case 'button':
-                result = <Button onClick={(event) => data.input.onClick(this.props.element, null, data)}>{data.icon}</Button>;
-                break;
            /* case 'number':
                 result = <InputNumber name={data.name} value={value} size="sm"
                                 onChange={(event) => this.onDataChange(event, data)} onCommit={(event) => this.onDataCommit(event, data, this.props.element)}/>;

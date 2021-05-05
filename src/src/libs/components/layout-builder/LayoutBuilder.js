@@ -61,11 +61,18 @@ export class LayoutBuilder extends Component
         // React JS
         //body.appendChild(doc.firstChild);
         
-        let tmp = Cookies.get('appData', null);
-        if(tmp !== null){
-            tmp = JSON.parse(tmp);
-            let data = {customHtmlComponentList: tmp.customHtmlComponentList};
-            this.setState({data: data})
+        try{
+            let tmp = Cookies.get('appData', null);
+            console.log(tmp)
+            if(tmp !== null){
+                tmp = JSON.parse(tmp);
+                let data = {customHtmlComponentList: tmp.customHtmlComponentList};
+                this.setState({data: data})
+            }
+        }
+        catch(err){
+            alert("Error on getting Cookie appData. See console for more information.");
+            console.log(err);
         }
     }
 
@@ -250,7 +257,14 @@ export class LayoutBuilder extends Component
     }
 
     onAfterSaveCustomComponent(){
-        Cookies.set('appData', JSON.stringify(this.state.data), 43200)
+        try{
+            let str = JSON.stringify(this.state.data)
+            Cookies.set('appData', str, 43200);
+        }
+        catch(err){
+            alert("Error on setting Cookie appData. See console for more information.");
+            console.log(err);
+        }
     }
 
     onDeleteCustomComponent(item, type){

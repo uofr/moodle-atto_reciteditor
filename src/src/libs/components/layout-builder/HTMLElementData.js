@@ -182,25 +182,7 @@ export class HTMLElementData{
                 }
             ]
         },
-        {
-            name: 'grid', description: 'Grid', 
-            children: [
-                {
-                    name: 'addrow', 
-                    text: "Ajouter une ligne",
-                    icon: <FontAwesomeIcon icon={faPlus}/>,
-                    input: { 
-                        type: 'button', 
-                        onClick: function(el, value, data){
-                           console.log(el, value, data);
-                        }                        
-                    },
-                    getValue: function(el, data){
-                        return null;
-                    }
-                },
-            ]
-        },
+        
     ];
 
     static elementList = [
@@ -249,9 +231,8 @@ export class HTMLElementData{
         {name: 'Containers', children: [
             {name: "Div", type: 'native', tagName: 'div', properties: ['layout', 'background'],
                 init:function(el){
-                    el.innerText = "Div";
                 }, 
-            },
+            },           
             {name: "Grid", type: 'bootstrap', tagName: 'grid', properties: ['grid', 'layout', 'background'],
                 create: function(){
                     let el = document.createElement("div");
@@ -276,6 +257,20 @@ export class HTMLElementData{
                     col.innerHTML = "Col 3";
                     row.appendChild(col);
 
+                    return el;
+                }
+            },
+            {name: "Ligne", type: 'bootstrap', tagName: 'row', properties: ['layout', 'background'],
+                create: function(){
+                    let el = document.createElement("div");
+                    el.classList.add("row");
+                    return el;
+                }
+            },
+            {name: "Colonne", type: 'bootstrap', tagName: 'col', properties: ['layout', 'background'],
+                create: function(){
+                    let el = document.createElement("div");
+                    el.classList.add("col");
                     return el;
                 }
             },

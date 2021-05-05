@@ -1,10 +1,21 @@
-$border-onhover-element: 1px solid rgb(0, 153, 255);
+$border-onhover-element: 1px solid rgb(0, 153, 255)!important;
 
 html.canvas-content{
     margin: 0; padding: 0;
 
     body{
         margin:0; padding: 15px;
+
+        div:not(.row):not(.col):not(.dropping-zone):empty::after{content: "Div"}
+
+        .container{ border: 1px dashed rgb(82, 81, 81); padding: 1rem!important; }    
+        .row{ border: 1px dashed rgb(121, 119, 119);  padding: 1rem; }
+        .row:empty::after{content: "Row"}
+        .col{ border: 1px dashed rgb(201, 197, 197); }
+        .col:empty::after{content: "Col"}
+        
+
+        /* Those elements have priority over the previous ones*/
 
         .element-focus{
             border: $border-onhover-element;
@@ -25,15 +36,5 @@ html.canvas-content{
     .dropping-zone{border: 1px dashed  #32c35dfd; height: 50px; width: 50px;  transform: scale(0.97); 
         display: inline-flex; margin-left: .5rem; margin-right: .5rem; margin-top: .5rem;}
 
-    .container{
-        border: 1px dashed #000; padding: 1rem!important;
-
-        .row{
-            border: 1px dashed rgb(121, 119, 119);  padding: 1rem;
-
-            .col{
-                border: 1px dashed rgb(201, 197, 197);
-            }
-        }
-    }    
+   
 }
