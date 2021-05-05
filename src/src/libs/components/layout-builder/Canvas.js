@@ -7,12 +7,16 @@ import {HTMLElementData} from './HTMLElementData';
 export class Canvas extends Component
 {
     static defaultProps = {
-        children: null
+        children: null,
+        style: null
     };      
 
-	render(){        
+	render(){     
+        let style = {margin: "auto", display: "flex"};
+        style = this.props.style;
+
 		let main = 
-            <div style={{margin: "auto", display: "flex"}}>
+            <div style={style}>
                 {this.props.children}
             </div>; 
 

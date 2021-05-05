@@ -39,8 +39,10 @@ export class LayoutBuilder extends Component
         this.onAfterSaveCustomComponent = this.onAfterSaveCustomComponent.bind(this);
         this.onCreateCanvasElement = this.onCreateCanvasElement.bind(this);
         this.onPreview = this.onPreview.bind(this);
+        this.onSourceCode = this.onSourceCode.bind(this);
+        this.onChangeContent = this.onChangeContent.bind(this);
 
-        this.state = {device: 'xl', view: '', collapsed: ['0', '1', '2'], selectedElement: null, data: {customHtmlComponentList: []}};
+        this.state = {device: 'xl', view: '', collapsed: ['0', '1', '2'], selectedElement: null, data: {customHtmlComponentList: [], content: ''}};
 
         this.canvas = React.createRef();
     }
@@ -99,7 +101,7 @@ export class LayoutBuilder extends Component
                         </Nav>
                         <Nav className="mr-auto" activeKey={this.state.view}>
                             <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title="Preview"/></Nav.Link>
-                            <Nav.Link eventKey="codesource"><FontAwesomeIcon icon={faCode} title="Code source"/></Nav.Link>
+                            <Nav.Link eventKey="sourcecode"><FontAwesomeIcon icon={faCode} title="Code source"/></Nav.Link>
                         </Nav>
                         <Nav activeKey={this.state.device}>
                             <Nav.Link eventKey="xs"><FontAwesomeIcon icon={faMobileAlt} title="XS"/></Nav.Link>
@@ -139,16 +141,16 @@ export class LayoutBuilder extends Component
                     </div>
                     
                     <div className="center-area" >
-                        {this.state.view === 'sourcecode' ?
-                            <CodeMirror  value={this.state.tmpContent}  options={{mode: 'xml', tabSize: 4, theme: 'material', lineNumbers: true, electricChars: true}} 
-                                onBeforeChange={(editor, data, value) => this.onChangeTmpContent(value)}/>
-                            :
-                            <Canvas>
-                                <iframe ref={this.canvas} className="canvas" style={this.getDeviceDimension()}></iframe>
-                                <FloatingMenu canvas={this.canvas} selectedElement={this.state.selectedElement} onDeleteElement={this.onDeleteElement} onRefresh={this.onRefresh}
-                                            onSaveCustomComponent={this.onSaveCustomComponent} onCreateCanvasElement={this.onCreateCanvasElement}/>
-                            </Canvas>
+                        {this.state.view === 'sourcecode' &&
+                            <CodeMirror  value={this.state.data.content}  options={{mode: 'xml', tabSize: 4, theme: 'material', lineNumbers: true, electricChars: true}} 
+                                onBeforeChange={(editor, data, value) => this.onChangeContent(value)}/>
                         }
+
+                        <Canvas style={{display: (this.state.view === 'sourcecode' ? 'none' : 'block')}}>
+                            <iframe ref={this.canvas} className="canvas" style={this.getDeviceDimension()}></iframe>
+                            <FloatingMenu canvas={this.canvas} selectedElement={this.state.selectedElement} onDeleteElement={this.onDeleteElement} onRefresh={this.onRefresh}
+                                        onSaveCustomComponent={this.onSaveCustomComponent} onCreateCanvasElement={this.onCreateCanvasElement}/>
+                        </Canvas>
                     </div>
                 </div>
             </div>;
@@ -178,8 +180,9 @@ export class LayoutBuilder extends Component
             let value = (this.state.view === eventKey);
             this.setState({view: value ? '' : eventKey}, () => this.onPreview(value));
         }
-        else if('codesource' === eventKey){
-            this.setState({view: (this.state.view === eventKey ? '' : eventKey)});
+        else if('sourcecode' === eventKey){
+            this.onSourceCode((this.state.view === eventKey));
+            
         }
         else{
             this.setState({device: eventKey});
@@ -196,6 +199,36 @@ export class LayoutBuilder extends Component
         else{
             body.parentElement.classList.remove("canvas-content");
         }
+    }
+
+    onSourceCode(opened){
+        let window = this.canvas.current.contentWindow || this.canvas.current.contentDocument;
+        let body = window.document.body;
+        let html = body.parentElement;
+
+        if(opened){
+            html.removeChild(body);
+
+            let el = document.createElement("body");
+            html.appendChild(el);
+            el.innerHTML = this.state.data.content;
+            this.onCreateCanvasElement(el);
+            this.setState({view: ''});
+        }       
+        else{            
+            
+            let tmpContent = body.innerHTML;
+            tmpContent = beautifyingHTML(tmpContent, {ocd: true});
+            let data = this.state.data;
+            data.content = tmpContent
+            this.setState({view: 'sourcecode', data: data});
+        }
+    }
+
+    onChangeContent(value){
+        let data = this.state.data;
+        data.content = value;
+        this.setState({data: data});
     }
 
     onSelectElement(el){
