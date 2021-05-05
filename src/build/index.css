@@ -12,6 +12,8 @@
 }*/
 .layout-builder {
   height: 100%; }
+  .layout-builder .navbar .navbar-nav .nav-link.active {
+    color: #ffc107; }
   .layout-builder .main {
     padding: 10px;
     display: grid;

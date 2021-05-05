@@ -249,6 +249,13 @@ export default class Utils{
     static RGBToHex(rgb) {
         rgb = rgb || "rgb(0,0,0)";
 
+        let regex = new RegExp(/^rgb[(](?:\s*0*(?:\d\d?(?:\.\d+)?(?:\s*%)?|\.\d+\s*%|100(?:\.0*)?\s*%|(?:1\d\d|2[0-4]\d|25[0-5])(?:\.\d+)?)\s*(?:,(?![)])|(?=[)]))){3}[)]$/gm);
+
+        // not an RGB
+        if(!regex.test(rgb)){ 
+            return rgb; 
+        }
+
         // Choose correct separator
         let sep = rgb.indexOf(",") > -1 ? "," : " ";
         // Turn "rgb(r,g,b)" into [r,g,b]

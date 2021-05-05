@@ -41,8 +41,8 @@ export class ComponentProperties extends Component{
                         {item.children.map((item2, index2) => {
                             let formItem = 
                                 <Form.Group size="sm" key={index2} as={Row}  controlId={`formitem${index2}`}>
-                                    <Form.Label column sm="5">{item2.text}</Form.Label>
-                                    <Col sm="7">
+                                    <Form.Label column sm="6">{item2.text}</Form.Label>
+                                    <Col sm="6">
                                         {this.createFormControl(item2)}
                                     </Col>
                                 </Form.Group>;

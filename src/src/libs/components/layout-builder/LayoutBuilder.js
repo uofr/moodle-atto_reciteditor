@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import { Nav, Card, Navbar, Collapse  } from 'react-bootstrap';
-import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faFileWord} from '@fortawesome/free-solid-svg-icons';
+import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faFileWord, faEye, faCode} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {TreeView} from './TreeView';
 import {Canvas, CanvasElement, FloatingMenu} from './Canvas';
 import {ComponentProperties, VisualComponentList} from './ComponentsCollection';
-import {HTMLElementData} from './HTMLElementData';
 import {Cookies} from '../../utils/Cookies';
 import { JsNx } from '../../utils/Utils';
+
+import {Controlled  as CodeMirror} from 'react-codemirror2';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/material.css';
+var beautifyingHTML = require("pretty");
+require('codemirror/mode/xml/xml');
+require('codemirror/mode/javascript/javascript');
 
 export class LayoutBuilder extends Component
 {
@@ -32,8 +38,9 @@ export class LayoutBuilder extends Component
         this.onImportCustomComponent = this.onImportCustomComponent.bind(this);
         this.onAfterSaveCustomComponent = this.onAfterSaveCustomComponent.bind(this);
         this.onCreateCanvasElement = this.onCreateCanvasElement.bind(this);
+        this.onPreview = this.onPreview.bind(this);
 
-        this.state = {device: 'xl', collapsed: ['0', '1', '2'], selectedElement: null, data: {customHtmlComponentList: []}};
+        this.state = {device: 'xl', view: '', collapsed: ['0', '1', '2'], selectedElement: null, data: {customHtmlComponentList: []}};
 
         this.canvas = React.createRef();
     }
@@ -63,7 +70,7 @@ export class LayoutBuilder extends Component
         
         try{
             let tmp = Cookies.get('appData', null);
-            console.log(tmp)
+            
             if(tmp !== null){
                 tmp = JSON.parse(tmp);
                 let data = {customHtmlComponentList: tmp.customHtmlComponentList};
@@ -88,6 +95,11 @@ export class LayoutBuilder extends Component
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
                             <Nav.Link eventKey="wordbuilder"><FontAwesomeIcon icon={faFileWord} title="Word Builder"/></Nav.Link>
+                            
+                        </Nav>
+                        <Nav className="mr-auto" activeKey={this.state.view}>
+                            <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title="Preview"/></Nav.Link>
+                            <Nav.Link eventKey="codesource"><FontAwesomeIcon icon={faCode} title="Code source"/></Nav.Link>
                         </Nav>
                         <Nav activeKey={this.state.device}>
                             <Nav.Link eventKey="xs"><FontAwesomeIcon icon={faMobileAlt} title="XS"/></Nav.Link>
@@ -127,11 +139,16 @@ export class LayoutBuilder extends Component
                     </div>
                     
                     <div className="center-area" >
-                        <Canvas>
-                            <iframe ref={this.canvas} className="canvas" style={this.getDeviceDimension()}></iframe>
-                            <FloatingMenu canvas={this.canvas} selectedElement={this.state.selectedElement} onDeleteElement={this.onDeleteElement} onRefresh={this.onRefresh}
-                                        onSaveCustomComponent={this.onSaveCustomComponent} onCreateCanvasElement={this.onCreateCanvasElement}/>
-                        </Canvas>
+                        {this.state.view === 'sourcecode' ?
+                            <CodeMirror  value={this.state.tmpContent}  options={{mode: 'xml', tabSize: 4, theme: 'material', lineNumbers: true, electricChars: true}} 
+                                onBeforeChange={(editor, data, value) => this.onChangeTmpContent(value)}/>
+                            :
+                            <Canvas>
+                                <iframe ref={this.canvas} className="canvas" style={this.getDeviceDimension()}></iframe>
+                                <FloatingMenu canvas={this.canvas} selectedElement={this.state.selectedElement} onDeleteElement={this.onDeleteElement} onRefresh={this.onRefresh}
+                                            onSaveCustomComponent={this.onSaveCustomComponent} onCreateCanvasElement={this.onCreateCanvasElement}/>
+                            </Canvas>
+                        }
                     </div>
                 </div>
             </div>;
@@ -157,8 +174,27 @@ export class LayoutBuilder extends Component
         if(eventKey === 'wordbuilder'){
             this.props.onSelectBuilder('word');
         }
+        else if('preview' === eventKey){
+            let value = (this.state.view === eventKey);
+            this.setState({view: value ? '' : eventKey}, () => this.onPreview(value));
+        }
+        else if('codesource' === eventKey){
+            this.setState({view: (this.state.view === eventKey ? '' : eventKey)});
+        }
         else{
             this.setState({device: eventKey});
+        }
+    }
+
+    onPreview(value){
+        let window = this.canvas.current.contentWindow || this.canvas.current.contentDocument;
+        let body = window.document.body;
+
+        if(value){
+            body.parentElement.classList.add("canvas-content");
+        }
+        else{
+            body.parentElement.classList.remove("canvas-content");
         }
     }
 

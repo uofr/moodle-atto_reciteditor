@@ -1,7 +1,6 @@
 import React from 'react';
 import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {Utils} from '../../utils/Utils';
 import ImageEmpty from '../assets/empty.jpg';
 
 export class HTMLElementData{
@@ -188,7 +187,37 @@ export class HTMLElementData{
     static elementList = [
         {name: 'Text', children: [
             {
-                name: "Heading", type: 'native', tagName: 'h1', properties: ['font', 'layout', 'background'],
+                name: "H1", type: 'native', tagName: 'h1', properties: ['font', 'layout', 'background'],
+                init: function (el) {
+                    el.innerText = el.tagName.toLowerCase();
+                },
+            },
+            {
+                name: "H2", type: 'native', tagName: 'h2', properties: ['font', 'layout', 'background'],
+                init: function (el) {
+                    el.innerText = el.tagName.toLowerCase();
+                },
+            },
+            {
+                name: "H3", type: 'native', tagName: 'h3', properties: ['font', 'layout', 'background'],
+                init: function (el) {
+                    el.innerText = el.tagName.toLowerCase();
+                },
+            },
+            {
+                name: "H4", type: 'native', tagName: 'h4', properties: ['font', 'layout', 'background'],
+                init: function (el) {
+                    el.innerText = el.tagName.toLowerCase();
+                },
+            },
+            {
+                name: "H5", type: 'native', tagName: 'h5', properties: ['font', 'layout', 'background'],
+                init: function (el) {
+                    el.innerText = el.tagName.toLowerCase();
+                },
+            },
+            {
+                name: "H6", type: 'native', tagName: 'h6', properties: ['font', 'layout', 'background'],
                 init: function (el) {
                     el.innerText = el.tagName.toLowerCase();
                 },
