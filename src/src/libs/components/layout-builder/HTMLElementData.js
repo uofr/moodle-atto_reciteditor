@@ -226,7 +226,22 @@ export class HTMLElementData{
                 init:function(el){
                     el.innerText = "Paragraph";
                 }
-            }
+            },
+            {name: "Unordered list", type: 'native', tagName: 'ul', properties: ['font', 'layout', 'background'],
+                init:function(el){
+                    el.innerHTML = "<li>List</li>";
+                }
+            },
+            {name: "Ordered list", type: 'native', tagName: 'ol', properties: ['font', 'layout', 'background'],
+                init:function(el){
+                    el.innerHTML = "<li>List</li>";
+                }
+            },
+            {name: "List Item", type: 'native', tagName: 'li', properties: ['font', 'layout', 'background'],
+                init:function(el){
+                    el.innerText = "Item";
+                }
+            },
         ]},
         {name: 'Controls', children: [
             {name: "Button", type: 'native', tagName: 'button', properties: ['font', 'layout', 'background'],
