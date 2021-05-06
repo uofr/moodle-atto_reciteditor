@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ImageEmpty from '../assets/empty.jpg';
 
 export class HTMLElementData{
+
     static propertyList = [
         {
             name: 'layout', description: 'Layout',
@@ -123,6 +124,25 @@ export class HTMLElementData{
                     },
                     getValue: function(el, data){
                         return (el.style.backgroundColor ? el.style.backgroundColor : '#FFFFFF');
+                    }
+                },
+            ]
+        },
+        {
+            name: 'icon', description: 'Icon', 
+            children: [
+                {
+                    name: 'icon', 
+                    text: "Icon",
+                    input: { 
+                        type: 'iconselector',
+                        text: 'Select icon',
+                        onChange: function(el, value, data){
+                           el.setAttribute('class', value);
+                        }
+                    },
+                    getValue: function(el, data){
+                        return el.getAttribute('class');
                     }
                 },
             ]
@@ -324,6 +344,11 @@ export class HTMLElementData{
             {name: "Image", type: 'native', tagName: 'img', properties: ['basic', 'layout'],
                 init:function(el){
                     el.setAttribute('src', `.${ImageEmpty}`);
+                },
+            },
+            {name: "Icon", type: 'native', tagName: 'i', properties: ['icon', 'font'],
+                init:function(el){
+                    el.classList.add('icon-emo-happy-1');//TODO: Default icon
                 },
             }
         ]},

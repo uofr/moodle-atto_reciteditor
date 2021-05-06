@@ -62,6 +62,11 @@ export class LayoutBuilder extends Component
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
+        el = document.createElement("link");
+		el.setAttribute("href", `fontello/css/fontello.css`);
+		el.setAttribute("rel", "stylesheet");
+		head.appendChild(el);
+
         body.parentElement.classList.add("canvas-content");
 
         // pure JS

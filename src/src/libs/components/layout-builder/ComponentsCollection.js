@@ -4,6 +4,7 @@ import { faUpload, faDownload, faTrashAlt} from '@fortawesome/free-solid-svg-ico
 import { ToggleButtons, InputColor, InputText} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
+import { IconSelector } from '../iconSelector';
 
 export class ComponentProperties extends Component{
     static defaultProps = {
@@ -72,6 +73,10 @@ export class ComponentProperties extends Component{
                 break;
             case 'color':
                 result = <InputColor name={data.name} value={value} 
+                                onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'iconselector':
+                result = <IconSelector name={data.name} value={value} text={data.input.text}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
            /* case 'number':
