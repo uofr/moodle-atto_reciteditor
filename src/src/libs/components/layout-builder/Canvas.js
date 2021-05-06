@@ -53,7 +53,10 @@ export class CanvasElement{
     onClick(event){        
         event.preventDefault(); // Cancel the default action (in case of href)
         event.stopPropagation();
-        this.onSelectCallback(this.dom);
+
+        if(!this.dom.hasAttribute("contenteditable")){
+            this.onSelectCallback(this.dom);
+        }
     }
 
     onDrop(event){

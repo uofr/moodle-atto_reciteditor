@@ -13,6 +13,7 @@ html.canvas-content{
         .row:empty::after{content: "Row"}
         .col{ border: 1px dashed rgb(201, 197, 197); }
         .col:empty::after{content: "Col"}
+        .btn:empty::after{content: "Button"}
         
 
         /* Those elements have priority over the previous ones*/

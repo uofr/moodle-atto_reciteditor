@@ -118,15 +118,17 @@ export class LayoutBuilder extends Component
                         <Card>
                             <Card.Header onClick={() => this.onCollapse('0')}>Composants</Card.Header>
                             <Collapse in={this.state.collapsed.includes('0')}>
-                                <Card.Body><VisualComponentList onDeleteCustomComponent={this.onDeleteCustomComponent}  onImportCustomComponent={this.onImportCustomComponent}
-                                                customHtmlComponentList={this.state.data.customHtmlComponentList} onDragEnd={this.onDragEnd}/></Card.Body>
+                                <Card.Body style={{maxHeight: 350, overflow: "auto"}}>
+                                    <VisualComponentList onDeleteCustomComponent={this.onDeleteCustomComponent}  onImportCustomComponent={this.onImportCustomComponent}
+                                                customHtmlComponentList={this.state.data.customHtmlComponentList} onDragEnd={this.onDragEnd}/>
+                                </Card.Body>
                             </Collapse>
                         </Card>
 
                         <Card>
                             <Card.Header onClick={() => this.onCollapse('1')}>Proprietés</Card.Header>
                             <Collapse in={this.state.collapsed.includes('1')}>
-                                <Card.Body>
+                                <Card.Body style={{maxHeight: 350, overflow: "auto"}}>
                                     <ComponentProperties element={this.state.selectedElement}/>
                                 </Card.Body>
                             </Collapse>
@@ -135,7 +137,9 @@ export class LayoutBuilder extends Component
                         <Card>
                             <Card.Header  onClick={() => this.onCollapse('2')}>Arborescence</Card.Header>
                             <Collapse in={this.state.collapsed.includes('2')}>
-                                <Card.Body><TreeView canvas={this.canvas} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} /></Card.Body>
+                                <Card.Body style={{maxHeight: 350, overflow: "auto"}}>
+                                    <TreeView canvas={this.canvas} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} />
+                                </Card.Body>
                             </Collapse>
                         </Card>
                     </div>
@@ -233,9 +237,16 @@ export class LayoutBuilder extends Component
 
     onSelectElement(el){
         // if the selected element receives another click then it deselects it
-        if((Object.is(el, this.state.selectedElement)) || (this.state.selectedElement !== null)){ 
+        if(Object.is(el, this.state.selectedElement)){
             this.htmlCleaning();
             this.setState({selectedElement: null});
+            return;
+        }
+
+
+        if(this.state.selectedElement !== null){ 
+            this.htmlCleaning();
+            this.setState({selectedElement: null}, () => this.onSelectElement(el));
             return; 
         }
 
