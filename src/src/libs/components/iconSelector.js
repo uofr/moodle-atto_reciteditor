@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Button, Modal, FormControl } from 'react-bootstrap';
-import Utils from '../utils/Utils';
 import './assets/fontello/css/fontello.css';
 import fontData from './assets/fontello/config.json';
-
+import { faIcons} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 export class IconSelector extends Component {
     static defaultProps = {
         name: '',
@@ -27,13 +27,16 @@ export class IconSelector extends Component {
     render() {
         let items = this.getIconTable();
 
-        let main = <Button key="1" name={this.props.name} variant="info" onClick={this.handleShow} disabled={this.props.disabled}>{this.props.text}</Button>;
+        let main = 
+            <Button key="1" name={this.props.name} size="sm" variant="primary" onClick={this.handleShow} disabled={this.props.disabled}>
+                <FontAwesomeIcon icon={faIcons}/>{` ${this.props.text}`}
+            </Button>;
         
         let modal = <Modal key="2" show={this.state.modal} onHide={this.handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Icons</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{overflowY: 'scroll', maxHeight: '75vh'}}>
+        <Modal.Body style={{overflowY: 'scroll', maxHeight: '50vh'}}>
             <FormControl className={"InputText"} type="text" value={this.state.search} onChange={this.onSearch} placeholder={"Recherche"} style={{marginLeft: '15px', width: '91%'}}/>
             <div className={"d-flex flex-wrap"}>
                 {items}

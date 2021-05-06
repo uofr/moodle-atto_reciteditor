@@ -3,13 +3,32 @@ html.canvas-content {
   padding: 0; }
   html.canvas-content body {
     margin: 0;
-    padding: 0; }
+    padding: 15px;
+    /* Those elements have priority over the previous ones*/ }
+    html.canvas-content body div:not(.row):not(.col):not(.dropping-zone):empty::after {
+      content: "Div"; }
+    html.canvas-content body div {
+      border: 2px dashed #c9c5c5; }
+    html.canvas-content body .container {
+      border: 2px dashed #c9c5c5;
+      padding: 1rem !important; }
+    html.canvas-content body .row {
+      border: 2px dashed #c9c5c5;
+      padding: 1rem; }
+    html.canvas-content body .row:empty::after {
+      content: "Row"; }
+    html.canvas-content body .col {
+      border: 2px dashed #c9c5c5; }
+    html.canvas-content body .col:empty::after {
+      content: "Col"; }
+    html.canvas-content body .btn:empty::after {
+      content: "Button"; }
     html.canvas-content body .element-focus, html.canvas-content body body:hover, html.canvas-content body h1:hover, html.canvas-content body h2:hover, html.canvas-content body h3:hover, html.canvas-content body h4:hover, html.canvas-content body h5:hover, html.canvas-content body h6:hover, html.canvas-content body button:hover, html.canvas-content body p:hover, html.canvas-content body [data-selected="1"] {
-      border: 1px solid #0099ff; }
+      border: 2px solid #0099ff !important; }
   html.canvas-content .dropping-zone {
-    border: 1px dashed  #32c35dfd;
+    border: 2px dashed #0099ff;
     height: 50px;
-    width: 50px;
+    width: 100%;
     transform: scale(0.97);
     display: inline-flex;
     margin-left: .5rem;

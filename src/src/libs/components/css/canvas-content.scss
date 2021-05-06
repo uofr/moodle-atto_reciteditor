@@ -1,4 +1,4 @@
-$border-onhover-element: 1px solid rgb(0, 153, 255)!important;
+$border-onhover-element: 2px solid rgb(0, 153, 255)!important;
 
 html.canvas-content{
     margin: 0; padding: 0;
@@ -7,11 +7,12 @@ html.canvas-content{
         margin:0; padding: 15px;
 
         div:not(.row):not(.col):not(.dropping-zone):empty::after{content: "Div"}
+        div{ border: 2px dashed rgb(201, 197, 197); }    
 
-        .container{ border: 1px dashed rgb(82, 81, 81); padding: 1rem!important; }    
-        .row{ border: 1px dashed rgb(121, 119, 119);  padding: 1rem; }
+        .container{ border: 2px dashed rgb(201, 197, 197); padding: 1rem!important; }    
+        .row{ border: 2px dashed rgb(201, 197, 197);  padding: 1rem; }
         .row:empty::after{content: "Row"}
-        .col{ border: 1px dashed rgb(201, 197, 197); }
+        .col{ border: 2px dashed rgb(201, 197, 197); }
         .col:empty::after{content: "Col"}
         .btn:empty::after{content: "Button"}
         
@@ -34,8 +35,9 @@ html.canvas-content{
 
         *[data-selected="1"]{@extend .element-focus;}
     }
-    .dropping-zone{border: 1px dashed  #32c35dfd; height: 50px; width: 50px;  transform: scale(0.97); 
+    .dropping-zone{border: 2px dashed rgb(0, 153, 255); height: 50px; width: 100%;  transform: scale(0.97); 
         display: inline-flex; margin-left: .5rem; margin-right: .5rem; margin-top: .5rem;}
 
+    //.dropping-zone:empty::after{content: 'Déposer ici';}
    
 }
