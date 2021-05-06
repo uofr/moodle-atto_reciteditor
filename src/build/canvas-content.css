@@ -23,7 +23,7 @@ html.canvas-content {
       content: "Col"; }
     html.canvas-content body .btn:empty::after {
       content: "Button"; }
-    html.canvas-content body .element-focus, html.canvas-content body body:hover, html.canvas-content body h1:hover, html.canvas-content body h2:hover, html.canvas-content body h3:hover, html.canvas-content body h4:hover, html.canvas-content body h5:hover, html.canvas-content body h6:hover, html.canvas-content body button:hover, html.canvas-content body p:hover, html.canvas-content body [data-selected="1"] {
+    html.canvas-content body .element-focus, html.canvas-content body body:hover, html.canvas-content body h1:hover, html.canvas-content body h2:hover, html.canvas-content body h3:hover, html.canvas-content body h4:hover, html.canvas-content body h5:hover, html.canvas-content body h6:hover, html.canvas-content body button:hover, html.canvas-content body p:hover, html.canvas-content body div:hover, html.canvas-content body ul:hover, html.canvas-content body ol:hover, html.canvas-content body li:hover, html.canvas-content body [data-selected="1"] {
       border: 2px solid #0099ff !important; }
   html.canvas-content .dropping-zone {
     border: 2px dashed #0099ff;
@@ -34,5 +34,7 @@ html.canvas-content {
     margin-left: .5rem;
     margin-right: .5rem;
     margin-top: .5rem; }
+  html.canvas-content .dropping-zone-hover {
+    background-color: rgba(0, 153, 255, 0.5) !important; }
 
 /*# sourceMappingURL=canvas-content.css.map */

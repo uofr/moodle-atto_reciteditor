@@ -306,13 +306,16 @@ export class LayoutBuilder extends Component
 
         // remove the class dropping-zone of all elements
         let canvas = this.canvas.current.contentWindow || this.canvas.current.contentDocument;
-        let items = canvas.document.querySelectorAll(".dropping-zone, [contenteditable='true']");
+        let items = canvas.document.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable='true']");
 
         items.forEach(function(item) {
             //item.classList.remove('dropping-zone');
             if(item.classList.contains("dropping-zone")){
                 item.remove();
             }
+            else if(item.classList.contains("dropping-zone-hover")){
+                item.classList.remove('dropping-zone-hover');
+            }           
             
             item.removeAttribute("contenteditable");
         });

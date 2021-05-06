@@ -92,6 +92,9 @@ export class CanvasElement{
     
     onDragOver(event){
         event.preventDefault(); // Necessary to allows us to drop.
+        if(!event.target.classList.contains('dropping-zone-hover')){
+            event.target.classList.add('dropping-zone-hover');
+        }
         return false;
     }
 
@@ -110,6 +113,11 @@ export class CanvasElement{
     onDragLeave(event){
         //console.log('leave')
         //this.dom.classList.remove('dropping-zone');
+        event.preventDefault();
+
+        if(event.target.classList.contains('dropping-zone-hover')){
+            event.target.classList.remove('dropping-zone-hover');
+        }
     }
 
     createDroppingZone(pos){

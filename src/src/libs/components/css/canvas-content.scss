@@ -25,19 +25,14 @@ html.canvas-content{
             //padding: 3px;
         }
 
-        &:hover{
-            @extend .element-focus;
-        }
-
-        h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover, button:hover, p:hover{
-            @extend .element-focus;
-        }
+        &:hover{ @extend .element-focus;}
+        h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover, button:hover, p:hover, div:hover, ul:hover, ol:hover, li:hover{@extend .element-focus;}
 
         *[data-selected="1"]{@extend .element-focus;}
     }
     .dropping-zone{border: 2px dashed rgb(0, 153, 255); height: 50px; width: 100%;  transform: scale(0.97); 
         display: inline-flex; margin-left: .5rem; margin-right: .5rem; margin-top: .5rem;}
 
-    //.dropping-zone:empty::after{content: 'Déposer ici';}
-   
+    .dropping-zone-hover{background-color:  rgba(0, 153, 255, .5)!important;}
+    //.dropping-zone:empty::after{content: 'Déposer ici';}  
 }
