@@ -9,6 +9,8 @@ export class Cookies
     * @returns {void}
     */
     static set(id, value, minutesExpire) {
+        value = window.escape(value);
+
         let d = new Date();
         d.setTime(d.getTime() + (minutesExpire*60*1000));
         let expires = "expires="+d.toUTCString();
@@ -28,6 +30,7 @@ export class Cookies
                 result = c.substring(name.length, c.length);
         }
 
+        result = window.unescape(result);
         switch(typeof defaultValue){            
             case 'boolean':
                 result = result === 'true';

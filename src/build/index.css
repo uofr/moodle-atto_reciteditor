@@ -11,7 +11,11 @@
     }
 }*/
 .layout-builder {
-  height: 100%; }
+  height: 100%;
+  /* width */
+  /* Track */
+  /* Handle */
+  /* Handle on hover */ }
   .layout-builder .navbar .navbar-nav .nav-link.active {
     color: #ffc107; }
   .layout-builder .main {
@@ -46,8 +50,6 @@
     .layout-builder .component-list ul .token-section {
       font-weight: 500; }
     .layout-builder .component-list ul .token {
-      background-color: #343a40;
-      color: #FFF;
       margin: 3px;
       padding: 5px;
       text-align: center;
@@ -55,6 +57,15 @@
       display: inline-flex;
       font-weight: 500;
       border-radius: 6px; }
+    .layout-builder .component-list ul .token[data-type='native'] {
+      background-color: #6c757d;
+      color: #FFF; }
+    .layout-builder .component-list ul .token[data-type='bootstrap'] {
+      background-color: #007bff;
+      color: #FFF; }
+    .layout-builder .component-list ul .token[data-type='custom'] {
+      background-color: #28a745;
+      color: #FFF; }
   .layout-builder .floating-menu {
     position: absolute; }
   .layout-builder .tree-view {
@@ -63,6 +74,14 @@
     .layout-builder .tree-view ul {
       list-style: none;
       padding-left: 1rem; }
+  .layout-builder ::-webkit-scrollbar {
+    width: 4px; }
+  .layout-builder ::-webkit-scrollbar-track {
+    background: #f1f1f1; }
+  .layout-builder ::-webkit-scrollbar-thumb {
+    background: #888; }
+  .layout-builder ::-webkit-scrollbar-thumb:hover {
+    background: #555; }
 
 /*****************
  * SCREEN CAPTURE

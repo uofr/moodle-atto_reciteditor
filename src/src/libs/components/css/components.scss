@@ -40,10 +40,13 @@
         ul{list-style: none; padding-left: 0;
             .token-section{ font-weight: 500;}
             .token{
-                background-color: #343a40; color: #FFF;
+                
                  margin: 3px; padding: 5px; text-align: center; cursor: grab; display: inline-flex;
                  font-weight: 500; border-radius: 6px;
             }
+            .token[data-type='native']{background-color: #6c757d; color: #FFF;}
+            .token[data-type='bootstrap']{background-color: #007bff; color: #FFF;}
+            .token[data-type='custom']{background-color: #28a745; color: #FFF;}
         }
     }
     
@@ -53,6 +56,18 @@
         list-style: none; padding-left: 0;
         ul{list-style: none; padding-left: 1rem; }
     }
+
+    /* width */
+    ::-webkit-scrollbar { width: 4px; }
+  
+    /* Track */
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+  
+    /* Handle */
+    ::-webkit-scrollbar-thumb {background: #888;}
+  
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {background: #555;}
 }
 
 /*****************

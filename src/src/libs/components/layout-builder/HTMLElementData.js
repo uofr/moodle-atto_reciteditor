@@ -246,29 +246,15 @@ export class HTMLElementData{
                 init:function(el){
                     el.innerText = "Paragraph";
                 }
-            },
-            {name: "Unordered list", type: 'native', tagName: 'ul', properties: ['font', 'layout', 'background'],
-                init:function(el){
-                    el.innerHTML = "<li>List</li>";
-                }
-            },
-            {name: "Ordered list", type: 'native', tagName: 'ol', properties: ['font', 'layout', 'background'],
-                init:function(el){
-                    el.innerHTML = "<li>List</li>";
-                }
-            },
-            {name: "List Item", type: 'native', tagName: 'li', properties: ['font', 'layout', 'background'],
-                init:function(el){
-                    el.innerText = "Item";
-                }
-            },
+            }
         ]},
         {name: 'Controls', children: [
-            {name: "Button", type: 'native', tagName: 'button', properties: ['font', 'layout', 'background'],
-                init:function(el){
-                    el.innerText = el.tagName.toLowerCase();
+            {name: "Button", type: 'bootstrap', tagName: 'button', properties: ['font', 'layout', 'background'],
+                create: function(){
+                    let el = document.createElement("button");
                     el.classList.add('btn');
                     el.classList.add('btn-primary');
+                    return el;
                 },
             },
             {name: "Link", type: 'native', tagName: 'a', properties: ['link', 'font', 'layout', 'background'],
@@ -308,17 +294,14 @@ export class HTMLElementData{
 
                     let col = document.createElement("div");
                     col.classList.add("col");
-                    col.innerHTML = "Col 1";
                     row.appendChild(col);
 
                     col = document.createElement("div");
                     col.classList.add("col");
-                    col.innerHTML = "Col 2";
                     row.appendChild(col);
 
                     col = document.createElement("div");
                     col.classList.add("col");
-                    col.innerHTML = "Col 3";
                     row.appendChild(col);
 
                     return el;
@@ -336,6 +319,21 @@ export class HTMLElementData{
                     let el = document.createElement("div");
                     el.classList.add("col");
                     return el;
+                }
+            },
+            {name: "Unordered list", type: 'native', tagName: 'ul', properties: ['layout', 'background'],
+                init:function(el){
+                    el.innerHTML = "<li>List</li>";
+                }
+            },
+            {name: "Ordered list", type: 'native', tagName: 'ol', properties: ['layout', 'background'],
+                init:function(el){
+                    el.innerHTML = "<li>List</li>";
+                }
+            },
+            {name: "List Item", type: 'native', tagName: 'li', properties: ['font', 'layout', 'background'],
+                init:function(el){
+                    el.innerText = "Item";
                 }
             },
             {name: "Séparateur", type: 'native', tagName: 'hr', properties: ['layout', 'background']}

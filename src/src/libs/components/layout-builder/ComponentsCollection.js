@@ -41,7 +41,7 @@ export class ComponentProperties extends Component{
                         <h6>{item.description}</h6>
                         {item.children.map((item2, index2) => {
                             let formItem = 
-                                <Form.Group size="sm" key={index2} as={Row}  controlId={`formitem${index2}`}>
+                                <Form.Group size="sm" key={index2} as={Row}  controlId={`formitem${index}${index2}`}>
                                     <Form.Label column sm="6">{item2.text}</Form.Label>
                                     <Col sm="6">
                                         {this.createFormControl(item2)}
@@ -270,7 +270,7 @@ class Token extends Component
 	
 	render(){
 		let main = 
-            <li className="token" draggable="true" onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}>
+            <li className="token" data-type={this.props.data.type} draggable="true" onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}>
                 {this.props.data.name}   
                 {this.props.showMenu && 
                     <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
