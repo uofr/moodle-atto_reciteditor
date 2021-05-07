@@ -37,6 +37,26 @@ export class HTMLElementData{
                         return el.style.height;
                     }
                 },
+                {
+                    name: 'classlist', 
+                    text: "Class List",
+                    input: { 
+                        type: 'multipleselect',
+                        autoadd: true,
+                        options: [], 
+                        defaultValue: '',
+                        onChange: function(el, value, data){
+                           el.className = value.join(' ');
+                        }
+                    },
+                    getValue: function(el, data){
+                        let list = [];
+                        for (let c of el.classList){
+                            list.push({value:c, text:c});
+                        }
+                        return list;
+                    }
+                },
             ]
         },
         {

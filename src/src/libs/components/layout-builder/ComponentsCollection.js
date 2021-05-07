@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button  } from 'react-bootstrap';
 import { faUpload, faDownload, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
-import { ToggleButtons, InputColor, InputText} from '../Components';
+import { MultipleSelect, ToggleButtons, InputColor, InputText} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import { IconSelector } from '../iconSelector';
@@ -77,6 +77,10 @@ export class ComponentProperties extends Component{
                 break;
             case 'iconselector':
                 result = <IconSelector name={data.name} value={value} text={data.input.text}
+                                onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'multipleselect':
+                result = <MultipleSelect name={data.name} values={value} options={data.input.options} autoAdd={data.input.autoadd}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
            /* case 'number':

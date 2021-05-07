@@ -81,8 +81,10 @@ export class LayoutBuilder extends Component
             
             if(tmp !== null){
                 tmp = JSON.parse(tmp);
-                let data = {customHtmlComponentList: tmp.customHtmlComponentList};
-                this.setState({data: data})
+                if (tmp){
+                    let data = {customHtmlComponentList: tmp.customHtmlComponentList};
+                    this.setState({data: data})
+                }
             }
         }
         catch(err){
