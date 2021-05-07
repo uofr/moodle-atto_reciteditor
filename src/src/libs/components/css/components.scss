@@ -162,4 +162,103 @@
         }
     }
 }
+
+  
+/**********************************************************
+ * Layout Spacing editor
+ **********************************************************/
  
+.layoutspacing_layout-onion {
+    width: 350px;
+    -webkit-box-flex: initial;
+    -ms-flex-positive: initial;
+    flex-grow: initial;
+}
+
+.layoutspacing_layout-onion * {
+    margin: 44px;
+    position: relative
+}
+
+.layoutspacing_layout-onion label {
+    position: absolute;
+    font-size: 9px;
+    line-height: 9px;
+    top: 6px;
+    left: 5px;
+    color: #2c2c2c;
+    margin: 0;
+    padding: 0
+}
+
+.layoutspacing_layout-onion input {
+    position: absolute;
+    text-align: center;
+    padding: 3px 0;
+    height: 24px;
+    width: 34px;
+    margin: 0;
+    border: 1px solid #bdbdbd;
+    font-size: 11px;
+    line-height: 11px
+}
+
+.layoutspacing_layout-onion input.layoutspacing_top {
+    top: 11px;
+    left: 50%;
+    margin-left: -17px
+}
+
+.layoutspacing_layout-onion input.layoutspacing_bottom {
+    bottom: 11px;
+    left: 50%;
+    margin-left: -17px
+}
+
+.layoutspacing_layout-onion input.layoutspacing_left {
+    top: 50%;
+    left: 5px;
+    margin-top: -12px
+}
+
+.layoutspacing_layout-onion input.layoutspacing_right {
+    top: 50%;
+    right: 5px;
+    margin-top: -12px
+}
+
+.layoutspacing_layout-onion .layoutspacing_margin {
+    border: 1px dashed #bababa;
+    margin: 1px
+}
+
+.layoutspacing_layout-onion .layoutspacing_margin .layoutspacing_border {
+    border: 1px solid #d7d7d7;
+    background: #f6f6f6
+}
+
+.layoutspacing_layout-onion .layoutspacing_margin .layoutspacing_border .layoutspacing_padding {
+    border: 1px solid #bababa;
+    background: #ebebeb
+}
+
+.layoutspacing_layout-onion .layoutspacing_margin .layoutspacing_border .layoutspacing_padding .layoutspacing_content {
+    border: 1px solid #bababa;
+    height: 50px;
+    padding: 0;
+    text-align: center;
+    font-size: 10px;
+    line-height: 11px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box
+}
+
+.layoutspacing_layout-onion .layoutspacing_margin .layoutspacing_border .layoutspacing_padding .layoutspacing_content i {
+    margin: 8px auto;
+    background: #333333;
+    background-size: 32px;
+    display: block;
+    width: 32px;
+    height: 32px
+}
+

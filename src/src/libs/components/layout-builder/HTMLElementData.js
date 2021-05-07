@@ -2,6 +2,7 @@ import React from 'react';
 import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ImageEmpty from '../assets/empty.jpg';
+import { LayoutSpacingEditor} from '../Components';
 
 export class HTMLElementData{
 
@@ -53,6 +54,26 @@ export class HTMLElementData{
                         let list = [];
                         for (let c of el.classList){
                             list.push({value:c, text:c});
+                        }
+                        return list;
+                    }
+                },
+                {
+                    name: 'layoutspacing',
+                    text: "Layout Spacing",
+                    noColumn: true,
+                    input: { 
+                        type: 'layoutspacing',
+                        defaultValue: '',
+                        onChange: function(el, value, data){
+                           el.style[value.name] = value.value;
+                        }
+                    },
+                    getValue: function(el, data){
+                        let list = {};
+                        let styles = getComputedStyle(el);
+                        for (let c of LayoutSpacingEditor.styleKeys){
+                            list[c] = styles[c];
                         }
                         return list;
                     }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button  } from 'react-bootstrap';
 import { faUpload, faDownload, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
-import { MultipleSelect, ToggleButtons, InputColor, InputText} from '../Components';
+import { LayoutSpacingEditor, MultipleSelect, ToggleButtons, InputColor, InputText} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import { IconSelector } from '../iconSelector';
@@ -40,13 +40,21 @@ export class ComponentProperties extends Component{
                     <Form key={index} onSubmit={this.onSubmit}>
                         <h6>{item.description}</h6>
                         {item.children.map((item2, index2) => {
-                            let formItem = 
+                            let formItem = null;
+                            if (item2.noColumn){
+                                formItem = 
+                                <Form.Group size="sm" key={index2} as={Row}  controlId={`formitem${index}${index2}`}>
+                                    {this.createFormControl(item2)}
+                                </Form.Group>;
+                            }else{
+                                formItem = 
                                 <Form.Group size="sm" key={index2} as={Row}  controlId={`formitem${index}${index2}`}>
                                     <Form.Label column sm="6">{item2.text}</Form.Label>
                                     <Col sm="6">
                                         {this.createFormControl(item2)}
                                     </Col>
                                 </Form.Group>;
+                            }
 
                             return (formItem);
                         })}
@@ -81,6 +89,10 @@ export class ComponentProperties extends Component{
                 break;
             case 'multipleselect':
                 result = <MultipleSelect name={data.name} values={value} options={data.input.options} autoAdd={data.input.autoadd}
+                                onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'layoutspacing':
+                result = <LayoutSpacingEditor name={data.name} values={value}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
            /* case 'number':

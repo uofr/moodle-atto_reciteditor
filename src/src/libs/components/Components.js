@@ -10,6 +10,7 @@ export * from './InputText';
 export * from './ComboBox';
 export * from './InputColor';
 export * from './MultipleSelect';
+export * from './LayoutSpacingEditor';
 export * from './RecitRichEditor';
 
 export default class Components{
