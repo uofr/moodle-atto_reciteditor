@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Nav, Card, Navbar, Collapse  } from 'react-bootstrap';
-import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faFileWord, faEye, faCode} from '@fortawesome/free-solid-svg-icons';
+import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faFileWord, faEye, faCode, faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {TreeView} from './TreeView';
 import {Canvas, CanvasElement, FloatingMenu} from './Canvas';
@@ -124,7 +124,10 @@ export class LayoutBuilder extends Component
                 <div className="main">
                     <div className="left-area">
                         <Card>
-                            <Card.Header onClick={() => this.onCollapse('0')}>Composants</Card.Header>
+                            <Card.Header onClick={() => this.onCollapse('0')}>
+                                <FontAwesomeIcon className="mr-1" icon={(!this.state.collapsed.includes('0') ? faAngleRight : faAngleDown)}/>
+                                Composants
+                            </Card.Header>
                             <Collapse in={this.state.collapsed.includes('0')}>
                                 <Card.Body style={{maxHeight: 350, overflow: "auto"}}>
                                     <VisualComponentList onDeleteCustomComponent={this.onDeleteCustomComponent}  onImportCustomComponent={this.onImportCustomComponent}
@@ -134,7 +137,9 @@ export class LayoutBuilder extends Component
                         </Card>
 
                         <Card>
-                            <Card.Header onClick={() => this.onCollapse('1')}>Proprietés</Card.Header>
+                            <Card.Header onClick={() => this.onCollapse('1')}>
+                                <FontAwesomeIcon className="mr-1" icon={(!this.state.collapsed.includes('1') ? faAngleRight : faAngleDown)}/>Proprietés
+                            </Card.Header>
                             <Collapse in={this.state.collapsed.includes('1')}>
                                 <Card.Body style={{maxHeight: 350, overflow: "auto"}}>
                                     <ComponentProperties element={this.state.selectedElement}/>
@@ -143,7 +148,9 @@ export class LayoutBuilder extends Component
                         </Card>
 
                         <Card>
-                            <Card.Header  onClick={() => this.onCollapse('2')}>Arborescence</Card.Header>
+                            <Card.Header  onClick={() => this.onCollapse('2')}>
+                                <FontAwesomeIcon className="mr-1" icon={(!this.state.collapsed.includes('2') ? faAngleRight : faAngleDown)}/>Arborescence
+                            </Card.Header>
                             <Collapse in={this.state.collapsed.includes('2')}>
                                 <Card.Body style={{maxHeight: 350, overflow: "auto"}}>
                                     <TreeView canvas={this.canvas} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} />

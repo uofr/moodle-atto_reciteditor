@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button  } from 'react-bootstrap';
-import { faUpload, faDownload, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
+import { faUpload, faDownload, faTrashAlt, faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
 import { LayoutSpacingEditor, MultipleSelect, ToggleButtons, InputColor, InputText} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
@@ -16,6 +16,9 @@ export class ComponentProperties extends Component{
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onDataChange = this.onDataChange.bind(this);
+        this.onCollapse = this.onCollapse.bind(this);
+
+        this.state = {collapsed: {}}
     }
 
     render(){
@@ -36,10 +39,14 @@ export class ComponentProperties extends Component{
 
         let main =
                 properties.map((item, index) => {
+                    let collapsed = (typeof this.state.collapsed[item.name] === "undefined" ? true : this.state.collapsed[item.name]);
+                    
+                    let icon = collapsed ? faAngleRight : faAngleDown;
+
                     let form = 
-                    <Form key={index} onSubmit={this.onSubmit}>
-                        <h6>{item.description}</h6>
-                        {item.children.map((item2, index2) => {
+                    <Form key={index} onSubmit={this.onSubmit} className="mb-4">
+                        <h6><FontAwesomeIcon className="mr-1" icon={icon} onClick={(event) => this.onCollapse(event, item.name)}/>{item.description}</h6>
+                        {!collapsed && item.children.map((item2, index2) => {
                             let formItem = null;
                             
                             if((!item2.input.hasOwnProperty('flags')) || (item2.input.flags.showLabel)){
@@ -60,6 +67,7 @@ export class ComponentProperties extends Component{
 
                             return (formItem);
                         })}
+
                     </Form>
 
                     return form;
@@ -117,14 +125,13 @@ export class ComponentProperties extends Component{
         event.preventDefault();
     }
 
-    onDataCommit(event, componentData, element){
-        let properties = this.state.properties;
-        properties[event.target.name] = event.target.value;
-        if (componentData.input.onCommit){
-            this.setState({properties: properties}, componentData.input.onCommit(this.props.element, event.target.value, componentData));
-        }else{
-            this.setState({properties: properties});
-        }
+    onCollapse(event, id){
+        event.stopPropagation();
+        event.preventDefault();
+
+        let collapsed = this.state.collapsed;
+        collapsed[id] = (typeof collapsed[id] === 'undefined' ? false : !collapsed[id]);
+        this.setState({collapsed: collapsed});
     }
 }
 
@@ -190,31 +197,34 @@ class TokenList extends Component{
         this.onExport = this.onExport.bind(this);
         this.showMenu = this.showMenu.bind(this);
         this.showImport = this.showImport.bind(this);
+        this.onCollapse = this.onCollapse.bind(this);
 
-        this.state = {showMenu: false, showImport: false};
-
-        this.fileInput = React.createRef();
+        this.state = {showMenu: false, showImport: false, collapsed: {}};
     }
 
     render(){
         let main =
             <div className="tab-content">
                 {this.props.showMenu && 
-            <div>
-                    <ButtonToolbar style={{justifyContent: 'flex-end'}}>
-                        <ButtonGroup >
-                                <Button onClick={() => this.showImport(!this.state.showImport)}><FontAwesomeIcon  icon={faUpload} title="Importer la collection"/></Button>
-                                <Button onClick={this.onExport} ><FontAwesomeIcon  icon={faDownload} title="Exporter la collection"/></Button>
-                            <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
-                        </ButtonGroup>
-                    </ButtonToolbar>
+                    <div>
+                        <ButtonToolbar style={{justifyContent: 'flex-end'}}>
+                            <ButtonGroup >
+                                    <Button onClick={() => this.showImport(!this.state.showImport)}><FontAwesomeIcon  icon={faUpload} title="Importer la collection"/></Button>
+                                    <Button onClick={this.onExport} ><FontAwesomeIcon  icon={faDownload} title="Exporter la collection"/></Button>
+                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                            </ButtonGroup>
+                        </ButtonToolbar>
                         {this.state.showImport && <input type="file" onChange={this.onImport} accept=".json"/>}
                     </div>
                 }
                 {this.props.dataProvider.map((item, index) => {
+                    let collapsed = ((typeof this.state.collapsed[item.name] !== "undefined") && (this.state.collapsed[item.name]));
+                    let icon = collapsed ? faAngleRight : faAngleDown;
+
                     let branch = 
                         <ul key={index}>
                             <li key={index} className='token-section'>
+                                <FontAwesomeIcon className="mr-1" icon={icon} onClick={(event) => this.onCollapse(event, item.name)}/>
                                 {item.name}
                                 {this.state.showMenu &&
                                     <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
@@ -224,7 +234,7 @@ class TokenList extends Component{
                                     </ButtonToolbar>
                                 }
                             </li>
-                            {item.children.map((item2, index2) => {
+                            {!collapsed && item.children.map((item2, index2) => {
                                 return (<Token showMenu={this.state.showMenu} data={item2} key={index2} onDragEnd={this.props.onDragEnd} onDeleteCustomComponent={this.props.onDeleteCustomComponent}/>);
                             })}
                         </ul>
@@ -267,6 +277,15 @@ class TokenList extends Component{
         window.document.body.appendChild(node); // required for firefox
         node.click();
         node.remove();
+    }
+
+    onCollapse(event, id){
+        event.stopPropagation();
+        event.preventDefault();
+
+        let collapsed = this.state.collapsed;
+        collapsed[id] = !collapsed[id] || false;
+        this.setState({collapsed: collapsed});
     }
 }
 
