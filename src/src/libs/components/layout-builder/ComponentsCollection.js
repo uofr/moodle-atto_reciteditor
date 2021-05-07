@@ -41,18 +41,20 @@ export class ComponentProperties extends Component{
                         <h6>{item.description}</h6>
                         {item.children.map((item2, index2) => {
                             let formItem = null;
-                            if (item2.noColumn){
-                                formItem = 
-                                <Form.Group size="sm" key={index2} as={Row}  controlId={`formitem${index}${index2}`}>
-                                    {this.createFormControl(item2)}
-                                </Form.Group>;
-                            }else{
+                            
+                            if((!item2.input.hasOwnProperty('flags')) || (item2.input.flags.showLabel)){
                                 formItem = 
                                 <Form.Group size="sm" key={index2} as={Row}  controlId={`formitem${index}${index2}`}>
                                     <Form.Label column sm="6">{item2.text}</Form.Label>
                                     <Col sm="6">
                                         {this.createFormControl(item2)}
                                     </Col>
+                                </Form.Group>;
+                                
+                            }else{
+                                formItem = 
+                                <Form.Group size="sm" key={index2}  controlId={`formitem${index}${index2}`}>
+                                    {this.createFormControl(item2)}
                                 </Form.Group>;
                             }
 
@@ -88,7 +90,7 @@ export class ComponentProperties extends Component{
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
             case 'multipleselect':
-                result = <MultipleSelect name={data.name} values={value} options={data.input.options} autoAdd={data.input.autoadd}
+                result = <MultipleSelect name={data.name} values={value} options={data.input.options} autoAdd={data.input.flags.autoAdd}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
             case 'layoutspacing':

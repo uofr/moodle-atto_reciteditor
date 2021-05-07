@@ -37,47 +37,7 @@ export class HTMLElementData{
                     getValue: function(el, data){
                         return el.style.height;
                     }
-                },
-                {
-                    name: 'classlist', 
-                    text: "Class List",
-                    input: { 
-                        type: 'multipleselect',
-                        autoadd: true,
-                        options: [], 
-                        defaultValue: '',
-                        onChange: function(el, value, data){
-                           el.className = value.join(' ');
-                        }
-                    },
-                    getValue: function(el, data){
-                        let list = [];
-                        for (let c of el.classList){
-                            list.push({value:c, text:c});
-                        }
-                        return list;
-                    }
-                },
-                {
-                    name: 'layoutspacing',
-                    text: "Layout Spacing",
-                    noColumn: true,
-                    input: { 
-                        type: 'layoutspacing',
-                        defaultValue: '',
-                        onChange: function(el, value, data){
-                           el.style[value.name] = value.value;
-                        }
-                    },
-                    getValue: function(el, data){
-                        let list = {};
-                        let styles = getComputedStyle(el);
-                        for (let c of LayoutSpacingEditor.styleKeys){
-                            list[c] = styles[c];
-                        }
-                        return list;
-                    }
-                },
+                }
             ]
         },
         {
@@ -224,7 +184,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'basic', description: 'De base', 
+            name: 'source', description: 'Source', 
             children: [
                 {
                     name: 'src', 
@@ -242,55 +202,100 @@ export class HTMLElementData{
                 }
             ]
         },
-        
+        {
+            name: 'cssclasslist', description: 'Liste des classes CSS', 
+            children: [{
+                name: 'classlist', 
+                text: "Liste des classes",
+                input: { 
+                    type: 'multipleselect',
+                    flags: {autoAdd: true, showLabel: false},
+                    options: [], 
+                    defaultValue: '',
+                    onChange: function(el, value, data){
+                        el.className = value.join(' ');
+                    }
+                },
+                getValue: function(el, data){
+                    let list = [];
+                    for (let c of el.classList){
+                        list.push({value:c, text:c});
+                    }
+                    return list;
+                }
+            }]
+        },
+        {
+            name: 'marginborderpadding', description: 'Marge - Bordure - Padding', 
+            children: [{
+                name: 'layoutspacing',
+                text: "Layout Spacing",
+                input: { 
+                    type: 'layoutspacing',
+                    flags: {showLabel: false},
+                    defaultValue: '',
+                    onChange: function(el, value, data){
+                        el.style[value.name] = value.value;
+                    }
+                },
+                getValue: function(el, data){
+                    let list = {};
+                    let styles = getComputedStyle(el);
+                    for (let c of LayoutSpacingEditor.styleKeys){
+                        list[c] = styles[c];
+                    }
+                    return list;
+                }
+            },]
+        }
     ];
 
     static elementList = [
         {name: 'Text', children: [
             {
-                name: "H1", type: 'native', tagName: 'h1', properties: ['font', 'layout', 'background'],
+                name: "H1", type: 'native', tagName: 'h1', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
                 init: function (el) {
                     el.innerText = el.tagName.toLowerCase();
                 },
             },
             {
-                name: "H2", type: 'native', tagName: 'h2', properties: ['font', 'layout', 'background'],
+                name: "H2", type: 'native', tagName: 'h2', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
                 init: function (el) {
                     el.innerText = el.tagName.toLowerCase();
                 },
             },
             {
-                name: "H3", type: 'native', tagName: 'h3', properties: ['font', 'layout', 'background'],
+                name: "H3", type: 'native', tagName: 'h3', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
                 init: function (el) {
                     el.innerText = el.tagName.toLowerCase();
                 },
             },
             {
-                name: "H4", type: 'native', tagName: 'h4', properties: ['font', 'layout', 'background'],
+                name: "H4", type: 'native', tagName: 'h4', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
                 init: function (el) {
                     el.innerText = el.tagName.toLowerCase();
                 },
             },
             {
-                name: "H5", type: 'native', tagName: 'h5', properties: ['font', 'layout', 'background'],
+                name: "H5", type: 'native', tagName: 'h5', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
                 init: function (el) {
                     el.innerText = el.tagName.toLowerCase();
                 },
             },
             {
-                name: "H6", type: 'native', tagName: 'h6', properties: ['font', 'layout', 'background'],
+                name: "H6", type: 'native', tagName: 'h6', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
                 init: function (el) {
                     el.innerText = el.tagName.toLowerCase();
                 },
             },
-            {name: "Paragraph", type: 'native', tagName: 'p', properties: ['font', 'layout', 'background'],
+            {name: "Paragraph", type: 'native', tagName: 'p', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
                 init:function(el){
                     el.innerText = "Paragraph";
                 }
             }
         ]},
         {name: 'Controls', children: [
-            {name: "Button", type: 'bootstrap', tagName: 'button', properties: ['font', 'layout', 'background'],
+            {name: "Button", type: 'bootstrap', tagName: 'button', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
                 create: function(){
                     let el = document.createElement("button");
                     el.classList.add('btn');
@@ -298,19 +303,19 @@ export class HTMLElementData{
                     return el;
                 },
             },
-            {name: "Link", type: 'native', tagName: 'a', properties: ['link', 'font', 'layout', 'background'],
+            {name: "Link", type: 'native', tagName: 'a', properties: ['cssclasslist', 'marginborderpadding', 'link', 'font', 'layout', 'background'],
                 init:function(el){
                     el.innerText = "Link";
                     el.setAttribute('href', '#');
                     el.setAttribute('target', '_self');
                 },
             },
-            {name: "Audio", type: 'native', tagName: 'audio', properties: ['basic', 'layout'],
+            {name: "Audio", type: 'native', tagName: 'audio', properties: ['cssclasslist', 'marginborderpadding', 'source', 'layout'],
                 init:function(el){
                      el.setAttribute('controls', '');
                 }, 
             },
-            {name: "Video", type: 'native', tagName: 'video', properties: ['basic', 'layout'],
+            {name: "Video", type: 'native', tagName: 'video', properties: ['cssclasslist', 'marginborderpadding', 'source', 'layout'],
                 init:function(el){
                     el.width = "320";
                     el.height = "240";
@@ -320,11 +325,11 @@ export class HTMLElementData{
             }
         ]},
         {name: 'Containers', children: [
-            {name: "Div", type: 'native', tagName: 'div', properties: ['layout', 'background'],
+            {name: "Div", type: 'native', tagName: 'div', properties: ['cssclasslist', 'marginborderpadding', 'layout', 'background'],
                 init:function(el){
                 }, 
             },           
-            {name: "Grid", type: 'bootstrap', tagName: 'grid', properties: ['grid', 'layout', 'background'],
+            {name: "Grid", type: 'bootstrap', tagName: 'grid', properties: ['cssclasslist', 'marginborderpadding', 'layout', 'background'],
                 create: function(){
                     let el = document.createElement("div");
                     el.classList.add("container");
@@ -348,44 +353,44 @@ export class HTMLElementData{
                     return el;
                 }
             },
-            {name: "Ligne", type: 'bootstrap', tagName: 'row', properties: ['layout', 'background'],
+            {name: "Ligne", type: 'bootstrap', tagName: 'row', properties: ['cssclasslist', 'marginborderpadding', 'layout', 'background'],
                 create: function(){
                     let el = document.createElement("div");
                     el.classList.add("row");
                     return el;
                 }
             },
-            {name: "Colonne", type: 'bootstrap', tagName: 'col', properties: ['layout', 'background'],
+            {name: "Colonne", type: 'bootstrap', tagName: 'col', properties: ['cssclasslist', 'marginborderpadding', 'layout', 'background'],
                 create: function(){
                     let el = document.createElement("div");
                     el.classList.add("col");
                     return el;
                 }
             },
-            {name: "Unordered list", type: 'native', tagName: 'ul', properties: ['layout', 'background'],
+            {name: "Unordered list", type: 'native', tagName: 'ul', properties: ['cssclasslist', 'marginborderpadding', 'layout', 'background'],
                 init:function(el){
                     el.innerHTML = "<li>List</li>";
                 }
             },
-            {name: "Ordered list", type: 'native', tagName: 'ol', properties: ['layout', 'background'],
+            {name: "Ordered list", type: 'native', tagName: 'ol', properties: ['cssclasslist', 'marginborderpadding', 'layout', 'background'],
                 init:function(el){
                     el.innerHTML = "<li>List</li>";
                 }
             },
-            {name: "List Item", type: 'native', tagName: 'li', properties: ['font', 'layout', 'background'],
+            {name: "List Item", type: 'native', tagName: 'li', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
                 init:function(el){
                     el.innerText = "Item";
                 }
             },
-            {name: "Séparateur", type: 'native', tagName: 'hr', properties: ['layout', 'background']}
+            {name: "Séparateur", type: 'native', tagName: 'hr', properties: ['cssclasslist', 'marginborderpadding', 'layout', 'background']}
         ]},
         {name: 'Images', children: [
-            {name: "Image", type: 'native', tagName: 'img', properties: ['basic', 'layout'],
+            {name: "Image", type: 'native', tagName: 'img', properties: ['cssclasslist', 'marginborderpadding', 'source', 'layout'],
                 init:function(el){
                     el.setAttribute('src', `.${ImageEmpty}`);
                 },
             },
-            {name: "Icon", type: 'native', tagName: 'i', properties: ['icon', 'font'],
+            {name: "Icon", type: 'native', tagName: 'i', properties: ['cssclasslist', 'marginborderpadding', 'icon', 'font'],
                 init:function(el){
                     el.classList.add('icon-emo-happy-1');//TODO: Default icon
                 },

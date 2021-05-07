@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Form } from 'react-bootstrap';
-import Utils from '../utils/Utils';
+
 
 export class LayoutSpacingEditor extends Component {
     static styleKeys = ['marginLeft', 'marginRight', 'marginTop', 'marginBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom', 'borderLeftWidth', 'borderRightWidth', 'borderTopWidth', 'borderBottomWidth'];
