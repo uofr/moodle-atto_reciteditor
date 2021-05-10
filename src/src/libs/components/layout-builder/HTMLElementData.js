@@ -1,5 +1,5 @@
 import React from 'react';
-import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus} from '@fortawesome/free-solid-svg-icons';
+import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus, faEllipsisH, faGripLines, faSquare, faRuler} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ImageEmpty from '../assets/empty.jpg';
 import { LayoutSpacingEditor} from '../Components';
@@ -246,15 +246,33 @@ export class HTMLElementData{
                 },
                 getValue: function(el, data){
                     let list = {};
-                    let styles = getComputedStyle(el);
                     for (let c of LayoutSpacingEditor.styleKeys){
                         if (el.style[c]){
                             list[c] = el.style[c];
                         }else{
-                            list[c] = styles[c];
+                            list[c] = '';
                         }
                     }
                     return list;
+                }
+            },
+            {
+                name: 'borderstyle', 
+                text: 'Style de la bordure',
+                input: { 
+                    type: 'radio',
+                    options:[
+                        {text: <FontAwesomeIcon className="mr-1" icon={faSquare} title="Solide"/>, value:'solid'},
+                        {text: <FontAwesomeIcon className="mr-1" icon={faRuler} title="Barré"/>, value:'dashed' },
+                        {text: <FontAwesomeIcon className="mr-1" icon={faEllipsisH} title="Pointillé"/>, value:'dotted' },
+                        {text: <FontAwesomeIcon className="mr-1" icon={faGripLines} title="Double"/>, value:'double' },
+                    ],
+                    onChange: function(el, value, data){
+                        el.style.borderStyle = value;
+                    }
+                },
+                getValue: function(el, data){
+                    return [el.style.borderStyle];
                 }
             },]
         }

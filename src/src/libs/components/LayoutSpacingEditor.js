@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import {faTint} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 export class LayoutSpacingEditor extends Component {
-    static styleKeys = ['marginLeft', 'marginRight', 'marginTop', 'marginBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom', 'borderLeftWidth', 'borderRightWidth', 'borderTopWidth', 'borderBottomWidth'];
+    static styleKeys = ['marginLeft', 'marginRight', 'marginTop', 'marginBottom', 'paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom', 'borderLeftWidth', 'borderRightWidth', 'borderTopWidth', 'borderBottomWidth', 'borderColor'];
     static defaultProps = {
         name: "",
         values: {},
@@ -15,6 +17,9 @@ export class LayoutSpacingEditor extends Component {
         this.onChange = this.onChange.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
+        this.onBorderClick = this.onBorderClick.bind(this);
+        this.colorRef = React.createRef()
+        this.borderRef = React.createRef()
     }
     
     render() {
@@ -26,8 +31,9 @@ export class LayoutSpacingEditor extends Component {
            <input type="text" name="marginRight" className="layoutspacing_right" placeholder="-" value={this.props.values.marginRight} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
             <input type="text" name="marginBottom" className="layoutspacing_bottom" placeholder="-" value={this.props.values.marginBottom} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
             <input type="text" name="marginLeft" className="layoutspacing_left" placeholder="-" value={this.props.values.marginLeft} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
-           <div className="layoutspacing_border">
+           <div className="layoutspacing_border" style={{borderColor: this.props.values.borderColor, cursor: 'pointer'}} onClick={this.onBorderClick} ref={this.borderRef}>
               <label>border</label>
+              <input type="color" ref={this.colorRef} name="borderColor" style={{visibility:'hidden'}} value={this.props.values.borderColor} onInput={this.onBlur} onChange={this.onChange}/>
               <input type="text" name="borderTopWidth" className="layoutspacing_top" placeholder="-" value={this.props.values.borderTopWidth} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
               <input type="text" name="borderRightWidth" className="layoutspacing_right" placeholder="-" value={this.props.values.borderRightWidth} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
               <input type="text" name="borderBottomWidth" className="layoutspacing_bottom" placeholder="-" value={this.props.values.borderBottomWidth} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
@@ -45,6 +51,11 @@ export class LayoutSpacingEditor extends Component {
      </div>
         return (main);
     }   
+
+    onBorderClick(event){
+        if (event.target != this.borderRef.current) return; //Cancel if user clicked on an input
+        this.colorRef.current.click();
+    }
     
     onChange(event){
         let values = this.props.values;

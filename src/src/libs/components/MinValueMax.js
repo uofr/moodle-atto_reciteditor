@@ -26,14 +26,12 @@ export class MinValueMax extends Component {
 
         this.state = {values: {}};    
         if (this.props.values){
-            if (this.props.values['min']){
-                this.state.values['min'] = this.props.value['min'];
-            }
-            if (this.props.values['value']){
-                this.state.values['value'] = this.props.value['value'];
-            }
-            if (this.props.values['max']){
-                this.state.values['max'] = this.props.value['max'];
+            for (let k of ['min','value','max']){
+                if (this.props.values[k]){
+                    this.state.values[k] = this.props.values[k];
+                }else{
+                    this.state.values[k] = '';
+                }
             }
         }
     }
