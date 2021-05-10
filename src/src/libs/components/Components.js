@@ -10,6 +10,7 @@ export * from './InputText';
 export * from './ComboBox';
 export * from './InputColor';
 export * from './MultipleSelect';
+export * from './MinValueMax';
 export * from './LayoutSpacingEditor';
 export * from './RecitRichEditor';
 

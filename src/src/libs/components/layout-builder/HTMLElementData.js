@@ -11,31 +11,37 @@ export class HTMLElementData{
             name: 'layout', description: 'Layout',
             children: [
                 {
-                    name: 'width', 
+                    name: 'Width', 
                     text: 'Largeur',
                     input: { 
-                        type: 'text', 
+                        type: 'minvaluemax', 
                         defaultValue: '',
+                        flags: {showLabel: false},
                         onChange: function(el, value, data){
-                           el.style.width = value;
+                            el.style.minWidth = value['min'];
+                            el.style.width = value['value'];
+                            el.style.maxWidth = value['max'];
                         }
                     },
                     getValue: function(el, data){
-                        return el.style.width;
+                        return {min:el.style.minWidth, value:el.style.width, max:el.style.maxWidth};
                     }
                 },
                 {
-                    name: 'height', 
+                    name: 'Height', 
                     text: 'Hauteur',
                     input: { 
-                        type: 'text', 
+                        type: 'minvaluemax', 
                         defaultValue: '',
+                        flags: {showLabel: false},
                         onChange: function(el, value, data){
-                           el.style.height = value;
+                            el.style.minHeight = value['min'];
+                            el.style.height = value['value'];
+                            el.style.maxHeight = value['max'];
                         }
                     },
                     getValue: function(el, data){
-                        return el.style.height;
+                        return {min:el.style.minHeight, value:el.style.height, max:el.style.maxHeight};
                     }
                 }
             ]
