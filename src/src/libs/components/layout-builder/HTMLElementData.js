@@ -248,7 +248,11 @@ export class HTMLElementData{
                     let list = {};
                     let styles = getComputedStyle(el);
                     for (let c of LayoutSpacingEditor.styleKeys){
-                        list[c] = styles[c];
+                        if (el.style[c]){
+                            list[c] = el.style[c];
+                        }else{
+                            list[c] = styles[c];
+                        }
                     }
                     return list;
                 }
