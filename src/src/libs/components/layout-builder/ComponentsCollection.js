@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button  } from 'react-bootstrap';
 import { faUpload, faDownload, faTrashAlt, faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
-import { LayoutSpacingEditor, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax} from '../Components';
+import { LayoutSpacingEditor, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import { IconSelector } from '../iconSelector';
@@ -95,6 +95,10 @@ export class ComponentProperties extends Component{
             break;
             case 'color':
                 result = <InputColor name={data.name} value={value} 
+                                onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'combobox':
+                result = <ComboBox name={data.name} value={value} options={data.input.options}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
             case 'iconselector':

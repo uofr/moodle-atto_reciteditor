@@ -3,6 +3,7 @@ import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustif
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ImageEmpty from '../assets/empty.jpg';
 import { LayoutSpacingEditor} from '../Components';
+import Utils from '../../utils/Utils';
 
 export class HTMLElementData{
 
@@ -98,6 +99,21 @@ export class HTMLElementData{
                     },
                     getValue: function(el, data){
                         return el.style.fontSize;
+                    }
+                },
+                {
+                    name: 'fontfamily', 
+                    text: 'Police',
+                    input: { 
+                        type: 'combobox',
+                        options: Utils.getAvailableFonts(),
+                        defaultValue: '',
+                        onChange: function(el, value, data){
+                           el.style.fontFamily = value;
+                        }
+                    },
+                    getValue: function(el, data){
+                        return el.style.fontFamily;
                     }
                 },
                 {
@@ -262,6 +278,7 @@ export class HTMLElementData{
                 input: { 
                     type: 'radio',
                     options:[
+                        {text: <FontAwesomeIcon className="mr-1" icon={faRemoveFormat} title="Default"/>, value:''},
                         {text: <FontAwesomeIcon className="mr-1" icon={faSquare} title="Solide"/>, value:'solid'},
                         {text: <FontAwesomeIcon className="mr-1" icon={faRuler} title="Barré"/>, value:'dashed' },
                         {text: <FontAwesomeIcon className="mr-1" icon={faEllipsisH} title="Pointillé"/>, value:'dotted' },
