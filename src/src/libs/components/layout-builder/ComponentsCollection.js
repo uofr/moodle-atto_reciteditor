@@ -45,7 +45,7 @@ export class ComponentProperties extends Component{
 
                     let form = 
                     <Form key={index} onSubmit={this.onSubmit} className="mb-4">
-                        <h6><FontAwesomeIcon className="mr-1" icon={icon} onClick={(event) => this.onCollapse(event, item.name)}/>{item.description}</h6>
+                        <h6  onClick={(event) => this.onCollapse(event, item.name)}><FontAwesomeIcon className="mr-1" icon={icon}/>{item.description}</h6>
                         {!collapsed && item.children.map((item2, index2) => {
                             let formItem = null;
                             
@@ -92,7 +92,7 @@ export class ComponentProperties extends Component{
             case 'minvaluemax':
                 result = <MinValueMax valueName={data.name} values={value} size="sm"
                                 onChange={(event) => this.onDataChange(event, data)} />;
-            break;
+                break;
             case 'color':
                 result = <InputColor name={data.name} value={value} 
                                 onChange={(event) => this.onDataChange(event, data)} />;
@@ -231,8 +231,8 @@ class TokenList extends Component{
 
                     let branch = 
                         <ul key={index}>
-                            <li key={index} className='token-section'>
-                                <FontAwesomeIcon className="mr-1" icon={icon} onClick={(event) => this.onCollapse(event, item.name)}/>
+                            <li key={index} className='token-section' onClick={(event) => this.onCollapse(event, item.name)}>
+                                <FontAwesomeIcon className="mr-1" icon={icon} />
                                 {item.name}
                                 {this.state.showMenu &&
                                     <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
