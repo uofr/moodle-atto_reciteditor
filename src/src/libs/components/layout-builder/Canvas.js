@@ -25,11 +25,14 @@ export class Canvas extends Component
 }
 
 export class CanvasElement{
+    static draggingItem = null;
+
     constructor(dom, onSelectCallback, onDropCallback){
         this.onDragOver = this.onDragOver.bind(this);
         this.onDragEnter = this.onDragEnter.bind(this);
         this.onDragLeave = this.onDragLeave.bind(this);
         this.onDrop = this.onDrop.bind(this);
+        this.onDragStart = this.onDragStart.bind(this);
         this.onClick = this.onClick.bind(this);
 
         this.onSelectCallback = onSelectCallback;
@@ -39,6 +42,7 @@ export class CanvasElement{
         this.dom.ondragover = this.onDragOver;
         this.dom.ondragenter = this.onDragEnter;
         this.dom.ondragleave = this.onDragLeave;
+        this.dom.ondragstart = this.onDragStart;
         this.dom.ondrop = this.onDrop;
         this.dom.onclick = this.onClick;
 
@@ -63,15 +67,28 @@ export class CanvasElement{
         // it needs to stop propagation otherwise it will dispatch onFillInSlot in cascade. We want just assign a section to one single slot.
         event.stopPropagation();   
 
-        let componentData = JSON.parse(event.dataTransfer.getData("componentData"));
-
-        let el = HTMLElementData.createElement(componentData);
+        let eventData = event.dataTransfer.getData("componentData");
+        
+        let el = null;
+        if(eventData.length > 0){
+            let componentData = JSON.parse(eventData);
+            el = HTMLElementData.createElement(componentData);
+        }
+        else if (CanvasElement.draggingItem !== null){
+            el = CanvasElement.draggingItem;
+            CanvasElement.draggingItem = null;
+        }
         
         if(el !== null){
             new CanvasElement(el, this.onSelectCallback, this.onDropCallback);
 
             if(event.target.classList.contains('dropping-zone')){
-                event.target.replaceWith(el);
+                try{
+                    event.target.replaceWith(el);
+                }
+                catch(err){
+                    console.log(err)
+                }
             }
             else if(event.currentTarget.tagName.toLowerCase() === "body"){
                 //this.dom.appendChild(el);
@@ -118,6 +135,14 @@ export class CanvasElement{
         if(event.target.classList.contains('dropping-zone-hover')){
             event.target.classList.remove('dropping-zone-hover');
         }
+    }
+
+    onDragStart(event){
+        event.stopPropagation();
+
+        //let data = HTMLElementData.getElementData(null, this.dom);
+        //event.dataTransfer.setData("componentData", JSON.stringify(data));
+        CanvasElement.draggingItem = this.dom;
     }
 
     createDroppingZone(pos){
@@ -167,7 +192,6 @@ export class FloatingMenu extends Component{
                 <ButtonToolbar aria-label="Toolbar with Button groups">
                     <ButtonGroup size="sm">
                         <Button onClick={this.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
-                        <Button><FontAwesomeIcon icon={faArrowsAlt} title="Glisser / déposer"/></Button>
                         <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faObjectGroup} title="Créer un composant"/></Button>
                         <Button onClick={this.onMoveNodeUp}  disabled={this.props.selectedElement.previousSibling === null}><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
                         <Button onClick={this.onMoveNodeDown} disabled={this.props.selectedElement.nextSibling === null}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>

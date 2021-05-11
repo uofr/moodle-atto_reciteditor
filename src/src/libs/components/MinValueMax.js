@@ -38,15 +38,14 @@ export class MinValueMax extends Component {
     
     render() {       
         let main = <Container>
-            <h5>{this.props.valueName}</h5>
         <Row>
-          <Col>Minimum<br/><FormControl autoFocus={this.props.autoFocus} className={"InputMinValueMax"} name="min" type="text" 
+          <Col>Min<br/><FormControl autoFocus={this.props.autoFocus} className={"InputMinValueMax"} name="min" type="text" 
                     value={this.state.values['min']} placeholder={this.props.placeholder} onChange={this.onChange} onBlur={this.onFocusOut} onKeyDown={this.onKeyDown}
                     disabled={this.props.disabled} size={this.props.size}/></Col>
-          <Col>{this.props.valueName}<br/><FormControl autoFocus={this.props.autoFocus} className={"InputMinValueMax"} name="value" type="text" 
+          <Col>Value<br/><FormControl autoFocus={this.props.autoFocus} className={"InputMinValueMax"} name="value" type="text" 
                     value={this.state.values['value']} placeholder={this.props.placeholder} onChange={this.onChange} onBlur={this.onFocusOut} onKeyDown={this.onKeyDown}
                     disabled={this.props.disabled} size={this.props.size}/></Col>
-          <Col>Maximum<br/><FormControl autoFocus={this.props.autoFocus} className={"InputMinValueMax"} name="max" type="text" 
+          <Col>Max<br/><FormControl autoFocus={this.props.autoFocus} className={"InputMinValueMax"} name="max" type="text" 
                     value={this.state.values['max']} placeholder={this.props.placeholder} onChange={this.onChange} onBlur={this.onFocusOut} onKeyDown={this.onKeyDown}
                     disabled={this.props.disabled} size={this.props.size}/></Col>
         </Row>

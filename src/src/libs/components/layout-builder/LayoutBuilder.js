@@ -258,7 +258,6 @@ export class LayoutBuilder extends Component
             return;
         }
 
-
         if(this.state.selectedElement !== null){ 
             this.htmlCleaning();
             this.setState({selectedElement: null}, () => this.onSelectElement(el));
@@ -274,9 +273,11 @@ export class LayoutBuilder extends Component
         if(el !== null){
             if(el.getAttribute('data-selected') === '1'){
                 el.removeAttribute('data-selected');
+                el.removeAttribute('draggable');
             }
             else{
                 el.setAttribute('data-selected', '1');
+                el.setAttribute('draggable', 'true');
             }
         }
 
@@ -311,6 +312,7 @@ export class LayoutBuilder extends Component
         // deselect the element if it is the case
         if(this.state.selectedElement){            
             this.state.selectedElement.removeAttribute('data-selected');
+            this.state.selectedElement.removeAttribute('draggable');
         }
 
         // remove the class dropping-zone of all elements

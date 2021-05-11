@@ -17,7 +17,6 @@ export class HTMLElementData{
                     input: { 
                         type: 'minvaluemax', 
                         defaultValue: '',
-                        flags: {showLabel: false},
                         onChange: function(el, value, data){
                             el.style.minWidth = value['min'];
                             el.style.width = value['value'];
@@ -34,7 +33,6 @@ export class HTMLElementData{
                     input: { 
                         type: 'minvaluemax', 
                         defaultValue: '',
-                        flags: {showLabel: false},
                         onChange: function(el, value, data){
                             el.style.minHeight = value['min'];
                             el.style.height = value['value'];
