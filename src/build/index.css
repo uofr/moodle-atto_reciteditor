@@ -25,13 +25,26 @@
     grid-row-gap: 5px;
     background-color: #212529;
     height: calc(100% - 56px);
-    grid-template-columns: minmax(450px, 20%) auto;
+    grid-template-columns: min-content auto;
     grid-template-rows: auto; }
   .layout-builder .left-area {
     grid-column-start: 1;
     grid-column-end: 1; }
     .layout-builder .left-area .card {
       margin-bottom: 1rem; }
+    .layout-builder .left-area .panel {
+      transition: width 1s; }
+    .layout-builder .left-area .panel[data-status='open'] {
+      width: 450px; }
+    .layout-builder .left-area .panel[data-status='close'] {
+      background-color: #FFFFFF;
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      font-size: 24px;
+      align-items: center;
+      width: 60px;
+      padding: 1rem; }
   .layout-builder .center-area {
     grid-column-start: 2;
     grid-column-end: 2; }

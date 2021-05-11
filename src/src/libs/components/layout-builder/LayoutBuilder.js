@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Nav, Card, Navbar, Collapse  } from 'react-bootstrap';
-import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faFileWord, faEye, faCode, faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
+import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faFileWord, faEye, faCode, faAngleRight, faAngleDown, faBars, faPuzzlePiece, faSlidersH, faStream} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {TreeView} from './TreeView';
 import {Canvas, CanvasElement, FloatingMenu} from './Canvas';
@@ -43,7 +43,10 @@ export class LayoutBuilder extends Component
         this.onSourceCode = this.onSourceCode.bind(this);
         this.onChangeContent = this.onChangeContent.bind(this);
 
-        this.state = {device: 'xl', view: '', collapsed: ['0', '1', '2'], selectedElement: null, data: {customHtmlComponentList: [], content: ''}};
+        this.onMouseEnter = this.onMouseEnter.bind(this);
+        this.onMouseLeave = this.onMouseLeave.bind(this);
+
+        this.state = {device: 'xl', view: '', collapsed: ['1', '2', '3', '4'], selectedElement: null, data: {customHtmlComponentList: [], content: ''}};
 
         this.canvas = React.createRef();
     }
@@ -105,7 +108,7 @@ export class LayoutBuilder extends Component
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
                             <Nav.Link eventKey="wordbuilder"><FontAwesomeIcon icon={faFileWord} title="Word Builder"/></Nav.Link>
-                            
+                            <Nav.Link eventKey="collapse"><FontAwesomeIcon icon={faBars} title="Collapser"/></Nav.Link>
                         </Nav>
                         <Nav className="mr-auto" activeKey={this.state.view}>
                             <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title="Preview"/></Nav.Link>
@@ -122,41 +125,51 @@ export class LayoutBuilder extends Component
                 </Navbar>
                    
                 <div className="main">
-                    <div className="left-area">
-                        <Card>
-                            <Card.Header onClick={() => this.onCollapse('0')}>
-                                <FontAwesomeIcon className="mr-1" icon={(!this.state.collapsed.includes('0') ? faAngleRight : faAngleDown)}/>
-                                Composants
-                            </Card.Header>
-                            <Collapse in={this.state.collapsed.includes('0')}>
-                                <Card.Body style={{maxHeight: 350, overflow: "auto"}}>
-                                    <VisualComponentList onDeleteCustomComponent={this.onDeleteCustomComponent}  onImportCustomComponent={this.onImportCustomComponent}
-                                                customHtmlComponentList={this.state.data.customHtmlComponentList} onDragEnd={this.onDragEnd}/>
-                                </Card.Body>
-                            </Collapse>
-                        </Card>
+                    <div className="left-area" onMouseLeave={this.onMouseLeave} >
+                        {this.state.collapsed.includes('0') && !this.state.collapsed.includes('4') ? 
+                            <div className="panel" data-status='close' onMouseEnter={this.onMouseEnter} >
+                                <div><FontAwesomeIcon icon={faPuzzlePiece} title="Composants"/></div>
+                                <div><FontAwesomeIcon icon={faSlidersH} title="Proprietés"/></div>
+                                <div><FontAwesomeIcon icon={faStream} title="Arborescence"/></div>
+                            </div>
+                        :
+                            <div className="panel" data-status='open'>
+                                <Card>
+                                    <Card.Header onClick={() => this.onCollapse('1')}>
+                                        <FontAwesomeIcon className="mr-1" icon={(!this.state.collapsed.includes('1') ? faAngleRight : faAngleDown)}/>
+                                        Composants
+                                    </Card.Header>
+                                    <Collapse in={this.state.collapsed.includes('1')}>
+                                        <Card.Body style={{maxHeight: 350, overflow: "auto"}}>
+                                            <VisualComponentList onDeleteCustomComponent={this.onDeleteCustomComponent}  onImportCustomComponent={this.onImportCustomComponent}
+                                                        customHtmlComponentList={this.state.data.customHtmlComponentList} onDragEnd={this.onDragEnd}/>
+                                        </Card.Body>
+                                    </Collapse>
+                                </Card>
 
-                        <Card>
-                            <Card.Header onClick={() => this.onCollapse('1')}>
-                                <FontAwesomeIcon className="mr-1" icon={(!this.state.collapsed.includes('1') ? faAngleRight : faAngleDown)}/>Proprietés
-                            </Card.Header>
-                            <Collapse in={this.state.collapsed.includes('1')}>
-                                <Card.Body style={{maxHeight: 350, overflow: "auto"}}>
-                                    <ComponentProperties element={this.state.selectedElement}/>
-                                </Card.Body>
-                            </Collapse>
-                        </Card>
+                                <Card>
+                                    <Card.Header onClick={() => this.onCollapse('2')}>
+                                        <FontAwesomeIcon className="mr-1" icon={(!this.state.collapsed.includes('2') ? faAngleRight : faAngleDown)}/>Proprietés
+                                    </Card.Header>
+                                    <Collapse in={this.state.collapsed.includes('2')}>
+                                        <Card.Body style={{maxHeight: 450, overflow: "auto"}}>
+                                            <ComponentProperties element={this.state.selectedElement}/>
+                                        </Card.Body>
+                                    </Collapse>
+                                </Card>
 
-                        <Card>
-                            <Card.Header  onClick={() => this.onCollapse('2')}>
-                                <FontAwesomeIcon className="mr-1" icon={(!this.state.collapsed.includes('2') ? faAngleRight : faAngleDown)}/>Arborescence
-                            </Card.Header>
-                            <Collapse in={this.state.collapsed.includes('2')}>
-                                <Card.Body style={{maxHeight: 350, overflow: "auto"}}>
-                                    <TreeView canvas={this.canvas} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} />
-                                </Card.Body>
-                            </Collapse>
-                        </Card>
+                                <Card>
+                                    <Card.Header  onClick={() => this.onCollapse('3')}>
+                                        <FontAwesomeIcon className="mr-1" icon={(!this.state.collapsed.includes('3') ? faAngleRight : faAngleDown)}/>Arborescence
+                                    </Card.Header>
+                                    <Collapse in={this.state.collapsed.includes('3')}>
+                                        <Card.Body style={{maxHeight: 350, overflow: "auto"}}>
+                                            <TreeView canvas={this.canvas} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} />
+                                        </Card.Body>
+                                    </Collapse>
+                                </Card>
+                            </div>
+                        }
                     </div>
                     
                     <div className="center-area" >
@@ -177,8 +190,18 @@ export class LayoutBuilder extends Component
 		return (main);
     }
 
+    onMouseEnter(){
+        this.onCollapse('4');
+    }
+
+    onMouseLeave(){
+        this.onCollapse('4');
+    }
+
     onCollapse(index){
         let data = [];
+        let result = false;
+
         if(this.state.collapsed.includes(index)){
             data = this.state.collapsed;
             data = data.filter(item => item !== index);
@@ -186,12 +209,15 @@ export class LayoutBuilder extends Component
         else{
             data = this.state.collapsed;
             data.push(index);
+            result = true;
         }
 
         this.setState({collapsed: data});
+
+        return result;
     }
 
-    onNavbarSelect(eventKey){
+    onNavbarSelect(eventKey, event){
         if(eventKey === 'wordbuilder'){
             this.props.onSelectBuilder('word');
         }
@@ -201,7 +227,11 @@ export class LayoutBuilder extends Component
         }
         else if('sourcecode' === eventKey){
             this.onSourceCode((this.state.view === eventKey));
-            
+        }
+        else if(eventKey === 'collapse'){
+            if(!this.onCollapse('0')){
+                event.currentTarget.classList.remove('active')
+            }
         }
         else{
             this.setState({device: eventKey});
