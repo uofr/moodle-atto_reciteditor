@@ -372,6 +372,12 @@ export class HTMLElementData{
                     el.setAttribute('controls', ''); 
                     //el.setAttribute('src', 'https://recitfad.ca/moodledocs/images/image206.png'); //video placeholder?
                 },
+            },
+            {name: "iFrame", type: 'native', tagName: 'iframe', properties: ['marginborderpadding', 'source', 'layout'],
+                init:function(el){
+                    el.width = "320";
+                    el.height = "240";
+                }
             }
         ]},
         {name: 'Containers', children: [
