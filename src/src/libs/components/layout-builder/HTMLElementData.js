@@ -106,7 +106,14 @@ export class HTMLElementData{
                     text: 'Police',
                     input: { 
                         type: 'combobox',
-                        options: Utils.getAvailableFonts(),
+                        options: [
+                            {text: 'Sans-serif', value:'sans-serif'},
+                            {text: 'Serif', value:'serif'},
+                            {text: 'Monospace', value:'monospace'},
+                            {text: 'Cursive', value:'cursive'},
+                            {text: 'Fantasy', value:'Fantasy'},
+                            ...Utils.getAvailableFonts(),
+                        ],
                         defaultValue: '',
                         onChange: function(el, value, data){
                            el.style.fontFamily = value;
