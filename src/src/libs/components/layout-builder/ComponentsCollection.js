@@ -52,8 +52,8 @@ export class ComponentProperties extends Component{
                             if((!item2.input.hasOwnProperty('flags')) || (item2.input.flags.showLabel)){
                                 formItem = 
                                 <Form.Group size="sm" key={index2} as={Row}  controlId={`formitem${index}${index2}`}>
-                                    <Form.Label column sm="6">{item2.text}</Form.Label>
-                                    <Col sm="6">
+                                    <Form.Label column sm="5">{item2.text}</Form.Label>
+                                    <Col sm="7">
                                         {this.createFormControl(item2)}
                                     </Col>
                                 </Form.Group>;
