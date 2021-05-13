@@ -9,7 +9,7 @@ export class HTMLElementData{
 
     static propertyList = [
         {
-            name: 'layout', description: 'Layout',
+            name: 'layout', description: 'Layout', type: 'native',
             children: [
                 {
                     name: 'Width', 
@@ -46,7 +46,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'font', description: 'Police de caractère', 
+            name: 'font', description: 'Police de caractère', type: 'native',
             children: [
                 {
                     name: 'alignment', 
@@ -138,7 +138,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'background', description: 'Background', 
+            name: 'background', description: 'Background',  type: 'native',
             children: [
                 {
                     name: 'backgroundcolor', 
@@ -157,7 +157,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'icon', description: 'Icon', 
+            name: 'icon', description: 'Icon',  type: 'native',
             children: [
                 {
                     name: 'icon', 
@@ -176,7 +176,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'link', description: 'Link Options', 
+            name: 'link', description: 'Link Options',  type: 'native',
             children: [
                 {
                     name: 'href', 
@@ -211,7 +211,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'source', description: 'Source', 
+            name: 'source', description: 'Source',  type: 'native',
             children: [
                 {
                     name: 'src', 
@@ -230,7 +230,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'cssclasslist', description: 'Liste des classes CSS', 
+            name: 'cssclasslist', description: 'Liste des classes CSS',  type: 'native',
             children: [{
                 name: 'classlist', 
                 text: "Liste des classes",
@@ -253,7 +253,7 @@ export class HTMLElementData{
             }]
         },
         {
-            name: 'marginborderpadding', description: 'Marge - Bordure - Padding', 
+            name: 'marginborderpadding', description: 'Marge - Bordure - Padding',  type: 'native',
             children: [{
                 name: 'layoutspacing',
                 text: "Layout Spacing",
@@ -299,7 +299,7 @@ export class HTMLElementData{
             },]
         },
         {
-            name: 'bootstrap', description: 'Bootstrap', 
+            name: 'bootstrap', description: 'Bootstrap',  type: 'bootstrap',
             children: [{
                 name: 'margin',
                 text: "Marge",

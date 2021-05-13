@@ -45,6 +45,11 @@
       align-items: center;
       width: 60px;
       padding: 1rem; }
+    .layout-builder .left-area .tab-content {
+      border: 1px solid #dee2e6;
+      margin-top: 12px;
+      padding: 1rem;
+      margin-left: -10px; }
   .layout-builder .center-area {
     grid-column-start: 2;
     grid-column-end: 2; }
@@ -52,11 +57,6 @@
       margin: auto;
       background-color: #FFF;
       border: 0; }
-  .layout-builder .component-list .tab-content {
-    border: 1px solid #dee2e6;
-    margin-top: 12px;
-    padding: 1rem;
-    margin-left: -10px; }
   .layout-builder .component-list ul {
     list-style: none;
     padding-left: 0; }
