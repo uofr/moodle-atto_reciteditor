@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button  } from 'react-bootstrap';
 import { faUpload, faDownload, faTrashAlt, faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
-import { LayoutSpacingEditor, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox} from '../Components';
+import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import { IconSelector } from '../iconSelector';
+import { ColorSelector } from '../ColorSelector';
 
 export class ComponentProperties extends Component{
     static defaultProps = {
@@ -51,7 +52,7 @@ export class ComponentProperties extends Component{
                             
                             if((!item2.input.hasOwnProperty('flags')) || (item2.input.flags.showLabel)){
                                 formItem = 
-                                <Form.Group size="sm" key={index2} as={Row}  controlId={`formitem${index}${index2}`}>
+                                <Form.Group size="sm" key={index2} as={Row} style={{alignItems: "center"}}  controlId={`formitem${index}${index2}`}>
                                     <Form.Label column sm="5">{item2.text}</Form.Label>
                                     <Col sm="7">
                                         {this.createFormControl(item2)}
@@ -109,8 +110,16 @@ export class ComponentProperties extends Component{
                 result = <MultipleSelect name={data.name} values={value} options={data.input.options} autoAdd={data.input.flags.autoAdd}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
-            case 'layoutspacing':
+            case 'layoutspacingeditor':
                 result = <LayoutSpacingEditor name={data.name} values={value}
+                                onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'layoutspacing':
+                result = <LayoutSpacing name={data.name} value={value} options={data.input.options}
+                                            onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'colorselector':
+                result = <ColorSelector name={data.name} value={value} options={data.input.options}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
            /* case 'number':

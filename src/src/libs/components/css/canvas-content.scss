@@ -1,4 +1,4 @@
-$border-onhover-element: 2px solid rgb(0, 153, 255)!important;
+$border-onhover-element: 2px dashed rgb(0, 153, 255)!important;
 
 html.canvas-content{
     margin: 0; padding: 0;
@@ -28,7 +28,7 @@ html.canvas-content{
         &:hover{ @extend .element-focus;}
         h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover, button:hover, p:hover, div:hover, ul:hover, ol:hover, li:hover{@extend .element-focus;}
 
-        *[data-selected="1"]{@extend .element-focus;}
+        *[data-selected="1"]{@extend .element-focus; border-style: solid!important;}
         *[draggable="true"]{cursor: grab;}
     }
     .dropping-zone{border: 2px dashed rgb(0, 153, 255); height: 50px; width: 100%;  transform: scale(0.97); 

@@ -12,7 +12,9 @@ export * from './InputColor';
 export * from './MultipleSelect';
 export * from './MinValueMax';
 export * from './LayoutSpacingEditor';
+export * from './LayoutSpacing';
 export * from './RecitRichEditor';
+export * from './ColorSelector';
 
 export default class Components{
     static version = 1.0;

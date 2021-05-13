@@ -258,7 +258,7 @@ export class HTMLElementData{
                 name: 'layoutspacing',
                 text: "Layout Spacing",
                 input: { 
-                    type: 'layoutspacing',
+                    type: 'layoutspacingeditor',
                     flags: {showLabel: false},
                     defaultValue: '',
                     onChange: function(el, value, data){
@@ -287,7 +287,7 @@ export class HTMLElementData{
                         {text: <FontAwesomeIcon className="mr-1" icon={faSquare} title="Solide"/>, value:'solid'},
                         {text: <FontAwesomeIcon className="mr-1" icon={faRuler} title="Barré"/>, value:'dashed' },
                         {text: <FontAwesomeIcon className="mr-1" icon={faEllipsisH} title="Pointillé"/>, value:'dotted' },
-                        {text: <FontAwesomeIcon className="mr-1" icon={faGripLines} title="Double"/>, value:'double' },
+                        {text: <FontAwesomeIcon className="mr-1" icon={faGripLines} title="Double"/>, value:'double' }
                     ],
                     onChange: function(el, value, data){
                         el.style.borderStyle = value;
@@ -297,13 +297,222 @@ export class HTMLElementData{
                     return [el.style.borderStyle];
                 }
             },]
+        },
+        {
+            name: 'bootstrap', description: 'Bootstrap', 
+            children: [{
+                name: 'margin',
+                text: "Marge",
+                input: { 
+                    type: 'layoutspacing',
+                    options: ["mt", "mr", "mb", "ml", "m"],
+                    onChange: function(el, value, data){
+                        if(value.oldValue.length > 0){
+                            el.classList.remove(value.oldValue);
+                        }
+                        
+                       
+                        if(value.newValue.length > 0){
+                            el.classList.add(value.newValue);
+                        }
+                    }
+                },
+                getValue: function(el, data){
+                    let result = [];
+
+                    for(let i = 0; i <= 5; i++){
+                        for(let item of data.input.options){
+                            let className = `${item}-${i}`;
+                            if(el.classList.contains(className)){
+                                result.push(className);
+                            }
+                        }
+                    }
+                    return result;
+                },
+            },{
+                name: 'padding',
+                text: "Espacement",
+                input: { 
+                    type: 'layoutspacing',
+                    options: ["pt", "pr", "pb", "pl", "p"],
+                    onChange: function(el, value, data){
+                        if(value.oldValue.length > 0){
+                            el.classList.remove(value.oldValue);
+                        }
+                        
+                       
+                        if(value.newValue.length > 0){
+                            el.classList.add(value.newValue);
+                        }
+                    }
+                },
+                getValue: function(el, data){
+                    let result = [];
+
+                    for(let i = 0; i <= 5; i++){
+                        for(let item of data.input.options){
+                            let className = `${item}-${i}`;
+                            if(el.classList.contains(className)){
+                                result.push(className);
+                            }
+                        }
+                    }
+                    return result;
+                }
+            },{
+                name: 'border',
+                text: "Bordure",
+                input: { 
+                    type: 'layoutspacing',
+                    options: ["border-top", "border-right", "border-bottom", "border-left", "border"],
+                    onChange: function(el, value, data){
+                        if(value.oldValue.length > 0){
+                            el.classList.remove(value.oldValue);
+                        }
+                        
+                        if(value.newValue.length > 0){
+                            el.classList.add(value.newValue);
+                        }
+                    }
+                },
+                getValue: function(el, data){
+                    let result = [];
+
+                    for(let i = 0; i <= 5; i++){
+                        for(let item of data.input.options){
+                            let className = `${item}-${i}`;
+                            if(el.classList.contains(className)){
+                                result.push(className);
+                            }
+                        }
+                    }
+                    return result;
+                }
+            },
+           /* {
+                name: 'border',
+                text: "Bordure",
+                input: { 
+                    type: 'layoutspacing',
+                    options:[
+                            [ 
+                                {text:"0", value: "bt-0"},
+                                {text:"1", value: "bt-1"},
+                                {text:"2", value: "bt-2"},
+                                {text:"3", value: "bt-3"},
+                                {text:"4", value: "bt-4"},
+                                {text:"5", value: "bt-5"}
+                            ],
+                            [ 
+                                {text:"0", value: "br-0"},
+                                {text:"1", value: "br-1"},
+                                {text:"2", value: "br-2"},
+                                {text:"3", value: "br-3"},
+                                {text:"4", value: "br-4"},
+                                {text:"5", value: "br-5"}
+                            ],
+                            [ 
+                                {text:"0", value: "bb-0"},
+                                {text:"1", value: "bb-1"},
+                                {text:"2", value: "bb-2"},
+                                {text:"3", value: "bb-3"},
+                                {text:"4", value: "bb-4"},
+                                {text:"5", value: "bb-5"}
+                            ],
+                            [ 
+                                {text:"0", value: "bl-0"},
+                                {text:"1", value: "bl-1"},
+                                {text:"2", value: "bl-2"},
+                                {text:"3", value: "bl-3"},
+                                {text:"4", value: "bl-4"},
+                                {text:"5", value: "bl-5"}
+                            ],
+                            [ 
+                                {text:"0", value: "b-0"},
+                                {text:"1", value: "b-1"},
+                                {text:"2", value: "b-2"},
+                                {text:"3", value: "b-3"},
+                                {text:"4", value: "b-4"},
+                                {text:"5", value: "b-5"}
+                            ]
+                    ],
+                    onChange: function(el, value, data){
+                        let replace = function(str){
+                            return str.replace('b-', 'border-').replace('bt', 'border-top').replace('br', 'border-right').replace('bb', 'border-bottom').replace('bl', 'border-left');
+                        }
+
+                        if(value.removeClassName.length > 0){
+                            el.classList.remove(replace(value.removeClassName));
+                        }
+
+                        if(value.addClassName.length > 0){
+                            el.classList.add(replace(value.addClassName));
+                        }
+                    }
+                },
+                getValue: function(el, data){
+                    let replace = function(str){
+                        return str.replace('border-top', 'bt').replace('border-right', 'br').replace('border-bottom', 'bb').replace('border-left', 'bl').replace('border-', 'b-').replace('border', '');
+                    }
+                    let result = [...el.classList];
+
+                    for(let i = 0; i < result.length; i++){
+                        result[i] = replace(result[i]);
+                    }
+
+                    return result;
+                }
+            },*/
+            {
+                name: 'bordercolor',
+                text: "Couleur de bordure",
+                input: { 
+                    type: 'colorselector',
+                    options:[
+                        {text:"", value: "primary"},
+                        {text:"", value: "secondary"},
+                        {text:"", value: "success"},
+                        {text:"", value: "danger"},
+                        {text:"", value: "warning"},
+                        {text:"", value: "info"},
+                        {text:"", value: "light"},
+                        {text:"", value: "dark"}
+                    
+                    ],
+                    onChange: function(el, value, data){
+                        for(let item of data.input.options){
+                            el.classList.remove(`border-${item.value}`);
+                        }
+
+                        if(value.length > 0){
+                            el.classList.add(`border-${value}`);
+                        }
+                    }
+                },
+                getValue: function(el, data){
+                    let result = "";
+
+                    let classList = [...el.classList]
+
+                    for(let item of data.input.options){
+                        if(classList.includes(`border-${item.value}`)){
+                            result = item.value;
+                            break;
+                        }
+                    }
+
+                    return result;
+                }
+            }
+            ]
         }
     ];
 
     static elementList = [
         {name: 'Text', children: [
             {
-                name: "H1", type: 'native', tagName: 'h1', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
+                name: "H1", type: 'native', tagName: 'h1', properties: ['bootstrap', 'cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
                 init: function (el) {
                     el.innerText = el.tagName.toLowerCase();
                 },
