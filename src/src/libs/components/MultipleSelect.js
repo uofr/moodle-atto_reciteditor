@@ -20,6 +20,7 @@ export class MultipleSelect extends Component{
         this.onFocus = this.onFocus.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.onDeleteItem = this.onDeleteItem.bind(this);
+        this.onKeyDown = this.onKeyDown.bind(this);
 
         this.state = {status: 0, searchStr: ""};
     }
@@ -57,7 +58,8 @@ export class MultipleSelect extends Component{
                         }
                     )}
                      <li className="search">
-                        <input placeholder={this.props.placeholder} onChange={this.onChange} onFocus={this.onFocus} onBlur={this.onBlur} value={this.state.searchStr}/>
+                        <input placeholder={this.props.placeholder} onChange={this.onChange} onFocus={this.onFocus} onBlur={this.onBlur} value={this.state.searchStr}
+                                 onKeyDown={this.onKeyDown}/>
                     </li>
                 </ul>
                 <div className='dropdown-container' data-status={this.state.status}>
@@ -119,5 +121,12 @@ export class MultipleSelect extends Component{
         }
         let event = {target: {name: this.props.name, value: values}}
         this.props.onChange(event);
+    }
+
+    onKeyDown(event) {
+        if (event.key === 'Enter'){
+            this.onSelectItem(event.target.value);
+            this.setState({searchStr: ""});
+        }
     }
 }

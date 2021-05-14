@@ -31,6 +31,11 @@
         
         .panel[data-status='open']{
             width: 450px;
+            .card{
+                .card-body{
+                    width: 100%; overflow: "auto";
+                }
+            }
         }
         .panel[data-status='close']{
             background-color: #FFFFFF; display: flex; height: 100%; flex-direction: column; font-size: 24px; align-items: center; width: 60px; padding: 1rem;

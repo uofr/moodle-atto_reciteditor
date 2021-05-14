@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {  Button  } from 'react-bootstrap';
 import {faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {HTMLElementData} from './HTMLElementData';
 
 export class TreeView extends Component{
     static defaultProps = {
@@ -83,15 +84,16 @@ export class TreeView extends Component{
     }
 
     getNodeDesc(node){
-        let text = node.tagName.toLowerCase();
+        //let text = node.tagName.charAt(0).toUpperCase() + node.tagName.toLowerCase().slice(1);
 
-        let classList = [...node.classList]; // spread syntax 
+        /*let classList = [...node.classList]; // spread syntax 
 
         if(classList.length > 0){
             text = `${text} (${classList.join(", ")})`;
-        }
+        }*/
+        let bs = HTMLElementData.getBootstrapComponents(node);
 
-        return text;
+        return bs.text;
     }
 
     onCollapse(event, id){

@@ -282,7 +282,13 @@ export class HTMLElementData{
                 text: "Marge",
                 input: { 
                     type: 'layoutspacing',
-                    options: ["mt", "mr", "mb", "ml", "m"],
+                    options: [
+                        {name: "mt", nbItems: 6}, 
+                        {name: "mr", nbItems: 6}, 
+                        {name: "mb", nbItems: 6}, 
+                        {name: "ml", nbItems: 6}, 
+                        {name: "m", nbItems: 6}
+                    ],
                     onChange: function(el, value, data){
                         if(value.oldValue.length > 0){
                             el.classList.remove(value.oldValue);
@@ -299,7 +305,7 @@ export class HTMLElementData{
 
                     for(let i = 0; i <= 5; i++){
                         for(let item of data.input.options){
-                            let className = `${item}-${i}`;
+                            let className = `${item.name}-${i}`;
                             if(el.classList.contains(className)){
                                 result.push(className);
                             }
@@ -312,7 +318,13 @@ export class HTMLElementData{
                 text: "Espacement",
                 input: { 
                     type: 'layoutspacing',
-                    options: ["pt", "pr", "pb", "pl", "p"],
+                    options: [
+                        {name: "pt", nbItems: 6}, 
+                        {name: "pr", nbItems: 6}, 
+                        {name: "pb",nbItems: 6}, 
+                        {name: "pl", nbItems: 6}, 
+                        {name: "p", nbItems: 6}
+                    ],
                     onChange: function(el, value, data){
                         if(value.oldValue.length > 0){
                             el.classList.remove(value.oldValue);
@@ -329,7 +341,7 @@ export class HTMLElementData{
 
                     for(let i = 0; i <= 5; i++){
                         for(let item of data.input.options){
-                            let className = `${item}-${i}`;
+                            let className = `${item.name}-${i}`;
                             if(el.classList.contains(className)){
                                 result.push(className);
                             }
@@ -342,7 +354,13 @@ export class HTMLElementData{
                 text: "Bordure",
                 input: { 
                     type: 'layoutspacing',
-                    options: ["border-top", "border-right", "border-bottom", "border-left", "border"],
+                    options: [
+                        {name: "border-top", nbItems: 1}, 
+                        {name: "border-right", nbItems: 1}, 
+                        {name: "border-bottom",nbItems: 1}, 
+                        {name: "border-left", nbItems: 1}, 
+                        {name: "border", nbItems: 6}
+                    ],
                     onChange: function(el, value, data){
                         if(value.oldValue.length > 0){
                             el.classList.remove('border');
@@ -360,7 +378,7 @@ export class HTMLElementData{
 
                     for(let i = 0; i <= 5; i++){
                         for(let item of data.input.options){
-                            let className = `${item}-${i}`;
+                            let className = `${item.name}-${i}`;
                             if(el.classList.contains(className)){
                                 result.push(className);
                             }
@@ -369,80 +387,6 @@ export class HTMLElementData{
                     return result;
                 }
             },
-           /* {
-                name: 'border',
-                text: "Bordure",
-                input: { 
-                    type: 'layoutspacing',
-                    options:[
-                            [ 
-                                {text:"0", value: "bt-0"},
-                                {text:"1", value: "bt-1"},
-                                {text:"2", value: "bt-2"},
-                                {text:"3", value: "bt-3"},
-                                {text:"4", value: "bt-4"},
-                                {text:"5", value: "bt-5"}
-                            ],
-                            [ 
-                                {text:"0", value: "br-0"},
-                                {text:"1", value: "br-1"},
-                                {text:"2", value: "br-2"},
-                                {text:"3", value: "br-3"},
-                                {text:"4", value: "br-4"},
-                                {text:"5", value: "br-5"}
-                            ],
-                            [ 
-                                {text:"0", value: "bb-0"},
-                                {text:"1", value: "bb-1"},
-                                {text:"2", value: "bb-2"},
-                                {text:"3", value: "bb-3"},
-                                {text:"4", value: "bb-4"},
-                                {text:"5", value: "bb-5"}
-                            ],
-                            [ 
-                                {text:"0", value: "bl-0"},
-                                {text:"1", value: "bl-1"},
-                                {text:"2", value: "bl-2"},
-                                {text:"3", value: "bl-3"},
-                                {text:"4", value: "bl-4"},
-                                {text:"5", value: "bl-5"}
-                            ],
-                            [ 
-                                {text:"0", value: "b-0"},
-                                {text:"1", value: "b-1"},
-                                {text:"2", value: "b-2"},
-                                {text:"3", value: "b-3"},
-                                {text:"4", value: "b-4"},
-                                {text:"5", value: "b-5"}
-                            ]
-                    ],
-                    onChange: function(el, value, data){
-                        let replace = function(str){
-                            return str.replace('b-', 'border-').replace('bt', 'border-top').replace('br', 'border-right').replace('bb', 'border-bottom').replace('bl', 'border-left');
-                        }
-
-                        if(value.removeClassName.length > 0){
-                            el.classList.remove(replace(value.removeClassName));
-                        }
-
-                        if(value.addClassName.length > 0){
-                            el.classList.add(replace(value.addClassName));
-                        }
-                    }
-                },
-                getValue: function(el, data){
-                    let replace = function(str){
-                        return str.replace('border-top', 'bt').replace('border-right', 'br').replace('border-bottom', 'bb').replace('border-left', 'bl').replace('border-', 'b-').replace('border', '');
-                    }
-                    let result = [...el.classList];
-
-                    for(let i = 0; i < result.length; i++){
-                        result[i] = replace(result[i]);
-                    }
-
-                    return result;
-                }
-            },*/
             {
                 name: 'bordercolor',
                 text: "Couleur de bordure",
@@ -459,7 +403,7 @@ export class HTMLElementData{
                         {text:"", value: "dark"}
                     
                     ],
-                    onChange: function(el, value, data){
+                    onChange: function(el, value, data){                       
                         for(let item of data.input.options){
                             el.classList.remove(`border-${item.value}`);
                         }
@@ -506,22 +450,25 @@ export class HTMLElementData{
                         
                         ],
                         onChange: function(el, value, data){
+                            let bs = HTMLElementData.getBootstrapComponents(el);
+
                             for(let item of data.input.options){
-                                el.classList.remove(`bg-${item.value}`);
+                                el.classList.remove(`${bs.value}-${item.value}`);
                             }
 
                             if(value.length > 0){
-                                el.classList.add(`bg-${value}`);
+                                el.classList.add(`${bs.value}-${value}`);
                             }
                         }
                     },
                     getValue: function(el, data){
                         let result = "";
+                        let bs = HTMLElementData.getBootstrapComponents(el);
 
                         let classList = [...el.classList]
 
                         for(let item of data.input.options){
-                            if(classList.includes(`bg-${item.value}`)){
+                            if(classList.includes(`${bs.value}-${item.value}`)){
                                 result = item.value;
                                 break;
                             }
@@ -789,5 +736,41 @@ export class HTMLElementData{
         }
 
         return el;
+    }
+
+    static getBootstrapComponents(el){
+        let result = {text: el.tagName, value: el.tagName.toLowerCase()};
+        result.text = result.text.charAt(0).toUpperCase() + result.text.toLowerCase().slice(1);
+
+        if(el.classList.contains('container')){
+            result.text = 'Container';
+            result.value = 'container';
+        }
+        else if(el.classList.contains('container-fluid')){
+            result.text = 'Container';
+            result.value = 'container-fluid';
+        }
+        else if(el.classList.contains('row')){
+            result.text = 'Row';
+            result.value = 'row';
+        }
+        else if(el.classList.contains('col')){
+            result.text = 'Col';
+            result.value = 'col';
+        }
+        else if(el.classList.contains('alert')){
+            result.text = 'Alert';
+            result.value = 'alert';
+        }
+        else if(el.classList.contains('btn')){
+            result.text = 'Button';
+            result.value = 'btn';
+        }
+        else if(el.className.search('border') >=0 ){
+            result.text = 'Border';
+            result.value = 'border';
+        }
+
+        return result;
     }
 }

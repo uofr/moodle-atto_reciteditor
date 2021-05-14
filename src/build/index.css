@@ -34,6 +34,9 @@
       margin-bottom: 1rem; }
     .layout-builder .left-area .panel[data-status='open'] {
       width: 450px; }
+      .layout-builder .left-area .panel[data-status='open'] .card .card-body {
+        width: 100%;
+        overflow: "auto"; }
     .layout-builder .left-area .panel[data-status='close'] {
       background-color: #FFFFFF;
       display: flex;

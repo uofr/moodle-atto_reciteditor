@@ -84,18 +84,15 @@ export class LayoutSpacing extends Component {
         let that = this;
         let main = 
             <div className="layout-spacing">
-                {this.props.options.map((item, index) => {
-                    let options = [
-                        {text: '0', value: `${item}-0`},
-                        {text: '1', value: `${item}-1`},
-                        {text: '2', value: `${item}-2`},
-                        {text: '3', value: `${item}-3`},
-                        {text: '4', value: `${item}-4`},
-                        {text: '5', value: `${item}-5`}
-                    ]
+                {this.props.options.map((option, index) => {
+                    let dataProvider = [];
 
-                    let oldValue = that.getValue(options);
-                    let result = <ComboBox key={index} name={item} value={oldValue} size='sm' className={`item-${index+1}`} options={options} 
+                    for(let i = 0; i < option.nbItems; i++){
+                        dataProvider.push({text: i, value: `${option.name}-${i}`});
+                    }
+
+                    let oldValue = that.getValue(dataProvider);
+                    let result = <ComboBox key={index} name={option.name} value={oldValue} size='sm' className={`item-${index+1}`} options={dataProvider} 
                                         onChange={(event) => that.onChange(oldValue, event.target.value)}></ComboBox>;
                     return result;
                 })}

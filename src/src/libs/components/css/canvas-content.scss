@@ -7,7 +7,7 @@ html.canvas-content{
         margin:0; padding: 15px;
 
         div:not(.row):not(.col):not(.dropping-zone):not(.alert):empty::after{content: "Div"}
-        div{ border: 2px dashed rgb(201, 197, 197); }    
+        div:not(.alert){ border: 2px dashed rgb(201, 197, 197); }    
 
         .container{ border: 2px dashed rgb(201, 197, 197); padding: 1rem!important; }    
         .row{ border: 2px dashed rgb(201, 197, 197);  padding: 1rem; }
@@ -15,6 +15,7 @@ html.canvas-content{
         .col{ border: 2px dashed rgb(201, 197, 197); }
         .col:empty::after{content: "Col"}
         .btn:empty::after{content: "Button"}
+        .alert:empty::after{content: "Alerte"}
         
 
         /* Those elements have priority over the previous ones*/
