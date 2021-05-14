@@ -74,12 +74,13 @@ export class ButtonsBar extends Component{
                     <BtnSetCssProp selection={selection} cssProp="font-style" defaultValue="normal" value="italic" icon={faItalic}  title="Italique"/>
                     <BtnSetCssProp selection={selection} cssProp="text-decoration" defaultValue="normal" value="underline" icon={faUnderline}  title="Souligné"/>
                     <BtnSetCssProp selection={selection} cssProp="text-decoration" defaultValue="normal" value="line-through" icon={faStrikethrough}  title="Barré"/>
+                    <BtnUnsetCssProp selection={selection} cssProp={["fontSize","fontWeight","fontStyle","textDecoration"]} icon={faRemoveFormat} defaultValue=""   title="Enlever la mise en forme de la police"/>
                 </ButtonGroup>
                 <ButtonGroup className="mr-2 mb-2" size="sm" style={{border: style.border, borderRadius: style.borderRadius}}>
                     <BtnColorPicker selection={selection} cssProp="backgroundColor" icon={faFillDrip} defaultValue="#FFFFFF"   title="Couleur d'arrière-plan"/>
-                    <BtnUnsetCssProp selection={selection} cssProp="backgroundColor" icon={faRemoveFormat} defaultValue="#FFFFFF"  title="Enlever la couleur d'arrière-plan"/>
+                    <BtnUnsetCssProp selection={selection} cssProp={["backgroundColor"]} icon={faRemoveFormat} defaultValue="#FFFFFF"  title="Enlever la couleur d'arrière-plan"/>
                     <BtnColorPicker selection={selection} cssProp="color" icon={faFont} defaultValue="#000000"  title="Couleur de la police"/>
-                    <BtnUnsetCssProp selection={selection} cssProp="color" icon={faRemoveFormat} defaultValue="#000000"   title="Enlever la couleur de la police"/>
+                    <BtnUnsetCssProp selection={selection} cssProp={["color"]} icon={faRemoveFormat} defaultValue="#000000"   title="Enlever la couleur de la police"/>
                 </ButtonGroup>
                 <ButtonGroup className="mr-2 mb-2" size="sm" style={{border: style.border, borderRadius: style.borderRadius}} >
                     <Button variant={ButtonsBar.Layout.btnNormal} onClick={() => this.applyNumerationTypeset("ul")}><FontAwesomeIcon icon={faListUl} title="Liste non numérotée"/></Button>
@@ -350,6 +351,8 @@ class BtnSetCssProp extends Component{
             sel.node.outerHTML = sel.node.innerHTML;
         }
 
+        sel.refreshSelection()
+
         if(this.props.onClick){
             this.props.onClick(event, true);
         }
@@ -431,6 +434,7 @@ class BtnColorPicker extends Component{
     }
   
     onChange(event){
+        //TODO: Ignore if color is constantly changed, causes lags
         let sel = this.props.selection;
         
         if(sel === null){ return; }
@@ -458,6 +462,8 @@ class BtnColorPicker extends Component{
             sel.node.style[prop] = color
         }
 
+        sel.refreshSelection()
+
         if(this.props.onClick){
             this.props.onClick(event);
         }
@@ -468,7 +474,7 @@ class BtnUnsetCssProp extends Component{
     static defaultProps = {
         selection: null,
         icon: null,
-        cssProp: "",
+        cssProp: [],
         defaultValue: "",
         onClick: null,
         title: ""
@@ -490,8 +496,9 @@ class BtnUnsetCssProp extends Component{
         if(sel === null){ return; }
         if(sel.isNodeRoot){ return; }
 
-        sel.node.style[this.props.cssProp] = this.props.defaultValue;
-        //sel.node.outerHTML = sel.node.innerHTML;
+        for (let prop of this.props.cssProp){
+            sel.node.style[prop] = this.props.defaultValue;
+        }
 
         if(this.props.onClick){
             this.props.onClick(event);
@@ -608,6 +615,8 @@ class BtnAlignment extends Component{
                 sel.parentNode.appendChild(newNode);
             }
         }
+
+        sel.refreshSelection()
 
         if(this.props.onClick){
             this.props.onClick(event);

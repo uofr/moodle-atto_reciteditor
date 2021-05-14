@@ -197,7 +197,7 @@ export class VisualWordProcessor extends Component
                 sel.node.remove();
             }
             else if(sel.isNodeRoot){
-                let newNode = document.createElement("span");                
+                let newNode = document.createElement("span");
                 newNode.appendChild(sel.range.extractContents());
                 newNode.style.backgroundColor = backgroundColor;
                 sel.range.insertNode(newNode);
@@ -305,6 +305,7 @@ class TextArea extends Component{
         this.onMouseMove = this.onMouseMove.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.onClick = this.onClick.bind(this);
+        this.setCurrentSelection = this.setCurrentSelection.bind(this);
 
         this.editorRef = React.createRef();
 
@@ -381,7 +382,8 @@ class TextArea extends Component{
                 result.selectionDirection = 'rtl';
             }
              
-            let mainNode = (result.selectionDirection === 'ltr' ? result.sel.focusNode : result.sel.anchorNode);
+            //let mainNode = (result.selectionDirection === 'ltr' ? result.sel.focusNode : result.sel.anchorNode);
+            let mainNode = result.sel.baseNode;
             result.node = (mainNode instanceof Element ? mainNode :  mainNode.parentElement);
             result.subSelection = (result.sel.anchorOffset > 0 && result.sel.focusOffset > 0);
     
@@ -390,6 +392,16 @@ class TextArea extends Component{
             result.isParentNodeRoot = (result.node === this.editorRef.current);
             result.editorRef = this.editorRef;
             result.selectedText = result.sel.toString();
+            result.selectedContent = result.range.cloneContents();
+
+            if (result.selectedContent.children[0]){ // Est-ce que la selection contient des tag html?
+                if (result.selectedContent.children[0].innerText == result.selectedText){
+                    result.node = result.selectedContent.children[0];
+                    result.isNodeRoot = false;
+                    result.subSelection = false;
+                }
+            }
+            result.refreshSelection = this.setCurrentSelection;
         }
         
         if(!JsNx.compare(result, this.state.selection)){
