@@ -32,8 +32,6 @@
     grid-column-end: 1; }
     .layout-builder .left-area .card {
       margin-bottom: 1rem; }
-    .layout-builder .left-area .panel {
-      transition: width 1s; }
     .layout-builder .left-area .panel[data-status='open'] {
       width: 450px; }
     .layout-builder .left-area .panel[data-status='close'] {
@@ -87,6 +85,8 @@
     .layout-builder .tree-view ul {
       list-style: none;
       padding-left: 1rem; }
+      .layout-builder .tree-view ul button {
+        text-align: left; }
   .layout-builder ::-webkit-scrollbar {
     width: 4px; }
   .layout-builder ::-webkit-scrollbar-track {

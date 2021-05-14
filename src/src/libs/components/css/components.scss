@@ -28,9 +28,7 @@
     .left-area{ 
         grid-column-start: 1; grid-column-end: 1; 
         .card{margin-bottom: 1rem;}
-        .panel{
-            transition: width 1s;
-        }
+        
         .panel[data-status='open']{
             width: 450px;
         }
@@ -64,7 +62,10 @@
 
     .tree-view{
         list-style: none; padding-left: 0;
-        ul{list-style: none; padding-left: 1rem; }
+        ul{
+            list-style: none; padding-left: 1rem; 
+            button{text-align: left;}
+        }
     }
 
     /* width */

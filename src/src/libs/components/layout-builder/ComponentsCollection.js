@@ -37,7 +37,8 @@ export class ComponentProperties extends Component{
         });
 
         let bootstrapProps = properties.filter(item => item.type === 'bootstrap');
-        let nativeProps = properties.filter(item => item.type === 'native');
+        let styleAttr = properties.filter(item => item.type === 'styleattr');
+        let attributes = properties.filter(item => item.type === 'htmlattr');
 
         let main = 
             <div>
@@ -46,11 +47,15 @@ export class ComponentProperties extends Component{
                         <Nav.Link eventKey="0">Bootstrap</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="1">HTML</Nav.Link>
+                        <Nav.Link eventKey="1">Proprietés HTML</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link eventKey="2">Style</Nav.Link>
                     </Nav.Item>
                 </Nav>
                 {this.state.tab === "0" && <FormProperties element={this.props.element} properties={bootstrapProps} />}
-                {this.state.tab === "1" && <FormProperties element={this.props.element} properties={nativeProps} />}
+                {this.state.tab === "1" && <FormProperties element={this.props.element} properties={attributes} />}
+                {this.state.tab === "2" && <FormProperties element={this.props.element} properties={styleAttr} />}
             </div>
                 
                 
@@ -95,8 +100,8 @@ class FormProperties extends Component{
                         if((!item2.input.hasOwnProperty('flags')) || (item2.input.flags.showLabel)){
                             formItem = 
                             <Form.Group size="sm" key={index2} as={Row} style={{alignItems: "center"}}  controlId={`formitem${index}${index2}`}>
-                                <Form.Label column sm="5">{item2.text}</Form.Label>
-                                <Col sm="7">
+                                <Form.Label column sm="4">{item2.text}</Form.Label>
+                                <Col sm="8">
                                     {this.createFormControl(item2)}
                                 </Col>
                             </Form.Group>;

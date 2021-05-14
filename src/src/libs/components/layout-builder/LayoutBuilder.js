@@ -48,7 +48,9 @@ export class LayoutBuilder extends Component
 
         this.state = {
             device: 'xl', view: '', 
-            collapsed: ['1', '2', '3', '4'], // 0 = left-panel, 1=components, 2=properties, 3=tree view, 4=left-panel on hover
+            collapsed: {
+                leftPanel: false, leftPanelOnHover: false, components: false, properties: false, treeView: false,
+            }, 
             selectedElement: null, data: {customHtmlComponentList: [], content: ''}
         };
 
@@ -130,7 +132,7 @@ export class LayoutBuilder extends Component
                    
                 <div className="main">
                     <div className="left-area" onMouseLeave={this.onMouseLeave} >
-                        {this.state.collapsed.includes('0') && !this.state.collapsed.includes('4') ? 
+                        {this.state.collapsed.leftPanel && !this.state.collapsed.leftPanelOnHover ? 
                             <div className="panel" data-status='close' onMouseEnter={this.onMouseEnter} >
                                 <div><FontAwesomeIcon icon={faPuzzlePiece} title="Composants"/></div>
                                 <div><FontAwesomeIcon icon={faSlidersH} title="Proprietés"/></div>
@@ -139,11 +141,11 @@ export class LayoutBuilder extends Component
                         :
                             <div className="panel" data-status='open'>
                                 <Card>
-                                    <Card.Header onClick={() => this.onCollapse('1')}>
-                                        <FontAwesomeIcon className="mr-1" icon={(!this.state.collapsed.includes('1') ? faAngleRight : faAngleDown)}/>
+                                    <Card.Header onClick={() => this.onCollapse('components')}>
+                                        <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.components ? faAngleRight : faAngleDown)}/>
                                         Composants
                                     </Card.Header>
-                                    <Collapse in={this.state.collapsed.includes('1')}>
+                                    <Collapse in={!this.state.collapsed.components}>
                                         <Card.Body style={{maxHeight: 350, overflow: "auto"}}>
                                             <VisualComponentList onDeleteCustomComponent={this.onDeleteCustomComponent}  onImportCustomComponent={this.onImportCustomComponent}
                                                         customHtmlComponentList={this.state.data.customHtmlComponentList} onDragEnd={this.onDragEnd}/>
@@ -152,10 +154,10 @@ export class LayoutBuilder extends Component
                                 </Card>
 
                                 <Card>
-                                    <Card.Header onClick={() => this.onCollapse('2')}>
-                                        <FontAwesomeIcon className="mr-1" icon={(!this.state.collapsed.includes('2') ? faAngleRight : faAngleDown)}/>Proprietés
+                                    <Card.Header onClick={() => this.onCollapse('properties')}>
+                                        <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/>Proprietés
                                     </Card.Header>
-                                    <Collapse in={this.state.collapsed.includes('2')}>
+                                    <Collapse in={!this.state.collapsed.properties}>
                                         <Card.Body style={{maxHeight: 450, overflow: "auto"}}>
                                             <ComponentProperties element={this.state.selectedElement}/>
                                         </Card.Body>
@@ -163,10 +165,10 @@ export class LayoutBuilder extends Component
                                 </Card>
 
                                 <Card>
-                                    <Card.Header  onClick={() => this.onCollapse('3')}>
-                                        <FontAwesomeIcon className="mr-1" icon={(!this.state.collapsed.includes('3') ? faAngleRight : faAngleDown)}/>Arborescence
+                                    <Card.Header  onClick={() => this.onCollapse('treeView')}>
+                                        <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/>Arborescence
                                     </Card.Header>
-                                    <Collapse in={this.state.collapsed.includes('3')}>
+                                    <Collapse in={!this.state.collapsed.treeView}>
                                         <Card.Body style={{maxHeight: 350, overflow: "auto"}}>
                                             <TreeView canvas={this.canvas} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} />
                                         </Card.Body>
@@ -195,34 +197,22 @@ export class LayoutBuilder extends Component
     }
 
     onMouseEnter(){
-        if(this.state.collapsed.includes('0')){
-            this.onCollapse('4');
+        if(this.state.collapsed.leftPanel){
+            this.onCollapse('leftPanelOnHover');
         }
     }
 
     onMouseLeave(){
-        if(this.state.collapsed.includes('0')){
-            this.onCollapse('4');
+        if(this.state.collapsed.leftPanel && this.state.selectedElement === null){
+            this.onCollapse('leftPanelOnHover');
         }
     }
 
-    onCollapse(index){
-        let data = [];
-        let result = false;
-
-        if(this.state.collapsed.includes(index)){
-            data = this.state.collapsed;
-            data = data.filter(item => item !== index);
-        }
-        else{
-            data = this.state.collapsed;
-            data.push(index);
-            result = true;
-        }
-
+    onCollapse(name){
+        let data = this.state.collapsed;
+        data[name] = !data[name];
         this.setState({collapsed: data});
-
-        return result;
+        return data[name];
     }
 
     onNavbarSelect(eventKey, event){
@@ -237,7 +227,7 @@ export class LayoutBuilder extends Component
             this.onSourceCode((this.state.view === eventKey));
         }
         else if(eventKey === 'collapse'){
-            if(!this.onCollapse('0')){
+            if(!this.onCollapse('leftPanel')){
                 event.currentTarget.classList.remove('active');
             }
         }
@@ -292,13 +282,23 @@ export class LayoutBuilder extends Component
         // if the selected element receives another click then it deselects it
         if(Object.is(el, this.state.selectedElement)){
             this.htmlCleaning();
-            this.setState({selectedElement: null});
+            
+            let collapsed = this.state.collapsed;
+            collapsed.components = false;
+            collapsed.treeView = false;
+            collapsed.leftPanelOnHover = false;
+            this.setState({selectedElement: null, collapsed: collapsed});
             return;
         }
 
         if(this.state.selectedElement !== null){ 
             this.htmlCleaning();
-            this.setState({selectedElement: null}, () => this.onSelectElement(el));
+            
+            let collapsed = this.state.collapsed;
+            collapsed.components = false;
+            collapsed.treeView = false;
+            collapsed.leftPanelOnHover = false;
+            this.setState({selectedElement: null, collapsed: collapsed}, () => this.onSelectElement(el));
             return; 
         }
 
@@ -319,7 +319,11 @@ export class LayoutBuilder extends Component
             }
         }
 
-        this.setState({selectedElement: el});
+        let collapsed = this.state.collapsed;
+        collapsed.components = true;
+        collapsed.treeView = true;
+        collapsed.leftPanelOnHover = true;
+        this.setState({selectedElement: el, collapsed: collapsed});
     }
 
     onDropElement(el){

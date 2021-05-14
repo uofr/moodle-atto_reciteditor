@@ -9,7 +9,7 @@ export class HTMLElementData{
 
     static propertyList = [
         {
-            name: 'layout', description: 'Layout', type: 'native',
+            name: 'layout', description: 'Layout', type: 'styleattr',
             children: [
                 {
                     name: 'Width', 
@@ -46,7 +46,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'font', description: 'Police de caractère', type: 'native',
+            name: 'font', description: 'Police de caractère', type: 'styleattr',
             children: [
                 {
                     name: 'alignment', 
@@ -138,7 +138,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'background', description: 'Background',  type: 'native',
+            name: 'background', description: 'Background',  type: 'styleattr',
             children: [
                 {
                     name: 'backgroundcolor', 
@@ -157,7 +157,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'icon', description: 'Icon',  type: 'native',
+            name: 'icon', description: 'Icon',  type: 'styleattr',
             children: [
                 {
                     name: 'icon', 
@@ -176,7 +176,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'link', description: 'Link Options',  type: 'native',
+            name: 'link', description: 'Link Options',  type: 'styleattr',
             children: [
                 {
                     name: 'href', 
@@ -211,7 +211,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'source', description: 'Source',  type: 'native',
+            name: 'source', description: 'Source',  type: 'htmlattr',
             children: [
                 {
                     name: 'src', 
@@ -230,30 +230,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'cssclasslist', description: 'Liste des classes CSS',  type: 'native',
-            children: [{
-                name: 'classlist', 
-                text: "Liste des classes",
-                input: { 
-                    type: 'multipleselect',
-                    flags: {autoAdd: true, showLabel: false},
-                    options: [], 
-                    defaultValue: '',
-                    onChange: function(el, value, data){
-                        el.className = value.join(' ');
-                    }
-                },
-                getValue: function(el, data){
-                    let list = [];
-                    for (let c of el.classList){
-                        list.push({value:c, text:c});
-                    }
-                    return list;
-                }
-            }]
-        },
-        {
-            name: 'marginborderpadding', description: 'Marge - Bordure - Padding',  type: 'native',
+            name: 'marginborderpadding', description: 'Marge - Bordure - Padding',  type: 'styleattr',
             children: [{
                 name: 'layoutspacing',
                 text: "Layout Spacing",
@@ -299,7 +276,7 @@ export class HTMLElementData{
             },]
         },
         {
-            name: 'bootstrap', description: 'Bootstrap',  type: 'bootstrap',
+            name: 'bs-spacingborder', description: 'Espacement - Bordure',  type: 'bootstrap',
             children: [{
                 name: 'margin',
                 text: "Marge",
@@ -368,10 +345,12 @@ export class HTMLElementData{
                     options: ["border-top", "border-right", "border-bottom", "border-left", "border"],
                     onChange: function(el, value, data){
                         if(value.oldValue.length > 0){
+                            el.classList.remove('border');
                             el.classList.remove(value.oldValue);
                         }
                         
                         if(value.newValue.length > 0){
+                            el.classList.add('border');
                             el.classList.add(value.newValue);
                         }
                     }
@@ -506,55 +485,147 @@ export class HTMLElementData{
                 }
             }
             ]
+        },
+        {
+            name: 'bs-general', description: "De base",  type: 'bootstrap',
+            children: [
+                {
+                    name: 'background',
+                    text: "Couleur de l'arrière plan",
+                    input: { 
+                        type: 'colorselector',
+                        options:[
+                            {text:"", value: "primary"},
+                            {text:"", value: "secondary"},
+                            {text:"", value: "success"},
+                            {text:"", value: "danger"},
+                            {text:"", value: "warning"},
+                            {text:"", value: "info"},
+                            {text:"", value: "light"},
+                            {text:"", value: "dark"}
+                        
+                        ],
+                        onChange: function(el, value, data){
+                            for(let item of data.input.options){
+                                el.classList.remove(`bg-${item.value}`);
+                            }
+
+                            if(value.length > 0){
+                                el.classList.add(`bg-${value}`);
+                            }
+                        }
+                    },
+                    getValue: function(el, data){
+                        let result = "";
+
+                        let classList = [...el.classList]
+
+                        for(let item of data.input.options){
+                            if(classList.includes(`bg-${item.value}`)){
+                                result = item.value;
+                                break;
+                            }
+                        }
+
+                        return result;
+                    }
+                }
+            ]
+        },
+        {
+            name: 'htmlattributes', description: 'Attributs HTML',  type: 'htmlattr',
+            children: [
+                {
+                    name: 'classlist', 
+                    text: "Liste des classes",
+                    input: { 
+                        type: 'multipleselect',
+                        flags: {autoAdd: true, showLabel: true},
+                        options: [], 
+                        defaultValue: '',
+                        onChange: function(el, value, data){
+                            el.className = value.join(' ');
+                        }
+                    },
+                    getValue: function(el, data){
+                        let list = [];
+                        for (let c of el.classList){
+                            list.push({value:c, text:c});
+                        }
+                        return list;
+                    }
+                },
+                {
+                    name: 'id', 
+                    text: 'ID',
+                    input: { 
+                        type: 'text', 
+                        defaultValue: '',
+                        onChange: function(el, value, data){
+                            el.setAttribute("id",  value);
+                        }
+                    },
+                    getValue: function(el){
+                        return el.getAttribute("id") || "";
+                    }
+                }
+            ]
         }
     ];
+
+    static propsAssignmentFacade = {
+        text: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'marginborderpadding', 'font', 'layout', 'background'],
+        controls: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'marginborderpadding', 'font', 'layout', 'background'],
+        containers: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'layout', 'background'],
+
+    }
 
     static elementList = [
         {name: 'Text', children: [
             {
-                name: "H1", type: 'native', tagName: 'h1', properties: ['bootstrap', 'cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
+                name: "H1", type: 'native', tagName: 'h1', properties: HTMLElementData.propsAssignmentFacade.text,
                 init: function (el) {
                     el.innerText = el.tagName.toLowerCase();
                 },
             },
             {
-                name: "H2", type: 'native', tagName: 'h2', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
+                name: "H2", type: 'native', tagName: 'h2', properties: HTMLElementData.propsAssignmentFacade.text,
                 init: function (el) {
                     el.innerText = el.tagName.toLowerCase();
                 },
             },
             {
-                name: "H3", type: 'native', tagName: 'h3', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
+                name: "H3", type: 'native', tagName: 'h3',  properties: HTMLElementData.propsAssignmentFacade.text,
                 init: function (el) {
                     el.innerText = el.tagName.toLowerCase();
                 },
             },
             {
-                name: "H4", type: 'native', tagName: 'h4', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
+                name: "H4", type: 'native', tagName: 'h4', properties:  HTMLElementData.propsAssignmentFacade.text,
                 init: function (el) {
                     el.innerText = el.tagName.toLowerCase();
                 },
             },
             {
-                name: "H5", type: 'native', tagName: 'h5', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
+                name: "H5", type: 'native', tagName: 'h5', properties:  HTMLElementData.propsAssignmentFacade.text,
                 init: function (el) {
                     el.innerText = el.tagName.toLowerCase();
                 },
             },
             {
-                name: "H6", type: 'native', tagName: 'h6', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
+                name: "H6", type: 'native', tagName: 'h6', properties:  HTMLElementData.propsAssignmentFacade.text,
                 init: function (el) {
                     el.innerText = el.tagName.toLowerCase();
                 },
             },
-            {name: "Paragraph", type: 'native', tagName: 'p', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
+            {name: "Paragraph", type: 'native', tagName: 'p', properties:  HTMLElementData.propsAssignmentFacade.text,
                 init:function(el){
                     el.innerText = "Paragraph";
                 }
             }
         ]},
         {name: 'Controls', children: [
-            {name: "Button", type: 'bootstrap', tagName: 'button', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
+            {name: "Button", type: 'bootstrap', tagName: 'button', properties: HTMLElementData.propsAssignmentFacade.controls,
                 create: function(){
                     let el = document.createElement("button");
                     el.classList.add('btn');
@@ -562,19 +633,19 @@ export class HTMLElementData{
                     return el;
                 },
             },
-            {name: "Link", type: 'native', tagName: 'a', properties: ['cssclasslist', 'marginborderpadding', 'link', 'font', 'layout', 'background'],
+            {name: "Link", type: 'native', tagName: 'a', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'link', 'font', 'layout', 'background'],
                 init:function(el){
                     el.innerText = "Link";
                     el.setAttribute('href', '#');
                     el.setAttribute('target', '_self');
                 },
             },
-            {name: "Audio", type: 'native', tagName: 'audio', properties: ['cssclasslist', 'marginborderpadding', 'source', 'layout'],
+            {name: "Audio", type: 'native', tagName: 'audio', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'source', 'layout'],
                 init:function(el){
                      el.setAttribute('controls', '');
                 }, 
             },
-            {name: "Video", type: 'native', tagName: 'video', properties: ['cssclasslist', 'marginborderpadding', 'source', 'layout'],
+            {name: "Video", type: 'native', tagName: 'video', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'source', 'layout'],
                 init:function(el){
                     el.width = "320";
                     el.height = "240";
@@ -590,11 +661,11 @@ export class HTMLElementData{
             }
         ]},
         {name: 'Containers', children: [
-            {name: "Div", type: 'native', tagName: 'div', properties: ['cssclasslist', 'marginborderpadding', 'layout', 'background'],
+            {name: "Div", type: 'native', tagName: 'div', properties: HTMLElementData.propsAssignmentFacade.containers,
                 init:function(el){
                 }, 
             },           
-            {name: "Grid", type: 'bootstrap', tagName: 'grid', properties: ['cssclasslist', 'marginborderpadding', 'layout', 'background'],
+            {name: "Grid", type: 'bootstrap', tagName: 'grid', properties: HTMLElementData.propsAssignmentFacade.containers,
                 create: function(){
                     let el = document.createElement("div");
                     el.classList.add("container");
@@ -618,44 +689,53 @@ export class HTMLElementData{
                     return el;
                 }
             },
-            {name: "Ligne", type: 'bootstrap', tagName: 'row', properties: ['cssclasslist', 'marginborderpadding', 'layout', 'background'],
+            {name: "Ligne", type: 'bootstrap', tagName: 'row', properties:  HTMLElementData.propsAssignmentFacade.containers,
                 create: function(){
                     let el = document.createElement("div");
                     el.classList.add("row");
                     return el;
                 }
             },
-            {name: "Colonne", type: 'bootstrap', tagName: 'col', properties: ['cssclasslist', 'marginborderpadding', 'layout', 'background'],
+            {name: "Colonne", type: 'bootstrap', tagName: 'col', properties:  HTMLElementData.propsAssignmentFacade.containers,
                 create: function(){
                     let el = document.createElement("div");
                     el.classList.add("col");
                     return el;
                 }
             },
-            {name: "Unordered list", type: 'native', tagName: 'ul', properties: ['cssclasslist', 'marginborderpadding', 'layout', 'background'],
+            {name: "Unordered list", type: 'native', tagName: 'ul', properties:  HTMLElementData.propsAssignmentFacade.containers,
                 init:function(el){
                     el.innerHTML = "<li>List</li>";
                 }
             },
-            {name: "Ordered list", type: 'native', tagName: 'ol', properties: ['cssclasslist', 'marginborderpadding', 'layout', 'background'],
+            {name: "Ordered list", type: 'native', tagName: 'ol', properties:  HTMLElementData.propsAssignmentFacade.containers,
                 init:function(el){
                     el.innerHTML = "<li>List</li>";
                 }
             },
-            {name: "List Item", type: 'native', tagName: 'li', properties: ['cssclasslist', 'marginborderpadding', 'font', 'layout', 'background'],
+            {name: "List Item", type: 'native', tagName: 'li', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'font', 'layout', 'background'],
                 init:function(el){
                     el.innerText = "Item";
                 }
             },
-            {name: "Séparateur", type: 'native', tagName: 'hr', properties: ['cssclasslist', 'marginborderpadding', 'layout', 'background']}
+            {name: "Alerte", type: 'bootstrap', tagName: 'alert', properties:  HTMLElementData.propsAssignmentFacade.containers,
+                create: function(){
+                    let el = document.createElement("div");
+                    el.classList.add("alert");
+                    el.classList.add("alert-primary");
+                    el.setAttribute("role", "alert");
+                    return el;
+                }
+            },
+            {name: "Séparateur", type: 'native', tagName: 'hr', properties: HTMLElementData.propsAssignmentFacade.containers}
         ]},
         {name: 'Images', children: [
-            {name: "Image", type: 'native', tagName: 'img', properties: ['cssclasslist', 'marginborderpadding', 'source', 'layout'],
+            {name: "Image", type: 'native', tagName: 'img', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'source', 'layout'],
                 init:function(el){
                     el.setAttribute('src', `.${ImageEmpty}`);
                 },
             },
-            {name: "Icon", type: 'native', tagName: 'i', properties: ['cssclasslist', 'marginborderpadding', 'icon', 'font'],
+            {name: "Icon", type: 'native', tagName: 'i', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'icon', 'font'],
                 init:function(el){
                     el.classList.add('icon-emo-happy-1');//TODO: Default icon
                 },

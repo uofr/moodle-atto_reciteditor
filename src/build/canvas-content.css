@@ -5,7 +5,7 @@ html.canvas-content {
     margin: 0;
     padding: 15px;
     /* Those elements have priority over the previous ones*/ }
-    html.canvas-content body div:not(.row):not(.col):not(.dropping-zone):empty::after {
+    html.canvas-content body div:not(.row):not(.col):not(.dropping-zone):not(.alert):empty::after {
       content: "Div"; }
     html.canvas-content body div {
       border: 2px dashed #c9c5c5; }
@@ -40,5 +40,29 @@ html.canvas-content {
     margin-top: .5rem; }
   html.canvas-content .dropping-zone-hover {
     background-color: rgba(0, 153, 255, 0.5) !important; }
+
+.border-1 {
+  border-width: 1px !important; }
+
+.border-2 {
+  border-width: 2px !important; }
+
+.border-3 {
+  border-width: 3px !important; }
+
+.border-4 {
+  border-width: 4px !important; }
+
+.border-5 {
+  border-width: 5px !important; }
+
+.rounded-1 {
+  border-radius: 0.2rem !important; }
+
+.rounded-2 {
+  border-radius: 0.25rem !important; }
+
+.rounded-3 {
+  border-radius: 0.3rem !important; }
 
 /*# sourceMappingURL=canvas-content.css.map */

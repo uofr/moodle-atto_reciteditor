@@ -6,7 +6,7 @@ html.canvas-content{
     body{
         margin:0; padding: 15px;
 
-        div:not(.row):not(.col):not(.dropping-zone):empty::after{content: "Div"}
+        div:not(.row):not(.col):not(.dropping-zone):not(.alert):empty::after{content: "Div"}
         div{ border: 2px dashed rgb(201, 197, 197); }    
 
         .container{ border: 2px dashed rgb(201, 197, 197); padding: 1rem!important; }    
@@ -37,3 +37,15 @@ html.canvas-content{
     .dropping-zone-hover{background-color:  rgba(0, 153, 255, .5)!important;}
     //.dropping-zone:empty::after{content: 'Déposer ici';}  
 }
+
+
+// Début ajout classe bootstrap 5.0 
+.border-1 {border-width: 1px !important;}
+.border-2 {border-width: 2px !important;}
+.border-3 {border-width: 3px !important;}
+.border-4 {border-width: 4px !important;}
+.border-5 {border-width: 5px !important;}
+.rounded-1 {border-radius: 0.2rem !important;}
+.rounded-2 {border-radius: 0.25rem !important;}
+.rounded-3 {border-radius: 0.3rem !important;}
+// Fin ajout classe bootstrap 5.0 
