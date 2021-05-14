@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button  } from 'react-bootstrap';
 import { faUpload, faDownload, faTrashAlt, faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
-import { LayoutSpacingEditor, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox} from '../Components';
+import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import { IconSelector } from '../iconSelector';
+import { ColorSelector } from '../ColorSelector';
 
 export class ComponentProperties extends Component{
     static defaultProps = {
@@ -14,11 +15,9 @@ export class ComponentProperties extends Component{
     constructor(props){
         super(props);
 
-        this.onSubmit = this.onSubmit.bind(this);
-        this.onDataChange = this.onDataChange.bind(this);
-        this.onCollapse = this.onCollapse.bind(this);
+        this.onSelectTab = this.onSelectTab.bind(this);
 
-        this.state = {collapsed: {}}
+        this.state = {tab: '0'};
     }
 
     render(){
@@ -37,42 +36,87 @@ export class ComponentProperties extends Component{
             return componentData.properties.indexOf(el1.name) - componentData.properties.indexOf(el2.name)
         });
 
-        let main =
-                properties.map((item, index) => {
-                    let collapsed = (typeof this.state.collapsed[item.name] === "undefined" ? true : this.state.collapsed[item.name]);
-                    
-                    let icon = collapsed ? faAngleRight : faAngleDown;
+        let bootstrapProps = properties.filter(item => item.type === 'bootstrap');
+        let nativeProps = properties.filter(item => item.type === 'native');
 
-                    let form = 
-                    <Form key={index} onSubmit={this.onSubmit} className="mb-4">
-                        <h6  onClick={(event) => this.onCollapse(event, item.name)}><FontAwesomeIcon className="mr-1" icon={icon}/>{item.description}</h6>
-                        {!collapsed && item.children.map((item2, index2) => {
-                            let formItem = null;
-                            
-                            if((!item2.input.hasOwnProperty('flags')) || (item2.input.flags.showLabel)){
-                                formItem = 
-                                <Form.Group size="sm" key={index2} as={Row}  controlId={`formitem${index}${index2}`}>
-                                    <Form.Label column sm="5">{item2.text}</Form.Label>
-                                    <Col sm="7">
-                                        {this.createFormControl(item2)}
-                                    </Col>
-                                </Form.Group>;
-                                
-                            }else{
-                                formItem = 
-                                <Form.Group size="sm" key={index2}  controlId={`formitem${index}${index2}`}>
-                                    {this.createFormControl(item2)}
-                                </Form.Group>;
-                            }
-
-                            return (formItem);
-                        })}
-
-                    </Form>
-
-                    return form;
-                });
+        let main = 
+            <div>
+                <Nav variant="tabs" activeKey={this.state.tab} onSelect={this.onSelectTab}>
+                    <Nav.Item>
+                        <Nav.Link eventKey="0">Bootstrap</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                        <Nav.Link eventKey="1">HTML</Nav.Link>
+                    </Nav.Item>
+                </Nav>
+                {this.state.tab === "0" && <FormProperties element={this.props.element} properties={bootstrapProps} />}
+                {this.state.tab === "1" && <FormProperties element={this.props.element} properties={nativeProps} />}
+            </div>
                 
+                
+        return main;
+    }
+
+    onSelectTab(k){
+        this.setState({tab: k});
+    }
+}
+
+class FormProperties extends Component{
+    static defaultProps = {
+        element: null,
+        properties: []
+    };
+
+    constructor(props){
+        super(props);
+
+        this.onSubmit = this.onSubmit.bind(this);
+        this.onDataChange = this.onDataChange.bind(this);
+        this.onCollapse = this.onCollapse.bind(this);
+
+        this.state = {collapsed: {}}
+    }
+    
+    render(){
+        let main =
+        <div className="tab-content">
+            {this.props.properties.map((item, index) => {
+                let collapsed = (typeof this.state.collapsed[item.name] === "undefined" ? false : this.state.collapsed[item.name]);
+                
+                let icon = collapsed ? faAngleRight : faAngleDown;
+
+                let form = 
+                <Form key={index} onSubmit={this.onSubmit} className="mb-4">
+                    <h6  onClick={(event) => this.onCollapse(event, item.name)}><FontAwesomeIcon className="mr-1" icon={icon}/>{item.description}</h6>
+                    {!collapsed && item.children.map((item2, index2) => {
+                        let formItem = null;
+                        
+                        if((!item2.input.hasOwnProperty('flags')) || (item2.input.flags.showLabel)){
+                            formItem = 
+                            <Form.Group size="sm" key={index2} as={Row} style={{alignItems: "center"}}  controlId={`formitem${index}${index2}`}>
+                                <Form.Label column sm="5">{item2.text}</Form.Label>
+                                <Col sm="7">
+                                    {this.createFormControl(item2)}
+                                </Col>
+                            </Form.Group>;
+                            
+                        }else{
+                            formItem = 
+                            <Form.Group size="sm" key={index2}  controlId={`formitem${index}${index2}`}>
+                                {this.createFormControl(item2)}
+                            </Form.Group>;
+                        }
+
+                        return (formItem);
+                    })}
+
+                </Form>
+
+                return form;
+            })}
+        </div>;
+            
         return main;
     }
 
@@ -109,8 +153,16 @@ export class ComponentProperties extends Component{
                 result = <MultipleSelect name={data.name} values={value} options={data.input.options} autoAdd={data.input.flags.autoAdd}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
-            case 'layoutspacing':
+            case 'layoutspacingeditor':
                 result = <LayoutSpacingEditor name={data.name} values={value}
+                                onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'layoutspacing':
+                result = <LayoutSpacing name={data.name} value={value} options={data.input.options}
+                                            onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'colorselector':
+                result = <ColorSelector name={data.name} value={value} options={data.input.options}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
            /* case 'number':
@@ -132,7 +184,7 @@ export class ComponentProperties extends Component{
     onSubmit(event){
         event.preventDefault();
     }
-
+    
     onCollapse(event, id){
         event.stopPropagation();
         event.preventDefault();

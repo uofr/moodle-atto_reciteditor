@@ -46,7 +46,11 @@ export class LayoutBuilder extends Component
         this.onMouseEnter = this.onMouseEnter.bind(this);
         this.onMouseLeave = this.onMouseLeave.bind(this);
 
-        this.state = {device: 'xl', view: '', collapsed: ['1', '2', '3', '4'], selectedElement: null, data: {customHtmlComponentList: [], content: ''}};
+        this.state = {
+            device: 'xl', view: '', 
+            collapsed: ['1', '2', '3', '4'], // 0 = left-panel, 1=components, 2=properties, 3=tree view, 4=left-panel on hover
+            selectedElement: null, data: {customHtmlComponentList: [], content: ''}
+        };
 
         this.canvas = React.createRef();
     }
@@ -191,11 +195,15 @@ export class LayoutBuilder extends Component
     }
 
     onMouseEnter(){
-        this.onCollapse('4');
+        if(this.state.collapsed.includes('0')){
+            this.onCollapse('4');
+        }
     }
 
     onMouseLeave(){
-        this.onCollapse('4');
+        if(this.state.collapsed.includes('0')){
+            this.onCollapse('4');
+        }
     }
 
     onCollapse(index){
@@ -230,7 +238,7 @@ export class LayoutBuilder extends Component
         }
         else if(eventKey === 'collapse'){
             if(!this.onCollapse('0')){
-                event.currentTarget.classList.remove('active')
+                event.currentTarget.classList.remove('active');
             }
         }
         else{

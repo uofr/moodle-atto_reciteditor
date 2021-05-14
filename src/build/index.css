@@ -45,6 +45,11 @@
       align-items: center;
       width: 60px;
       padding: 1rem; }
+    .layout-builder .left-area .tab-content {
+      border: 1px solid #dee2e6;
+      margin-top: 12px;
+      padding: 1rem;
+      margin-left: -10px; }
   .layout-builder .center-area {
     grid-column-start: 2;
     grid-column-end: 2; }
@@ -52,11 +57,6 @@
       margin: auto;
       background-color: #FFF;
       border: 0; }
-  .layout-builder .component-list .tab-content {
-    border: 1px solid #dee2e6;
-    margin-top: 12px;
-    padding: 1rem;
-    margin-left: -10px; }
   .layout-builder .component-list ul {
     list-style: none;
     padding-left: 0; }
@@ -242,6 +242,57 @@
           color: #fff; }
         .multiple-select .dropdown-container .dropdown-list li[data-selected="1"] {
           opacity: 0.5; }
+
+.layout-spacing {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto auto auto;
+  grid-gap: 1rem;
+  margin: 1rem;
+  /*.margin-spacing{
+        display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto auto; border: 1px dashed #bababa; margin: 1px;
+        .name{font-size: 9px;}
+        .item-1{grid-column: 2/3; grid-row: 1/2;}
+        .item-2{grid-column: 3/4; grid-row: 2/3; align-self: center;}
+        .item-3{grid-column: 2/3; grid-row: 3/4;}
+        .item-4{grid-column: 1/2; grid-row: 2/3;  align-self: center;}
+        .item-5{ grid-column: 2/3; grid-row: 2/3;  display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto auto; }
+        .border-options{
+           border: 1px solid #d7d7d7; background: #f6f6f6;
+            .padding-spacing{
+                grid-column: 2/3; grid-row: 2/3; border: 1px solid #bababa;     background: #ebebeb;
+
+                .background{
+                    border: 1px solid #bababa;
+                }
+            }
+        }
+    }*/ }
+  .layout-spacing .item-1 {
+    grid-column: 2/3;
+    grid-row: 1/2; }
+  .layout-spacing .item-2 {
+    grid-column: 3/4;
+    grid-row: 2/3;
+    align-self: center; }
+  .layout-spacing .item-3 {
+    grid-column: 2/3;
+    grid-row: 3/4; }
+  .layout-spacing .item-4 {
+    grid-column: 1/2;
+    grid-row: 2/3;
+    align-self: center; }
+  .layout-spacing .item-5 {
+    grid-column: 2/3;
+    grid-row: 2/3;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto auto; }
+
+.color-selector {
+  background-color: #333;
+  border-radius: 6px;
+  padding: 3px; }
 
 /**********************************************************
  * Layout Spacing editor
