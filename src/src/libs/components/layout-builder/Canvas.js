@@ -158,12 +158,10 @@ export class CanvasElement{
     onMouseOver(event){
         event.stopPropagation();
         event.preventDefault();
-        console.log("enter", event.target)
         this.dom.setAttribute("data-hovering", "1");
     }
 
     onMouseOut(event){
-        console.log("onMouseOut", event.target)
         this.dom.removeAttribute("data-hovering");
     }
 }
