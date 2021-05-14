@@ -34,6 +34,8 @@ export class CanvasElement{
         this.onDrop = this.onDrop.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.onClick = this.onClick.bind(this);
+        this.onMouseOver = this.onMouseOver.bind(this);
+        this.onMouseOut = this.onMouseOut.bind(this);
 
         this.onSelectCallback = onSelectCallback;
         this.onDropCallback = onDropCallback;
@@ -45,6 +47,8 @@ export class CanvasElement{
         this.dom.ondragstart = this.onDragStart;
         this.dom.ondrop = this.onDrop;
         this.dom.onclick = this.onClick;
+        this.dom.onmouseover = this.onMouseOver;
+        this.dom.onmouseout = this.onMouseOut;
 
         this.droppingZoneAfter = document.createElement("div");
         this.droppingZoneAfter.classList.add("dropping-zone");
@@ -149,6 +153,18 @@ export class CanvasElement{
         let el = document.createElement("div");
         el.classList.add("dropping-zone");
         return el;
+    }
+
+    onMouseOver(event){
+        event.stopPropagation();
+        event.preventDefault();
+        console.log("enter", event.target)
+        this.dom.setAttribute("data-hovering", "1");
+    }
+
+    onMouseOut(event){
+        console.log("onMouseOut", event.target)
+        this.dom.removeAttribute("data-hovering");
     }
 }
 

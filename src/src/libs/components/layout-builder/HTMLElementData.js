@@ -674,6 +674,26 @@ export class HTMLElementData{
                     return el;
                 }
             },
+            {name: "Card", type: 'bootstrap', tagName: 'card', properties:  HTMLElementData.propsAssignmentFacade.containers,
+                create: function(){
+                    let card = document.createElement("div");
+                    card.classList.add("card");
+                    
+                    let el = document.createElement("div");
+                    el.classList.add("card-header");
+                    card.appendChild(el);
+
+                    el = document.createElement("div");
+                    el.classList.add("card-body");
+                    card.appendChild(el);
+
+                    el = document.createElement("div");
+                    el.classList.add("card-footer");
+                    card.appendChild(el);
+
+                    return card;
+                }
+            },
             {name: "Séparateur", type: 'native', tagName: 'hr', properties: HTMLElementData.propsAssignmentFacade.containers}
         ]},
         {name: 'Images', children: [

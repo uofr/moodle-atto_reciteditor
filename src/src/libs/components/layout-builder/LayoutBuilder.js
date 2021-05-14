@@ -280,6 +280,11 @@ export class LayoutBuilder extends Component
     }
 
     onSelectElement(el){
+
+        if((el !== null) && (el.tagName.toLowerCase() === 'body')){ 
+            el = null;
+        }
+
         // if the selected element receives another click then it deselects it
         if(Object.is(el, this.state.selectedElement)){
             this.htmlCleaning();
@@ -307,9 +312,7 @@ export class LayoutBuilder extends Component
 
         this.htmlCleaning();
 
-        if(el.tagName.toLowerCase() === 'body'){ 
-            el = null;
-        }
+        
 
         if(el !== null){
             if(el.getAttribute('data-selected') === '1'){

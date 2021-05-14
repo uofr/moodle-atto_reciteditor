@@ -5,9 +5,9 @@ html.canvas-content {
     margin: 0;
     padding: 15px;
     /* Those elements have priority over the previous ones*/ }
-    html.canvas-content body div:not(.row):not(.col):not(.dropping-zone):not(.alert):empty::after {
+    html.canvas-content body div:not(.row):not(.col):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):empty::after {
       content: "Div"; }
-    html.canvas-content body div:not(.alert) {
+    html.canvas-content body div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer) {
       border: 2px dashed #c9c5c5; }
     html.canvas-content body .container {
       border: 2px dashed #c9c5c5;
@@ -25,10 +25,16 @@ html.canvas-content {
       content: "Button"; }
     html.canvas-content body .alert:empty::after {
       content: "Alerte"; }
-    html.canvas-content body .element-focus, html.canvas-content body body:hover, html.canvas-content body h1:hover, html.canvas-content body h2:hover, html.canvas-content body h3:hover, html.canvas-content body h4:hover, html.canvas-content body h5:hover, html.canvas-content body h6:hover, html.canvas-content body button:hover, html.canvas-content body p:hover, html.canvas-content body div:hover, html.canvas-content body ul:hover, html.canvas-content body ol:hover, html.canvas-content body li:hover, html.canvas-content body [data-selected="1"] {
+    html.canvas-content body .card-header:empty::after {
+      content: "Header"; }
+    html.canvas-content body .card-body:empty::after {
+      content: "Body"; }
+    html.canvas-content body .card-footer:empty::after {
+      content: "Footer"; }
+    html.canvas-content body *[data-hovering="1"] {
       border: 2px dashed #0099ff !important; }
     html.canvas-content body *[data-selected="1"] {
-      border-style: solid !important; }
+      border: 2px solid #0099ff !important; }
     html.canvas-content body *[draggable="true"] {
       cursor: grab; }
   html.canvas-content .dropping-zone {

@@ -6,8 +6,8 @@ html.canvas-content{
     body{
         margin:0; padding: 15px;
 
-        div:not(.row):not(.col):not(.dropping-zone):not(.alert):empty::after{content: "Div"}
-        div:not(.alert){ border: 2px dashed rgb(201, 197, 197); }    
+        div:not(.row):not(.col):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):empty::after{content: "Div"}
+        div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer){ border: 2px dashed rgb(201, 197, 197); }    
 
         .container{ border: 2px dashed rgb(201, 197, 197); padding: 1rem!important; }    
         .row{ border: 2px dashed rgb(201, 197, 197);  padding: 1rem; }
@@ -16,20 +16,15 @@ html.canvas-content{
         .col:empty::after{content: "Col"}
         .btn:empty::after{content: "Button"}
         .alert:empty::after{content: "Alerte"}
+        .card-header:empty::after{content: "Header"}
+        .card-body:empty::after{content: "Body"}
+        .card-footer:empty::after{content: "Footer"}
         
-
         /* Those elements have priority over the previous ones*/
-
-        .element-focus{
-            border: $border-onhover-element;
-            //transform: scale(0.97);
-            //padding: 3px;
-        }
-
-        &:hover{ @extend .element-focus;}
-        h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover, button:hover, p:hover, div:hover, ul:hover, ol:hover, li:hover{@extend .element-focus;}
-
-        *[data-selected="1"]{@extend .element-focus; border-style: solid!important;}
+        //&:hover{ @extend .element-focus;}
+        //h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover, button:hover, p:hover, div:hover, ul:hover, ol:hover, li:hover{@extend .element-focus;}
+        *[data-hovering="1"]{ border: $border-onhover-element;}
+        *[data-selected="1"]{border: 2px solid rgb(0, 153, 255)!important;}
         *[draggable="true"]{cursor: grab;}
     }
     .dropping-zone{border: 2px dashed rgb(0, 153, 255); height: 50px; width: 100%;  transform: scale(0.97); 
