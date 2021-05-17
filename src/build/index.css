@@ -36,7 +36,8 @@
       width: 450px; }
       .layout-builder .left-area .panel[data-status='open'] .card .card-body {
         width: 100%;
-        overflow: "auto"; }
+        overflow: auto;
+        max-height: 50vh; }
     .layout-builder .left-area .panel[data-status='close'] {
       background-color: #FFFFFF;
       display: flex;

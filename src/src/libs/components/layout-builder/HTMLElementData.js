@@ -276,7 +276,7 @@ export class HTMLElementData{
             },]
         },
         {
-            name: 'bs-spacingborder', description: 'Espacement - Bordure',  type: 'bootstrap',
+            name: 'bs-spacing', description: 'Espacement',  type: 'bootstrap',
             children: [{
                 name: 'margin',
                 text: "Marge",
@@ -349,7 +349,12 @@ export class HTMLElementData{
                     }
                     return result;
                 }
-            },{
+            }
+            ]
+        },
+        {
+            name: 'bs-border', description: 'Bordure',  type: 'bootstrap',
+            children: [{
                 name: 'border',
                 text: "Bordure",
                 input: { 
@@ -427,6 +432,46 @@ export class HTMLElementData{
 
                     return result;
                 }
+            },
+            {
+                name: 'borderradius',
+                text: "Bordur radius",
+                input: { 
+                    type: 'combobox',
+                    options:[
+                        {text:"Rounded", value: "rounded"},
+                        {text:"Rounded-Top", value: "rounded-top"},
+                        {text:"Rounded-Right", value: "rounded-right"},
+                        {text:"Rounded-Bottom", value: "rounded-bottom"},
+                        {text:"Rounded-Left", value: "rounded-left"},
+                        {text:"Rounded-Circle", value: "rounded-circle"},
+                        {text:"Rounded-0", value: "rounded-0"},
+                    
+                    ],
+                    onChange: function(el, value, data){                       
+                        for(let item of data.input.options){
+                            el.classList.remove(value);
+                        }
+
+                        if(value.length > 0){
+                            el.classList.add(value);
+                        }
+                    }
+                },
+                getValue: function(el, data){
+                    let result = "";
+
+                    let classList = [...el.classList]
+
+                    for(let item of data.input.options){
+                        if(classList.includes(item.value)){
+                            result = item.value;
+                            break;
+                        }
+                    }
+
+                    return result;
+                }
             }
             ]
         },
@@ -478,6 +523,79 @@ export class HTMLElementData{
                     }
                 },
                 {
+                    name: 'btnblock',
+                    text: "Btn Block",
+                    input: { 
+                        type: 'radio',
+                        options:[
+                            {text:"Oui", value: "btn-block"},
+                            {text:"Non", value: ""}
+                        
+                        ],
+                        onChange: function(el, value, data){
+                            if(el.classList.contains("btn-block")){
+                                el.classList.remove("btn-block");
+                            }
+
+                            if(value.length > 0){
+                                el.classList.add(value);
+                            }
+                        }
+                    },
+                    getValue: function(el, data){
+                        let result = "";
+                        
+                        if(el.classList.contains("btn-block")){
+                            result = "btn-block";
+                        }
+
+                        return result;
+                    }
+                },
+                {
+                    name: 'shadow',
+                    text: "Shadow",
+                    input: { 
+                        type: 'radio',
+                        options:[
+                            {text: <FontAwesomeIcon icon={faRemoveFormat} title="Remove Format"/>, value:'default'},
+                            {text:"None", value: "shadow-none"},
+                            {text:"SM", value: "shadow-sm"},
+                            {text:"REG", value: "shadow"},
+                            {text:"LG", value: "shadow-lg"}
+                        ],
+                        defaultValue: ['default'],
+                        onChange: function(el, value, data){
+                            for(let item of data.input.options){
+                                el.classList.remove(item.value);
+                            }
+
+                            if((value.length > 0) && (value !== data.input.defaultValue[0])){
+                                el.classList.add(value);
+                            }
+                        }
+                    },
+                    getValue: function(el, data){
+                        let result = data.input.defaultValue;
+
+                        let classList = [...el.classList]
+
+                        for(let item of data.input.options){
+                            if(classList.includes(item.value)){
+                                result = [item.value];
+                                break;
+                            }
+                        }
+
+                        return result;
+                    }
+                }
+            ]
+        },
+        {
+            name: 'bs-text', description: "Texte",  type: 'bootstrap',
+            children: [
+                {
                     name: 'color',
                     text: "Couleur",
                     input: { 
@@ -516,6 +634,95 @@ export class HTMLElementData{
                         }
 
                         return result;
+                    }
+                },
+                {
+                    name: 'alignment', 
+                    text: 'Alignment',
+                    input: { 
+                        type: 'radio', 
+                        options:[
+                            {text: <FontAwesomeIcon icon={faRemoveFormat} title="Défaut"/>, value:'default'},
+                            {text: <FontAwesomeIcon icon={faAlignLeft} title="Left"/>, value:'text-left' },
+                            {text: <FontAwesomeIcon icon={faAlignCenter} title="Center"/>, value:'text-center' },
+                            {text: <FontAwesomeIcon icon={faAlignRight} title="Right"/>, value:'text-right' },
+                            {text: <FontAwesomeIcon icon={faAlignJustify} title="Justify"/>, value:'text-justify' }
+                        ],
+                        defaultValue: ['default'],
+                        onChange: function(el, value, data){
+                            if(el.classList.length > 0){
+                                for(let option of data.input.options){
+                                    el.classList.remove(option.value);
+                                }
+                            }
+                            
+                            if(data.input.defaultValue.join() === value){
+                                return;
+                            }
+
+                            el.classList.add(value)
+                        }
+                    },
+                    getValue: function(el, data){
+                        for(let option of data.input.options){
+                            if (el.classList.contains(option.value)){
+                                return [option.value];
+                            }
+                        }
+                        
+                        return data.input.defaultValue;
+                    }
+                },
+                {
+                    name: 'resposivesize', 
+                    text: 'Responsive Size',
+                    input: { 
+                        type: 'radio', 
+                        options:[
+                            {text: <FontAwesomeIcon icon={faRemoveFormat} title="Défaut"/>, value:'default'},
+                            {text: 'SM', value:'sm' },
+                            {text: 'MD', value:'md' },
+                            {text: 'LG', value:'lg' },
+                            {text: 'XL', value:'xl' }
+                        ],
+                        defaultValue: ['default'],
+                        onChange: function(el, value, data){
+                            let sufix = ['left', 'right', 'center', 'justify'];
+                            let className = null;
+
+                            if(el.classList.length > 0){
+                                for(let option of data.input.options){
+                                    for(let s of sufix){
+                                        if(el.classList.contains(`text-${s}`)){
+                                            className = `text-${value}-${s}`;
+                                        }
+
+                                        el.classList.remove(`text-${option.value}-${s}`);
+                                    }
+                                }
+                            }
+                            
+                            if(data.input.defaultValue.join() === value){
+                                return;
+                            }
+
+                            if(className !== null){
+                                el.classList.add(className);
+                            }
+                        }
+                    },
+                    getValue: function(el, data){
+                        let sufix = ['left', 'right', 'center', 'justify'];
+
+                        for(let option of data.input.options){
+                            for(let s of sufix){
+                                if (el.classList.contains(`text-${option.value}-${s}`)){
+                                    return [option.value];
+                                }
+                            }
+                        }
+                        
+                        return data.input.defaultValue;
                     }
                 }
             ]
@@ -562,9 +769,9 @@ export class HTMLElementData{
     ];
 
     static propsAssignmentFacade = {
-        text: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'marginborderpadding', 'font', 'layout', 'background'],
-        controls: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'marginborderpadding', 'font', 'layout', 'background'],
-        containers: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'layout', 'background'],
+        text: ['bs-text', 'bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'marginborderpadding', 'font', 'layout', 'background'],
+        controls: ['bs-text', 'bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'marginborderpadding', 'font', 'layout', 'background'],
+        containers: ['bs-text', 'bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'layout', 'background'],
 
     }
 
@@ -741,9 +948,12 @@ export class HTMLElementData{
             {name: "Séparateur", type: 'native', tagName: 'hr', properties: HTMLElementData.propsAssignmentFacade.containers}
         ]},
         {name: 'Images', children: [
-            {name: "Image", type: 'native', tagName: 'img', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'source', 'layout'],
-                init:function(el){
+            {name: "Image", type: 'bootstrap', tagName: 'img', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'source', 'layout'],
+                create:function(){
+                    let el = document.createElement("img");
                     el.setAttribute('src', `.${ImageEmpty}`);
+                    el.classList.add("img-fluid");
+                    return el;
                 },
             },
             {name: "Icon", type: 'native', tagName: 'i', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'icon', 'font'],
@@ -850,13 +1060,10 @@ export class HTMLElementData{
             result.text = 'Border';
             result.prefix = 'border';
         }
-        else if(el.className.search('text-') >=0 ){
+        /*else if(el.className.search('text-') >=0 ){
             result.text = 'Text';
             result.prefix = 'text';
-        }
-        else if(result.text === 'P'){
-            result.text = 'Paragraph';
-        }
+        }*/
         else{
             result.prefix = 'bg';
         }
