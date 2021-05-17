@@ -945,10 +945,34 @@ export class HTMLElementData{
                     return card;
                 }
             },
+            {name: "Media", type: 'bootstrap', tagName: 'media', properties:  HTMLElementData.propsAssignmentFacade.containers,
+                create: function(){
+                    let media = document.createElement("div");
+                    media.classList.add("media");
+                    
+                    let el = document.createElement("img");
+                    el.classList.add("mr-3");
+                    el.setAttribute("src", `.${ImageEmpty}`);
+                    media.appendChild(el);
+
+                    let body = document.createElement("div");
+                    body.classList.add("media-body");
+                    media.appendChild(body);
+
+                    el = document.createElement("h5");
+                    el.classList.add("mt-0");
+                    el.innerHTML = 'Media heading';
+                    body.appendChild(el);
+
+                    body.innerHTML += "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.";
+
+                    return media;
+                }
+            },
             {name: "Séparateur", type: 'native', tagName: 'hr', properties: HTMLElementData.propsAssignmentFacade.containers}
         ]},
         {name: 'Images', children: [
-            {name: "Image", type: 'bootstrap', tagName: 'img', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'source', 'layout'],
+            {name: "Image", type: 'bootstrap', tagName: 'img', properties: ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout'],
                 create:function(){
                     let el = document.createElement("img");
                     el.setAttribute('src', `.${ImageEmpty}`);
@@ -956,7 +980,7 @@ export class HTMLElementData{
                     return el;
                 },
             },
-            {name: "Icon", type: 'native', tagName: 'i', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'icon', 'font'],
+            {name: "Icon", type: 'native', tagName: 'i', properties: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'icon', 'font'],
                 init:function(el){
                     el.classList.add('icon-emo-happy-1');//TODO: Default icon
                 },
@@ -1059,6 +1083,14 @@ export class HTMLElementData{
         else if(el.className.search('border-') >=0 ){
             result.text = 'Border';
             result.prefix = 'border';
+        }
+        else if(el.classList.contains('media')){
+            result.text = 'Media';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('media-body')){
+            result.text = 'Media Body';
+            result.prefix = 'bg';
         }
         /*else if(el.className.search('text-') >=0 ){
             result.text = 'Text';
