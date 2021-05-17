@@ -291,7 +291,6 @@ export class LayoutBuilder extends Component
             
             let collapsed = this.state.collapsed;
             collapsed.components = false;
-            collapsed.treeView = false;
             collapsed.properties = true;
             collapsed.leftPanelOnHover = false;
             this.setState({selectedElement: null, collapsed: collapsed});
@@ -303,7 +302,6 @@ export class LayoutBuilder extends Component
             
             let collapsed = this.state.collapsed;
             collapsed.components = false;
-            collapsed.treeView = false;
             collapsed.properties = true;
             collapsed.leftPanelOnHover = false;
             this.setState({selectedElement: null, collapsed: collapsed}, () => this.onSelectElement(el));
@@ -327,7 +325,6 @@ export class LayoutBuilder extends Component
 
         let collapsed = this.state.collapsed;
         collapsed.components = true;
-        collapsed.treeView = true;
         collapsed.properties = false;
         collapsed.leftPanelOnHover = true;
         this.setState({selectedElement: el, collapsed: collapsed});

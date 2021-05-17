@@ -7,7 +7,7 @@ html.canvas-content {
     /* Those elements have priority over the previous ones*/ }
     html.canvas-content body div:not(.row):not(.col):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):empty::after {
       content: "Div"; }
-    html.canvas-content body div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer) {
+    html.canvas-content body div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.dropping-zone) {
       border: 2px dashed #c9c5c5; }
     html.canvas-content body .container {
       border: 2px dashed #c9c5c5;
@@ -37,17 +37,19 @@ html.canvas-content {
       border: 2px solid #0099ff !important; }
     html.canvas-content body *[draggable="true"] {
       cursor: grab; }
-  html.canvas-content .dropping-zone {
-    border: 2px dashed #0099ff;
-    height: 50px;
-    width: 100%;
-    transform: scale(0.97);
-    display: inline-flex;
-    margin-left: .5rem;
-    margin-right: .5rem;
-    margin-top: .5rem; }
-  html.canvas-content .dropping-zone-hover {
-    background-color: rgba(0, 153, 255, 0.5) !important; }
+    html.canvas-content body .dropping-zone {
+      border: 2px dashed #0099ff;
+      height: 50px;
+      width: 100%;
+      transform: scale(0.97);
+      display: inline-flex;
+      margin-left: .5rem;
+      margin-right: .5rem;
+      margin-top: .5rem; }
+    html.canvas-content body .dropping-zone-hover {
+      background-color: rgba(0, 153, 255, 0.5) !important; }
+    html.canvas-content body .dropping-zone-hover::before {
+      content: "Drop here..."; }
 
 .border-1 {
   border-width: 1px !important; }
