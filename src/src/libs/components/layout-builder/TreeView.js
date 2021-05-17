@@ -91,7 +91,7 @@ export class TreeView extends Component{
         if(classList.length > 0){
             text = `${text} (${classList.join(", ")})`;
         }*/
-        let bs = HTMLElementData.getBootstrapComponents(node);
+        let bs = HTMLElementData.mapBootstrapComponents(node);
 
         return bs.text;
     }

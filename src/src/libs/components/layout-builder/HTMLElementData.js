@@ -450,25 +450,66 @@ export class HTMLElementData{
                         
                         ],
                         onChange: function(el, value, data){
-                            let bs = HTMLElementData.getBootstrapComponents(el);
+                            let bs = HTMLElementData.mapBootstrapComponents(el);
 
                             for(let item of data.input.options){
-                                el.classList.remove(`${bs.value}-${item.value}`);
+                                el.classList.remove(`${bs.prefix}-${item.value}`);
                             }
 
                             if(value.length > 0){
-                                el.classList.add(`${bs.value}-${value}`);
+                                el.classList.add(`${bs.prefix}-${value}`);
                             }
                         }
                     },
                     getValue: function(el, data){
                         let result = "";
-                        let bs = HTMLElementData.getBootstrapComponents(el);
+                        let bs = HTMLElementData.mapBootstrapComponents(el);
 
                         let classList = [...el.classList]
 
                         for(let item of data.input.options){
-                            if(classList.includes(`${bs.value}-${item.value}`)){
+                            if(classList.includes(`${bs.prefix}-${item.value}`)){
+                                result = item.value;
+                                break;
+                            }
+                        }
+
+                        return result;
+                    }
+                },
+                {
+                    name: 'color',
+                    text: "Couleur",
+                    input: { 
+                        type: 'colorselector',
+                        options:[
+                            {text:"", value: "primary"},
+                            {text:"", value: "secondary"},
+                            {text:"", value: "success"},
+                            {text:"", value: "danger"},
+                            {text:"", value: "warning"},
+                            {text:"", value: "info"},
+                            {text:"", value: "light"},
+                            {text:"", value: "dark"}
+                        
+                        ],
+                        onChange: function(el, value, data){
+                            for(let item of data.input.options){
+                                el.classList.remove(`text-${item.value}`);
+                            }
+
+                            if(value.length > 0){
+                                el.classList.add(`text-${value}`);
+                            }
+                        }
+                    },
+                    getValue: function(el, data){
+                        let result = "";
+
+                        let classList = [...el.classList]
+
+                        for(let item of data.input.options){
+                            if(classList.includes(`text-${item.value}`)){
                                 result = item.value;
                                 break;
                             }
@@ -611,6 +652,9 @@ export class HTMLElementData{
             {name: "Div", type: 'native', tagName: 'div', properties: HTMLElementData.propsAssignmentFacade.containers,
                 init:function(el){
                 }, 
+            },  
+            {name: "Span", type: 'native', tagName: 'span', properties: HTMLElementData.propsAssignmentFacade.containers,
+                init:function(el){}, 
             },           
             {name: "Grid", type: 'bootstrap', tagName: 'grid', properties: HTMLElementData.propsAssignmentFacade.containers,
                 create: function(){
@@ -758,37 +802,63 @@ export class HTMLElementData{
         return el;
     }
 
-    static getBootstrapComponents(el){
-        let result = {text: el.tagName, value: el.tagName.toLowerCase()};
+    static mapBootstrapComponents(el){
+        let result = {text: el.tagName, prefix: el.tagName.toLowerCase()};
         result.text = result.text.charAt(0).toUpperCase() + result.text.toLowerCase().slice(1);
 
         if(el.classList.contains('container')){
             result.text = 'Container';
-            result.value = 'container';
+            result.prefix = 'bg';
         }
         else if(el.classList.contains('container-fluid')){
             result.text = 'Container';
-            result.value = 'container-fluid';
+            result.prefix = 'bg';
         }
         else if(el.classList.contains('row')){
             result.text = 'Row';
-            result.value = 'row';
+            result.prefix = 'bg';
         }
         else if(el.classList.contains('col')){
             result.text = 'Col';
-            result.value = 'col';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('card')){
+            result.text = 'Card';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('card-header')){
+            result.text = 'Header';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('card-body')){
+            result.text = 'Body';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('card-footer')){
+            result.text = 'Footer';
+            result.prefix = 'bg';
         }
         else if(el.classList.contains('alert')){
             result.text = 'Alert';
-            result.value = 'alert';
+            result.prefix = 'alert';
         }
         else if(el.classList.contains('btn')){
             result.text = 'Button';
-            result.value = 'btn';
+            result.prefix = 'btn';
         }
-        else if(el.className.search('border') >=0 ){
+        else if(el.className.search('border-') >=0 ){
             result.text = 'Border';
-            result.value = 'border';
+            result.prefix = 'border';
+        }
+        else if(el.className.search('text-') >=0 ){
+            result.text = 'Text';
+            result.prefix = 'text';
+        }
+        else if(result.text === 'P'){
+            result.text = 'Paragraph';
+        }
+        else{
+            result.prefix = 'bg';
         }
 
         return result;

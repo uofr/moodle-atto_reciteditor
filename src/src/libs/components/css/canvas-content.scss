@@ -8,6 +8,8 @@ html.canvas-content{
 
         div:not(.row):not(.col):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):empty::after{content: "Div"}
         div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer){ border: 2px dashed rgb(201, 197, 197); }    
+        span:empty::after{content: "Span"}
+        span{ border: 2px dashed rgb(201, 197, 197); }    
 
         .container{ border: 2px dashed rgb(201, 197, 197); padding: 1rem!important; }    
         .row{ border: 2px dashed rgb(201, 197, 197);  padding: 1rem; }
