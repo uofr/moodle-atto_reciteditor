@@ -144,7 +144,7 @@ class FormProperties extends Component{
                 break;
             case 'color':
                 result = <InputColor name={data.name} value={value} 
-                                onChange={(event) => this.onDataChange(event, data)} />;
+                                onBlur={(event) => this.onDataChange(event, data)} />;
                 break;
             case 'combobox':
                 result = <ComboBox name={data.name} value={value} options={data.input.options}

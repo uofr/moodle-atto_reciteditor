@@ -18,15 +18,18 @@ export class InputColor extends Component {
         
         this.onChange = this.onChange.bind(this);
         this.onReset = this.onReset.bind(this);
+        this.onBlur = this.onBlur.bind(this);
+
+        this.state = {value:this.props.value};
     }
     
     render() {       
-        let value = Utils.RGBToHex(this.props.value);
+        let value = Utils.RGBToHex(this.state.value);
 
         let main = 
             <div style={{display: "inline-flex"}}>
                 <Form.Control size={this.props.size} name={this.props.name} type="color" value={value} 
-                                onChange={this.onChange} disabled={this.props.disabled} style={{width: "80px"}}/>
+                                onChange={this.onChange} onBlur={this.onBlur} disabled={this.props.disabled} style={{width: "80px"}}/>
                 <Button className="ml-1" size='sm' variant={'primary'} onClick={this.onReset} title={"Supprimer le format"}><FontAwesomeIcon icon={faRemoveFormat}/></Button>
             </div>
         return (main);
@@ -37,8 +40,22 @@ export class InputColor extends Component {
             target: {name: this.props.name, value: event.target.value}
         };
 
-        this.props.onChange(eventData)
-    }   
+        this.setState({value:event.target.value});
+
+        if (this.props.onChange){
+            this.props.onChange(eventData);
+        }
+    }
+    
+    onBlur(event){ 
+        let eventData = {
+            target: {name: this.props.name, value: this.state.value}
+        };
+
+        if (this.props.onBlur){
+            this.props.onBlur(eventData);
+        }
+    }
 
     onReset(){
         let eventData = {

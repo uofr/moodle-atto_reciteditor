@@ -373,11 +373,13 @@ class BtnColorPicker extends Component{
         super(props);
 
         this.onChange = this.onChange.bind(this);
+        this.onBlur = this.onBlur.bind(this);
+        this.state = {value:this.props.defaultValue};
     }
 
-    render(){
-        let value = this.props.defaultValue;
-                
+    render() {
+        let value = this.state.value;
+
         if((this.props.selection !== null) && (this.props.selection.node !== null)){
             value = this.RGBToHex(this.props.selection.node.style[this.props.cssProp]);
         }
@@ -385,7 +387,7 @@ class BtnColorPicker extends Component{
         let main = 
             <Button variant={ButtonsBar.Layout.btnNormal} title={this.props.title}>
                 <FontAwesomeIcon icon={this.props.icon}/>{" "}
-                <input type="color" onChange={this.onChange} value={value}/>
+                <input type="color" onChange={this.onChange} onBlur={this.onBlur} value={value}/>
             </Button>;
 
         return main;
@@ -432,9 +434,12 @@ class BtnColorPicker extends Component{
         */
         return "#" + r + g + b;
     }
-  
+
     onChange(event){
-        //TODO: Ignore if color is constantly changed, causes lags
+        this.setState({value:event.target.value})
+    }
+  
+    onBlur(event){
         let sel = this.props.selection;
         
         if(sel === null){ return; }
@@ -443,7 +448,7 @@ class BtnColorPicker extends Component{
         if(sel.sel.isCollapsed){ return; }
 
         let prop = this.props.cssProp;
-        let color = event.target.value;
+        let color = this.state.value;
 
         if(sel.isNodeRoot){
             let newNode = document.createElement("span");
