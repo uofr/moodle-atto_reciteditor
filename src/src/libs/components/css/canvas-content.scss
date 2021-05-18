@@ -8,7 +8,8 @@ html.canvas-content{
 
         
 
-        div:not(.container):not(.row):not(.col):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before{content: "Div"}
+        //div:not(.container):not(.row):not(.col):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.carousel):not(.carousel-inner)::before{content: "Div"}
+        div:empty:not(.col):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before{content: "Div"}
         div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.dropping-zone){ border: 2px dashed rgb(201, 197, 197); }    
 
         .container{ border: 2px dashed rgb(201, 197, 197); padding: 1rem!important; }    
@@ -17,21 +18,19 @@ html.canvas-content{
 
         .btn:empty::after{content: "Button"}
         .alert:empty::after{content: "Alerte"}
-        .card-header:empty::after{content: "Header"}
-        .card-body:empty::after{content: "Body"}
-        .card-footer:empty::after{content: "Footer"}
-
-        .carousel, .carousel-inner{ border: none !important; }
-
-        .carousel-inner:first-child:after{content:'First slide'; text-align: center;}
-        .carousel-inner:nth-child(2)::after{content:'2nd slide'; text-align: center;}
-        .carousel-inner:nth-child(3)::after{content:'3rd slide'; text-align: center;}
-        .carousel-inner:nth-child(4)::after{content:'4th slide'; text-align: center;}
-        .carousel-inner:nth-child(5)::after{content:'5th slide'; text-align: center;}
-        .carousel-inner:last-child::after{content:'last slide'; text-align: center;}
         .card-header:empty::before{content: "Header"; }
         .card-body:empty::before{content: "Body"; }
         .card-footer:empty::before{content: "Footer"; }
+
+        .carousel, .carousel-inner{ border: none !important; }
+        .slide-pos{ position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 45px; font-weight: 100;color: #fff;}
+        .carousel-inner:first-child:after{content:'First slide'; @extend .slide-pos;}
+        .carousel-inner:nth-child(2)::after{content:'2nd slide'; @extend .slide-pos;}
+        .carousel-inner:nth-child(3)::after{content:'3rd slide'; @extend .slide-pos;}
+        .carousel-inner:nth-child(4)::after{content:'4th slide'; @extend .slide-pos;}
+        .carousel-inner:nth-child(5)::after{content:'5th slide'; @extend .slide-pos;}
+        .carousel-inner:last-child::after{content:'last slide'; @extend .slide-pos;}
+        
         
         /* Those elements have priority over the previous ones*/
         //&:hover{ @extend .element-focus;}
