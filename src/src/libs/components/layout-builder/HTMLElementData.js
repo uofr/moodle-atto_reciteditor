@@ -2,6 +2,7 @@ import React from 'react';
 import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus, faEllipsisH, faGripLines, faSquare, faRuler} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ImageEmpty from '../assets/empty.jpg';
+import ImageEmptyHD from '../assets/emptyHD.jpg';
 import { LayoutSpacingEditor} from '../Components';
 import Utils from '../../utils/Utils';
 
@@ -987,7 +988,7 @@ export class HTMLElementData{
                     
                     let el = document.createElement("img");
                     el.classList.add("w-100");
-                    el.setAttribute("src", `.${ImageEmpty}`);
+                    el.setAttribute("src", `.${ImageEmptyHD}`);
                     slide.appendChild(el);
 
                     slide = document.createElement("div");
@@ -997,8 +998,17 @@ export class HTMLElementData{
                     
                     el = document.createElement("img");
                     el.classList.add("w-100");
-                    el.setAttribute("src", `.${ImageEmpty}`);
+                    el.setAttribute("src", `.${ImageEmptyHD}`);
                     slide.appendChild(el);
+
+                    slider.insertAdjacentHTML('beforeend', '<button class="carousel-control-prev" type="button" data-bs-slide="prev">\
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>\
+                    <span class="visually-hidden">Previous</span>\
+                  </button>\
+                  <button class="carousel-control-next" type="button" data-bs-slide="next">\
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>\
+                    <span class="visually-hidden">Next</span>\
+                  </button>');
 
                     return slider;
                 }
@@ -1011,7 +1021,7 @@ export class HTMLElementData{
                     
                     let el = document.createElement("img");
                     el.classList.add("w-100");
-                    el.setAttribute("src", `.${ImageEmpty}`);
+                    el.setAttribute("src", `.${ImageEmptyHD}`);
                     slide.appendChild(el);
 
                     return slide;
@@ -1150,6 +1160,10 @@ export class HTMLElementData{
         }
         else if(el.classList.contains('carousel-item')){
             result.text = 'Carousel slide';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('carousel-control-prev') || el.classList.contains('carousel-control-next')){
+            result.text = 'Carousel Navigation';
             result.prefix = 'bg';
         }
         /*else if(el.className.search('text-') >=0 ){

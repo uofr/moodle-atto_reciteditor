@@ -19,6 +19,15 @@ html.canvas-content{
         .card-header:empty::after{content: "Header"}
         .card-body:empty::after{content: "Body"}
         .card-footer:empty::after{content: "Footer"}
+
+        .carousel, .carousel-inner{ border: none !important; }
+
+        .carousel-inner:first-child img::after{content:'First slide'; text-align: center;}
+        .carousel-inner:nth-child(2)::after{content:'2nd slide'; text-align: center;}
+        .carousel-inner:nth-child(3)::after{content:'3rd slide'; text-align: center;}
+        .carousel-inner:nth-child(4)::after{content:'4th slide'; text-align: center;}
+        .carousel-inner:nth-child(5)::after{content:'5th slide'; text-align: center;}
+        .carousel-inner:last-child::after{content:'last slide'; text-align: center;}
         
         /* Those elements have priority over the previous ones*/
         //&:hover{ @extend .element-focus;}
