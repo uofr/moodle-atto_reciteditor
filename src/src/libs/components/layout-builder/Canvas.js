@@ -125,6 +125,7 @@ export class CanvasElement{
         }
 
         if(this.dom.children.length > 0){
+            this.dom.setAttribute("data-dragging", "1");
             this.dom.insertBefore(this.createDroppingZone(), this.dom.firstChild);    
         }
 

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 html.canvas-content {
   margin: 0;
   padding: 0; }
@@ -5,7 +6,7 @@ html.canvas-content {
     margin: 0;
     padding: 15px;
     /* Those elements have priority over the previous ones*/ }
-    html.canvas-content body div:not(.row):not(.col):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):empty::after {
+    html.canvas-content body div:not(.container):not(.row):not(.col):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before {
       content: "Div"; }
     html.canvas-content body div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.dropping-zone) {
       border: 2px dashed #c9c5c5; }
@@ -15,21 +16,16 @@ html.canvas-content {
     html.canvas-content body .row {
       border: 2px dashed #c9c5c5;
       padding: 1rem; }
-    html.canvas-content body .row:empty::after {
-      content: "Row"; }
     html.canvas-content body .col {
-      border: 2px dashed #c9c5c5; }
-    html.canvas-content body .col:empty::after {
-      content: "Col"; }
+      border: 2px dashed #c9c5c5;
+      min-height: 30px; }
     html.canvas-content body .btn:empty::after {
       content: "Button"; }
-    html.canvas-content body .alert:empty::after {
-      content: "Alerte"; }
-    html.canvas-content body .card-header:empty::after {
+    html.canvas-content body .card-header:empty::before {
       content: "Header"; }
-    html.canvas-content body .card-body:empty::after {
+    html.canvas-content body .card-body:empty::before {
       content: "Body"; }
-    html.canvas-content body .card-footer:empty::after {
+    html.canvas-content body .card-footer:empty::before {
       content: "Footer"; }
     html.canvas-content body *[data-hovering="1"] {
       border: 2px dashed #0099ff !important; }
@@ -50,6 +46,50 @@ html.canvas-content {
       background-color: rgba(0, 153, 255, 0.5) !important; }
     html.canvas-content body .dropping-zone-hover::before {
       content: "Drop here..."; }
+  html.canvas-content .tagName, html.canvas-content [data-dragging="1"]::before, html.canvas-content [data-dragging="1"]::after, html.canvas-content *[data-dragging="1"] .container::before, html.canvas-content *[data-dragging="1"] .container::after, html.canvas-content *[data-dragging="1"] .row::before, html.canvas-content *[data-dragging="1"] .row::after, html.canvas-content *[data-dragging="1"] .col::before, html.canvas-content *[data-dragging="1"] .col::after, html.canvas-content *[data-dragging="1"] .alert::before, html.canvas-content *[data-dragging="1"] .alert::after, html.canvas-content *[data-dragging="1"] .card::before, html.canvas-content *[data-dragging="1"] .card::after, html.canvas-content *[data-dragging="1"] .card-header::before, html.canvas-content *[data-dragging="1"] .card-header::after, html.canvas-content *[data-dragging="1"] .card-body::before, html.canvas-content *[data-dragging="1"] .card-body::after, html.canvas-content *[data-dragging="1"] .card-footer::before, html.canvas-content *[data-dragging="1"] .card-footer::after {
+    display: inline-block;
+    background-color: #ffd75e !important;
+    padding: 3px;
+    margin: 3px;
+    font-size: 10px;
+    font-weight: 500;
+    align-items: center; }
+  html.canvas-content *[data-dragging="1"]::before {
+    content: "Début du body"; }
+  html.canvas-content *[data-dragging="1"]::after {
+    content: "Fin du body"; }
+  html.canvas-content *[data-dragging="1"] .container::before {
+    content: "Début du container"; }
+  html.canvas-content *[data-dragging="1"] .container::after {
+    content: "Fin du container"; }
+  html.canvas-content *[data-dragging="1"] .row::before {
+    content: "Début du row"; }
+  html.canvas-content *[data-dragging="1"] .row::after {
+    content: "Fin du row"; }
+  html.canvas-content *[data-dragging="1"] .col::before {
+    content: "Début du col"; }
+  html.canvas-content *[data-dragging="1"] .col::after {
+    content: "Fin du col"; }
+  html.canvas-content *[data-dragging="1"] .alert::before {
+    content: "Début du alerte"; }
+  html.canvas-content *[data-dragging="1"] .alert::after {
+    content: "Fin du alerte"; }
+  html.canvas-content *[data-dragging="1"] .card::before {
+    content: "Début du card"; }
+  html.canvas-content *[data-dragging="1"] .card::after {
+    content: "Fin du card"; }
+  html.canvas-content *[data-dragging="1"] .card-header::before {
+    content: "Début du card-header"; }
+  html.canvas-content *[data-dragging="1"] .card-header::after {
+    content: "Fin du card-header"; }
+  html.canvas-content *[data-dragging="1"] .card-body::before {
+    content: "Début du card-body"; }
+  html.canvas-content *[data-dragging="1"] .card-body::after {
+    content: "Fin du card-body"; }
+  html.canvas-content *[data-dragging="1"] .card-footer::before {
+    content: "Début du card-footer"; }
+  html.canvas-content *[data-dragging="1"] .card-footer::after {
+    content: "Fin du card-footer"; }
 
 .border-1 {
   border-width: 1px !important; }
