@@ -363,7 +363,7 @@ export class LayoutBuilder extends Component
 
         // remove the class dropping-zone of all elements
         let canvas = this.canvas.current.contentWindow || this.canvas.current.contentDocument;
-        let items = canvas.document.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable='true']");
+        let items = canvas.document.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable], [data-dragging]");
 
         items.forEach(function(item) {
             //item.classList.remove('dropping-zone');
@@ -372,8 +372,9 @@ export class LayoutBuilder extends Component
             }
             else if(item.classList.contains("dropping-zone-hover")){
                 item.classList.remove('dropping-zone-hover');
-            }           
+            }
             
+            item.removeAttribute("data-dragging");
             item.removeAttribute("contenteditable");
         });
     }
