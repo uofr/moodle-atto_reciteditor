@@ -969,6 +969,54 @@ export class HTMLElementData{
                     return media;
                 }
             },
+            {name: "Slider", type: 'bootstrap', tagName: 'slider', properties:  HTMLElementData.propsAssignmentFacade.containers,
+                create: function(){
+                    let slider = document.createElement("div");
+                    slider.classList.add("carousel");
+                    slider.classList.add("slide");
+                    slider.setAttribute("data-ride", "carousel");
+
+                    let body = document.createElement("div");
+                    body.classList.add("carousel-inner");
+                    slider.appendChild(body);
+
+                    let slide = document.createElement("div");
+                    slide.classList.add("carousel-item");
+                    slide.classList.add("active");
+                    body.appendChild(slide);
+                    
+                    let el = document.createElement("img");
+                    el.classList.add("w-100");
+                    el.setAttribute("src", `.${ImageEmpty}`);
+                    slide.appendChild(el);
+
+                    slide = document.createElement("div");
+                    slide.classList.add("carousel-item");
+                    slide.classList.add("active");
+                    body.appendChild(slide);
+                    
+                    el = document.createElement("img");
+                    el.classList.add("w-100");
+                    el.setAttribute("src", `.${ImageEmpty}`);
+                    slide.appendChild(el);
+
+                    return slider;
+                }
+            },
+            {name: "Slide", type: 'bootstrap', tagName: 'slide', properties:  HTMLElementData.propsAssignmentFacade.containers,
+                create: function(){
+                    let slide = document.createElement("div");
+                    slide.classList.add("carousel-item");
+                    slide.classList.add("active");
+                    
+                    let el = document.createElement("img");
+                    el.classList.add("w-100");
+                    el.setAttribute("src", `.${ImageEmpty}`);
+                    slide.appendChild(el);
+
+                    return slide;
+                }
+            },
             {name: "Séparateur", type: 'native', tagName: 'hr', properties: HTMLElementData.propsAssignmentFacade.containers}
         ]},
         {name: 'Images', children: [
@@ -1090,6 +1138,18 @@ export class HTMLElementData{
         }
         else if(el.classList.contains('media-body')){
             result.text = 'Media Body';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('carousel')){
+            result.text = 'Carousel';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('carousel-inner')){
+            result.text = 'Carousel Body';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('carousel-item')){
+            result.text = 'Carousel slide';
             result.prefix = 'bg';
         }
         /*else if(el.className.search('text-') >=0 ){
