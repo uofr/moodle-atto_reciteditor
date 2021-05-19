@@ -863,7 +863,10 @@ export class HTMLElementData{
             },  
             {name: "Span", type: 'native', tagName: 'span', properties: HTMLElementData.propsAssignmentFacade.containers,
                 init:function(el){}, 
-            },           
+            },  
+            {name: "Section", type: 'native', tagName: 'section', properties: HTMLElementData.propsAssignmentFacade.containers,
+                init:function(el){}, 
+            },         
             {name: "Grid", type: 'bootstrap', tagName: 'grid', properties: HTMLElementData.propsAssignmentFacade.containers,
                 create: function(){
                     let el = document.createElement("div");
@@ -993,7 +996,6 @@ export class HTMLElementData{
 
                     slide = document.createElement("div");
                     slide.classList.add("carousel-item");
-                    slide.classList.add("active");
                     body.appendChild(slide);
                     
                     el = document.createElement("img");

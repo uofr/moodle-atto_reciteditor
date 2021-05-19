@@ -6,11 +6,15 @@ html.canvas-content {
     margin: 0;
     padding: 15px;
     /* Those elements have priority over the previous ones*/ }
-    html.canvas-content body div:empty:not(.col):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before {
+    html.canvas-content body div:empty:not(.col):not(.col-12):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before {
       content: "Div"; }
-    html.canvas-content body div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.dropping-zone) {
+    html.canvas-content body div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.dropping-zone):not(.carousel-item) {
       border: 2px dashed #c9c5c5; }
-    html.canvas-content body .container {
+    html.canvas-content body section {
+      border: 2px dashed #c9c5c5; }
+    html.canvas-content body section:empty::before {
+      content: "Section"; }
+    html.canvas-content body .container, html.canvas-content body .container-fluid {
       border: 2px dashed #c9c5c5;
       padding: 1rem !important; }
     html.canvas-content body .row {
@@ -31,7 +35,7 @@ html.canvas-content {
       content: "Footer"; }
     html.canvas-content body .carousel, html.canvas-content body .carousel-inner {
       border: none !important; }
-    html.canvas-content body .slide-pos, html.canvas-content body .carousel-inner:nth-of-type(1):after, html.canvas-content body .carousel-inner:nth-of-type(2):after, html.canvas-content body .carousel-inner:nth-of-type(3):after, html.canvas-content body .carousel-inner:nth-of-type(4):after, html.canvas-content body .carousel-inner:nth-of-type(5):after {
+    html.canvas-content body .slide-pos, html.canvas-content body .carousel-item:nth-of-type(1):after, html.canvas-content body .carousel-item:nth-of-type(2):after, html.canvas-content body .carousel-item:nth-of-type(3):after, html.canvas-content body .carousel-item:nth-of-type(4):after, html.canvas-content body .carousel-item:nth-of-type(5):after {
       position: absolute;
       left: 50%;
       top: 50%;
@@ -39,20 +43,21 @@ html.canvas-content {
       font-size: 45px;
       font-weight: 100;
       color: #fff; }
-    html.canvas-content body .carousel-inner:nth-of-type(1):after {
-      content: 'First slide'; }
-    html.canvas-content body .carousel-inner:nth-of-type(2):after {
+    html.canvas-content body .carousel-item:nth-of-type(1):after {
+      content: '1st slide'; }
+    html.canvas-content body .carousel-item:nth-of-type(2):after {
       content: '2nd slide'; }
-    html.canvas-content body .carousel-inner:nth-of-type(3):after {
+    html.canvas-content body .carousel-item:nth-of-type(3):after {
       content: '3rd slide'; }
-    html.canvas-content body .carousel-inner:nth-of-type(4):after {
+    html.canvas-content body .carousel-item:nth-of-type(4):after {
       content: '4th slide'; }
-    html.canvas-content body .carousel-inner:nth-of-type(5):after {
+    html.canvas-content body .carousel-item:nth-of-type(5):after {
       content: '5th slide'; }
     html.canvas-content body *[data-hovering="1"] {
       border: 2px dashed #0099ff !important; }
     html.canvas-content body *[data-selected="1"] {
-      border: 2px solid #0099ff !important; }
+      border: 2px dashed #0099ff !important;
+      border-style: solid !important; }
     html.canvas-content body *[draggable="true"] {
       cursor: grab; }
     html.canvas-content body .dropping-zone {
@@ -68,7 +73,7 @@ html.canvas-content {
       background-color: rgba(0, 153, 255, 0.5) !important; }
     html.canvas-content body .dropping-zone-hover::before {
       content: "Drop here..."; }
-  html.canvas-content .tagName, html.canvas-content [data-dragging="1"]::before, html.canvas-content [data-dragging="1"]::after, html.canvas-content *[data-dragging="1"] .container::before, html.canvas-content *[data-dragging="1"] .container::after, html.canvas-content *[data-dragging="1"] .row::before, html.canvas-content *[data-dragging="1"] .row::after, html.canvas-content *[data-dragging="1"] .col::before, html.canvas-content *[data-dragging="1"] .col::after, html.canvas-content *[data-dragging="1"] .alert::before, html.canvas-content *[data-dragging="1"] .alert::after, html.canvas-content *[data-dragging="1"] .card::before, html.canvas-content *[data-dragging="1"] .card::after, html.canvas-content *[data-dragging="1"] .card-header::before, html.canvas-content *[data-dragging="1"] .card-header::after, html.canvas-content *[data-dragging="1"] .card-body::before, html.canvas-content *[data-dragging="1"] .card-body::after, html.canvas-content *[data-dragging="1"] .card-footer::before, html.canvas-content *[data-dragging="1"] .card-footer::after {
+  html.canvas-content .tagName, html.canvas-content [data-dragging="1"]::before, html.canvas-content [data-dragging="1"]::after, html.canvas-content *[data-dragging="1"] section::before, html.canvas-content *[data-dragging="1"] section::after, html.canvas-content *[data-dragging="1"] .container::before, html.canvas-content *[data-dragging="1"] .container-fluid::before, html.canvas-content *[data-dragging="1"] .container::after, html.canvas-content *[data-dragging="1"] .container-fluid::after, html.canvas-content *[data-dragging="1"] .row::before, html.canvas-content *[data-dragging="1"] .row::after, html.canvas-content *[data-dragging="1"] .col::before, html.canvas-content *[data-dragging="1"] .col-12::before, html.canvas-content *[data-dragging="1"] .col::after, html.canvas-content *[data-dragging="1"] .col-12::after, html.canvas-content *[data-dragging="1"] .alert::before, html.canvas-content *[data-dragging="1"] .alert::after, html.canvas-content *[data-dragging="1"] .card::before, html.canvas-content *[data-dragging="1"] .card::after, html.canvas-content *[data-dragging="1"] .card-header::before, html.canvas-content *[data-dragging="1"] .card-header::after, html.canvas-content *[data-dragging="1"] .card-body::before, html.canvas-content *[data-dragging="1"] .card-body::after, html.canvas-content *[data-dragging="1"] .card-footer::before, html.canvas-content *[data-dragging="1"] .card-footer::after, html.canvas-content *[data-dragging="1"] .carousel-inner::before, html.canvas-content *[data-dragging="1"] .carousel-inner::after {
     display: inline-block;
     background-color: #ffd75e !important;
     padding: 3px;
@@ -77,20 +82,24 @@ html.canvas-content {
     font-weight: 500;
     align-items: center; }
   html.canvas-content *[data-dragging="1"]::before {
-    content: "Début du body"; }
+    content: "Début body"; }
   html.canvas-content *[data-dragging="1"]::after {
-    content: "Fin du body"; }
-  html.canvas-content *[data-dragging="1"] .container::before {
+    content: "Fin body"; }
+  html.canvas-content *[data-dragging="1"] section::before {
+    content: "Début de la section"; }
+  html.canvas-content *[data-dragging="1"] section::after {
+    content: "Fin de la section"; }
+  html.canvas-content *[data-dragging="1"] .container::before, html.canvas-content *[data-dragging="1"] body .container-fluid::before, html.canvas-content body *[data-dragging="1"] .container-fluid::before, html.canvas-content *[data-dragging="1"] .container-fluid::before {
     content: "Début du container"; }
-  html.canvas-content *[data-dragging="1"] .container::after {
+  html.canvas-content *[data-dragging="1"] .container::after, html.canvas-content *[data-dragging="1"] body .container-fluid::after, html.canvas-content body *[data-dragging="1"] .container-fluid::after, html.canvas-content *[data-dragging="1"] .container-fluid::after {
     content: "Fin du container"; }
   html.canvas-content *[data-dragging="1"] .row::before {
     content: "Début du row"; }
   html.canvas-content *[data-dragging="1"] .row::after {
     content: "Fin du row"; }
-  html.canvas-content *[data-dragging="1"] .col::before {
+  html.canvas-content *[data-dragging="1"] .col::before, html.canvas-content *[data-dragging="1"] .col-12::before {
     content: "Début du col"; }
-  html.canvas-content *[data-dragging="1"] .col::after {
+  html.canvas-content *[data-dragging="1"] .col::after, html.canvas-content *[data-dragging="1"] .col-12::after {
     content: "Fin du col"; }
   html.canvas-content *[data-dragging="1"] .alert::before {
     content: "Début du alerte"; }
@@ -112,6 +121,10 @@ html.canvas-content {
     content: "Début du card-footer"; }
   html.canvas-content *[data-dragging="1"] .card-footer::after {
     content: "Fin du card-footer"; }
+  html.canvas-content *[data-dragging="1"] .carousel-inner::before {
+    content: "Première diapositive"; }
+  html.canvas-content *[data-dragging="1"] .carousel-inner::after {
+    content: "Dernière diapositive"; }
 
 .border-1 {
   border-width: 1px !important; }

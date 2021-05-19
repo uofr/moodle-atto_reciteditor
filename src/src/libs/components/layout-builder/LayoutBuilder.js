@@ -286,6 +286,10 @@ export class LayoutBuilder extends Component
             el = null;
         }
 
+        if(this.state.view === 'preview'){
+            return;
+        }
+
         // if the selected element receives another click then it deselects it
         if(Object.is(el, this.state.selectedElement)){
             this.htmlCleaning();

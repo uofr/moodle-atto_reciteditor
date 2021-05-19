@@ -1,4 +1,5 @@
 $border-onhover-element: 2px dashed rgb(0, 153, 255)!important;
+$border-invisible-element: 2px dashed rgb(201, 197, 197);
 
 html.canvas-content{
     margin: 0; padding: 0;
@@ -9,12 +10,15 @@ html.canvas-content{
         
 
         //div:not(.container):not(.row):not(.col):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.carousel):not(.carousel-inner)::before{content: "Div"}
-        div:empty:not(.col):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before{content: "Div"}
-        div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.dropping-zone){ border: 2px dashed rgb(201, 197, 197); }    
+        div:empty:not(.col):not(.col-12):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before{content: "Div"}
+        div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.dropping-zone):not(.carousel-item){ border: $border-invisible-element; }    
+        section{border: $border-invisible-element;}
+        section:empty::before{content: "Section";}
 
-        .container{ border: 2px dashed rgb(201, 197, 197); padding: 1rem!important; }    
-        .row{ border: 2px dashed rgb(201, 197, 197);  padding: 1rem; }
-        .col{ border: 2px dashed rgb(201, 197, 197); min-height: 30px;}
+        .container{ border: $border-invisible-element; padding: 1rem!important; }
+        .container-fluid{@extend .container;}
+        .row{ border: $border-invisible-element;  padding: 1rem; }
+        .col{ border: $border-invisible-element; min-height: 30px;}
 
         .btn:empty::after{content: "Button"}
         .alert:empty::after{content: "Alerte"}
@@ -24,18 +28,18 @@ html.canvas-content{
 
         .carousel, .carousel-inner{ border: none !important; }
         .slide-pos{ position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 45px; font-weight: 100;color: #fff;}
-        .carousel-inner:nth-of-type(1):after{content:'First slide'; @extend .slide-pos;}
-        .carousel-inner:nth-of-type(2):after{content:'2nd slide'; @extend .slide-pos;}
-        .carousel-inner:nth-of-type(3):after{content:'3rd slide'; @extend .slide-pos;}
-        .carousel-inner:nth-of-type(4):after{content:'4th slide'; @extend .slide-pos;}
-        .carousel-inner:nth-of-type(5):after{content:'5th slide'; @extend .slide-pos;}
+        .carousel-item:nth-of-type(1):after{content:'1st slide'; @extend .slide-pos;}
+        .carousel-item:nth-of-type(2):after{content:'2nd slide'; @extend .slide-pos;}
+        .carousel-item:nth-of-type(3):after{content:'3rd slide'; @extend .slide-pos;}
+        .carousel-item:nth-of-type(4):after{content:'4th slide'; @extend .slide-pos;}
+        .carousel-item:nth-of-type(5):after{content:'5th slide'; @extend .slide-pos;}
         
         
         /* Those elements have priority over the previous ones*/
         //&:hover{ @extend .element-focus;}
         //h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover, button:hover, p:hover, div:hover, ul:hover, ol:hover, li:hover{@extend .element-focus;}
         *[data-hovering="1"]{ border: $border-onhover-element;}
-        *[data-selected="1"]{border: 2px solid rgb(0, 153, 255)!important;}
+        *[data-selected="1"]{border: $border-onhover-element; border-style: solid!important;}
         *[draggable="true"]{cursor: grab;}
         
         .dropping-zone{border: 2px dashed rgb(0, 153, 255); height: 50px; width: 100%;  transform: scale(0.97); 
@@ -49,14 +53,16 @@ html.canvas-content{
     .tagName{display: inline-block; background-color: #ffd75e!important; padding: 3px; margin: 3px; font-size: 10px; font-weight: 500; align-items: center;}
     
     *[data-dragging="1"]{
-        &::before{content: "Début du body";  @extend .tagName;}
-        &::after{content: "Fin du body";  @extend .tagName;}
-        .container::before{content: "Début du container";  @extend .tagName;}
-        .container::after{content: "Fin du container";  @extend .tagName;}
+        &::before{content: "Début body";  @extend .tagName;}
+        &::after{content: "Fin body";  @extend .tagName;}
+        section::before{content: "Début de la section";  @extend .tagName;}
+        section::after{content: "Fin de la section";  @extend .tagName;}
+        .container::before, .container-fluid::before{content: "Début du container";  @extend .tagName;}
+        .container::after, .container-fluid::after{content: "Fin du container";  @extend .tagName;}
         .row::before{content: "Début du row";  @extend .tagName;}
         .row::after{content: "Fin du row";  @extend .tagName;}
-        .col::before{content: "Début du col";  @extend .tagName;}
-        .col::after{content: "Fin du col";  @extend .tagName;}
+        .col::before, .col-12::before{content: "Début du col";  @extend .tagName;}
+        .col::after, .col-12::after{content: "Fin du col";  @extend .tagName;}
         .alert::before{content: "Début du alerte"; @extend .tagName;}
         .alert::after{content: "Fin du alerte"; @extend .tagName;}
         .card::before{content: "Début du card"; @extend .tagName;}
@@ -67,7 +73,9 @@ html.canvas-content{
         .card-body::after{content: "Fin du card-body"; @extend .tagName;}
         .card-footer::before{content: "Début du card-footer"; @extend .tagName;}
         .card-footer::after{content: "Fin du card-footer"; @extend .tagName;}
-    }  
+        .carousel-inner::before{content: "Première diapositive"; @extend .tagName;}
+        .carousel-inner::after{content: "Dernière diapositive"; @extend .tagName;}
+    } 
 }
 
 
