@@ -369,10 +369,11 @@ class TextArea extends Component{
         let result = null;
         let sel = window.getSelection ? window.getSelection() : document.selection;              
 
-        if((sel !== null) && (sel.rangeCount > 0) && (sel.toString().length > 0)){
+        if(sel !== null){
             result = {};
             result.sel = sel;
             result.range = result.sel.getRangeAt(0);
+            result.isSelection = (sel.rangeCount > 0) && (sel.toString().length > 0);
         
             result.selectionDirection = '';
             if(result.sel.anchorOffset > result.sel.focusOffset){
@@ -386,6 +387,15 @@ class TextArea extends Component{
             let mainNode = result.sel.baseNode;
             result.node = (mainNode instanceof Element ? mainNode :  mainNode.parentElement);
             result.subSelection = (result.sel.anchorOffset > 0 && result.sel.focusOffset > 0);
+
+            if (!result.isSelection){//If it's not a selection, set the range to be the whole node
+                let range = document.createRange();
+                let text = result.node;
+                if (text){
+                    range.selectNodeContents(text);
+                    result.range = range;
+                }
+            }
     
             result.isNodeRoot = (result.node === this.editorRef.current);
             result.parentNode = (result.node === this.editorRef.current ? result.node : result.node.parentElement);

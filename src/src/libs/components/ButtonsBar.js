@@ -127,7 +127,7 @@ export class ButtonsBar extends Component{
     applyNumerationTypeset(option){
         let sel = this.props.selection;
         
-        if(sel === null){ return; }
+        if(sel === null || !sel.isSelection){ return; }
 
         let newNode = document.createElement(option);
         let li = document.createElement("li");
@@ -163,7 +163,7 @@ export class ButtonsBar extends Component{
     onAddLink(){
         let sel = this.props.selection;
 
-        if(sel === null || sel.node === null){ return; }
+        if(sel === null || sel.node === null || !sel.isSelection){ return; }
 
         this.setState({modalInputLink: true});
     }
@@ -328,7 +328,7 @@ class BtnSetCssProp extends Component{
     onClick(event){
         let sel = this.props.selection;
         
-        if(sel === null){ return; }
+        if(sel === null || !sel.isSelection){ return; }
         
         // if there is no text selected then it quits
         if(sel.sel.isCollapsed){ return; }
