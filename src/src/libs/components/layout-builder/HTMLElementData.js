@@ -158,7 +158,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'icon', description: 'Icon',  type: 'styleattr',
+            name: 'icon', description: 'Icon',  type: 'bootstrap',
             children: [
                 {
                     name: 'icon', 
@@ -973,7 +973,7 @@ export class HTMLElementData{
                     return media;
                 }
             },
-            {name: "Slider", type: 'bootstrap', tagName: 'slider', properties:  HTMLElementData.propsAssignmentFacade.containers,
+            {name: "Carousel", type: 'bootstrap', tagName: 'slider', properties:  HTMLElementData.propsAssignmentFacade.containers,
                 create: function(){
                     let slider = document.createElement("div");
                     slider.classList.add("carousel");
@@ -1003,6 +1003,8 @@ export class HTMLElementData{
                     el.setAttribute("src", `.${ImageEmptyHD}`);
                     slide.appendChild(el);
 
+                    body.appendChild(slide.cloneNode(true));
+
                     slider.insertAdjacentHTML('beforeend', '<button class="carousel-control-prev" type="button" data-bs-slide="prev">\
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>\
                     <span class="visually-hidden">Previous</span>\
@@ -1013,30 +1015,16 @@ export class HTMLElementData{
                   </button>');
 
                     return slider;
-                }
-            },
-            {name: "Slide", type: 'bootstrap', tagName: 'slide', properties:  HTMLElementData.propsAssignmentFacade.containers,
-                create: function(){
-                    let slide = document.createElement("div");
-                    slide.classList.add("carousel-item");
-                    slide.classList.add("active");
-                    
-                    let el = document.createElement("img");
-                    el.classList.add("w-100");
-                    el.setAttribute("src", `.${ImageEmptyHD}`);
-                    slide.appendChild(el);
-
-                    return slide;
                 },
                 onSelect: function(el){
-                    let slider = el.parentElement;
-                    let slides = slider.querySelectorAll('.carousel-item');
-                    for (let i = 0; i < slides.length; i++){
-                      if (slides[i].classList.contains('active')){
-                        slides[i].classList.remove('active');
-                      }
+                    if(el.classList.contains("carousel-item")){
+                        let slider = el.parentElement;
+                        let slides = slider.querySelectorAll('.carousel-item');
+                        for(let slide of slides){
+                            slide.classList.remove('active');
+                        }
+                        el.classList.add('active');
                     }
-                    el.classList.add('active')
                 }
             },
             {name: "Séparateur", type: 'native', tagName: 'hr', properties: HTMLElementData.propsAssignmentFacade.containers}
@@ -1057,6 +1045,18 @@ export class HTMLElementData{
             }
         ]},
     ];
+
+    static elementListSort = function(){
+        HTMLElementData.elementList.sort((a,b) =>{
+            return a.name.toString().localeCompare(b.name.toString());
+        })
+
+        for(let item of HTMLElementData.elementList){
+            item.children.sort((a,b) =>{
+                return a.name.toString().localeCompare(b.name.toString());
+            })
+        }
+    }
 
     static getElementData(data, el){
         data = data || null;
@@ -1168,18 +1168,9 @@ export class HTMLElementData{
             result.text = 'Media Body';
             result.prefix = 'bg';
         }
-        else if(el.classList.contains('carousel')){
+        else if(el.classList.contains('carousel') || el.classList.contains('carousel-inner') || el.classList.contains('carousel-item')){
             result.text = 'Carousel';
             result.tagName = 'slider';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('carousel-inner')){
-            result.text = 'Carousel Body';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('carousel-item')){
-            result.text = 'Carousel slide';
-            result.tagName = 'slide';
             result.prefix = 'bg';
         }
         else if(el.classList.contains('carousel-control-prev') || el.classList.contains('carousel-control-next')){
@@ -1197,3 +1188,6 @@ export class HTMLElementData{
         return result;
     }
 }
+
+HTMLElementData.elementListSort();
+

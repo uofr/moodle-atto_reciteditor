@@ -415,6 +415,20 @@ export class LayoutBuilder extends Component
 
     onAfterSaveCustomComponent(){
         try{
+            let tmp = this.state.data;
+            
+            tmp.customHtmlComponentList.sort((a,b) =>{
+                return a.name.toString().localeCompare(b.name.toString());
+            })
+    
+            for(let item of tmp.customHtmlComponentList){
+                item.children.sort((a,b) =>{
+                    return a.name.toString().localeCompare(b.name.toString());
+                })
+            }
+
+            this.setState({data: tmp});
+            
             let str = JSON.stringify(this.state.data)
             Cookies.set('appData', str, 43200);
         }
@@ -443,11 +457,20 @@ export class LayoutBuilder extends Component
 
     onImportCustomComponent(fileContent){
         let tmp = this.state.data;
-        tmp.customHtmlComponentList = JSON.parse(fileContent);
-        this.setState({data: tmp}, this.onAfterSaveCustomComponent);
+        try{
+            let newData = JSON.parse(fileContent);
+            tmp.customHtmlComponentList = tmp.customHtmlComponentList.concat(newData);
+            this.setState({data: tmp}, this.onAfterSaveCustomComponent);
+        }
+        catch(err){
+            alert("Error on importing data. See console for more information.");
+            console.log(err);
+        }
     }
 
     onCreateCanvasElement(el){
-        return new CanvasElement(el, this.onSelectElement, this.onDropElement);
+        let result = new CanvasElement(el, this.onSelectElement, this.onDropElement);
+        this.forceUpdate();
+        return result;
     }
 }

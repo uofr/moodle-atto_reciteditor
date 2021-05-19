@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button  } from 'react-bootstrap';
-import { faUpload, faDownload, faTrashAlt, faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
+import { faFile, faSave, faTrashAlt, faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
 import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
@@ -263,6 +263,7 @@ class TokenList extends Component{
         this.showMenu = this.showMenu.bind(this);
         this.showImport = this.showImport.bind(this);
         this.onCollapse = this.onCollapse.bind(this);
+        this.onDelete = this.onDelete.bind(this);
 
         this.state = {showMenu: false, showImport: false, collapsed: {}};
     }
@@ -274,12 +275,13 @@ class TokenList extends Component{
                     <div>
                         <ButtonToolbar style={{justifyContent: 'flex-end'}}>
                             <ButtonGroup >
-                                    <Button onClick={() => this.showImport(!this.state.showImport)}><FontAwesomeIcon  icon={faUpload} title="Importer la collection"/></Button>
-                                    <Button onClick={this.onExport} ><FontAwesomeIcon  icon={faDownload} title="Exporter la collection"/></Button>
-                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                                    <Button onClick={() => this.showImport(!this.state.showImport)}><FontAwesomeIcon  icon={faFile} title="Importer la collection"/></Button>
+                                    <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faSave} title="Exporter"/></Button>
+                                    <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                             </ButtonGroup>
                         </ButtonToolbar>
                         {this.state.showImport && <input type="file" onChange={this.onImport} accept=".json"/>}
+                        {this.state.showMenu && <Button onClick={(event) => this.onExport(event, this.props.dataProvider)}><FontAwesomeIcon  icon={faSave}/>{" Exporter la collection"}</Button>}
                     </div>
                 }
                 {this.props.dataProvider.map((item, index) => {
@@ -287,20 +289,23 @@ class TokenList extends Component{
                     let icon = collapsed ? faAngleRight : faAngleDown;
 
                     let branch = 
-                        <ul key={index}>
+                        <ul key={index} className='mt-2'>
                             <li key={index} className='token-section' onClick={(event) => this.onCollapse(event, item.name)}>
                                 <FontAwesomeIcon className="mr-1" icon={icon} />
                                 {item.name}
                                 {this.state.showMenu &&
                                     <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                                         <ButtonGroup size="sm">
-                                            <Button onClick={() => this.props.onDeleteCustomComponent(item, 's')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                                            <Button onClick={(event) => this.onExport(event, [item])}><FontAwesomeIcon  icon={faSave} title="Export"/></Button>
+                                            <Button onClick={(event) => this.onDelete(event, item, 's')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                                         </ButtonGroup>
                                     </ButtonToolbar>
                                 }
                             </li>
                             {!collapsed && item.children.map((item2, index2) => {
-                                return (<Token showMenu={this.state.showMenu} data={item2} key={index2} onDragEnd={this.props.onDragEnd} onDeleteCustomComponent={this.props.onDeleteCustomComponent}/>);
+                                return (<Token showMenu={this.state.showMenu} data={item2} key={index2} onDragEnd={this.props.onDragEnd} 
+                                            onDeleteCustomComponent={this.props.onDeleteCustomComponent} 
+                                            onExport={(event) => this.onExport(event, [{"name": item.name,children: [item2]}])}/>);
                             })}
                         </ul>
 
@@ -334,8 +339,11 @@ class TokenList extends Component{
 		reader.readAsText(fileCtrl.files[0]);
     }
 
-    onExport(){
-        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.props.dataProvider));
+    onExport(event, item){
+        item = item || null
+        event.stopPropagation();
+
+        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(item));
         let node = document.createElement('a');
         node.setAttribute("href",     dataStr);
         node.setAttribute("download", "my-collection.json");
@@ -352,6 +360,11 @@ class TokenList extends Component{
         collapsed[id] = !collapsed[id] || false;
         this.setState({collapsed: collapsed});
     }
+
+    onDelete(event, item, type){
+        event.stopPropagation();
+        this.props.onDeleteCustomComponent(item, type);
+    }
 }
 
 class Token extends Component
@@ -360,7 +373,8 @@ class Token extends Component
         data: null,
         onDragEnd: null,
         onDeleteCustomComponent: null,
-        showMenu: false
+        showMenu: false,
+        onExport: null
     };
     
     constructor(props){
@@ -377,6 +391,7 @@ class Token extends Component
                 {this.props.showMenu && 
                     <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                         <ButtonGroup size="sm">
+                            <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faSave} title="Export"/></Button>
                             <Button onClick={() => this.props.onDeleteCustomComponent(this.props.data)}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
