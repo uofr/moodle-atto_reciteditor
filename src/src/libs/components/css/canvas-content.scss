@@ -24,12 +24,11 @@ html.canvas-content{
 
         .carousel, .carousel-inner{ border: none !important; }
         .slide-pos{ position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 45px; font-weight: 100;color: #fff;}
-        .carousel-inner:first-child:after{content:'First slide'; @extend .slide-pos;}
-        .carousel-inner:nth-child(2)::after{content:'2nd slide'; @extend .slide-pos;}
-        .carousel-inner:nth-child(3)::after{content:'3rd slide'; @extend .slide-pos;}
-        .carousel-inner:nth-child(4)::after{content:'4th slide'; @extend .slide-pos;}
-        .carousel-inner:nth-child(5)::after{content:'5th slide'; @extend .slide-pos;}
-        .carousel-inner:last-child::after{content:'last slide'; @extend .slide-pos;}
+        .carousel-inner:nth-of-type(1):after{content:'First slide'; @extend .slide-pos;}
+        .carousel-inner:nth-of-type(2):after{content:'2nd slide'; @extend .slide-pos;}
+        .carousel-inner:nth-of-type(3):after{content:'3rd slide'; @extend .slide-pos;}
+        .carousel-inner:nth-of-type(4):after{content:'4th slide'; @extend .slide-pos;}
+        .carousel-inner:nth-of-type(5):after{content:'5th slide'; @extend .slide-pos;}
         
         
         /* Those elements have priority over the previous ones*/

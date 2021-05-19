@@ -31,7 +31,7 @@ html.canvas-content {
       content: "Footer"; }
     html.canvas-content body .carousel, html.canvas-content body .carousel-inner {
       border: none !important; }
-    html.canvas-content body .slide-pos, html.canvas-content body .carousel-inner:first-child:after, html.canvas-content body .carousel-inner:nth-child(2)::after, html.canvas-content body .carousel-inner:nth-child(3)::after, html.canvas-content body .carousel-inner:nth-child(4)::after, html.canvas-content body .carousel-inner:nth-child(5)::after, html.canvas-content body .carousel-inner:last-child::after {
+    html.canvas-content body .slide-pos, html.canvas-content body .carousel-inner:nth-of-type(1):after, html.canvas-content body .carousel-inner:nth-of-type(2):after, html.canvas-content body .carousel-inner:nth-of-type(3):after, html.canvas-content body .carousel-inner:nth-of-type(4):after, html.canvas-content body .carousel-inner:nth-of-type(5):after {
       position: absolute;
       left: 50%;
       top: 50%;
@@ -39,18 +39,16 @@ html.canvas-content {
       font-size: 45px;
       font-weight: 100;
       color: #fff; }
-    html.canvas-content body .carousel-inner:first-child:after {
+    html.canvas-content body .carousel-inner:nth-of-type(1):after {
       content: 'First slide'; }
-    html.canvas-content body .carousel-inner:nth-child(2)::after {
+    html.canvas-content body .carousel-inner:nth-of-type(2):after {
       content: '2nd slide'; }
-    html.canvas-content body .carousel-inner:nth-child(3)::after {
+    html.canvas-content body .carousel-inner:nth-of-type(3):after {
       content: '3rd slide'; }
-    html.canvas-content body .carousel-inner:nth-child(4)::after {
+    html.canvas-content body .carousel-inner:nth-of-type(4):after {
       content: '4th slide'; }
-    html.canvas-content body .carousel-inner:nth-child(5)::after {
+    html.canvas-content body .carousel-inner:nth-of-type(5):after {
       content: '5th slide'; }
-    html.canvas-content body .carousel-inner:last-child::after {
-      content: 'last slide'; }
     html.canvas-content body *[data-hovering="1"] {
       border: 2px dashed #0099ff !important; }
     html.canvas-content body *[data-selected="1"] {

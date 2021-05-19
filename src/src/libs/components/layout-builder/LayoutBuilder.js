@@ -12,6 +12,7 @@ import RecitLogo from '../assets/recit.png';
 import {Controlled  as CodeMirror} from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
+import { HTMLElementData } from './HTMLElementData';
 var beautifyingHTML = require("pretty");
 require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
@@ -320,6 +321,11 @@ export class LayoutBuilder extends Component
             else{
                 el.setAttribute('data-selected', '1');
                 el.setAttribute('draggable', 'true');
+
+                let elData = HTMLElementData.getElementData(null, el);
+                if (elData && elData.onSelect){
+                    elData.onSelect(el, elData);
+                }
             }
         }
 

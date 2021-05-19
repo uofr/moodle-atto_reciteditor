@@ -1025,6 +1025,16 @@ export class HTMLElementData{
                     slide.appendChild(el);
 
                     return slide;
+                },
+                onSelect: function(el){
+                    let slider = el.parentElement;
+                    let slides = slider.querySelectorAll('.carousel-item');
+                    for (let i = 0; i < slides.length; i++){
+                      if (slides[i].classList.contains('active')){
+                        slides[i].classList.remove('active');
+                      }
+                    }
+                    el.classList.add('active')
                 }
             },
             {name: "Séparateur", type: 'native', tagName: 'hr', properties: HTMLElementData.propsAssignmentFacade.containers}
@@ -1054,8 +1064,9 @@ export class HTMLElementData{
 
         // bootstrap components
         if(el !== null){
-            if(el.classList.contains('row') || el.classList.contains('col') || el.classList.contains('container')){
-                tagName = "grid";
+            let bootstrapData = HTMLElementData.mapBootstrapComponents(el);
+            if (bootstrapData && bootstrapData.tagName){
+                tagName = bootstrapData.tagName;
             }
         }
 
@@ -1100,18 +1111,22 @@ export class HTMLElementData{
 
         if(el.classList.contains('container')){
             result.text = 'Container';
+            result.tagName = 'grid';
             result.prefix = 'bg';
         }
         else if(el.classList.contains('container-fluid')){
             result.text = 'Container';
+            result.tagName = 'grid';
             result.prefix = 'bg';
         }
         else if(el.classList.contains('row')){
             result.text = 'Row';
+            result.tagName = 'grid';
             result.prefix = 'bg';
         }
         else if(el.classList.contains('col')){
             result.text = 'Col';
+            result.tagName = 'grid';
             result.prefix = 'bg';
         }
         else if(el.classList.contains('card')){
@@ -1136,6 +1151,7 @@ export class HTMLElementData{
         }
         else if(el.classList.contains('btn')){
             result.text = 'Button';
+            result.tagName = 'button';
             result.prefix = 'btn';
         }
         else if(el.className.search('border-') >=0 ){
@@ -1152,6 +1168,7 @@ export class HTMLElementData{
         }
         else if(el.classList.contains('carousel')){
             result.text = 'Carousel';
+            result.tagName = 'slider';
             result.prefix = 'bg';
         }
         else if(el.classList.contains('carousel-inner')){
@@ -1160,6 +1177,7 @@ export class HTMLElementData{
         }
         else if(el.classList.contains('carousel-item')){
             result.text = 'Carousel slide';
+            result.tagName = 'slide';
             result.prefix = 'bg';
         }
         else if(el.classList.contains('carousel-control-prev') || el.classList.contains('carousel-control-next')){
