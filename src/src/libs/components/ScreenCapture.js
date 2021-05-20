@@ -29,10 +29,16 @@ export default class ScreenCapture extends Component {
   componentDidMount = () => {
     this.handleWindowResize()
     window.addEventListener('resize', this.handleWindowResize)
+    window.addEventListener('mousemove', this.handleMouseMove)
+    window.addEventListener('mouseup', this.handleMouseUp)
+    window.addEventListener('mousedown', this.handleMouseDown)
   }
 
   componentWillUnmount = () => {
     window.removeEventListener('resize', this.handleWindowResize)
+    window.removeEventListener('mousemove', this.handleMouseMove)
+    window.removeEventListener('mouseup', this.handleMouseUp)
+    window.removeEventListener('mousedown', this.handleMouseDown)
   }
 
   handleWindowResize = () => {
@@ -97,8 +103,8 @@ export default class ScreenCapture extends Component {
     }
 
     this.setState({
-      crossHairsTop: e.clientY,
       crossHairsLeft: e.clientX,
+      crossHairsTop: e.clientY,
       borderWidth: newBorderWidth,
       cropWidth,
       cropHeigth,
@@ -108,6 +114,7 @@ export default class ScreenCapture extends Component {
   }
 
   handleMouseDown = (e) => {
+    if (!this.state.on) return;
     const startX = e.clientX
     const startY = e.clientY
 
@@ -122,6 +129,7 @@ export default class ScreenCapture extends Component {
   }
 
   handleMouseUp = (e) => {
+    if (!this.state.on) return;
     this.handleClickTakeScreenShot()
     this.setState({
       on: false,
@@ -148,7 +156,7 @@ export default class ScreenCapture extends Component {
   }
 
   renderChild = () => {
-    const { children } = this.props
+    const children = this.props.children;
 
     const props = {
       onStartCapture: this.handStartCapture
@@ -159,31 +167,19 @@ export default class ScreenCapture extends Component {
   }
 
   render() {
-    const {
-      on,
-      crossHairsTop,
-      crossHairsLeft,
-      borderWidth,
-      isMouseDown,
-      imageURL
-    } = this.state
 
-    if (!on) return this.renderChild()
+    if (!this.state.on) return this.renderChild()
 
     return (
-      <div
-        onMouseMove={this.handleMouseMove}
-        onMouseDown={this.handleMouseDown}
-        onMouseUp={this.handleMouseUp}
-      >
+      <div>
         {this.renderChild()}
         <div
-          className={`overlay ${isMouseDown && 'highlighting'}`}
-          style={{ borderWidth }}
+          className={`overlay ${this.state.isMouseDown && 'highlighting'}`}
+          style={{ borderWidth: this.state.borderWidth }}
         />
         <div
           className="crosshairs"
-          style={{ left: crossHairsLeft + 'px', top: crossHairsTop + 'px' }}
+          style={{ left: this.state.crossHairsLeft + 'px', top: this.state.crossHairsTop + 'px', position: 'fixed' }}
         />
       </div>
     )

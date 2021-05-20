@@ -392,8 +392,8 @@ class TextArea extends Component{
                 result.selectionDirection = 'rtl';
             }
              
-            //let mainNode = (result.selectionDirection === 'ltr' ? result.sel.focusNode : result.sel.anchorNode);
             let mainNode = result.sel.baseNode;
+            if (!mainNode) return;
             result.node = (mainNode instanceof Element ? mainNode :  mainNode.parentElement);
             result.subSelection = (result.sel.anchorOffset > 0 && result.sel.focusOffset > 0);
 
