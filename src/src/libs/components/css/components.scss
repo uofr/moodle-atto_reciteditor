@@ -84,6 +84,8 @@
   
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {background: #555;}
+
+    .CodeMirror{height: calc(100vh - 80px);}
 }
 
 /*****************

@@ -99,6 +99,8 @@
     background: #888; }
   .layout-builder ::-webkit-scrollbar-thumb:hover {
     background: #555; }
+  .layout-builder .CodeMirror {
+    height: calc(100vh - 80px); }
 
 /*****************
  * SCREEN CAPTURE

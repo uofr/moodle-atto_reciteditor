@@ -56,6 +56,7 @@ export class LayoutBuilder extends Component
         };
 
         this.canvas = React.createRef();
+        this.codeMirror = React.createRef();
     }
 
     componentDidMount(){
@@ -181,8 +182,8 @@ export class LayoutBuilder extends Component
                     
                     <div className="center-area" >
                         {this.state.view === 'sourcecode' &&
-                            <CodeMirror  value={this.state.data.content}  options={{mode: 'xml', tabSize: 4, theme: 'material', lineNumbers: true, electricChars: true}} 
-                                onBeforeChange={(editor, data, value) => this.onChangeContent(value)}/>
+                            <CodeMirror ref={this.codeMirror} value={this.state.data.content}  options={{mode: 'xml', tabSize: 4, theme: 'material', lineNumbers: true, electricChars: true, autofocus: true}} 
+                                onBeforeChange={this.onChangeContent}/>
                         }
 
                         <Canvas style={{display: (this.state.view === 'sourcecode' ? 'none' : 'block')}}>
@@ -265,7 +266,6 @@ export class LayoutBuilder extends Component
             this.setState({view: ''});
         }       
         else{            
-            
             let tmpContent = body.innerHTML;
             tmpContent = beautifyingHTML(tmpContent, {ocd: true});
             let data = this.state.data;
@@ -274,14 +274,30 @@ export class LayoutBuilder extends Component
         }
     }
 
-    onChangeContent(value){
+    onChangeContent(editor, editorData, value){
         let data = this.state.data;
         data.content = value;
         this.setState({data: data});
     }
 
     onSelectElement(el){
+        if(this.state.view === 'sourcecode'){
+            let tmp = this.state.data.content.split("\n");
+            let cursorPos = {line: 0, ch: 0};
+            
+            for(let row = 0; row < tmp.length; row++){
+                let pos = el.outerHTML.indexOf(tmp[row].trim());
+                if(pos >= 0 && pos <= 5){
+                    cursorPos.line = row;
+                    break;
+                }                
+            }
+            this.codeMirror.current.editor.focus();
+            this.codeMirror.current.editor.setCursor(cursorPos);
 
+            return;
+        }
+        
         if((el !== null) && (el.tagName.toLowerCase() === 'body')){ 
             el = null;
         }
@@ -314,8 +330,6 @@ export class LayoutBuilder extends Component
         }
 
         this.htmlCleaning();
-
-        
 
         if(el !== null){
             if(el.getAttribute('data-selected') === '1'){
@@ -470,7 +484,7 @@ export class LayoutBuilder extends Component
 
     onCreateCanvasElement(el){
         let result = new CanvasElement(el, this.onSelectElement, this.onDropElement);
-        this.forceUpdate();
+        this.onRefresh();
         return result;
     }
 }
