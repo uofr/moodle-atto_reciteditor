@@ -40,7 +40,6 @@ export class VisualWordProcessor extends Component
         this.undoHistory = this.undoHistory.bind(this);
         this.redoHistory = this.redoHistory.bind(this);
         this.onCodeSource = this.onCodeSource.bind(this);
-        this.onMyScript = this.onMyScript.bind(this);
         this.onScreenCapture = this.onScreenCapture.bind(this);
 
         this.state = {
@@ -59,7 +58,7 @@ export class VisualWordProcessor extends Component
         let main = <EditorFrame flags={this.state.flags} 
                         buttonsBar={<ButtonsBar selection={this.state.selection} history={this.state.history} onUndo={this.undoHistory} onRedo={this.redoHistory}
                                 flags={this.state.flags} onHighlighter={() => this.onSetFlag('highlighter')} onCodeSource={this.onCodeSource}
-                                onMathFormula={() => this.onSetFlag('mathFormula')} onScreenCapture={this.onScreenCapture} onMyScript={this.onMyScript}
+                                onMathFormula={() => this.onSetFlag('mathFormula')} onScreenCapture={this.onScreenCapture}
                                     onShowHtmlEditor={() => this.props.onSelectBuilder('layout')}/>} 
                         workArea={this.getWorkArea()}
                         footerBar={<StatusBar selection={this.state.selection} />}>
@@ -240,7 +239,6 @@ export class VisualWordProcessor extends Component
             else{
                 sel.node.style.backgroundColor = backgroundColor;
             }
-            console.log(sel)
         }
     }
 
@@ -261,29 +259,12 @@ export class VisualWordProcessor extends Component
         }
     }
 
-    onMyScript(){
-        if(this.state.flags.myScript){
-            let tmp = this.state.flags;
-            tmp.myScript = !this.state.flags.myScript;
-            this.setState({flags: tmp}, this.onChange(this.state.tmpContent, true));
-        }       
-        else{            
-            let tmpContent = this.editorRef.current.innerHTML;
-            let tmp = this.state.flags;
-            tmp.myScript = !this.state.flags.myScript;
-            this.setState({flags: tmp, tmpContent: tmpContent});
-        }
-    }
-
     getWorkArea(){
         let result = null;
 
         if(this.state.flags.codeSource){
             result = <CodeMirror  value={this.state.tmpContent}  options={{mode: 'xml', tabSize: 4, theme: 'material', lineNumbers: true, electricChars: true}} 
                             onBeforeChange={(editor, data, value) => this.onChangeTmpContent(value)}/>;
-        }
-        else if(this.state.flags.myScript){
-            result = <MyScript value={this.state.tmpContent} onExported={this.onChangeTmpContent}/>;
         }
         else{
             result = <TextArea onComponentDidMount={this.onTextAreaDidMount} value={this.props.content} onChange={this.onChange} onSelect={this.onSelect} />;
@@ -401,7 +382,6 @@ class TextArea extends Component{
         if(sel !== null){
             result = {};
             result.sel = sel;
-            result.range = result.sel.getRangeAt(0);
             result.isSelection = (sel.rangeCount > 0) && (sel.toString().length > 0);
         
             result.selectionDirection = '';
@@ -424,6 +404,8 @@ class TextArea extends Component{
                     range.selectNodeContents(text);
                     result.range = range;
                 }
+            }else{
+                result.range = result.sel.getRangeAt(0);
             }
     
             result.isNodeRoot = (result.node === this.editorRef.current);

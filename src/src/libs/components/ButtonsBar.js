@@ -112,7 +112,6 @@ export class ButtonsBar extends Component{
                             <Button variant={ButtonsBar.Layout.btnNormal}  onClick={onStartCapture} title="Capture d'écran"><FontAwesomeIcon icon={faCamera}/></Button>
                         )}
                     </ScreenCapture>
-                    <Button variant={(this.props.flags.myScript ? 'warning' : ButtonsBar.Layout.btnNormal)}  onClick={this.props.onMyScript} title="My Script"><i><b>ms</b></i></Button>
                 </ButtonGroup>
                 <ButtonGroup className="mr-2 mb-2" size="sm"  style={{border: style.border, borderRadius: style.borderRadius}}>
                     <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.onRemoveTypeset} title="Supprimer la mise en forme"><FontAwesomeIcon icon={faRemoveFormat}/></Button>
