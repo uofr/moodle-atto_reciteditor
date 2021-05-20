@@ -83,6 +83,35 @@ export class VisualWordProcessor extends Component
 
     onTextAreaDidMount(editorRef){
         this.editorRef = editorRef;
+        document.body.onkeydown = this.onKeyDown.bind(this);
+        document.body.onkeyup = this.onKeyUp.bind(this);
+    }
+
+    componentWillUnmount(){
+        document.body.onkeydown = null;
+        document.body.onkeyup = null;
+    }
+
+    onKeyUp(e){
+        if (e.keyCode == 17 || e.keyCode == 91) {
+          this.ctrlDown = false;
+        }
+    }
+
+    onKeyDown(e){     
+        if (e.keyCode == 17 || e.keyCode == 91) { //17 = ctrl
+            this.ctrlDown = true;
+        }
+        if ((this.ctrlDown && e.key == 'z')) {//undo
+            e.preventDefault();
+            this.undoHistory();
+            return false;
+        }
+        if ((this.ctrlDown && e.key == 'y')) {//redo
+            e.preventDefault();
+            this.redoHistory();
+            return false;
+        }
     }
 
     onSelect(selection, clearSelection){

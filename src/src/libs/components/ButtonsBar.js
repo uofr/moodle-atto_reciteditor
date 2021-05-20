@@ -432,6 +432,7 @@ class BtnColorPicker extends Component{
             rgb(50%,30%,10%)
             rgb(50% 30% 10%)
         */
+       
         return "#" + r + g + b;
     }
 
@@ -453,15 +454,15 @@ class BtnColorPicker extends Component{
         if(sel.isNodeRoot){
             let newNode = document.createElement("span");
             newNode.appendChild(sel.range.extractContents());
-            newNode.style[prop] = color
             //sel.node.appendChild(newNode);
             sel.range.insertNode(newNode);
+            newNode.style[prop] = color
         }
         else if(sel.subSelection){
             let newNode = document.createElement("span");
             newNode.appendChild(sel.range.extractContents());
-            newNode.style[prop] = color
             sel.range.insertNode(newNode);
+            newNode.style[prop] = color
         }
         else{
             sel.node.style[prop] = color
