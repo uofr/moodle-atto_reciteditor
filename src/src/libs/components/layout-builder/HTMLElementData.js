@@ -949,6 +949,42 @@ export class HTMLElementData{
                     return card;
                 }
             },
+            {name: "Flip Card", type: 'bootstrap', tagName: 'flipcard', properties:  HTMLElementData.propsAssignmentFacade.containers,
+                create: function(){
+                    let card = document.createElement("div");
+                    card.classList.add("card");
+                    card.classList.add("flipcard");
+                    card.classList.add("manual-flip");
+                    
+                    for (let v of ['front', 'back']){
+                        let face = document.createElement("div");
+                        face.classList.add(v);
+                        card.appendChild(face);
+                        
+                        let el = document.createElement("div");
+                        el.classList.add("card-header");
+                        face.appendChild(el);
+
+                        el = document.createElement("div");
+                        el.classList.add("card-body");
+                        face.appendChild(el);
+
+                        el = document.createElement("div");
+                        el.classList.add("card-footer");
+                        face.appendChild(el);
+                    }
+
+                    return card;
+                },
+                onSelect: function(el){
+                    let card = el.parentElement;
+                    if(el.classList.contains("back")){
+                        card.classList.add('hover');
+                    }else{
+                        card.classList.remove('hover');
+                    }
+                }
+            },
             {name: "Media", type: 'bootstrap', tagName: 'media', properties:  HTMLElementData.propsAssignmentFacade.containers,
                 create: function(){
                     let media = document.createElement("div");
@@ -1133,6 +1169,21 @@ export class HTMLElementData{
         }
         else if(el.classList.contains('card')){
             result.text = 'Card';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('flipcard')){
+            result.text = 'Flip Card';
+            result.tagName = 'flipcard';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('front')){
+            result.text = 'Front Side';
+            result.tagName = 'flipcard';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('back')){
+            result.text = 'Back Side';
+            result.tagName = 'flipcard';
             result.prefix = 'bg';
         }
         else if(el.classList.contains('card-header')){
