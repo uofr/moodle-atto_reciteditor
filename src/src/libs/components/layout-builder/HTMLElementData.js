@@ -1041,14 +1041,37 @@ export class HTMLElementData{
 
                     body.appendChild(slide.cloneNode(true));
 
-                    slider.insertAdjacentHTML('beforeend', '<button class="carousel-control-prev" type="button" data-bs-slide="prev">\
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>\
-                    <span class="visually-hidden">Previous</span>\
-                  </button>\
-                  <button class="carousel-control-next" type="button" data-bs-slide="next">\
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>\
-                    <span class="visually-hidden">Next</span>\
-                  </button>');
+                    let btn = document.createElement("button");
+                    btn.classList.add("carousel-control-prev");
+                    btn.setAttribute("type", 'button');
+                    btn.setAttribute("data-bs-slide", 'prev');
+                    slider.appendChild(btn);
+
+                    el = document.createElement("span");
+                    el.classList.add("carousel-control-prev-icon");
+                    el.setAttribute("aria-hidden", 'true');
+                    btn.appendChild(el);
+
+                    el = document.createElement("span");
+                    el.classList.add("visually-hidden");
+                    el.innerHTML = "Previous";
+                    btn.appendChild(el);
+
+                    btn = document.createElement("button");
+                    btn.classList.add("carousel-control-next");
+                    btn.setAttribute("type", 'button');
+                    btn.setAttribute("data-bs-slide", 'next');
+                    slider.appendChild(btn);
+
+                    el = document.createElement("span");
+                    el.classList.add("carousel-control-next-icon");
+                    el.setAttribute("aria-hidden", 'true');
+                    btn.appendChild(el);
+
+                    el = document.createElement("span");
+                    el.classList.add("visually-hidden");
+                    el.innerHTML = "Next";
+                    btn.appendChild(el);
 
                     return slider;
                 },
