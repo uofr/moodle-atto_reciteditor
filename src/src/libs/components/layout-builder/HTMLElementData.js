@@ -952,6 +952,7 @@ export class HTMLElementData{
             {name: "Flip Card", type: 'bootstrap', tagName: 'flipcard', properties:  HTMLElementData.propsAssignmentFacade.containers,
                 create: function(){
                     let card = document.createElement("div");
+                    card.style.maxWidth = '340px';
                     card.classList.add("card");
                     card.classList.add("flipcard");
                     card.classList.add("manual-flip");
@@ -961,9 +962,31 @@ export class HTMLElementData{
                         face.classList.add(v);
                         card.appendChild(face);
                         
-                        let el = document.createElement("div");
-                        el.classList.add("card-header");
-                        face.appendChild(el);
+                        let head = document.createElement("div");
+                        head.classList.add("card-header");
+                        head.classList.add("bg-primary");
+                        head.classList.add("text-center");
+                        face.appendChild(head);
+
+                        let head2 = document.createElement("div");
+                        head.appendChild(head2);
+                        
+                        let el = document.createElement("img");
+                        el.classList.add("w-25");
+                        el.classList.add("rounded-circle");
+                        el.classList.add("shadow");
+                        el.setAttribute("src", `.${ImageEmptyHD}`);
+                        head2.appendChild(el);
+                        
+                        el = document.createElement("h3");
+                        el.style.color = '#fff';
+                        el.innerHTML = 'Title '+v;
+                        head2.appendChild(el);
+                        
+                        el = document.createElement("p");
+                        el.style.color = '#c6c6c6';
+                        el.innerHTML = 'Lorem';
+                        head2.appendChild(el);
 
                         el = document.createElement("div");
                         el.classList.add("card-body");
