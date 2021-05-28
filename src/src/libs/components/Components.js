@@ -15,6 +15,7 @@ export * from './LayoutSpacingEditor';
 export * from './LayoutSpacing';
 export * from './RecitRichEditor';
 export * from './ColorSelector';
+export * from './SourceCodeEditor';
 
 export default class Components{
     static version = 1.0;

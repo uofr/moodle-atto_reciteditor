@@ -3,12 +3,14 @@ import {  Button  } from 'react-bootstrap';
 import {faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
+import {UtilsHTML} from '../../utils/Utils';
 
 export class TreeView extends Component{
     static defaultProps = {
-        canvas: null,
+        data: null,
         onSelect: null,
-        selectedElement: null
+        selectedElement: null,
+        view: 'drawner'
     };
     
     constructor(props){
@@ -20,13 +22,15 @@ export class TreeView extends Component{
     }
 
     render(){
-        if(this.props.canvas === null){ return null; }
-        if(this.props.canvas.current === null){ return null; }
+        if(this.props.data === null){ return null; }
 
-        let window = this.props.canvas.current.contentWindow || this.props.canvas.current.contentDocument;
-        let body = window.document.body;
+        let data = this.props.data;
 
-        let treeView = this.createTreeViewData(body);
+        if(this.props.view === 'sourceCode'){           
+            data = UtilsHTML.assignTagId(this.props.data);
+        }
+        
+        let treeView = this.createTreeViewData(data);
 
         let main = <ul className='tree-view'>{this.renderTreeView(treeView, 0)}</ul>;
 
@@ -99,7 +103,6 @@ export class TreeView extends Component{
     onCollapse(event, id){
         event.stopPropagation();
         event.preventDefault();
-        console.log(event.currentTarget, id)
 
         let collapsed = this.state.collapsed;
         collapsed[id] = !collapsed[id] || false;

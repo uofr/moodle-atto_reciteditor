@@ -58,6 +58,10 @@ export class CanvasElement{
         }
     }
 
+    static create(el, onSelectElement, onDropElement){
+        return new CanvasElement(el, onSelectElement, onDropElement);
+    }
+
     onClick(event){        
         event.preventDefault(); // Cancel the default action (in case of href)
         event.stopPropagation();
@@ -169,21 +173,19 @@ export class CanvasElement{
 
 export class FloatingMenu extends Component{
     static defaultProps = {
-        canvas: null,
-        selectedElement: null,
+        posCanvas: null,
+        posEl: null,
+        onMoveNodeUp: null,
+        onMoveNodeDown: null,
         onDeleteElement: null,
-        onRefresh: null,
-        onSaveCustomComponent: null,
-        onCreateCanvasElement: null
+        onCloneNode: null,
+        onSaveCustomComponent: null
     };      
 
     constructor(props){
         super(props);
 
         this.onEdit = this.onEdit.bind(this);
-        this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
-        this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
-        this.onCloneNode = this.onCloneNode.bind(this);
         this.showModal = this.showModal.bind(this);
         this.onSaveCustomComponent = this.onSaveCustomComponent.bind(this);
 
@@ -191,13 +193,13 @@ export class FloatingMenu extends Component{
     }
 
     render(){
-        if(this.props.canvas === null){ return null;}
-        if(this.props.canvas.current === null){ return null;}
-        if(this.props.selectedElement === null){ return null;}
+        if(this.props.posCanvas === null){ return null;}
+        if(this.props.posEl === null){ return null;}
+
         let style = {display: 'block', top: 0, left: 0};
 
-        let posCanvas = this.props.canvas.current.getBoundingClientRect();
-        let posEl = this.props.selectedElement.getBoundingClientRect();
+        let posCanvas = this.props.posCanvas;
+        let posEl = this.props.posEl;
 
         style.top = Math.max(posCanvas.top + posEl.top - 32, 0);
         style.left = posCanvas.left + posEl.left;
@@ -208,29 +210,16 @@ export class FloatingMenu extends Component{
                     <ButtonGroup size="sm">
                         <Button onClick={this.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
                         <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faObjectGroup} title="Créer un composant"/></Button>
-                        <Button onClick={this.onMoveNodeUp}  disabled={this.props.selectedElement.previousSibling === null}><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
-                        <Button onClick={this.onMoveNodeDown} disabled={this.props.selectedElement.nextSibling === null}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>
-                        <Button onClick={this.onCloneNode}><FontAwesomeIcon icon={faClone} title="Dupliquer"/></Button>
-                        <Button onClick={() => this.props.onDeleteElement()}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                        <Button onClick={this.props.onMoveNodeUp}  ><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
+                        <Button onClick={this.props.onMoveNodeDown}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>
+                        <Button onClick={this.props.onCloneNode}><FontAwesomeIcon icon={faClone} title="Dupliquer"/></Button>
+                        <Button onClick={this.props.onDeleteElement}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                     </ButtonGroup>
                 </ButtonToolbar>
                 {this.state.showModal && <CustomComponentForm onClose={() => this.showModal(false)} onSave={this.onSaveCustomComponent}/>}
             </div>
+            //disabled={this.props.selectedElement.previousSibling === null}
         return main;
-    }
-
-    onMoveNodeUp(){
-        let parent = this.props.selectedElement.parentElement;
-        let previousSibling = this.props.selectedElement.previousSibling;
-        parent.insertBefore(this.props.selectedElement, previousSibling);
-        this.props.onRefresh();
-    }
-
-    onMoveNodeDown(){
-        let parent = this.props.selectedElement.parentElement;
-        let nextSibling = this.props.selectedElement.nextSibling;
-        parent.insertBefore(nextSibling, this.props.selectedElement);
-        this.props.onRefresh();
     }
 
     onEdit(){
@@ -256,16 +245,7 @@ export class FloatingMenu extends Component{
       
         // set scroll to the end if multiline
         el.scrollTop = el.scrollHeight; 
-      }
-
-    onCloneNode(){
-        let parent = this.props.selectedElement.parentElement;
-        let el = this.props.selectedElement.cloneNode(true)
-        el.removeAttribute("data-selected");
-        el.removeAttribute("contenteditable");
-        parent.appendChild(el);
-        this.props.onCreateCanvasElement(el);
-    }
+    }    
 
     showModal(show){
         this.setState({showModal: show});

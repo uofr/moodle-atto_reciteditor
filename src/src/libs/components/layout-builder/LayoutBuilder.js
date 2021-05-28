@@ -5,17 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {TreeView} from './TreeView';
 import {Canvas, CanvasElement, FloatingMenu} from './Canvas';
 import {ComponentProperties, VisualComponentList} from './ComponentsCollection';
-import {Cookies} from '../../utils/Cookies';
-import { JsNx } from '../../utils/Utils';
 import RecitLogo from '../assets/recit.png';
-
-import {Controlled  as CodeMirror} from 'react-codemirror2';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/material.css';
+import {CustomHtmlComponents} from './CustomHtmlComponents';
+import {SourceCodeEditor} from '../Components';
 import { HTMLElementData } from './HTMLElementData';
-var beautifyingHTML = require("pretty");
-require('codemirror/mode/xml/xml');
-require('codemirror/mode/javascript/javascript');
+import {UtilsHTML} from '../../utils/Utils';
 
 export class LayoutBuilder extends Component
 {
@@ -28,41 +22,297 @@ export class LayoutBuilder extends Component
         super(props);
 
         this.onNavbarSelect = this.onNavbarSelect.bind(this);
+
+        this.state = {
+            device: 'xl', view: 'drawner', leftPanel: false 
+        };
+    }  
+
+	render(){
+		let main = 
+			<div className="layout-builder">                
+                <Navbar bg="dark" variant="dark" onSelect={this.onNavbarSelect} expand="sm">
+                    <Navbar.Brand>
+                        <img alt="RÉCIT" src={`.${RecitLogo}`} width="30" height="30" className="d-inline-block align-top" />{' '}
+                        Éditeur RÉCIT
+                    </Navbar.Brand>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="mr-auto" activeKey={(this.state.leftPanel ? 'collapse' : '')}>
+                            <Nav.Link eventKey="wordbuilder"><FontAwesomeIcon icon={faFileWord} title="Word Builder"/></Nav.Link>
+                            <Nav.Link eventKey="collapse"><FontAwesomeIcon icon={faBars} title="Collapser"/></Nav.Link>
+                        </Nav>
+                        <Nav className="mr-auto" activeKey={this.state.view}>
+                            <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title="Preview"/></Nav.Link>
+                            <Nav.Link eventKey="sourceCode"><FontAwesomeIcon icon={faCode} title="Code source"/></Nav.Link>
+                        </Nav>
+                        <Nav activeKey={this.state.device}>
+                            <Nav.Link eventKey="xs"><FontAwesomeIcon icon={faMobileAlt} title="XS"/></Nav.Link>
+                            <Nav.Link eventKey="sm"><FontAwesomeIcon icon={faTabletAlt} title="SM"/></Nav.Link>
+                            <Nav.Link eventKey="md"><FontAwesomeIcon icon={faTabletAlt} title="MD" style={{transform: 'rotate(90deg)'}}/></Nav.Link>
+                            <Nav.Link eventKey="lg"><FontAwesomeIcon icon={faLaptop} title="LG"/></Nav.Link>
+                            <Nav.Link eventKey="xl"><FontAwesomeIcon icon={faDesktop} title="XL"/></Nav.Link>    
+                        </Nav>
+                    </Navbar.Collapse>
+                </Navbar>
+                <MainView data={this.state.data} device={this.state.device} view={this.state.view} leftPanel={this.state.leftPanel}/>
+            </div>;
+
+		return (main);
+    }
+
+    onNavbarSelect(eventKey, event){
+        if(eventKey === 'wordbuilder'){
+            this.props.onSelectBuilder('word');
+        }
+        else if('preview' === eventKey){
+            let value = (this.state.view === eventKey);
+            this.setState({view: value ? 'drawner' : eventKey});
+        }
+        else if('sourceCode' === eventKey){
+            let value = (this.state.view === eventKey);
+            this.setState({view: value ? 'drawner' : eventKey});
+        }
+        else if(eventKey === 'collapse'){
+            this.setState({leftPanel: !this.state.leftPanel});
+        }
+        else{
+            this.setState({device: eventKey});
+        }
+    }
+}
+
+class MainView extends Component{
+    static defaultProps = {
+        data: null,
+        device: "",
+        view: "drawner",
+        leftPanel: false
+    };
+
+    constructor(props){
+        super(props);
+
         this.onSelectElement = this.onSelectElement.bind(this);
         this.onDeleteElement = this.onDeleteElement.bind(this);
-        this.onRefresh = this.onRefresh.bind(this);
-        this.onDropElement = this.onDropElement.bind(this);
-        this.onDragEnd = this.onDragEnd.bind(this);
-        this.onCollapse = this.onCollapse.bind(this);
-        this.htmlCleaning = this.htmlCleaning.bind(this);
+        this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
+        this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
+        this.onCloneNode = this.onCloneNode.bind(this);
         this.onSaveCustomComponent = this.onSaveCustomComponent.bind(this);
-        this.onDeleteCustomComponent = this.onDeleteCustomComponent.bind(this);
-        this.onImportCustomComponent = this.onImportCustomComponent.bind(this);
-        this.onAfterSaveCustomComponent = this.onAfterSaveCustomComponent.bind(this);
-        this.onCreateCanvasElement = this.onCreateCanvasElement.bind(this);
-        this.onPreview = this.onPreview.bind(this);
-        this.onSourceCode = this.onSourceCode.bind(this);
-        this.onChangeContent = this.onChangeContent.bind(this);
-
+        this.onCollapse = this.onCollapse.bind(this);
+        this.setCollapse = this.setCollapse.bind(this);
+        this.onDragEnd = this.onDragEnd.bind(this);
         this.onMouseEnter = this.onMouseEnter.bind(this);
         this.onMouseLeave = this.onMouseLeave.bind(this);
 
-        this.state = {
-            device: 'xl', view: '', 
-            collapsed: {
-                leftPanel: false, leftPanelOnHover: false, components: false, properties: true, treeView: false,
-            }, 
-            selectedElement: null, data: {customHtmlComponentList: [], content: ''}
-        };
+        this.canvasState = {
+            drawner: new DrawnerState(this),
+            preview: new PreviewState(this),
+            sourceCode: new SourceCodeState(this),
+        }
 
-        this.canvas = React.createRef();
-        this.codeMirror = React.createRef();
+        this.state = {
+            canvasState: 'drawner',
+            selectedElement: null,
+            collapsed: {
+                leftPanelOnHover: false, components: false, properties: true, treeView: false,
+            }
+        };
     }
 
-    componentDidMount(){
-        let window = this.canvas.current.contentWindow || this.canvas.current.contentDocument;
-        let head = window.document.head;
-        let body = window.document.body;
+    componentDidUpdate(prevProps){
+        if(prevProps.view !== this.props.view){
+            let data = this.canvasState[prevProps.view].getData();
+            this.canvasState[this.props.view].setData(data);
+            this.setState({canvasState: this.props.view},  this.onCollapse);
+        }
+    }
+
+    render(){
+        let main =
+            <div className="main">
+                <div className="left-area" onMouseLeave={this.onMouseLeave} >
+                    {this.props.leftPanel && !this.state.collapsed.leftPanelOnHover ? 
+                        <div className="panel" data-status='close' onMouseEnter={this.onMouseEnter} >
+                            <div><FontAwesomeIcon icon={faPuzzlePiece} title="Composants"/></div>
+                            <div><FontAwesomeIcon icon={faSlidersH} title="Proprietés"/></div>
+                            <div><FontAwesomeIcon icon={faStream} title="Arborescence"/></div>
+                        </div>
+                    :
+                        <div className="panel" data-status='open'>
+                            <Card>
+                                <Card.Header onClick={() => this.setCollapse('components')}>
+                                    <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.components ? faAngleRight : faAngleDown)}/>
+                                    Composants
+                                </Card.Header>
+                                <Collapse in={!this.state.collapsed.components}>
+                                    <Card.Body>
+                                        <VisualComponentList onDragEnd={this.onDragEnd}/>
+                                    </Card.Body>
+                                </Collapse>
+                            </Card>
+
+                            <Card>
+                                <Card.Header onClick={() => this.setCollapse('properties')}>
+                                    <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/>Proprietés
+                                </Card.Header>
+                                <Collapse in={!this.state.collapsed.properties}>
+                                    <Card.Body>
+                                        <ComponentProperties element={this.state.selectedElement}/>
+                                    </Card.Body>
+                                </Collapse>
+                            </Card>
+
+                            <Card>
+                                <Card.Header  onClick={() => this.setCollapse('treeView')}>
+                                    <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/>Arborescence
+                                </Card.Header>
+                                <Collapse in={!this.state.collapsed.treeView}>
+                                    <Card.Body>
+                                        <TreeView data={this.canvasState.drawner.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} view={this.props.view}/>
+                                    </Card.Body>
+                                </Collapse>
+                            </Card>
+                        </div>
+                    }
+                </div>
+                
+                <div className="center-area">
+                    {this.canvasState.drawner.render(this.props.view === 'drawner')}
+                    {this.canvasState.preview.render(this.props.view === 'preview')}
+                    {this.canvasState.sourceCode.render(this.props.view === 'sourceCode')}
+                </div>
+            </div>;
+
+        return main;
+    }
+
+    onDragEnd(){
+        this.canvasState[this.state.canvasState].onDragEnd();
+        this.forceUpdate();
+    }
+
+    onSelectElement(el){
+        let result = this.canvasState[this.state.canvasState].onSelectElement(el, this.state.selectedElement, this.state.collapsed);
+        this.setState({selectedElement: result.el, collapsed: result.collapsed});
+    }
+
+    onDeleteElement(){
+        this.canvasState[this.state.canvasState].onDeleteElement(this.state.selectedElement);
+        this.setState({selectedElement: null});
+    }
+
+    onMoveNodeUp(){
+        this.canvasState[this.state.canvasState].onMoveNodeUp(this.state.selectedElement);
+        this.forceUpdate();
+    }
+
+    onMoveNodeDown(){
+        this.canvasState[this.state.canvasState].onMoveNodeDown(this.state.selectedElement);
+        this.forceUpdate();
+    }
+
+    onCloneNode(){
+        this.canvasState[this.state.canvasState].onCloneNode(this.state.selectedElement);
+        this.forceUpdate();
+    }
+
+    onSaveCustomComponent(data){
+        //this.canvasState[this.state.canvasState].onSaveCustomComponent(data, this.state.selectedElement, this.forceUpdate);
+        let p = CustomHtmlComponents.onSave(data, this.state.selectedElement);
+        let that = this;
+
+        p.then(() => {
+            that.forceUpdate();
+        })
+    }
+
+    onCollapse(){       
+        let collapsed = this.canvasState[this.state.canvasState].onCollapse(this.state.collapsed);
+        this.setState({collapsed: collapsed});
+    }
+
+    setCollapse(attr){
+        let data = this.state.collapsed;
+        data[attr] = !data[attr];
+        this.setState({collapsed: data});
+    }
+
+    onMouseEnter(){
+        if(this.props.leftPanel){
+            this.setCollapse('leftPanelOnHover');
+        }
+    }
+
+    onMouseLeave(){
+        if(this.props.leftPanel && this.state.selectedElement === null){
+            this.setCollapse('leftPanelOnHover');
+        }
+    }
+}
+
+class CanvasState{
+    constructor(mainView){
+        this.mainView = mainView;
+
+        this.onInit = this.onInit.bind(this);
+        this.onDropElement = this.onDropElement.bind(this);
+        this.onSelectElement = this.onSelectElement.bind(this);
+        this.onDeleteElement = this.onDeleteElement.bind(this);
+        this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
+        this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
+        this.onCloneNode = this.onCloneNode.bind(this);
+    }
+
+    onInit(){ console.log("Abstract method...");}
+    render(){ console.log("Abstract method...");}
+    onDragEnd(){ console.log("Abstract method...");}
+    onDropElement(){console.log("Abstract method...");}
+    getData(){console.log("Abstract method...");}
+    setData(){console.log("Abstract method...");}
+    onDeleteElement(){console.log("Abstract method...");}
+    onMoveNodeUp(){console.log("Abstract method...");}
+    onMoveNodeDown(){console.log("Abstract method...");}
+    onCloneNode(){console.log("Abstract method...");}
+
+    onCollapse(collapsed){ 
+        return collapsed;
+    }
+
+    onSelectElement(el, selectedElement, collapsed){ 
+        let result = {el: el, collapsed: collapsed };
+        return result;
+    }
+
+    getDeviceDimension(){
+        let device = null;
+        
+        switch(this.mainView.props.device){
+            case 'xs': device = {width: 360, height: 1050}; break;
+            case 'sm': device = {width: 576, height: 1050}; break;
+            case 'md': device = {width: 768, height: 1050}; break;
+            case 'lg': device = {width: 992, height: 1050}; break;
+            case 'xl':
+            default: device = {width: 1200, height: 1050}; 
+        }
+
+        return device;
+    }
+}
+
+class DrawnerState extends CanvasState{
+    constructor(mainView){
+        super(mainView);
+
+        this.iFrame = null;
+        this.window = null;
+    }
+
+    onInit(event){
+        this.iFrame = event.target;
+        this.window = this.iFrame.contentWindow || this.iFrame.contentDocument;
+        let head = this.window.document.head;
+        let body = this.window.document.body;
 
         let el = document.createElement("link");
 		el.setAttribute("href", `bootstrap.min.c9ac70f5.css`);
@@ -82,312 +332,127 @@ export class LayoutBuilder extends Component
         body.parentElement.classList.add("canvas-content");
 
         // pure JS
-        this.onCreateCanvasElement(body);
+        CanvasElement.create(body, this.mainView.onSelectElement, this.onDropElement);
 
         // React JS
         //body.appendChild(doc.firstChild);
-        
-        try{
-            let tmp = Cookies.get('appData', null);
-            
-            if(tmp !== null){
-                tmp = JSON.parse(tmp);
-                if (tmp){
-                    let data = {customHtmlComponentList: tmp.customHtmlComponentList};
-                    this.setState({data: data})
-                }
-            }
-        }
-        catch(err){
-            alert("Error on getting Cookie appData. See console for more information.");
-            console.log(err);
-        }
     }
 
-	render(){
-		let main = 
-			<div className="layout-builder">                
-                <Navbar bg="dark" variant="dark" onSelect={this.onNavbarSelect} expand="sm">
-                    <Navbar.Brand>
-                        <img alt="RÉCIT" src={`.${RecitLogo}`} width="30" height="30" className="d-inline-block align-top" />{' '}
-                        Éditeur RÉCIT
-                    </Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto" activeKey={(this.state.collapsed.leftPanel ? 'collapse' : '')}>
-                            <Nav.Link eventKey="wordbuilder"><FontAwesomeIcon icon={faFileWord} title="Word Builder"/></Nav.Link>
-                            <Nav.Link eventKey="collapse"><FontAwesomeIcon icon={faBars} title="Collapser"/></Nav.Link>
-                        </Nav>
-                        <Nav className="mr-auto" activeKey={this.state.view}>
-                            <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title="Preview"/></Nav.Link>
-                            <Nav.Link eventKey="sourcecode"><FontAwesomeIcon icon={faCode} title="Code source"/></Nav.Link>
-                        </Nav>
-                        <Nav activeKey={this.state.device}>
-                            <Nav.Link eventKey="xs"><FontAwesomeIcon icon={faMobileAlt} title="XS"/></Nav.Link>
-                            <Nav.Link eventKey="sm"><FontAwesomeIcon icon={faTabletAlt} title="SM"/></Nav.Link>
-                            <Nav.Link eventKey="md"><FontAwesomeIcon icon={faTabletAlt} title="MD" style={{transform: 'rotate(90deg)'}}/></Nav.Link>
-                            <Nav.Link eventKey="lg"><FontAwesomeIcon icon={faLaptop} title="LG"/></Nav.Link>
-                            <Nav.Link eventKey="xl"><FontAwesomeIcon icon={faDesktop} title="XL"/></Nav.Link>    
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
-                   
-                <div className="main">
-                    <div className="left-area" onMouseLeave={this.onMouseLeave} >
-                        {this.state.collapsed.leftPanel && !this.state.collapsed.leftPanelOnHover ? 
-                            <div className="panel" data-status='close' onMouseEnter={this.onMouseEnter} >
-                                <div><FontAwesomeIcon icon={faPuzzlePiece} title="Composants"/></div>
-                                <div><FontAwesomeIcon icon={faSlidersH} title="Proprietés"/></div>
-                                <div><FontAwesomeIcon icon={faStream} title="Arborescence"/></div>
-                            </div>
-                        :
-                            <div className="panel" data-status='open'>
-                                <Card>
-                                    <Card.Header onClick={() => this.onCollapse('components')}>
-                                        <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.components ? faAngleRight : faAngleDown)}/>
-                                        Composants
-                                    </Card.Header>
-                                    <Collapse in={!this.state.collapsed.components}>
-                                        <Card.Body>
-                                            <VisualComponentList onDeleteCustomComponent={this.onDeleteCustomComponent}  onImportCustomComponent={this.onImportCustomComponent}
-                                                        customHtmlComponentList={this.state.data.customHtmlComponentList} onDragEnd={this.onDragEnd}/>
-                                        </Card.Body>
-                                    </Collapse>
-                                </Card>
+    render(show){
+        let posCanvas = (this.iFrame === null ? null : this.iFrame.getBoundingClientRect());
+        let posEl = (this.mainView.state.selectedElement === null ? null : this.mainView.state.selectedElement.getBoundingClientRect());
 
-                                <Card>
-                                    <Card.Header onClick={() => this.onCollapse('properties')}>
-                                        <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/>Proprietés
-                                    </Card.Header>
-                                    <Collapse in={!this.state.collapsed.properties}>
-                                        <Card.Body>
-                                            <ComponentProperties element={this.state.selectedElement}/>
-                                        </Card.Body>
-                                    </Collapse>
-                                </Card>
+        let main = 
+            <Canvas style={{display: (show ? 'flex' : 'none') }}>
+                <iframe onLoad={this.onInit} className="canvas" style={this.getDeviceDimension()}></iframe>
+                <FloatingMenu posCanvas={posCanvas} posEl={posEl}
+                            onDeleteElement={this.mainView.onDeleteElement} onMoveNodeUp={this.mainView.onMoveNodeUp} onMoveNodeDown={this.mainView.onMoveNodeDown} 
+                             onCloneNode={this.mainView.onCloneNode} onSaveCustomComponent={this.mainView.onSaveCustomComponent} />                          
+            </Canvas>;
 
-                                <Card>
-                                    <Card.Header  onClick={() => this.onCollapse('treeView')}>
-                                        <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/>Arborescence
-                                    </Card.Header>
-                                    <Collapse in={!this.state.collapsed.treeView}>
-                                        <Card.Body>
-                                            <TreeView canvas={this.canvas} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} />
-                                        </Card.Body>
-                                    </Collapse>
-                                </Card>
-                            </div>
-                        }
-                    </div>
-                    
-                    <div className="center-area" >
-                        {this.state.view === 'sourcecode' &&
-                            <CodeMirror ref={this.codeMirror} value={this.state.data.content}  options={{mode: 'xml', tabSize: 4, theme: 'material', lineNumbers: true, electricChars: true, autofocus: true}} 
-                                onBeforeChange={this.onChangeContent}/>
-                        }
+        return main;
+    }   
 
-                        <Canvas style={{display: (this.state.view === 'sourcecode' ? 'none' : 'block')}}>
-                            <iframe ref={this.canvas} className="canvas" style={this.getDeviceDimension()}></iframe>
-                            <FloatingMenu canvas={this.canvas} selectedElement={this.state.selectedElement} onDeleteElement={this.onDeleteElement} onRefresh={this.onRefresh}
-                                        onSaveCustomComponent={this.onSaveCustomComponent} onCreateCanvasElement={this.onCreateCanvasElement}/>
-                            
-                        </Canvas>
-                    </div>
-                </div>
-            </div>;
+    onSelectElement(el, selectedElement, collapsed){
+        let result = {el: el, collapsed: collapsed};
 
-		return (main);
-    }
-
-    onMouseEnter(){
-        if(this.state.collapsed.leftPanel){
-            this.onCollapse('leftPanelOnHover');
-        }
-    }
-
-    onMouseLeave(){
-        if(this.state.collapsed.leftPanel && this.state.selectedElement === null){
-            this.onCollapse('leftPanelOnHover');
-        }
-    }
-
-    onCollapse(name){
-        let data = this.state.collapsed;
-        data[name] = !data[name];
-        this.setState({collapsed: data});
-        return data[name];
-    }
-
-    onNavbarSelect(eventKey, event){
-        if(eventKey === 'wordbuilder'){
-            this.props.onSelectBuilder('word');
-        }
-        else if('preview' === eventKey){
-            let value = (this.state.view === eventKey);
-            this.setState({view: value ? '' : eventKey}, () => this.onPreview(value));
-        }
-        else if('sourcecode' === eventKey){
-            this.onSourceCode((this.state.view === eventKey));
-        }
-        else if(eventKey === 'collapse'){
-            this.onCollapse('leftPanel');
-        }
-        else{
-            this.setState({device: eventKey});
-        }
-    }
-
-    onPreview(value){
-        let window = this.canvas.current.contentWindow || this.canvas.current.contentDocument;
-        let body = window.document.body;
-
-        if(value){
-            body.parentElement.classList.add("canvas-content");
-        }
-        else{
-            body.parentElement.classList.remove("canvas-content");
-        }
-
-        this.onSelectElement(null);
-    }
-
-    onSourceCode(opened){
-        let window = this.canvas.current.contentWindow || this.canvas.current.contentDocument;
-        let body = window.document.body;
-        let html = body.parentElement;
-
-        if(opened){
-            html.removeChild(body);
-
-            let el = document.createElement("body");
-            html.appendChild(el);
-            el.innerHTML = this.state.data.content;
-            this.onCreateCanvasElement(el);
-            this.setState({view: ''});
-        }       
-        else{            
-            let tmpContent = body.innerHTML;
-            tmpContent = beautifyingHTML(tmpContent, {ocd: true});
-            let data = this.state.data;
-            data.content = tmpContent
-            this.setState({view: 'sourcecode', data: data});
-        }
-    }
-
-    onChangeContent(editor, editorData, value){
-        let data = this.state.data;
-        data.content = value;
-        this.setState({data: data});
-    }
-
-    onSelectElement(el){
-        if(this.state.view === 'sourcecode'){
-            let tmp = this.state.data.content.split("\n");
-            let cursorPos = {line: 0, ch: 0};
-            
-            for(let row = 0; row < tmp.length; row++){
-                let pos = el.outerHTML.indexOf(tmp[row].trim());
-                if(pos >= 0 && pos <= 5){
-                    cursorPos.line = row;
-                    break;
-                }                
-            }
-            this.codeMirror.current.editor.focus();
-            this.codeMirror.current.editor.setCursor(cursorPos);
-
-            return;
-        }
-        
-        if((el !== null) && (el.tagName.toLowerCase() === 'body')){ 
-            el = null;
-        }
-
-        if(this.state.view === 'preview'){
-            return;
+        if((result.el !== null) && (result.el.tagName.toLowerCase() === 'body')){ 
+            result.el = null;
         }
 
         // if the selected element receives another click then it deselects it
-        if(Object.is(el, this.state.selectedElement)){
+        if(Object.is(result.el, selectedElement)){
             this.htmlCleaning();
             
-            let collapsed = this.state.collapsed;
-            collapsed.components = false;
-            collapsed.properties = true;
-            collapsed.leftPanelOnHover = false;
-            this.setState({selectedElement: null, collapsed: collapsed});
-            return;
+            result.collapsed.components = false;
+            result.collapsed.properties = true;
+            result.collapsed.leftPanelOnHover = false;
+            result.el = null;
         }
-
-        if(this.state.selectedElement !== null){ 
+        else if(selectedElement !== null){ 
             this.htmlCleaning();
             
-            let collapsed = this.state.collapsed;
-            collapsed.components = false;
-            collapsed.properties = true;
-            collapsed.leftPanelOnHover = false;
-            this.setState({selectedElement: null, collapsed: collapsed}, () => this.onSelectElement(el));
-            return; 
+            result.collapsed.components = false;
+            result.collapsed.properties = true;
+            result.collapsed.leftPanelOnHover = false;
+            result.el = null;
+            return result; 
         }
+        else{
+            this.htmlCleaning();
 
-        this.htmlCleaning();
-
-        if(el !== null){
-            if(el.getAttribute('data-selected') === '1'){
-                el.removeAttribute('data-selected');
-                el.removeAttribute('draggable');
-            }
-            else{
-                el.setAttribute('data-selected', '1');
-                el.setAttribute('draggable', 'true');
-
-                let elData = HTMLElementData.getElementData(null, el);
-                if (elData && elData.onSelect){
-                    elData.onSelect(el, elData);
+            if(result.el !== null){
+                if(result.el.getAttribute('data-selected') === '1'){
+                    result.el.removeAttribute('data-selected');
+                    result.el.removeAttribute('draggable');
+                }
+                else{
+                    result.el.setAttribute('data-selected', '1');
+                    result.el.setAttribute('draggable', 'true');
+    
+                    let elData = HTMLElementData.getElementData(null, result.el);
+                    if (elData && elData.onSelect){
+                        elData.onSelect(result.el, elData);
+                    }
                 }
             }
+    
+            result.collapsed.components = true;
+            result.collapsed.properties = false;
+            result.collapsed.leftPanelOnHover = true;
         }
 
-        let collapsed = this.state.collapsed;
-        collapsed.components = true;
-        collapsed.properties = false;
-        collapsed.leftPanelOnHover = true;
-        this.setState({selectedElement: el, collapsed: collapsed});
+        return result;
     }
 
-    onDropElement(el){
+    onCollapse(collapsed){
+        collapsed.components = false;
+        collapsed.properties = true;
+        collapsed.treeView = false;
+        return collapsed;
+    }
+
+    onDropElement(){
         this.onDragEnd();
-    }    
+    } 
+
+    onDeleteElement(selectedElement){
+        selectedElement.remove();
+    }
+    
+    onMoveNodeUp(selectedElement){
+        let parent = selectedElement.parentElement;
+        let previousSibling = selectedElement.previousSibling;
+        parent.insertBefore(selectedElement, previousSibling);
+    }
+
+    onMoveNodeDown(selectedElement){
+        let parent = selectedElement.parentElement;
+        let nextSibling = selectedElement.nextSibling;
+        if(nextSibling){
+            parent.insertBefore(nextSibling, selectedElement);
+        }
+        else{
+            parent.insertBefore(selectedElement, parent.firstChild);
+        }
+    }
+
+    onCloneNode(selectedElement){
+        let parent = selectedElement.parentElement;
+        let el = selectedElement.cloneNode(true)
+        el.removeAttribute("data-selected");
+        el.removeAttribute("contenteditable");
+        parent.appendChild(el);
+        CanvasElement.create(el, this.mainView.onSelectElement, this.onDropElement);
+    }
 
     onDragEnd(){
         this.htmlCleaning();
-        this.forceUpdate();
-    }
-
-    getDeviceDimension(){
-        let device = null;
-
-        switch(this.state.device){
-            case 'xs': device = {width: 360, height: 1050}; break;
-            case 'sm': device = {width: 576, height: 1050}; break;
-            case 'md': device = {width: 768, height: 1050}; break;
-            case 'lg': device = {width: 992, height: 1050}; break;
-            case 'xl':
-            default: device = {width: 1200, height: 1050}; 
-        }
-
-        return device;
     }
 
     htmlCleaning(){
-        // deselect the element if it is the case
-        if(this.state.selectedElement){            
-            this.state.selectedElement.removeAttribute('data-selected');
-            this.state.selectedElement.removeAttribute('draggable');
-        }
-
         // remove the class dropping-zone of all elements
-        let canvas = this.canvas.current.contentWindow || this.canvas.current.contentDocument;
-        let items = canvas.document.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable], [data-dragging]");
+        let items = this.window.document.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable], [data-dragging], [data-selected], [draggable]");
 
         items.forEach(function(item) {
             //item.classList.remove('dropping-zone');
@@ -400,91 +465,111 @@ export class LayoutBuilder extends Component
             
             item.removeAttribute("data-dragging");
             item.removeAttribute("contenteditable");
+            item.removeAttribute("data-selected");
+            item.removeAttribute("draggable");
         });
     }
 
-    onDeleteElement(){
-        this.state.selectedElement.remove();
-        this.setState({selectedElement: null});
+    getData(){
+        if(this.window === null){ return null; }
+
+        return this.window.document.body.innerHTML;
     }
 
-    onRefresh(){
-        this.forceUpdate();
+    getBody(){
+        if(this.window === null){ return null; }
+
+        return this.window.document.body;
     }
 
-    onSaveCustomComponent(data){
-        let tmp = this.state.data;
-        let section = JsNx.getItem(tmp.customHtmlComponentList, 'name', data.section, null);
+    setData(value){
+        let body = this.window.document.body;
+        body.innerHTML = value;
+        CanvasElement.create(body, this.mainView.onSelectElement, this.onDropElement);
+    }
+}
 
-        if(section === null){
-            section = {name: data.section, children: []};
-            tmp.customHtmlComponentList.push(section);
-        }
+class SourceCodeState extends CanvasState{
+    constructor(mainView){
+        super(mainView);
 
-        this.htmlCleaning();
-        section.children.push({name: data.name, type: 'custom', tagName: '', htmlString: this.state.selectedElement.outerHTML, properties: []});
+        this.onChange = this.onChange.bind(this);
 
-        this.setState({data: tmp}, this.onAfterSaveCustomComponent);
+        this.queryStr = "";
+        this.data = "";
     }
 
-    onAfterSaveCustomComponent(){
-        try{
-            let tmp = this.state.data;
-            
-            tmp.customHtmlComponentList.sort((a,b) =>{
-                return a.name.toString().localeCompare(b.name.toString());
-            })
-    
-            for(let item of tmp.customHtmlComponentList){
-                item.children.sort((a,b) =>{
-                    return a.name.toString().localeCompare(b.name.toString());
-                })
-            }
-
-            this.setState({data: tmp});
-            
-            let str = JSON.stringify(this.state.data)
-            Cookies.set('appData', str, 43200);
-        }
-        catch(err){
-            alert("Error on setting Cookie appData. See console for more information.");
-            console.log(err);
-        }
+    render(show){
+        return <SourceCodeEditor queryStr={this.queryStr} style={{display: (show ? 'block' : 'none') }} value={this.data} onChange={this.onChange}/>
     }
 
-    onDeleteCustomComponent(item, type){
-        if(!window.confirm("Êtes-vous sur de vouloir supprimer l'item ?")){ return; }
-
-        let tmp = this.state.data;
-
-        if(type === 's'){
-            JsNx.removeItem(tmp.customHtmlComponentList, 'name', item.name);
-        }
-        else{
-            for(let section of tmp.customHtmlComponentList){
-                JsNx.removeItem(section.children, 'name', item.name);
-            }
-        }
-        
-        this.setState({data: tmp}, this.onAfterSaveCustomComponent);
+    onChange(value){
+        this.data = value;
     }
 
-    onImportCustomComponent(fileContent){
-        let tmp = this.state.data;
-        try{
-            let newData = JSON.parse(fileContent);
-            tmp.customHtmlComponentList = tmp.customHtmlComponentList.concat(newData);
-            this.setState({data: tmp}, this.onAfterSaveCustomComponent);
-        }
-        catch(err){
-            alert("Error on importing data. See console for more information.");
-            console.log(err);
-        }
+    getData(){
+        return UtilsHTML.removeTagId(this.data);
     }
 
-    onCreateCanvasElement(el){
-        let result = new CanvasElement(el, this.onSelectElement, this.onDropElement);
-        this.onRefresh();
+    setData(value){
+        this.data = UtilsHTML.assignTagId(value);
+    }
+
+    onSelectElement(el, selectedElement, collapsed){ 
+        this.queryStr = el.getAttribute("data-tag-id") || "";
+        let result = {el: el, collapsed: collapsed };
         return result;
+    }
+
+    onCollapse(collapsed){ 
+        collapsed.components = true;
+        collapsed.properties = true;
+        collapsed.treeView = false;
+        return collapsed;
+    }
+}
+
+class PreviewState extends CanvasState{
+    constructor(mainView){
+        super(mainView);
+
+        this.iFrame = null;
+    }
+
+    onInit(event){
+        this.iFrame = event.target.contentWindow || event.target.contentDocument;
+        let head = this.iFrame.document.head;
+
+        let el = document.createElement("link");
+		el.setAttribute("href", `bootstrap.min.c9ac70f5.css`);
+		el.setAttribute("rel", "stylesheet");
+		head.appendChild(el);
+
+        el = document.createElement("link");
+		el.setAttribute("href", `fontello/css/fontello.css`);
+		el.setAttribute("rel", "stylesheet");
+		head.appendChild(el);
+    }
+
+    render(show){
+        let main = 
+            <Canvas style={{display: (show ? 'flex' : 'none') }}> 
+                <iframe onLoad={this.onInit} className="canvas" style={this.getDeviceDimension()}></iframe>
+            </Canvas>;
+        return main;
+    }
+
+    onSelectElement(el, selectedElement, collapsed){
+        let result = {el: null, collapsed: collapsed};
+        return result;
+    }
+
+    getData(){
+        return this.iFrame.document.body.innerHTML;
+    }
+
+    setData(value){
+        let body = this.iFrame.document.body;
+        body.innerHTML = value;
     }
 }

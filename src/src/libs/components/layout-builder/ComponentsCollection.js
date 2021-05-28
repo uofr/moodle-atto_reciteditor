@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import { IconSelector } from '../iconSelector';
 import { ColorSelector } from '../ColorSelector';
+import {CustomHtmlComponents} from './CustomHtmlComponents';
 
 export class ComponentProperties extends Component{
     static defaultProps = {
@@ -202,9 +203,6 @@ class FormProperties extends Component{
 
 export class VisualComponentList extends Component{
     static defaultProps = {
-        customHtmlComponentList: [],
-        onDeleteCustomComponent: null,
-        onImportCustomComponent: null,
         onDragEnd: null
     };
   
@@ -234,8 +232,7 @@ export class VisualComponentList extends Component{
                 {this.state.tab === "0" && <TokenList dataProvider={HTMLElementData.elementList} onDragEnd={this.props.onDragEnd}/>}
 
                 {this.state.tab === "1" && 
-                                <TokenList dataProvider={this.props.customHtmlComponentList} onDeleteCustomComponent={this.props.onDeleteCustomComponent} 
-                                onImportCustomComponent={this.props.onImportCustomComponent} onDragEnd={this.props.onDragEnd} showMenu={true}/>}
+                                <TokenList dataProvider={CustomHtmlComponents.data} onDragEnd={this.props.onDragEnd} showMenu={true} onChange={this.forceUpdate.bind(this)}/>}
             </div>;
 
         return main;
@@ -250,9 +247,8 @@ class TokenList extends Component{
     static defaultProps = {
         dataProvider: [],
         onDragEnd: null,
-        onDeleteCustomComponent: null,
-        onImportCustomComponent: null,
-        showMenu: false
+        showMenu: false,
+        onChange: null
     };
 
     constructor(props){
@@ -268,7 +264,11 @@ class TokenList extends Component{
         this.state = {showMenu: false, showImport: false, collapsed: {}};
     }
 
-    render(){
+    componentDidMount(){
+        CustomHtmlComponents.onLoad();
+    }
+
+    render(){       
         let main =
             <div className="tab-content">
                 {this.props.showMenu && 
@@ -304,8 +304,8 @@ class TokenList extends Component{
                             </li>
                             {!collapsed && item.children.map((item2, index2) => {
                                 return (<Token showMenu={this.state.showMenu} data={item2} key={index2} onDragEnd={this.props.onDragEnd} 
-                                            onDeleteCustomComponent={this.props.onDeleteCustomComponent} 
-                                            onExport={(event) => this.onExport(event, [{"name": item.name,children: [item2]}])}/>);
+                                            onExport={(event) => this.onExport(event, [{"name": item.name,children: [item2]}])}
+                                            onDelete={this.onDelete}/>);
                             })}
                         </ul>
 
@@ -327,23 +327,25 @@ class TokenList extends Component{
     onImport(event){
         let fileCtrl = event.target;
         
-        if(fileCtrl.length === 0) { return;}
-    
-        let reader = new FileReader();
+        let promise = CustomHtmlComponents.onImport(fileCtrl);
         let that = this;
-		reader.addEventListener('load', function(e) {
-            let content = (e.target.result);
-            that.props.onImportCustomComponent(content);
+
+        promise.then(() => {
+            //console.log("imported")
             that.showImport(false);
-        });
-		reader.readAsText(fileCtrl.files[0]);
+            that.props.onChange();
+        },
+        () => { 
+                //console.log("canceled")
+            }
+        );
     }
 
     onExport(event, item){
         item = item || null
         event.stopPropagation();
 
-        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(item));
+        let dataStr = CustomHtmlComponents.onExport(item);
         let node = document.createElement('a');
         node.setAttribute("href",     dataStr);
         node.setAttribute("download", "my-collection.json");
@@ -363,7 +365,18 @@ class TokenList extends Component{
 
     onDelete(event, item, type){
         event.stopPropagation();
-        this.props.onDeleteCustomComponent(item, type);
+
+        let promise = CustomHtmlComponents.onDelete(item, type);
+        let that = this;
+
+        promise.then(() => {
+           // console.log("deleted")
+            that.props.onChange();
+        },
+        () => { 
+              // console.log("canceled")
+            }
+        );
     }
 }
 
@@ -372,9 +385,9 @@ class Token extends Component
     static defaultProps = {
         data: null,
         onDragEnd: null,
-        onDeleteCustomComponent: null,
         showMenu: false,
-        onExport: null
+        onExport: null,
+        onDelete: null
     };
     
     constructor(props){
@@ -392,7 +405,7 @@ class Token extends Component
                     <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                         <ButtonGroup size="sm">
                             <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faSave} title="Export"/></Button>
-                            <Button onClick={() => this.props.onDeleteCustomComponent(this.props.data)}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                            <Button onClick={(event) => this.props.onDelete(event, this.props.data, 'c')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                 }             

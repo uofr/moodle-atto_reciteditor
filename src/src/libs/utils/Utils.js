@@ -569,3 +569,60 @@ export class UtilsTreeStruct
         return false;
     }*/
 }
+
+export class UtilsHTML{
+
+    static assignTagId(node){
+        let convertToString = false;
+
+        if(typeof node === 'string'){
+            node = new DOMParser().parseFromString(node, "text/html");
+            node = node.body;
+            convertToString = true;
+        }
+
+        let id = 1;
+        let funcRec = function (node) {
+            node.setAttribute("data-tag-id", id++);
+
+            for(let child of node.children){
+                if(child.children.length > 0){
+                    funcRec(child);
+                }
+                else{
+                    child.setAttribute("data-tag-id", id++);
+                }
+            }
+        }
+
+        funcRec(node);
+
+        if(convertToString){
+            node = node.innerHTML;
+        }
+
+        return node;
+    }
+
+    static removeTagId(node){
+        let convertToString = false;
+
+        if(typeof node === 'string'){
+            node = new DOMParser().parseFromString(node, "text/html");
+            node = node.body;
+            convertToString = true;
+        }
+
+        let items = node.querySelectorAll("[data-tag-id]");
+
+        items.forEach(function(item) {
+            item.removeAttribute("data-tag-id");
+        });
+
+        if(convertToString){
+            node = node.innerHTML;
+        }
+
+        return node;
+    }
+}

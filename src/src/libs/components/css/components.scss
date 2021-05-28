@@ -46,7 +46,7 @@
     .center-area{ 
         grid-column-start: 2; grid-column-end: 2; 
         .canvas{
-            margin: auto; background-color: #FFF; border: 0; 
+            background-color: #FFF; border: 0; 
         }        
     }
     .component-list{
@@ -85,7 +85,11 @@
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {background: #555;}
 
-    .CodeMirror{height: calc(100vh - 80px);}
+    .CodeMirror{
+        height: calc(100vh - 80px);
+    }
+
+    
 }
 
 /*****************
