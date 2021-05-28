@@ -1064,10 +1064,10 @@ export class HTMLElementData{
 
                     body.appendChild(slide.cloneNode(true));
 
-                    let btn = document.createElement("button");
+                    let btn = document.createElement("a");
                     btn.classList.add("carousel-control-prev");
-                    btn.setAttribute("type", 'button');
-                    btn.setAttribute("data-bs-slide", 'prev');
+                    btn.setAttribute("role", 'button');
+                    btn.setAttribute("data-slide", 'prev');
                     slider.appendChild(btn);
 
                     el = document.createElement("span");
@@ -1075,25 +1075,15 @@ export class HTMLElementData{
                     el.setAttribute("aria-hidden", 'true');
                     btn.appendChild(el);
 
-                    el = document.createElement("span");
-                    el.classList.add("visually-hidden");
-                    el.innerHTML = "Previous";
-                    btn.appendChild(el);
-
-                    btn = document.createElement("button");
+                    btn = document.createElement("a");
                     btn.classList.add("carousel-control-next");
-                    btn.setAttribute("type", 'button');
-                    btn.setAttribute("data-bs-slide", 'next');
+                    btn.setAttribute("role", 'button');
+                    btn.setAttribute("data-slide", 'next');
                     slider.appendChild(btn);
 
                     el = document.createElement("span");
                     el.classList.add("carousel-control-next-icon");
                     el.setAttribute("aria-hidden", 'true');
-                    btn.appendChild(el);
-
-                    el = document.createElement("span");
-                    el.classList.add("visually-hidden");
-                    el.innerHTML = "Next";
                     btn.appendChild(el);
 
                     return slider;

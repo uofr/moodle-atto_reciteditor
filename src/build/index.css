@@ -56,7 +56,6 @@
     grid-column-start: 2;
     grid-column-end: 2; }
     .layout-builder .center-area .canvas {
-      margin: auto;
       background-color: #FFF;
       border: 0; }
   .layout-builder .component-list ul {
