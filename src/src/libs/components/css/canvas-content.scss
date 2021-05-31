@@ -13,7 +13,9 @@ html.canvas-content{
         div:empty:not(.col):not(.col-12):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before{content: "Div"}
         div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.dropping-zone):not(.carousel-item){ border: $border-invisible-element; }    
         section{border: $border-invisible-element;}
+        table{border: $border-invisible-element;}
         section:empty::before{content: "Section";}
+        table:empty::before{content: "Table";}
 
         .container{ border: $border-invisible-element; padding: 1rem!important; }
         .container-fluid{@extend .container;}
@@ -81,6 +83,11 @@ html.canvas-content{
         .card-footer::after{content: "Fin du card-footer"; @extend .tagName;}
         .carousel-inner::before{content: "Première diapositive"; @extend .tagName;}
         .carousel-inner::after{content: "Dernière diapositive"; @extend .tagName;}
+        table::before,tbody::before{content: "Début de la table"; @extend .tagName;}
+        table::after,tbody::before{content: "Fin de la table"; @extend .tagName;}
+        tr::before{content: "Début de la ligne de la table"; @extend .tagName;}
+        tr::after{content: "Fin de la ligne de la table"; @extend .tagName;}
+        td::after,th::after{content: "Case de la table"; @extend .tagName;}
     } 
 }
 

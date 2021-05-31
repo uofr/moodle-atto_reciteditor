@@ -354,6 +354,52 @@ export class HTMLElementData{
             ]
         },
         {
+            name: 'table', description: 'Table',  type: 'bootstrap',
+            children: [{
+                name: 'tableborder',
+                text: "Bordure",
+                input: { 
+                    type: 'radio',
+                    options: [
+                        {text: "No", value:0},
+                        {text: "Yes", value:1},
+                    ],
+                    onChange: function(el, value, data){
+                        if(value == 1){
+                            el.border = true;
+                        }else{
+                            el.border = false;
+                        }
+                    }
+                },
+                getValue: function(el, data){
+                    return el.border ? 1 : 0;
+                }
+            },
+            {
+                name: 'tablestriped',
+                text: "Striped",
+                input: { 
+                    type: 'radio',
+                    options: [
+                        {text: "No", value:0},
+                        {text: "Yes", value:1},
+                    ],
+                    onChange: function(el, value, data){
+                        if(value == 1){
+                            el.classList.add('table-striped');
+                        }else{
+                            el.classList.remove('table-striped');
+                        }
+                    }
+                },
+                getValue: function(el, data){
+                    return el.classList.contains('table-striped') ? 1 : 0;
+                }
+            },
+        ],
+        },
+        {
             name: 'bs-border', description: 'Bordure',  type: 'bootstrap',
             children: [{
                 name: 'border',
@@ -436,7 +482,7 @@ export class HTMLElementData{
             },
             {
                 name: 'borderradius',
-                text: "Bordur radius",
+                text: "Border radius",
                 input: { 
                     type: 'combobox',
                     options:[
@@ -915,6 +961,23 @@ export class HTMLElementData{
                     el.innerHTML = "<li>List</li>";
                 }
             },
+            {name: "Table", type: 'native', tagName: 'table', properties:  ['table', ...HTMLElementData.propsAssignmentFacade.containers],
+                init:function(el){
+                    el.innerHTML = "<tr><td>Col 1</td><td>Col 2</td></tr>";
+                }
+            },
+            {name: "Table Row", type: 'native', tagName: 'tr', properties: HTMLElementData.propsAssignmentFacade.containers,
+                init:function(el){
+                }
+            },
+            {name: "Table Cell", type: 'native', tagName: 'td', properties: HTMLElementData.propsAssignmentFacade.containers,
+                init:function(el){
+                }
+            },
+            {name: "Table Header", type: 'native', tagName: 'th', properties: HTMLElementData.propsAssignmentFacade.containers,
+                init:function(el){
+                }
+            },
             {name: "List Item", type: 'native', tagName: 'li', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'font', 'layout', 'background'],
                 init:function(el){
                     el.innerText = "Item";
@@ -1237,6 +1300,10 @@ export class HTMLElementData{
         else if(el.classList.contains('alert')){
             result.text = 'Alert';
             result.prefix = 'alert';
+        }
+        else if(el.classList.contains('fa') || (el.classList[0] && el.classList[0].includes('icon-'))){
+            result.text = 'Icon';
+            result.prefix = 'bg';
         }
         else if(el.classList.contains('btn')){
             result.text = 'Button';

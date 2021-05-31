@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Button, Modal, FormControl } from 'react-bootstrap';
 import './assets/fontello/css/fontello.css';
+import './assets/fontawesome/css/fontello.css';
 import fontData from './assets/fontello/config.json';
+import faData from './assets/fontawesome/config.json';
 import { faIcons} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 export class IconSelector extends Component {
@@ -9,6 +11,7 @@ export class IconSelector extends Component {
         name: '',
         text: '',
         value: '',
+        lib: 'fa',
         disabled: false,
     };
     
@@ -20,6 +23,7 @@ export class IconSelector extends Component {
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.state = {modal:false, search: ''};
+        this.icons = {'Fontello': fontData, FontAwesome: faData};
     }
 
 
@@ -38,7 +42,7 @@ export class IconSelector extends Component {
         </Modal.Header>
         <Modal.Body style={{overflowY: 'scroll', maxHeight: '50vh'}}>
             <FormControl className={"InputText"} type="text" value={this.state.search} onChange={this.onSearch} placeholder={"Recherche"} style={{marginLeft: '15px', width: '91%'}}/>
-            <div className={"d-flex flex-wrap"}>
+            <div className={"d-f"}>
                 {items}
             </div>
         </Modal.Body>
@@ -72,12 +76,20 @@ export class IconSelector extends Component {
             'marginBottom': '30px',
         }
         let key = 0;
-        for (let val of icons){
-            items.push(<div key={key} style={style} onClick={() => this.onChange(fontData.css_prefix_text+val.css)}>
-                <i className={fontData.css_prefix_text+val.css} style={{fontSize:'40px'}}></i>
-                <br/>{val.css}
-            </div>);
+        for (let cat in icons){
+            items.push(<h3 key={key}>{cat}</h3>)
             key++;
+            let content = [];
+            for (let val of icons[cat]){
+                content.push(<div key={key} style={style} onClick={() => this.onChange(this.icons[cat].css_prefix_text+val.css)}>
+                    <i className={this.icons[cat].css_prefix_text+val.css} style={{fontSize:'40px'}}></i>
+                    <br/>{val.css}
+                </div>);
+                key++;
+            }
+            items.push(<div className={"d-flex flex-wrap"}>
+            {content}
+        </div>)
         }
         return items;
     }
@@ -93,10 +105,13 @@ export class IconSelector extends Component {
     
     getIconList(search){
         let iconList = [];
-        for (let val of fontData.glyphs) {
-            if (!search || val.css.includes(search)){
-                var code = ""+ String.fromCharCode(val.code)+"";
-                iconList.push( {value: fontData.css_prefix_text+ val.css, text: code + " " + val.css, css: val.css} );
+        for (let cat in this.icons){
+            iconList[cat] = [];
+            for (let val of this.icons[cat].glyphs) {
+                if (!search || val.css.includes(search)){
+                    var code = ""+ String.fromCharCode(val.code)+"";
+                    iconList[cat].push( {value: this.icons[cat].css_prefix_text+ val.css, text: code + " " + val.css, css: val.css} );
+                }
             }
         }
         return iconList;
