@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button  } from 'react-bootstrap';
 import { faFile, faSave, faTrashAlt, faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
-import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox} from '../Components';
+import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox, TableActions} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import { IconSelector } from '../iconSelector';
@@ -169,6 +169,10 @@ class FormProperties extends Component{
                 break;
             case 'colorselector':
                 result = <ColorSelector name={data.name} value={value} options={data.input.options}
+                                onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'tableactions':
+                result = <TableActions showRmCol={data.input.showRmCol}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
            /* case 'number':

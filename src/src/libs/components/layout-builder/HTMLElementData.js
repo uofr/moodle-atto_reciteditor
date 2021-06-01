@@ -354,8 +354,78 @@ export class HTMLElementData{
             ]
         },
         {
+            name: 'tablecell', description: 'Table',  type: 'bootstrap',
+            children: [{
+                name: 'tableaction',
+                text: "Actions",
+                input: { 
+                    type: 'tableactions',
+                    showRmCol: true,
+                    onChange: function(el, value, data){
+                        let table = el.parentElement.parentElement;
+                        if (value == 'rmcol'){
+                            for (let row of table.rows){
+                                row.deleteCell(el.cellIndex);
+                            }
+                        }else if (value == 'addcol'){
+                            for (let row of table.rows){
+                                let td = document.createElement('td');
+                                td.innerHTML = 'N/A';
+                                row.appendChild(td);
+                            }
+                        }else if (value == 'addline'){
+                            let td = document.createElement('tr');
+                            let tr = table.children[0];
+                            if (tr){
+                                let count = tr.children.length;
+                                for (let i = 0; i < count; i++){
+                                    td.innerHTML = td.innerHTML + '<td></td>';
+                                }
+                                table.appendChild(td);
+                            }
+                        }
+                    }
+                },
+                getValue: function(el, data){
+                    return el;
+                }
+            },]
+        },
+        {
             name: 'table', description: 'Table',  type: 'bootstrap',
             children: [{
+                name: 'tableaction',
+                text: "Actions",
+                input: { 
+                    type: 'tableactions',
+                    showRmCol: false,
+                    onChange: function(el, value, data){
+                        let table = el;
+                        if (value == 'addcol'){
+                            let rows = table.querySelectorAll('tr');
+                            for (let row of rows){
+                                let td = document.createElement('td');
+                                td.innerHTML = '';
+                                row.appendChild(td);
+                            }
+                        }else if (value == 'addline'){
+                            let td = document.createElement('tr');
+                            let tr = table.children[0];
+                            if (tr){
+                                let count = tr.children.length;
+                                for (let i = 0; i < count; i++){
+                                    td.innerHTML = td.innerHTML + '<td></td>';
+                                }
+                                table.appendChild(td);
+                            }
+                        }
+                    }
+                },
+                getValue: function(el, data){
+                    return el;
+                }
+            },
+            {
                 name: 'tableborder',
                 text: "Bordure",
                 input: { 
@@ -963,19 +1033,19 @@ export class HTMLElementData{
             },
             {name: "Table", type: 'native', tagName: 'table', properties:  ['table', ...HTMLElementData.propsAssignmentFacade.containers],
                 init:function(el){
-                    el.innerHTML = "<tr><td>Col 1</td><td>Col 2</td></tr>";
+                    for (let i = 0; i < 5; i++){
+                        let row = document.createElement('tr');
+                        el.appendChild(row);
+                        for (let j = 0; j < 5; j++){
+                            let cell = document.createElement('td')
+                            row.appendChild(cell)
+                        }
+                    }
                 }
             },
-            {name: "Table Row", type: 'native', tagName: 'tr', properties: HTMLElementData.propsAssignmentFacade.containers,
+            {name: "Table Cell", type: 'native', tagName: 'td', properties:  ['tablecell', ...HTMLElementData.propsAssignmentFacade.containers],
                 init:function(el){
-                }
-            },
-            {name: "Table Cell", type: 'native', tagName: 'td', properties: HTMLElementData.propsAssignmentFacade.containers,
-                init:function(el){
-                }
-            },
-            {name: "Table Header", type: 'native', tagName: 'th', properties: HTMLElementData.propsAssignmentFacade.containers,
-                init:function(el){
+                    el.innerHTML = "Cell";
                 }
             },
             {name: "List Item", type: 'native', tagName: 'li', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'font', 'layout', 'background'],

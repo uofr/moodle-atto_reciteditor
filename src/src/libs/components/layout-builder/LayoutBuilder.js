@@ -551,7 +551,7 @@ class PreviewState extends CanvasState{
 		head.appendChild(el);
 
         el = document.createElement("link");
-		el.setAttribute("href", `fontawesome/css/fontello.css`);
+		el.setAttribute("href", `fontawesome/css/all.css`);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
     }

@@ -11,6 +11,7 @@ export * from './ComboBox';
 export * from './InputColor';
 export * from './MultipleSelect';
 export * from './MinValueMax';
+export * from './TableActions'
 export * from './LayoutSpacingEditor';
 export * from './LayoutSpacing';
 export * from './RecitRichEditor';

@@ -27,6 +27,8 @@ html.canvas-content{
         .card-header:empty::before{content: "Header"; }
         .card-body:empty::before{content: "Body"; }
         .card-footer:empty::before{content: "Footer"; }
+        td:empty::before{content: "cell";}
+        td:empty{min-width: 50px;min-height: 15px;}
 
         .carousel, .carousel-inner{ border: none !important; }
         .slide-pos{ position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 45px; font-weight: 100;color: #fff;}
