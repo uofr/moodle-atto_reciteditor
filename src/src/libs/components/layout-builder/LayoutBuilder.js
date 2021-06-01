@@ -329,6 +329,11 @@ class DrawnerState extends CanvasState{
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
+        el = document.createElement("link");
+		el.setAttribute("href", `fontawesome/css/font-awesome.css`);
+		el.setAttribute("rel", "stylesheet");
+		head.appendChild(el);
+
         body.parentElement.classList.add("canvas-content");
 
         // pure JS
@@ -551,7 +556,7 @@ class PreviewState extends CanvasState{
 		head.appendChild(el);
 
         el = document.createElement("link");
-		el.setAttribute("href", `fontawesome/css/all.css`);
+		el.setAttribute("href", `fontawesome/css/font-awesome.css`);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
     }

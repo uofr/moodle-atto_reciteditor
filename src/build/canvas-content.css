@@ -38,8 +38,13 @@ html.canvas-content {
     html.canvas-content body .card-footer:empty::before {
       content: "Footer"; }
     html.canvas-content body td:empty::before {
-      content: "cell"; }
+      content: "Cell"; }
     html.canvas-content body td:empty {
+      min-width: 50px;
+      min-height: 15px; }
+    html.canvas-content body th:empty::before {
+      content: "Cell Header"; }
+    html.canvas-content body th:empty {
       min-width: 50px;
       min-height: 15px; }
     html.canvas-content body .carousel, html.canvas-content body .carousel-inner {

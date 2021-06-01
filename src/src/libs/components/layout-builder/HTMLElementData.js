@@ -370,7 +370,7 @@ export class HTMLElementData{
                         }else if (value == 'addcol'){
                             for (let row of table.rows){
                                 let td = document.createElement('td');
-                                td.innerHTML = 'N/A';
+                                td.innerHTML = '';
                                 row.appendChild(td);
                             }
                         }else if (value == 'addline'){
@@ -438,7 +438,7 @@ export class HTMLElementData{
                         if(value == 1){
                             el.border = true;
                         }else{
-                            el.border = false;
+                            el.removeAttribute('border');
                         }
                     }
                 },
@@ -1033,11 +1033,16 @@ export class HTMLElementData{
             },
             {name: "Table", type: 'native', tagName: 'table', properties:  ['table', ...HTMLElementData.propsAssignmentFacade.containers],
                 init:function(el){
+                    el.classList.add('table')
+                    let tbody = document.createElement('tbody')
+                    el.appendChild(tbody)
                     for (let i = 0; i < 5; i++){
                         let row = document.createElement('tr');
-                        el.appendChild(row);
+                        tbody.appendChild(row);
                         for (let j = 0; j < 5; j++){
-                            let cell = document.createElement('td')
+                            let tag = 'td';
+                            if (i == 0) tag = 'th'
+                            let cell = document.createElement(tag)
                             row.appendChild(cell)
                         }
                     }
@@ -1400,6 +1405,21 @@ export class HTMLElementData{
         else if(el.classList.contains('carousel-control-prev') || el.classList.contains('carousel-control-next')){
             result.text = 'Carousel Navigation';
             result.prefix = 'bg';
+        }
+        else if(el.tagName == 'TH'){
+            result.text = 'Table Heading';
+            result.prefix = 'th';
+            result.tagName = 'td';
+        }
+        else if(el.tagName == 'TD'){
+            result.text = 'Table Cell';
+            result.prefix = 'td';
+            result.tagName = 'td';
+        }
+        else if(el.tagName == 'TR'){
+            result.text = 'Table Row';
+            result.prefix = 'tr';
+            result.tagName = 'tr';
         }
         /*else if(el.className.search('text-') >=0 ){
             result.text = 'Text';
