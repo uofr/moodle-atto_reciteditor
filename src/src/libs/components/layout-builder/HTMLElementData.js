@@ -369,8 +369,9 @@ export class HTMLElementData{
                             }
                         }else if (value == 'addcol'){
                             for (let row of table.rows){
-                                let td = document.createElement('td');
-                                td.innerHTML = '';
+                                let tag = 'td';
+                                if (row.children[0] && row.children[0].tagName == 'TH') tag = 'th';
+                                let td = document.createElement(tag);
                                 row.appendChild(td);
                             }
                         }else if (value == 'addline'){
@@ -404,8 +405,9 @@ export class HTMLElementData{
                         if (value == 'addcol'){
                             let rows = table.querySelectorAll('tr');
                             for (let row of rows){
-                                let td = document.createElement('td');
-                                td.innerHTML = '';
+                                let tag = 'td';
+                                if (row.children[0] && row.children[0].tagName == 'TH') tag = 'th';
+                                let td = document.createElement(tag);
                                 row.appendChild(td);
                             }
                         }else if (value == 'addline'){
