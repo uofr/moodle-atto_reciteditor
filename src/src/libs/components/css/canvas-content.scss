@@ -20,7 +20,7 @@ html.canvas-content{
         .container{ border: $border-invisible-element; padding: 1rem!important; }
         .container-fluid{@extend .container;}
         .row{ border: $border-invisible-element;  padding: 1rem; }
-        .col{ border: $border-invisible-element; min-height: 30px;}
+        .col, .col-12{ border: $border-invisible-element; min-height: 30px;}
 
         .btn:empty::after{content: "Button"}
         .alert:empty::after{content: "Alerte"}

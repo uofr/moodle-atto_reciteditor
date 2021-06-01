@@ -24,7 +24,7 @@ html.canvas-content {
     html.canvas-content body .row {
       border: 2px dashed #c9c5c5;
       padding: 1rem; }
-    html.canvas-content body .col {
+    html.canvas-content body .col, html.canvas-content body .col-12 {
       border: 2px dashed #c9c5c5;
       min-height: 30px; }
     html.canvas-content body .btn:empty::after {

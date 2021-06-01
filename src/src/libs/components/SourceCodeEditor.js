@@ -36,15 +36,7 @@ export class SourceCodeEditor extends Component{
     }
 
     setCursor(prevProps){
-        console.log(this.props.queryStr)
         if((prevProps.queryStr !== this.props.queryStr) && (this.props.queryStr.length > 0)){
-            /*let match = this.props.queryStr.match(/<.+?>/g) || [];
-            if(match.length >= 0){
-                let pos = this.state.data.search(match[0]);   
-                let row = (this.state.data.substr(0, pos).match(/\n/g) || []).length;
-                this.codeMirror.current.editor.focus();
-                this.codeMirror.current.editor.setCursor({line: row, char: 0});
-            }*/
             let pos = this.state.data.search(`data-tag-id="${this.props.queryStr}"`);
             let line = (this.state.data.substr(0, pos).match(/\n/g) || []).length;
             this.codeMirror.current.editor.focus();
@@ -56,7 +48,7 @@ export class SourceCodeEditor extends Component{
         let main = 
             <div style={this.props.style}>
                 <CodeMirror2 ref={this.codeMirror} value={this.state.data}
-                        options={{mode: 'text/html', tabSize: 4, theme: 'material', lineNumbers: true, electricChars: true, autofocus: true}} 
+                        options={{mode: 'text/html', tabSize: 4, theme: 'material', lineNumbers: true, electricChars: true, autofocus: true, lineWrapping: true}} 
                         onBeforeChange={this.onBeforeChange}/>
             </div>;
 

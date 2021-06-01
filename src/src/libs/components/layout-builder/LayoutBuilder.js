@@ -189,7 +189,7 @@ class MainView extends Component{
 
     onDragEnd(){
         this.canvasState[this.state.canvasState].onDragEnd();
-        this.forceUpdate();
+        this.setState({selectedElement: null});
     }
 
     onSelectElement(el){
@@ -293,7 +293,7 @@ class CanvasState{
             case 'md': device = {width: 768, height: 1050}; break;
             case 'lg': device = {width: 992, height: 1050}; break;
             case 'xl':
-            default: device = {width: 1200, height: 1050}; 
+            default: device = {width: 1500, height: 1050}; 
         }
 
         return device;
@@ -374,7 +374,7 @@ class DrawnerState extends CanvasState{
             result.collapsed.leftPanelOnHover = false;
             result.el = null;
         }
-        else if(selectedElement !== null){ 
+       /* else if(selectedElement !== null){ 
             this.htmlCleaning();
             
             result.collapsed.components = false;
@@ -382,7 +382,7 @@ class DrawnerState extends CanvasState{
             result.collapsed.leftPanelOnHover = false;
             result.el = null;
             return result; 
-        }
+        }*/
         else{
             this.htmlCleaning();
 
@@ -505,7 +505,9 @@ class SourceCodeState extends CanvasState{
     }
 
     render(show){
-        return <SourceCodeEditor queryStr={this.queryStr} style={{display: (show ? 'block' : 'none') }} value={this.data} onChange={this.onChange}/>
+        let style = this.getDeviceDimension();
+        style.display = (show ? 'block' : 'none');
+        return <SourceCodeEditor queryStr={this.queryStr} style={style} value={this.data} onChange={this.onChange}/>
     }
 
     onChange(value){

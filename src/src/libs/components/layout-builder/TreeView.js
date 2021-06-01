@@ -18,7 +18,14 @@ export class TreeView extends Component{
 
         this.onCollapse = this.onCollapse.bind(this);
 
-        this.state = {collapsed: {}};
+        this.state = {notCollapsed: {}};
+    }
+
+    componentDidUpdate(prevProps, prevState){
+        // when the selected element is changed then it collapses all branches
+        if(!Object.is(prevProps.selectedElement, this.props.selectedElement)){
+            this.setState({notCollapsed: {}});
+        }
     }
 
     render(){
@@ -43,8 +50,15 @@ export class TreeView extends Component{
         let result = null;
            
         let selected = (this.props.selectedElement === node.dom ? 'disabled btn-warning' : '');
+
+        if(selected){
+            //node.dom.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+            
+            console.log(node.dom.scrollHeight , node.dom.getBoundingClientRect())
+        }
+
         let btn = <Button variant="link" className={`p-1 ${selected}`} onClick={() => this.props.onSelect(node.dom)} >{` ${node.text}`}</Button>;
-        let icon = (this.state.collapsed[id] ? faAngleRight : faAngleDown);
+        let icon = (this.state.notCollapsed[id] ? faAngleDown : faAngleRight);
 
         if(node.children.length > 0){
             result = 
@@ -53,7 +67,7 @@ export class TreeView extends Component{
                         <FontAwesomeIcon className="mr-1" icon={icon} onClick={(event) => this.onCollapse(event, id)}/>
                         {btn}
                     </span>
-                    {!this.state.collapsed[id] &&
+                    {(this.state.notCollapsed[id] || node.dom.contains(this.props.selectedElement)) &&
                         <ul>
                             {node.children.map((item, index) => {
                                 key = key + 1
@@ -104,8 +118,8 @@ export class TreeView extends Component{
         event.stopPropagation();
         event.preventDefault();
 
-        let collapsed = this.state.collapsed;
-        collapsed[id] = !collapsed[id] || false;
-        this.setState({collapsed: collapsed});
+        let notCollapsed = this.state.notCollapsed;
+        notCollapsed[id] = !notCollapsed[id] || false;
+        this.setState({notCollapsed: notCollapsed});
     }
 }

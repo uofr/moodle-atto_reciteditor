@@ -74,7 +74,7 @@
     }
 
     /* width */
-    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar { width: 4px; height: 4px;}
   
     /* Track */
     ::-webkit-scrollbar-track { background: #f1f1f1; }
@@ -84,12 +84,13 @@
   
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {background: #555;}
-
-    .CodeMirror{
-        height: calc(100vh - 80px);
-    }
-
     
+    .react-codemirror2{
+        height: 100%;
+        .CodeMirror {
+            height: 100%;
+        }
+    }
 }
 
 /*****************
