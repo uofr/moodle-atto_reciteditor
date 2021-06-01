@@ -51,12 +51,6 @@ export class TreeView extends Component{
            
         let selected = (this.props.selectedElement === node.dom ? 'disabled btn-warning' : '');
 
-        if(selected){
-            //node.dom.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
-            
-            console.log(node.dom.scrollHeight , node.dom.getBoundingClientRect())
-        }
-
         let btn = <Button variant="link" className={`p-1 ${selected}`} onClick={() => this.props.onSelect(node.dom)} >{` ${node.text}`}</Button>;
         let icon = (this.state.notCollapsed[id] ? faAngleDown : faAngleRight);
 

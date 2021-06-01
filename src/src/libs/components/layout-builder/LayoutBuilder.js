@@ -10,6 +10,7 @@ import {CustomHtmlComponents} from './CustomHtmlComponents';
 import {SourceCodeEditor} from '../Components';
 import { HTMLElementData } from './HTMLElementData';
 import {UtilsHTML} from '../../utils/Utils';
+import "../css/content.scss";
 
 export class LayoutBuilder extends Component
 {
@@ -130,7 +131,7 @@ class MainView extends Component{
 
     render(){
         let main =
-            <div className="main">
+            <div className="main" data-left-area-collapsed={(this.props.leftPanel ? "1" : "0")}>
                 <div className="left-area" onMouseLeave={this.onMouseLeave} >
                     {this.props.leftPanel && !this.state.collapsed.leftPanelOnHover ? 
                         <div className="panel" data-status='close' onMouseEnter={this.onMouseEnter} >
@@ -245,7 +246,7 @@ class MainView extends Component{
     }
 
     onMouseLeave(){
-        if(this.props.leftPanel && this.state.selectedElement === null){
+        if(this.props.leftPanel){
             this.setCollapse('leftPanelOnHover');
         }
     }
@@ -371,7 +372,7 @@ class DrawnerState extends CanvasState{
             
             result.collapsed.components = false;
             result.collapsed.properties = true;
-            result.collapsed.leftPanelOnHover = false;
+           // result.collapsed.leftPanelOnHover = false;
             result.el = null;
         }
        /* else if(selectedElement !== null){ 
@@ -404,7 +405,7 @@ class DrawnerState extends CanvasState{
     
             result.collapsed.components = true;
             result.collapsed.properties = false;
-            result.collapsed.leftPanelOnHover = true;
+            //result.collapsed.leftPanelOnHover = true;
         }
 
         return result;
