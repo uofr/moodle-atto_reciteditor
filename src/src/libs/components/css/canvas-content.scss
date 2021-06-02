@@ -13,9 +13,9 @@ html.canvas-content{
         div:empty:not(.col):not(.col-12):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before{content: "Div"}
         div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.dropping-zone):not(.carousel-item){ border: $border-invisible-element; }    
         section{border: $border-invisible-element;}
-        table{border: $border-invisible-element;}
+        table{border: $border-invisible-element; border-width: 3px;}
         section:empty::before{content: "Section";}
-        table:empty::before{content: "Table";}
+        
 
         .container{ border: $border-invisible-element; padding: 1rem!important; }
         .container-fluid{@extend .container;}
