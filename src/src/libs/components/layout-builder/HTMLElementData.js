@@ -1338,7 +1338,7 @@ export class HTMLElementData{
             result.tagName = 'grid';
             result.prefix = 'bg';
         }
-        else if(el.classList.contains('col')){
+        else if(el.classList.contains('col') || el.classList.contains('col-12')){
             result.text = 'Col';
             result.tagName = 'grid';
             result.prefix = 'bg';
