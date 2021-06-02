@@ -7,6 +7,7 @@ import {HTMLElementData} from './HTMLElementData';
 import { IconSelector } from '../iconSelector';
 import { ColorSelector } from '../ColorSelector';
 import {CustomHtmlComponents} from './CustomHtmlComponents';
+import { TemplateList, Templates } from './Templates';
 
 export class ComponentProperties extends Component{
     static defaultProps = {
@@ -237,6 +238,9 @@ export class VisualComponentList extends Component{
 
                 {this.state.tab === "1" && 
                                 <TokenList dataProvider={CustomHtmlComponents.data} onDragEnd={this.props.onDragEnd} showMenu={true} onChange={this.forceUpdate.bind(this)}/>}
+
+                {this.state.tab === "2" &&
+                                <TemplateList dataProvider={Templates.data} onDragEnd={this.props.onDragEnd} onChange={this.forceUpdate.bind(this)}/>}
             </div>;
 
         return main;
