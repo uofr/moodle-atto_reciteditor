@@ -394,125 +394,7 @@ export class HTMLElementData{
                 }
             }
             ]
-        },
-        {
-            name: 'tablecell', description: 'Table',  type: 'bootstrap',
-            children: [{
-                name: 'tableaction',
-                text: "Actions",
-                input: { 
-                    type: 'tableactions',
-                    showRmCol: true,
-                    onChange: function(el, value, data){
-                        let table = el.parentElement.parentElement;
-                        if (value == 'rmcol'){
-                            for (let row of table.rows){
-                                row.deleteCell(el.cellIndex);
-                            }
-                        }else if (value == 'addcol'){
-                            for (let row of table.rows){
-                                let tag = 'td';
-                                if (row.children[0] && row.children[0].tagName == 'TH') tag = 'th';
-                                let td = document.createElement(tag);
-                                row.appendChild(td);
-                            }
-                        }else if (value == 'addline'){
-                            let td = document.createElement('tr');
-                            let tr = table.children[0];
-                            if (tr){
-                                let count = tr.children.length;
-                                for (let i = 0; i < count; i++){
-                                    td.innerHTML = td.innerHTML + '<td></td>';
-                                }
-                                table.appendChild(td);
-                            }
-                        }
-                    }
-                },
-                getValue: function(el, data){
-                    return el;
-                }
-            },]
-        },
-        {
-            name: 'table', description: 'Table',  type: 'bootstrap',
-            children: [{
-                name: 'tableaction',
-                text: "Actions",
-                input: { 
-                    type: 'tableactions',
-                    showRmCol: false,
-                    onChange: function(el, value, data){
-                        let table = el;
-                        if (value == 'addcol'){
-                            let rows = table.querySelectorAll('tr');
-                            for (let row of rows){
-                                let tag = 'td';
-                                if (row.children[0] && row.children[0].tagName == 'TH') tag = 'th';
-                                let td = document.createElement(tag);
-                                row.appendChild(td);
-                            }
-                        }else if (value == 'addline'){
-                            let td = document.createElement('tr');
-                            let tr = table.children[0];
-                            if (tr){
-                                let count = tr.children.length;
-                                for (let i = 0; i < count; i++){
-                                    td.innerHTML = td.innerHTML + '<td></td>';
-                                }
-                                table.appendChild(td);
-                            }
-                        }
-                    }
-                },
-                getValue: function(el, data){
-                    return el;
-                }
-            },
-            {
-                name: 'tableborder',
-                text: "Bordure",
-                input: { 
-                    type: 'radio',
-                    options: [
-                        {text: "No", value:0},
-                        {text: "Yes", value:1},
-                    ],
-                    onChange: function(el, value, data){
-                        if(value == 1){
-                            el.border = true;
-                        }else{
-                            el.removeAttribute('border');
-                        }
-                    }
-                },
-                getValue: function(el, data){
-                    return el.border ? 1 : 0;
-                }
-            },
-            {
-                name: 'tablestriped',
-                text: "Striped",
-                input: { 
-                    type: 'radio',
-                    options: [
-                        {text: "No", value:0},
-                        {text: "Yes", value:1},
-                    ],
-                    onChange: function(el, value, data){
-                        if(value == 1){
-                            el.classList.add('table-striped');
-                        }else{
-                            el.classList.remove('table-striped');
-                        }
-                    }
-                },
-                getValue: function(el, data){
-                    return el.classList.contains('table-striped') ? 1 : 0;
-                }
-            },
-        ],
-        },
+        },                
         {
             name: 'bs-border', description: 'Bordure',  type: 'bootstrap',
             children: [{
@@ -639,6 +521,26 @@ export class HTMLElementData{
         {
             name: 'bs-general', description: "De base",  type: 'bootstrap',
             children: [
+                {
+                    name: 'classlist', 
+                    text: "Liste des classes",
+                    input: { 
+                        type: 'multipleselect',
+                        flags: {autoAdd: true, showLabel: true},
+                        options: [], 
+                        defaultValue: '',
+                        onChange: function(el, value, data){
+                            el.className = value.join(' ');
+                        }
+                    },
+                    getValue: function(el, data){
+                        let list = [];
+                        for (let c of el.classList){
+                            list.push({value:c, text:c});
+                        }
+                        return list;
+                    }
+                },
                 {
                     name: 'background',
                     text: "Couleur de l'arrière plan",
@@ -892,26 +794,6 @@ export class HTMLElementData{
             name: 'htmlattributes', description: 'Attributs HTML',  type: 'htmlattr',
             children: [
                 {
-                    name: 'classlist', 
-                    text: "Liste des classes",
-                    input: { 
-                        type: 'multipleselect',
-                        flags: {autoAdd: true, showLabel: true},
-                        options: [], 
-                        defaultValue: '',
-                        onChange: function(el, value, data){
-                            el.className = value.join(' ');
-                        }
-                    },
-                    getValue: function(el, data){
-                        let list = [];
-                        for (let c of el.classList){
-                            list.push({value:c, text:c});
-                        }
-                        return list;
-                    }
-                },
-                {
                     name: 'id', 
                     text: 'ID',
                     input: { 
@@ -924,15 +806,133 @@ export class HTMLElementData{
                     getValue: function(el){
                         return el.getAttribute("id") || "";
                     }
-                }
+                },
             ]
+        },
+        {
+            name: 'table', description: 'Table',  type: 'bootstrap',
+            children: [{
+                name: 'tableaction',
+                text: "Actions",
+                input: { 
+                    type: 'tableactions',
+                    showRmCol: false,
+                    onChange: function(el, value, data){
+                        let table = el;
+                        if (value == 'addcol'){
+                            let rows = table.querySelectorAll('tr');
+                            for (let row of rows){
+                                let tag = 'td';
+                                if (row.children[0] && row.children[0].tagName == 'TH') tag = 'th';
+                                let td = document.createElement(tag);
+                                row.appendChild(td);
+                            }
+                        }else if (value == 'addline'){
+                            let td = document.createElement('tr');
+                            let tr = table.children[0];
+                            if (tr){
+                                let count = tr.children.length;
+                                for (let i = 0; i < count; i++){
+                                    td.innerHTML = td.innerHTML + '<td></td>';
+                                }
+                                table.appendChild(td);
+                            }
+                        }
+                    }
+                },
+                getValue: function(el, data){
+                    return el;
+                }
+            },
+            {
+                name: 'tableborder',
+                text: "Bordure",
+                input: { 
+                    type: 'radio',
+                    options: [
+                        {text: "No", value:0},
+                        {text: "Yes", value:1},
+                    ],
+                    onChange: function(el, value, data){
+                        if(value == 1){
+                            el.border = true;
+                        }else{
+                            el.removeAttribute('border');
+                        }
+                    }
+                },
+                getValue: function(el, data){
+                    return el.border ? 1 : 0;
+                }
+            },
+            {
+                name: 'tablestriped',
+                text: "Striped",
+                input: { 
+                    type: 'radio',
+                    options: [
+                        {text: "No", value:0},
+                        {text: "Yes", value:1},
+                    ],
+                    onChange: function(el, value, data){
+                        if(value == 1){
+                            el.classList.add('table-striped');
+                        }else{
+                            el.classList.remove('table-striped');
+                        }
+                    }
+                },
+                getValue: function(el, data){
+                    return el.classList.contains('table-striped') ? 1 : 0;
+                }
+            },
+            ],
+        },
+        {
+            name: 'tablecell', description: 'Table',  type: 'bootstrap',
+            children: [{
+                name: 'tableaction',
+                text: "Actions",
+                input: { 
+                    type: 'tableactions',
+                    showRmCol: true,
+                    onChange: function(el, value, data){
+                        let table = el.parentElement.parentElement;
+                        if (value == 'rmcol'){
+                            for (let row of table.rows){
+                                row.deleteCell(el.cellIndex);
+                            }
+                        }else if (value == 'addcol'){
+                            for (let row of table.rows){
+                                let tag = 'td';
+                                if (row.children[0] && row.children[0].tagName == 'TH') tag = 'th';
+                                let td = document.createElement(tag);
+                                row.appendChild(td);
+                            }
+                        }else if (value == 'addline'){
+                            let td = document.createElement('tr');
+                            let tr = table.children[0];
+                            if (tr){
+                                let count = tr.children.length;
+                                for (let i = 0; i < count; i++){
+                                    td.innerHTML = td.innerHTML + '<td></td>';
+                                }
+                                table.appendChild(td);
+                            }
+                        }
+                    }
+                },
+                getValue: function(el, data){
+                    return el;
+                }
+            },]
         }
     ];
 
     static propsAssignmentFacade = {
-        text: ['bs-text', 'bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'marginborderpadding', 'font', 'layout', 'background'],
-        controls: ['bs-text', 'bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'marginborderpadding', 'font', 'layout', 'background'],
-        containers: ['bs-text', 'bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'layout', 'background'],
+        text: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'marginborderpadding', 'font', 'layout', 'background'],
+        controls: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'marginborderpadding', 'font', 'layout', 'background'],
+        containers: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'layout', 'background'],
 
     }
 
@@ -1090,11 +1090,13 @@ export class HTMLElementData{
                     el.innerHTML = "<li>List</li>";
                 }
             },
-            {name: "Table", type: 'native', tagName: 'table', properties:  ['table', ...HTMLElementData.propsAssignmentFacade.containers],
-                init:function(el){
+            {name: "Table", type: 'bootstrap', tagName: 'table', properties:  ['table', ...HTMLElementData.propsAssignmentFacade.containers],
+                create:function(){
+                    let el = document.createElement('table');
                     el.classList.add('table')
                     let tbody = document.createElement('tbody')
                     el.appendChild(tbody)
+                   
                     for (let i = 0; i < 5; i++){
                         let row = document.createElement('tr');
                         tbody.appendChild(row);
@@ -1105,6 +1107,8 @@ export class HTMLElementData{
                             row.appendChild(cell)
                         }
                     }
+
+                    return el;
                 }
             },
             {name: "Table Cell", type: 'native', tagName: 'td', properties:  ['tablecell', ...HTMLElementData.propsAssignmentFacade.containers],
