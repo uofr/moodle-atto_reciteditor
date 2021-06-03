@@ -562,6 +562,16 @@ class PreviewState extends CanvasState{
 		el.setAttribute("href", `fontawesome/css/font-awesome.css`);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
+
+        el = document.createElement("link");
+		el.setAttribute("href", `editor/style.css`);
+		el.setAttribute("rel", "stylesheet");
+		head.appendChild(el);
+
+        el = document.createElement("script");
+		el.setAttribute("src", `editor/script.js`);
+		el.setAttribute("type", "text/javascript");
+		head.appendChild(el);
     }
 
     render(show){

@@ -1,0 +1,23 @@
+.r_popup-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #000;
+    opacity: 0.5;
+    filter: alpha(opacity = 50); /* required for opacity to work in IE */
+}
+
+.r_popup {
+    width: 90vh;
+    height: 90vh;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.r_popup iframe {
+    width: 100%;
+    height: 85vh;
+    border: 0;
+}

@@ -284,7 +284,7 @@ export class TemplateList extends Component{
                 let MAX_HEIGHT = 600;
                 let fileType = "png"
                 Utils.resizeImageFromSize(data, MAX_WIDTH, MAX_HEIGHT, fileType, function(img){
-                    Templates.onSave(name, img, iframe.contentDocument.innerHTML).then(function(data){                
+                    Templates.onSave(name, img, body.innerHTML).then(function(data){                
                         alert('success');
                         self.props.onChange();
                     });

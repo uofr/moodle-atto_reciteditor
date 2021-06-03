@@ -244,7 +244,7 @@ export class HTMLElementData{
                         }
                     },
                     getValue: function(el){
-                        return el.getAttribute('data-videourl');
+                        return el.getAttribute('data-videourl') || '';
                     }
                 }
             ]
