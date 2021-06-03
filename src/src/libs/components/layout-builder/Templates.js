@@ -226,7 +226,7 @@ export class TemplateList extends Component{
                     <Modal.Title>Vitrine</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <iframe src='https://recitfad.ca/moodledocs/vitrine/index.php'/>
+                    <iframe src='https://recitfad.ca/moodledocs/vitrine_editeur_v2/index.php'/>
                 </Modal.Body>
             </Modal>}
             
