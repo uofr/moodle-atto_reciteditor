@@ -231,6 +231,48 @@ export class HTMLElementData{
             ]
         },
         {
+            name: 'videobtn', description: 'Source',  type: 'htmlattr',
+            children: [
+                {
+                    name: 'src', 
+                    text: 'Video embed URL',
+                    input: { 
+                        type: 'text', 
+                        defaultValue: '',
+                        onChange: function(el, value, data){
+                            el.setAttribute('data-videourl', value);
+                        }
+                    },
+                    getValue: function(el){
+                        return el.getAttribute('data-videourl');
+                    }
+                }
+            ]
+        },
+        {
+            name: 'videosource', description: 'Source',  type: 'htmlattr',
+            children: [
+                {
+                    name: 'src', 
+                    text: 'Video embed URL',
+                    input: {
+                        type: 'text', 
+                        defaultValue: '',
+                        onChange: function(el, value, data){
+                            let iframe = el;
+                            if (el.tagName == 'DIV') iframe = el.querySelector('iframe');
+                            iframe.src = value;
+                        }
+                    },
+                    getValue: function(el){
+                        let iframe = el;
+                        if (el.tagName == 'DIV') iframe = el.querySelector('iframe');
+                        return iframe.src;
+                    }
+                }
+            ]
+        },
+        {
             name: 'marginborderpadding', description: 'Marge - Bordure - Padding',  type: 'styleattr',
             children: [{
                 name: 'layoutspacing',
@@ -959,12 +1001,27 @@ export class HTMLElementData{
                      el.setAttribute('controls', '');
                 }, 
             },
-            {name: "Video", type: 'native', tagName: 'video', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'source', 'layout'],
-                init:function(el){
-                    el.width = "320";
-                    el.height = "240";
-                    el.setAttribute('controls', ''); 
-                    //el.setAttribute('src', 'https://recitfad.ca/moodledocs/images/image206.png'); //video placeholder?
+            {name: "Video", type: 'bootstrap', tagName: 'video', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'videosource', 'layout'],
+                create: function(){
+                    let el = document.createElement("div");
+                    el.classList.add('embed-responsive');
+                    el.classList.add('embed-responsive-16by9');
+                    el.classList.add('video');
+                    
+                    let iframe = document.createElement("iframe");
+                    iframe.classList.add('embed-responsive-item');
+                    iframe.classList.add('video');
+                    el.appendChild(iframe)
+                    return el;
+                },
+            },
+            {name: "Video Button", type: 'bootstrap', tagName: 'videobtn', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'videobtn', 'font', 'layout', 'background'],
+                create: function(){
+                    let el = document.createElement("button");
+                    el.classList.add('btn');
+                    el.classList.add('btn-primary');
+                    el.classList.add('videobtn');
+                    return el;
                 },
             },
             {name: "iFrame", type: 'native', tagName: 'iframe', properties: ['marginborderpadding', 'source', 'layout'],
@@ -1350,6 +1407,16 @@ export class HTMLElementData{
         else if(el.classList.contains('flipcard')){
             result.text = 'Flip Card';
             result.tagName = 'flipcard';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('video')){
+            result.text = 'Video';
+            result.tagName = 'video';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('videobtn')){
+            result.text = 'Video button';
+            result.tagName = 'videobtn';
             result.prefix = 'bg';
         }
         else if(el.classList.contains('front')){
