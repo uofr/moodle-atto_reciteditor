@@ -1032,6 +1032,7 @@ export class HTMLElementData{
             {name: "Video Button", type: 'bootstrap', tagName: 'videobtn', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'videobtn', 'font', 'layout', 'background'],
                 create: function(){
                     let el = document.createElement("button");
+                    el.innerHTML = 'Video Button';
                     el.classList.add('btn');
                     el.classList.add('btn-primary');
                     el.classList.add('videobtn');
