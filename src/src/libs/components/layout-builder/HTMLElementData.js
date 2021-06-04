@@ -177,7 +177,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'link', description: 'Link Options',  type: 'styleattr',
+            name: 'link', description: 'Link Options',  type: 'htmlattr',
             children: [
                 {
                     name: 'href', 
@@ -1020,11 +1020,11 @@ export class HTMLElementData{
                     let el = document.createElement("div");
                     el.classList.add('embed-responsive');
                     el.classList.add('embed-responsive-16by9');
-                    el.classList.add('video');
                     
                     let iframe = document.createElement("iframe");
                     iframe.classList.add('embed-responsive-item');
                     iframe.classList.add('video');
+                    iframe.src = 'https://www.youtube.com/embed/WvljI0VIq-E?rel=0'
                     el.appendChild(iframe)
                     return el;
                 },
@@ -1035,6 +1035,7 @@ export class HTMLElementData{
                     el.classList.add('btn');
                     el.classList.add('btn-primary');
                     el.classList.add('videobtn');
+                    el.setAttribute('data-videourl', 'https://www.youtube.com/embed/WvljI0VIq-E?rel=0');
                     return el;
                 },
             },
@@ -1325,13 +1326,44 @@ export class HTMLElementData{
                     return el;
                 },
             },
-            {name: "Image cliquable", type: 'bootstrap', tagName: 'imgpopup', properties: ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout'],
+            {name: "Image avec légende", type: 'bootstrap', tagName: 'imgpopup', properties: ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout'],
                 create:function(){
+                    let div = document.createElement("figure");
+                    div.classList.add('figure-caption');
+                    div.classList.add('text-center');
+                    
                     let el = document.createElement("img");
                     el.setAttribute('src', `.${ImageEmpty}`);
                     el.classList.add("img-fluid");
                     el.classList.add("img-popup");
-                    return el;
+                    div.appendChild(el);
+
+                    el = document.createElement("figcaption");
+                    el.innerHTML = "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.";
+                    div.appendChild(el);
+
+                    return div;
+                },
+            },
+            {name: "Image cliquable", type: 'bootstrap', tagName: 'imgclick', properties: ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout'],
+                create:function(){
+                    let div = document.createElement("div");
+                    div.classList.add('imgclick');
+                    
+                    let el = document.createElement("img");
+                    el.setAttribute('src', `.${ImageEmpty}`);
+                    el.classList.add("img-fluid");
+                    div.appendChild(el);
+
+                    let div2 = document.createElement("div");
+                    div2.classList.add('imgclickcontent');
+                    el = document.createElement("a");
+                    el.href = '#';
+                    el.innerHTML = 'Link clickable image';
+                    div2.appendChild(el);
+                    div.appendChild(div2);
+
+                    return div;
                 },
             },
             {name: "Icon", type: 'native', tagName: 'i', properties: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'icon', 'font'],
@@ -1441,6 +1473,11 @@ export class HTMLElementData{
             result.tagName = 'video';
             result.prefix = 'bg';
         }
+        else if(el.classList.contains('embed-responsive')){
+            result.text = 'Embed';
+            result.tagName = 'div';
+            result.prefix = 'bg';
+        }
         else if(el.classList.contains('videobtn')){
             result.text = 'Video button';
             result.tagName = 'videobtn';
@@ -1486,8 +1523,13 @@ export class HTMLElementData{
             result.prefix = 'border';
         }
         else if(el.classList.contains('img-popup')){
-            result.text = 'Image cliquable';
+            result.text = 'Image modal';
             result.tagName = 'imgpopup'
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('imgclick')){
+            result.text = 'Image cliquable';
+            result.tagName = 'div'
             result.prefix = 'bg';
         }
         else if(el.classList.contains('media')){

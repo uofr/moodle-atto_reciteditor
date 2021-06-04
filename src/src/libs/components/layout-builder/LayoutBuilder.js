@@ -588,6 +588,11 @@ class PreviewState extends CanvasState{
     }
 
     getData(){
+        //Clean up popups before returning html
+        let popup = this.iFrame.document.body.querySelectorAll('.r_popup-overlay');
+        for (let el of popup){
+            el.remove();
+        }
         return this.iFrame.document.body.innerHTML;
     }
 
