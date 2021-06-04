@@ -91,7 +91,7 @@ html.canvas-content {
     html.canvas-content body *[data-selected="1"] {
       border: 2px dashed #0099ff !important;
       border-style: solid !important; }
-    html.canvas-content body *[draggable="true"] {
+    html.canvas-content body *[draggable="true"]:not([contenteditable]) {
       cursor: grab; }
     html.canvas-content body .dropping-zone {
       border: 2px dashed #0099ff;

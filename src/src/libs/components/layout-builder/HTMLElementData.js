@@ -199,7 +199,7 @@ export class HTMLElementData{
                         type: 'radio', 
                         options:[
                             {text: "Même page", value:'_self'},
-                            {text: "Nouvelle onglet", value:'_blank' },
+                            {text: "Nouvel onglet", value:'_blank' },
                         ],
                         onChange: function(el, value, data){
                             el.setAttribute('target', value);
@@ -1556,17 +1556,17 @@ export class HTMLElementData{
         }
         else if(el.tagName == 'TH'){
             result.text = 'Table Heading';
-            result.prefix = 'th';
+            result.prefix = 'bg';
             result.tagName = 'td';
         }
         else if(el.tagName == 'TD'){
             result.text = 'Table Cell';
-            result.prefix = 'td';
+            result.prefix = 'bg';
             result.tagName = 'td';
         }
         else if(el.tagName == 'TR'){
             result.text = 'Table Row';
-            result.prefix = 'tr';
+            result.prefix = 'bg';
             result.tagName = 'tr';
         }
         /*else if(el.className.search('text-') >=0 ){

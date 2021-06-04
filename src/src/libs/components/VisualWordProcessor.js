@@ -3,7 +3,7 @@ import React, { Component  } from 'react';
 import {Controlled  as CodeMirror} from 'react-codemirror2';
 import MathJax from 'react-mathjax';
 import {ButtonsBar} from './ButtonsBar';
-import {JsNx} from '../utils/Utils';
+import {JsNx, UtilsHTML} from '../utils/Utils';
 
 import * as iink from 'iink-js';
 import 'codemirror/lib/codemirror.css';
@@ -376,54 +376,7 @@ class TextArea extends Component{
     }
 
     setCurrentSelection(event){
-        let result = null;
-        let sel = window.getSelection ? window.getSelection() : document.selection;              
-
-        if(sel !== null){
-            result = {};
-            result.sel = sel;
-            result.isSelection = (sel.rangeCount > 0) && (sel.toString().length > 0);
-        
-            result.selectionDirection = '';
-            if(result.sel.anchorOffset > result.sel.focusOffset){
-                result.selectionDirection = 'ltr';
-            }
-            else if(result.sel.anchorOffset < result.sel.focusOffset){
-                result.selectionDirection = 'rtl';
-            }
-             
-            let mainNode = result.sel.baseNode;
-            if (!mainNode) return;
-            result.node = (mainNode instanceof Element ? mainNode :  mainNode.parentElement);
-            result.subSelection = (result.sel.anchorOffset > 0 && result.sel.focusOffset > 0);
-
-            if (!result.isSelection){//If it's not a selection, set the range to be the whole node
-                let range = document.createRange();
-                let text = result.node;
-                if (text){
-                    range.selectNodeContents(text);
-                    result.range = range;
-                }
-            }else{
-                result.range = result.sel.getRangeAt(0);
-            }
-    
-            result.isNodeRoot = (result.node === this.editorRef.current);
-            result.parentNode = (result.node === this.editorRef.current ? result.node : result.node.parentElement);
-            result.isParentNodeRoot = (result.node === this.editorRef.current);
-            result.editorRef = this.editorRef;
-            result.selectedText = result.sel.toString();
-            result.selectedContent = result.range.cloneContents();
-
-            if (result.selectedContent.children[0]){ // Est-ce que la selection contient des tag html?
-                if (result.selectedContent.children[0].innerText == result.selectedText){
-                    result.node = result.selectedContent.children[0];
-                    result.isNodeRoot = false;
-                    result.subSelection = false;
-                }
-            }
-            result.refreshSelection = this.setCurrentSelection;
-        }
+        let result = UtilsHTML.getCurrentSelection(this.editorRef, this.setCurrentSelection);
         
         if(!JsNx.compare(result, this.state.selection)){
             this.setState({selection: result}, () => this.props.onSelect(result));
