@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ButtonToolbar, ButtonGroup, Button, Modal, Form, Col } from 'react-bootstrap';
-import {faObjectGroup, faEdit, faBold, faArrowUp,faArrowDown, faTrashAlt, faClone, faSave, faTimes, faItalic, faUnderline, faStrikethrough} from '@fortawesome/free-solid-svg-icons';
+import {faObjectGroup, faEdit, faBold, faArrowUp,faArrowDown, faTrashAlt, faClone, faSave, faTimes, faItalic, faUnderline, faStrikethrough, faPuzzlePiece} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import {BtnSetCssProp} from '../ButtonsBar';
@@ -205,7 +205,8 @@ export class FloatingMenu extends Component{
         onMoveNodeDown: null,
         onDeleteElement: null,
         onCloneNode: null,
-        onSaveCustomComponent: null
+        onSaveCustomComponent: null,
+        onSaveTemplate: null
     };      
 
     constructor(props){
@@ -235,7 +236,8 @@ export class FloatingMenu extends Component{
                 <ButtonToolbar aria-label="Toolbar with Button groups">
                     <ButtonGroup size="sm">
                         <Button onClick={this.props.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
-                        <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faObjectGroup} title="Créer un composant"/></Button>
+                        <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faPuzzlePiece} title="Créer un composant"/></Button>
+                        <Button onClick={this.props.onSaveTemplate}><FontAwesomeIcon icon={faObjectGroup} title="Créer un gabarit"/></Button>
                         <Button onClick={this.props.onMoveNodeUp}  ><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
                         <Button onClick={this.props.onMoveNodeDown}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>
                         <Button onClick={this.props.onCloneNode}><FontAwesomeIcon icon={faClone} title="Dupliquer"/></Button>

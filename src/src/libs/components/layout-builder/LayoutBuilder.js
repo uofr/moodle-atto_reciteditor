@@ -9,8 +9,10 @@ import RecitLogo from '../assets/recit.png';
 import {CustomHtmlComponents} from './CustomHtmlComponents';
 import {SourceCodeEditor} from '../Components';
 import { HTMLElementData } from './HTMLElementData';
-import {UtilsHTML} from '../../utils/Utils';
+import { Templates } from './Templates';
+import Utils, {UtilsHTML} from '../../utils/Utils';
 import "../css/content.scss";
+import html2canvas from 'html2canvas';
 
 export class LayoutBuilder extends Component
 {
@@ -101,6 +103,7 @@ class MainView extends Component{
         this.onCloneNode = this.onCloneNode.bind(this);
         this.onEditNodeText = this.onEditNodeText.bind(this);
         this.onSaveCustomComponent = this.onSaveCustomComponent.bind(this);
+        this.onSaveTemplate = this.onSaveTemplate.bind(this);
         this.onCollapse = this.onCollapse.bind(this);
         this.setCollapse = this.setCollapse.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
@@ -240,6 +243,17 @@ class MainView extends Component{
         })
     }
 
+    onSaveTemplate(){
+        let p = this.canvasState[this.state.canvasState].onSaveTemplate(this.state.selectedElement);
+
+        if(p !== null){
+            let that = this;
+            p.then(() => {
+                that.forceUpdate();
+            })
+        }
+    }
+
     onCollapse(){       
         let collapsed = this.canvasState[this.state.canvasState].onCollapse(this.state.collapsed);
         this.setState({collapsed: collapsed});
@@ -276,6 +290,7 @@ class CanvasState{
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
         this.onEditNodeText = this.onEditNodeText.bind(this);
+        this.onSaveTemplate = this.onSaveTemplate.bind(this);
     }
 
     onInit(){ console.log("Abstract method...");}
@@ -289,6 +304,7 @@ class CanvasState{
     onMoveNodeDown(selectedElement){console.log("Abstract method...");}
     onCloneNode(selectedElement){console.log("Abstract method...");}
     onEditNodeText(selectedElement){console.log("Abstract method...");}
+    onSaveTemplate(selectedElement){console.log("Abstract method...");}
 
     onCollapse(collapsed){ 
         return collapsed;
@@ -366,7 +382,7 @@ class DrawnerState extends CanvasState{
                 <iframe onLoad={this.onInit} className="canvas" style={this.getDeviceDimension()}></iframe>
                 <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement}  onEdit={this.mainView.onEditNodeText}
                             onDeleteElement={this.mainView.onDeleteElement} onMoveNodeUp={this.mainView.onMoveNodeUp} onMoveNodeDown={this.mainView.onMoveNodeDown} 
-                             onCloneNode={this.mainView.onCloneNode} onSaveCustomComponent={this.mainView.onSaveCustomComponent} />                          
+                             onCloneNode={this.mainView.onCloneNode} onSaveCustomComponent={this.mainView.onSaveCustomComponent} onSaveTemplate={this.mainView.onSaveTemplate} />
                 <NodeTextEditing posCanvas={posCanvas} window={this.window} selectedElement={selectedElement} />
             </Canvas>;
 
@@ -527,6 +543,32 @@ class DrawnerState extends CanvasState{
 
         selectedElement.setAttribute('contenteditable', 'true');
         setCaretToEnd(selectedElement);
+    }
+
+    onSaveTemplate(selectedElement){
+        let name = prompt('Nom du gabarit');
+        if (!name) {
+            return null;
+        }
+        
+        let result = null;
+        /*let body = this.window.document.body;
+        let height = '100%';
+        body.style.height = 'auto';*/
+        let body = selectedElement;
+        html2canvas(body, {useCORS: true}).then(canvas =>{
+                let data = canvas.toDataURL();
+                let MAX_WIDTH = 600;
+                let MAX_HEIGHT = 600;
+                let fileType = "png"
+                Utils.resizeImageFromSize(data, MAX_WIDTH, MAX_HEIGHT, fileType, function(img){
+                    //body.innerHTML
+                    result = Templates.onSave(name, img, body.outerHTML);
+                });
+                //body.style.height = height;
+        });
+
+        return result;
     }
 }
 

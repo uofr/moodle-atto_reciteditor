@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import Utils, { JsNx } from '../../utils/Utils';
-import {Cookies} from '../../utils/Cookies';
+import { JsNx } from '../../utils/Utils';
 import { ButtonGroup, ButtonToolbar, Button, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloud, faFile, faSave, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import html2canvas from 'html2canvas';
 
 export class Templates{
     static data = [];
@@ -46,7 +44,6 @@ export class Templates{
 
             that.sortCollection();
             that.saveAsCookie();
-            console.log("saving")
             resolve();
         });
 
@@ -157,7 +154,6 @@ export class TemplateList extends Component{
 
         this.onImport = this.onImport.bind(this);
         this.onExport = this.onExport.bind(this);
-        this.onSave = this.onSave.bind(this);
         this.showImport = this.showImport.bind(this);
         this.showVitrine = this.showVitrine.bind(this);
         this.hideVitrine = this.hideVitrine.bind(this);
@@ -186,13 +182,10 @@ export class TemplateList extends Component{
                     <div>
                         <ButtonToolbar style={{justifyContent: 'flex-end'}}>
                             <ButtonGroup>
-                                    <Button onClick={() => this.showImport(!this.state.showImport)}><FontAwesomeIcon  icon={faFile} title="Importer"/></Button>
-                                    <Button onClick={() => this.onSave()}><FontAwesomeIcon  icon={faSave} title="Save"/></Button>
-                                    <Button onClick={() => this.showVitrine()}><FontAwesomeIcon  icon={faCloud} title="Vitrine"/> Vitrine</Button>
-                            </ButtonGroup>
-                            <ButtonGroup style={{marginLeft:'15px'}}>
-                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faSave} title="Exporter"/></Button>
-                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                                    <Button onClick={() => this.showImport(!this.state.showImport)}><FontAwesomeIcon  icon={faFile} title="Importer des gabarits"/></Button>
+                                    <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faSave} title="Exporter des gabarits"/></Button>
+                                    <Button onClick={() => this.showVitrine()}><FontAwesomeIcon  icon={faCloud} title="Voir la vitrine de gabarits"/></Button>
+                                    <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                             </ButtonGroup>
                         </ButtonToolbar>
                         {this.state.showImport && <input type="file" onChange={this.onImport} accept=".json"/>}
@@ -269,31 +262,6 @@ export class TemplateList extends Component{
         this.setState({showVitrine: false});
     }
 
-    onSave(){
-        let name = prompt('Nom du gabarit');
-        if (!name) return;
-        
-        let self = this;
-        let iframe = document.querySelector('iframe.canvas');
-        let body = iframe.contentDocument.body;
-        let height = '100%';
-        body.style.height = 'auto';
-        html2canvas(body, {useCORS: true}).then(canvas =>{
-                let data = canvas.toDataURL();
-                let MAX_WIDTH = 600;
-                let MAX_HEIGHT = 600;
-                let fileType = "png"
-                Utils.resizeImageFromSize(data, MAX_WIDTH, MAX_HEIGHT, fileType, function(img){
-                    Templates.onSave(name, img, body.innerHTML).then(function(data){                
-                        alert('success');
-                        self.props.onChange();
-                    });
-                });
-                body.style.height = height;
-            
-        });
-    }
-
     onImport(event){
         let fileCtrl = event.target;
         
@@ -323,8 +291,6 @@ export class TemplateList extends Component{
         node.click();
         node.remove();
     }
-
-    
 
     receiveMessageFromIframe(event) {
         switch (event.data.message){
