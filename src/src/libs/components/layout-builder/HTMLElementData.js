@@ -1359,8 +1359,12 @@ export class HTMLElementData{
                     let div2 = document.createElement("div");
                     div2.classList.add('imgclickcontent');
                     el = document.createElement("a");
+                    el.classList.add('border');
+                    el.classList.add('border-white');
+                    el.classList.add('rounded');
+                    el.classList.add('p-2');
                     el.href = '#';
-                    el.innerHTML = 'Link clickable image';
+                    el.innerHTML = 'Link';
                     div2.appendChild(el);
                     div.appendChild(div2);
 

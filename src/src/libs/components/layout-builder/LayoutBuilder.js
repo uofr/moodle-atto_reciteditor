@@ -564,7 +564,7 @@ class PreviewState extends CanvasState{
 		head.appendChild(el);
 
         el = document.createElement("link");
-		el.setAttribute("href", `editor/style.css`);
+		el.setAttribute("href", `editor/content.css`);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
