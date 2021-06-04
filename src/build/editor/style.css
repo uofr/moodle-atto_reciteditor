@@ -12,6 +12,7 @@
 .r_popup {
     width: 90vh;
     height: 90vh;
+    margin: auto;
     padding: 10px;
     background-color: #fff;
 }

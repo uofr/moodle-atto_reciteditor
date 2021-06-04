@@ -2,10 +2,11 @@ class Popup {
     constructor(content) {
       this.popup = document.createElement('div');
       this.popup.classList.add('r_popup-overlay');
-      this.popup.onclick = this.destroy();
+      this.popup.onclick = this.destroy.bind(this);
       let inner = document.createElement('div');
       inner.classList.add('r_popup');
       inner.appendChild(content);
+      this.popup.appendChild(inner)
       document.body.appendChild(this.popup)
     }
 
@@ -14,8 +15,7 @@ class Popup {
     }
 }
 
-document.addEventListener('click',function(e){
-    console.log(e.target)
+document.body.addEventListener('click',function(e){
     if(e.target && e.target.classList.contains('videobtn')){
         let url = e.target.getAttribute('data-videourl');
         if (url){

@@ -221,6 +221,13 @@ export class HTMLElementData{
                         type: 'text', 
                         defaultValue: '',
                         onChange: function(el, value, data){
+                            if (!value.includes('rel=')){
+                                if (value.includes('?')){
+                                    value = value + '&rel=0';
+                                }else{
+                                    value = value + '?rel=0';
+                                }
+                            }
                             el.src = value;
                         }
                     },
@@ -240,6 +247,13 @@ export class HTMLElementData{
                         type: 'text', 
                         defaultValue: '',
                         onChange: function(el, value, data){
+                            if (!value.includes('rel=')){
+                                if (value.includes('?')){
+                                    value = value + '&rel=0';
+                                }else{
+                                    value = value + '?rel=0';
+                                }
+                            }
                             el.setAttribute('data-videourl', value);
                         }
                     },
