@@ -24,5 +24,13 @@ document.body.addEventListener('click',function(e){
             new Popup(iframe);
         }
         e.preventDefault();
+    }else if(e.target && e.target.classList.contains('img-popup')){
+        let url = e.target.src;
+        if (url){
+            let img = document.createElement('img');
+            img.src = url;
+            new Popup(img);
+        }
+        e.preventDefault();
     }
 });

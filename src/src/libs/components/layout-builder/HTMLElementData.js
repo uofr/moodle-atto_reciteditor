@@ -221,13 +221,6 @@ export class HTMLElementData{
                         type: 'text', 
                         defaultValue: '',
                         onChange: function(el, value, data){
-                            if (!value.includes('rel=')){
-                                if (value.includes('?')){
-                                    value = value + '&rel=0';
-                                }else{
-                                    value = value + '?rel=0';
-                                }
-                            }
                             el.src = value;
                         }
                     },
@@ -274,6 +267,13 @@ export class HTMLElementData{
                         defaultValue: '',
                         onChange: function(el, value, data){
                             let iframe = el;
+                            if (!value.includes('rel=')){
+                                if (value.includes('?')){
+                                    value = value + '&rel=0';
+                                }else{
+                                    value = value + '?rel=0';
+                                }
+                            }
                             if (el.tagName == 'DIV') iframe = el.querySelector('iframe');
                             iframe.src = value;
                         }
@@ -1325,6 +1325,15 @@ export class HTMLElementData{
                     return el;
                 },
             },
+            {name: "Image cliquable", type: 'bootstrap', tagName: 'imgpopup', properties: ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout'],
+                create:function(){
+                    let el = document.createElement("img");
+                    el.setAttribute('src', `.${ImageEmpty}`);
+                    el.classList.add("img-fluid");
+                    el.classList.add("img-popup");
+                    return el;
+                },
+            },
             {name: "Icon", type: 'native', tagName: 'i', properties: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'icon', 'font'],
                 init:function(el){
                     el.classList.add('icon-emo-happy-1');//TODO: Default icon
@@ -1475,6 +1484,11 @@ export class HTMLElementData{
         else if(el.className.search('border-') >=0 ){
             result.text = 'Border';
             result.prefix = 'border';
+        }
+        else if(el.classList.contains('img-popup')){
+            result.text = 'Image cliquable';
+            result.tagName = 'imgpopup'
+            result.prefix = 'bg';
         }
         else if(el.classList.contains('media')){
             result.text = 'Media';

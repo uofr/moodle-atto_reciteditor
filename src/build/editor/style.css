@@ -4,21 +4,26 @@
     height: 100%;
     top: 0;
     left: 0;
-    background: #000;
-    opacity: 0.5;
-    filter: alpha(opacity = 50); /* required for opacity to work in IE */
+    background: rgba(0, 0, 0, 0.5)
 }
 
 .r_popup {
     width: 90vh;
     height: 90vh;
     margin: auto;
-    padding: 10px;
-    background-color: #fff;
 }
 
 .r_popup iframe {
     width: 100%;
     height: 85vh;
     border: 0;
+}
+
+.r_popup img {
+    max-height: 85vh;
+    max-width: 90vw;
+}
+
+.img-popup {
+    cursor: pointer;
 }
