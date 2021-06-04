@@ -209,7 +209,7 @@ export class TemplateList extends Component{
                                 {this.state.showMenu &&
                                     <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                                         <ButtonGroup size="sm">
-                                            <Button onClick={(event) => this.onExport(event, [item])}><FontAwesomeIcon  icon={faSave} title="Exporter"/></Button>
+                                            <Button onClick={(event) => this.onExport(event, item)}><FontAwesomeIcon  icon={faSave} title="Exporter"/></Button>
                                             <Button onClick={(event) => this.onDelete(event, item)}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                                         </ButtonGroup>
                                     </ButtonToolbar>
