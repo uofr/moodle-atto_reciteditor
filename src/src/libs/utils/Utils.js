@@ -657,4 +657,60 @@ export class UtilsHTML{
 
         return node;
     }
+
+    static getCurrentSelection(dom, refreshSelectioCallback, windowObj){
+        let result = null;
+        
+        windowObj = windowObj || window;
+        
+        let sel = windowObj.getSelection ? windowObj.getSelection() : document.selection;              
+
+        if(sel !== null){
+            result = {};
+            result.sel = sel;
+            result.isSelection = (sel.rangeCount > 0) && (sel.toString().length > 0);
+        
+            result.selectionDirection = '';
+            if(result.sel.anchorOffset > result.sel.focusOffset){
+                result.selectionDirection = 'ltr';
+            }
+            else if(result.sel.anchorOffset < result.sel.focusOffset){
+                result.selectionDirection = 'rtl';
+            }
+             
+            let mainNode = result.sel.baseNode;
+            if (!mainNode) return null;
+            result.node = (mainNode instanceof Element ? mainNode :  mainNode.parentElement);
+            result.subSelection = (result.sel.anchorOffset > 0 && result.sel.focusOffset > 0);
+
+            if (!result.isSelection){//If it's not a selection, set the range to be the whole node
+                let range = document.createRange();
+                let text = result.node;
+                if (text){
+                    range.selectNodeContents(text);
+                    result.range = range;
+                }
+            }else{
+                result.range = result.sel.getRangeAt(0);
+            }
+    
+            result.isNodeRoot = (result.node === dom);
+            result.parentNode = (result.node === dom ? result.node : result.node.parentElement);
+            result.isParentNodeRoot = (result.node === dom);
+            result.editorRef = dom;
+            result.selectedText = result.sel.toString();
+            result.selectedContent = result.range.cloneContents();
+
+            if (result.selectedContent.children[0]){ // Est-ce que la selection contient des tag html?
+                if (result.selectedContent.children[0].innerText == result.selectedText){
+                    result.node = result.selectedContent.children[0];
+                    result.isNodeRoot = false;
+                    result.subSelection = false;
+                }
+            }
+            result.refreshSelection = refreshSelectioCallback;
+        }
+
+        return result;
+    }
 }

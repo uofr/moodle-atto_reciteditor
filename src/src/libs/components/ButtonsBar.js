@@ -6,6 +6,7 @@ import {faFont, faCode, faFileCode, faBold, faItalic, faAlignLeft, faAlignRight,
         faFillDrip, faHighlighter, faCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ScreenCapture from '../components/ScreenCapture';
+import { UtilsHTML } from '../utils/Utils';
 
 export class ButtonsBar extends Component{
     static defaultProps = {
@@ -278,9 +279,10 @@ class DropdownSetCssProp extends Component{
     }
 }
 
-class BtnSetCssProp extends Component{
+export class BtnSetCssProp extends Component{
     static defaultProps = {
         selection: null,
+        window: null,
         icon: null,
         cssProp: "",
         defaultValue: "",
@@ -308,7 +310,7 @@ class BtnSetCssProp extends Component{
     }
   
     getCurrentValue(){
-        let sel = this.props.selection;
+        let sel = this.props.selection || UtilsHTML.getCurrentSelection(null, null, this.props.window);
         if(sel === null){ 
             return this.props.defaultValue; 
         }
@@ -325,7 +327,7 @@ class BtnSetCssProp extends Component{
     }
 
     onClick(event){
-        let sel = this.props.selection;
+        let sel = this.props.selection || UtilsHTML.getCurrentSelection(null, null, this.props.window);
         
         if(sel === null || !sel.isSelection){ return; }
         
@@ -347,10 +349,17 @@ class BtnSetCssProp extends Component{
             sel.range.insertNode(newNode);
         }
         else{
+            try{
             sel.node.outerHTML = sel.node.innerHTML;
         }
+            catch(err){
+                console.log(err);
+            }
+        }
 
+        if(sel.refreshSelection){
         sel.refreshSelection()
+        }
 
         if(this.props.onClick){
             this.props.onClick(event, true);

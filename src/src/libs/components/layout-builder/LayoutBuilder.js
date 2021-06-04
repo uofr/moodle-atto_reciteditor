@@ -3,7 +3,7 @@ import { Nav, Card, Navbar, Collapse  } from 'react-bootstrap';
 import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faFileWord, faEye, faCode, faAngleRight, faAngleDown, faBars, faPuzzlePiece, faSlidersH, faStream} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {TreeView} from './TreeView';
-import {Canvas, CanvasElement, FloatingMenu} from './Canvas';
+import {Canvas, CanvasElement, FloatingMenu, NodeTextEditing} from './Canvas';
 import {ComponentProperties, VisualComponentList} from './ComponentsCollection';
 import RecitLogo from '../assets/recit.png';
 import {CustomHtmlComponents} from './CustomHtmlComponents';
@@ -99,6 +99,7 @@ class MainView extends Component{
         this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
+        this.onEditNodeText = this.onEditNodeText.bind(this);
         this.onSaveCustomComponent = this.onSaveCustomComponent.bind(this);
         this.onCollapse = this.onCollapse.bind(this);
         this.setCollapse = this.setCollapse.bind(this);
@@ -179,9 +180,9 @@ class MainView extends Component{
                 </div>
                 
                 <div className="center-area">
-                    {this.canvasState.drawner.render(this.props.view === 'drawner')}
-                    {this.canvasState.preview.render(this.props.view === 'preview')}
-                    {this.canvasState.sourceCode.render(this.props.view === 'sourceCode')}
+                    {this.canvasState.drawner.render(this.props.view === 'drawner', this.state.selectedElement)}
+                    {this.canvasState.preview.render(this.props.view === 'preview', this.state.selectedElement)}
+                    {this.canvasState.sourceCode.render(this.props.view === 'sourceCode', this.state.selectedElement)}
                 </div>
             </div>;
 
@@ -216,6 +217,17 @@ class MainView extends Component{
     onCloneNode(){
         this.canvasState[this.state.canvasState].onCloneNode(this.state.selectedElement);
         this.forceUpdate();
+    }
+
+    onEditNodeText(el){
+        if(el instanceof HTMLElement){
+            this.canvasState[this.state.canvasState].onEditNodeText(el);
+            this.setState({selectedElement: el});
+        }
+        else{
+            this.canvasState[this.state.canvasState].onEditNodeText(this.state.selectedElement);
+            this.forceUpdate();
+        }
     }
 
     onSaveCustomComponent(data){
@@ -263,18 +275,20 @@ class CanvasState{
         this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
+        this.onEditNodeText = this.onEditNodeText.bind(this);
     }
 
     onInit(){ console.log("Abstract method...");}
-    render(){ console.log("Abstract method...");}
+    render(show, selectedElement){ console.log("Abstract method...");}
     onDragEnd(){ console.log("Abstract method...");}
     onDropElement(){console.log("Abstract method...");}
     getData(){console.log("Abstract method...");}
-    setData(){console.log("Abstract method...");}
-    onDeleteElement(){console.log("Abstract method...");}
-    onMoveNodeUp(){console.log("Abstract method...");}
-    onMoveNodeDown(){console.log("Abstract method...");}
-    onCloneNode(){console.log("Abstract method...");}
+    setData(value){console.log("Abstract method...");}
+    onDeleteElement(selectedElement){console.log("Abstract method...");}
+    onMoveNodeUp(selectedElement){console.log("Abstract method...");}
+    onMoveNodeDown(selectedElement){console.log("Abstract method...");}
+    onCloneNode(selectedElement){console.log("Abstract method...");}
+    onEditNodeText(selectedElement){console.log("Abstract method...");}
 
     onCollapse(collapsed){ 
         return collapsed;
@@ -338,22 +352,22 @@ class DrawnerState extends CanvasState{
         body.parentElement.classList.add("canvas-content");
 
         // pure JS
-        CanvasElement.create(body, this.mainView.onSelectElement, this.onDropElement);
+        CanvasElement.create(body, this.mainView.onSelectElement, this.onDropElement, this.mainView.onEditNodeText);
 
         // React JS
         //body.appendChild(doc.firstChild);
     }
 
-    render(show){
+    render(show, selectedElement){
         let posCanvas = (this.iFrame === null ? null : this.iFrame.getBoundingClientRect());
-        let posEl = (this.mainView.state.selectedElement === null ? null : this.mainView.state.selectedElement.getBoundingClientRect());
 
         let main = 
             <Canvas style={{display: (show ? 'flex' : 'none') }}>
                 <iframe onLoad={this.onInit} className="canvas" style={this.getDeviceDimension()}></iframe>
-                <FloatingMenu posCanvas={posCanvas} posEl={posEl}
+                <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement}  onEdit={this.mainView.onEditNodeText}
                             onDeleteElement={this.mainView.onDeleteElement} onMoveNodeUp={this.mainView.onMoveNodeUp} onMoveNodeDown={this.mainView.onMoveNodeDown} 
                              onCloneNode={this.mainView.onCloneNode} onSaveCustomComponent={this.mainView.onSaveCustomComponent} />                          
+                <NodeTextEditing posCanvas={posCanvas} window={this.window} selectedElement={selectedElement} />
             </Canvas>;
 
         return main;
@@ -449,7 +463,7 @@ class DrawnerState extends CanvasState{
         el.removeAttribute("data-selected");
         el.removeAttribute("contenteditable");
         parent.appendChild(el);
-        CanvasElement.create(el, this.mainView.onSelectElement, this.onDropElement);
+        CanvasElement.create(el, this.mainView.onSelectElement, this.onDropElement, this.mainView.onEditNodeText);
     }
 
     onDragEnd(){
@@ -491,7 +505,28 @@ class DrawnerState extends CanvasState{
     setData(value){
         let body = this.window.document.body;
         body.innerHTML = value;
-        CanvasElement.create(body, this.mainView.onSelectElement, this.onDropElement);
+        CanvasElement.create(body, this.mainView.onSelectElement, this.onDropElement, this.mainView.onEditNodeText);
+    }
+
+    onEditNodeText(selectedElement){ 
+        let that = this;     
+      
+        let setCaretToEnd = function(el) {
+            el.focus();
+            
+            let range = document.createRange();
+            range.selectNodeContents(el);
+            range.collapse(true);
+            let sel = that.window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+          
+            // set scroll to the end if multiline
+            el.scrollTop = el.scrollHeight; 
+        }    
+
+        selectedElement.setAttribute('contenteditable', 'true');
+        setCaretToEnd(selectedElement);
     }
 }
 
@@ -505,7 +540,7 @@ class SourceCodeState extends CanvasState{
         this.data = "";
     }
 
-    render(show){
+    render(show, selectedElement){
         let style = this.getDeviceDimension();
         style.display = (show ? 'block' : 'none');
         return <SourceCodeEditor queryStr={this.queryStr} style={style} value={this.data} onChange={this.onChange}/>
@@ -574,7 +609,7 @@ class PreviewState extends CanvasState{
 		head.appendChild(el);
     }
 
-    render(show){
+    render(show, selectedElement){
         let main = 
             <Canvas style={{display: (show ? 'flex' : 'none') }}> 
                 <iframe onLoad={this.onInit} className="canvas" style={this.getDeviceDimension()}></iframe>

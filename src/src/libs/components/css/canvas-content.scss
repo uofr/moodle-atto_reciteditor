@@ -16,7 +16,6 @@ html.canvas-content{
         table{border: $border-invisible-element; border-width: 3px;}
         section:empty::before{content: "Section";}
         
-
         .container{ border: $border-invisible-element; padding: 1rem!important; }
         .container-fluid{@extend .container;}
         .row{ border: $border-invisible-element;  padding: 1rem; }
@@ -52,7 +51,7 @@ html.canvas-content{
         //h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover, button:hover, p:hover, div:hover, ul:hover, ol:hover, li:hover{@extend .element-focus;}
         *[data-hovering="1"]{ border: $border-onhover-element;}
         *[data-selected="1"]{border: $border-onhover-element; border-style: solid!important;}
-        *[draggable="true"]{cursor: grab;}
+        *[draggable="true"]:not([contenteditable]){cursor: grab;}
         
         .dropping-zone{border: 2px dashed rgb(0, 153, 255); height: 50px; width: 100%;  transform: scale(0.97); 
             display: inline-flex; margin-left: .5rem; margin-right: .5rem; margin-top: .5rem;

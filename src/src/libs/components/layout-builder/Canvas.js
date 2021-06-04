@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { ButtonToolbar, ButtonGroup, Button, Modal, Form, Col } from 'react-bootstrap';
-import {faObjectGroup, faEdit, faArrowsAlt, faArrowUp,faArrowDown, faTrashAlt, faClone, faSave, faTimes} from '@fortawesome/free-solid-svg-icons';
+import {faObjectGroup, faEdit, faBold, faArrowUp,faArrowDown, faTrashAlt, faClone, faSave, faTimes, faItalic, faUnderline, faStrikethrough} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
+import {BtnSetCssProp} from '../ButtonsBar';
 
 export class Canvas extends Component
 {
@@ -27,18 +28,20 @@ export class Canvas extends Component
 export class CanvasElement{
     static draggingItem = null;
 
-    constructor(dom, onSelectCallback, onDropCallback){
+    constructor(dom, onSelectCallback, onDropCallback, onEditNodeText){
         this.onDragOver = this.onDragOver.bind(this);
         this.onDragEnter = this.onDragEnter.bind(this);
         this.onDragLeave = this.onDragLeave.bind(this);
         this.onDrop = this.onDrop.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
+        this.onClickHandler = this.onClickHandler.bind(this);
         this.onClick = this.onClick.bind(this);
+        this.onDblClick = this.onDblClick.bind(this);
         this.onMouseOver = this.onMouseOver.bind(this);
         this.onMouseOut = this.onMouseOut.bind(this);
-
         this.onSelectCallback = onSelectCallback;
         this.onDropCallback = onDropCallback;
+        this.onEditNodeText = onEditNodeText;
 
         this.dom = dom;
         this.dom.ondragover = this.onDragOver;
@@ -46,29 +49,51 @@ export class CanvasElement{
         this.dom.ondragleave = this.onDragLeave;
         this.dom.ondragstart = this.onDragStart;
         this.dom.ondrop = this.onDrop;
-        this.dom.onclick = this.onClick;
+        this.dom.onclick = this.onClickHandler;
         this.dom.onmouseover = this.onMouseOver;
         this.dom.onmouseout = this.onMouseOut;
 
+        this.clickCounter = 0;
         this.droppingZoneAfter = document.createElement("div");
         this.droppingZoneAfter.classList.add("dropping-zone");
 
         for(let child of this.dom.childNodes){
-            new CanvasElement(child, this.onSelectCallback, this.onDropCallback);
+            CanvasElement.create(child, this.onSelectCallback, this.onDropCallback, this.onEditNodeText);
         }
     }
 
-    static create(el, onSelectElement, onDropElement){
-        return new CanvasElement(el, onSelectElement, onDropElement);
+    static create(el, onSelectElement, onDropElement, onEditNodeText){
+        return new CanvasElement(el, onSelectElement, onDropElement, onEditNodeText);
     }
 
-    onClick(event){        
+    onClickHandler(event){        
         event.preventDefault(); // Cancel the default action (in case of href)
         event.stopPropagation();
+        this.clickCounter++;
+        let that = this;
 
+        if(event.detail === 1){
+            setTimeout(() => {
+                if(that.clickCounter === 1){
+                    that.onClick();
+                }
+                that.clickCounter = 0;
+            }, 250);
+        }
+        else if (event.detail === 2) {
+            this.onDblClick();
+            this.clickCounter = 0;
+        }
+    }
+
+    onClick(){
         if(!this.dom.hasAttribute("contenteditable")){
             this.onSelectCallback(this.dom);
         }
+    }
+
+    onDblClick(){
+        this.onEditNodeText(this.dom);
     }
 
     onDrop(event){
@@ -88,7 +113,7 @@ export class CanvasElement{
         }
         
         if(el !== null){
-            new CanvasElement(el, this.onSelectCallback, this.onDropCallback);
+            CanvasElement.create(el, this.onSelectCallback, this.onDropCallback, this.onEditNodeText);
 
             if(event.target.classList.contains('dropping-zone')){
                 try{
@@ -174,7 +199,8 @@ export class CanvasElement{
 export class FloatingMenu extends Component{
     static defaultProps = {
         posCanvas: null,
-        posEl: null,
+        selectedElement: null,
+        onEdit: null,
         onMoveNodeUp: null,
         onMoveNodeDown: null,
         onDeleteElement: null,
@@ -185,7 +211,6 @@ export class FloatingMenu extends Component{
     constructor(props){
         super(props);
 
-        this.onEdit = this.onEdit.bind(this);
         this.showModal = this.showModal.bind(this);
         this.onSaveCustomComponent = this.onSaveCustomComponent.bind(this);
 
@@ -194,12 +219,13 @@ export class FloatingMenu extends Component{
 
     render(){
         if(this.props.posCanvas === null){ return null;}
-        if(this.props.posEl === null){ return null;}
+        if(this.props.selectedElement === null){ return null;}
+        if(this.props.selectedElement.getAttribute('contenteditable') === 'true'){ return null; }
 
         let style = {display: 'block', top: 0, left: 0};
 
         let posCanvas = this.props.posCanvas;
-        let posEl = this.props.posEl;
+        let posEl = (this.props.selectedElement === null ? null : this.props.selectedElement.getBoundingClientRect());
 
         style.top = Math.max(posCanvas.top + posEl.top - 32, 0);
         style.left = posCanvas.left + posEl.left;
@@ -208,7 +234,7 @@ export class FloatingMenu extends Component{
             <div className='floating-menu' style={style}>
                 <ButtonToolbar aria-label="Toolbar with Button groups">
                     <ButtonGroup size="sm">
-                        <Button onClick={this.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
+                        <Button onClick={this.props.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
                         <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faObjectGroup} title="Créer un composant"/></Button>
                         <Button onClick={this.props.onMoveNodeUp}  ><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
                         <Button onClick={this.props.onMoveNodeDown}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>
@@ -222,31 +248,6 @@ export class FloatingMenu extends Component{
         return main;
     }
 
-    onEdit(){
-        this.props.selectedElement.setAttribute('contenteditable', 'true');
-        this.setCaretToEnd(this.props.selectedElement);
-    }
-
-    setCaretToEnd(el) {
-        el.focus();
-        if (typeof window.getSelection != "undefined" && typeof document.createRange != "undefined") {
-            var range = document.createRange();
-            range.selectNodeContents(el);
-            range.collapse(false);
-            var sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-        } else if (typeof document.body.createTextRange != "undefined") {
-            var textRange = document.body.createTextRange();
-            textRange.moveToElementText(el);
-            textRange.collapse(false);
-            textRange.select();
-        }
-      
-        // set scroll to the end if multiline
-        el.scrollTop = el.scrollHeight; 
-    }    
-
     showModal(show){
         this.setState({showModal: show});
     }
@@ -254,6 +255,46 @@ export class FloatingMenu extends Component{
     onSaveCustomComponent(data){
         this.props.onSaveCustomComponent(data);
         this.showModal(false);
+    }
+}
+
+export class NodeTextEditing extends Component{
+    static defaultProps = {
+        posCanvas: null,
+        selectedElement: null,
+        window: null
+    };      
+
+    constructor(props){
+        super(props);
+    }
+
+    render(){
+        if(this.props.posCanvas === null){ return null;}
+        if(this.props.selectedElement === null){ return null;}
+        if(this.props.selectedElement.getAttribute('contenteditable') !== 'true'){ return null; }
+        
+        let style = {position: 'absolute', display: 'block', top: 0, left: 0};
+
+        let posCanvas = this.props.posCanvas;
+        let posEl = (this.props.selectedElement === null ? null : this.props.selectedElement.getBoundingClientRect());
+
+        style.top = Math.max(posCanvas.top + posEl.top - 32, 0);
+        style.left = posCanvas.left + posEl.left;
+
+        let main =  
+                <div style={style}>
+                   <ButtonToolbar >
+                        <ButtonGroup size="sm">
+                            <BtnSetCssProp window={this.props.window}  cssProp="font-weight" defaultValue="normal" value="bold"  icon={faBold}  title="Gras"/>
+                            <BtnSetCssProp window={this.props.window}  cssProp="font-style" defaultValue="normal" value="italic"  icon={faItalic}  title="Italique"/>
+                            <BtnSetCssProp window={this.props.window}  cssProp="text-decoration" defaultValue="normal" value="underline"  icon={faUnderline}  title="Souligné"/>
+                            <BtnSetCssProp window={this.props.window}  cssProp="text-decoration" defaultValue="normal" value="line-through"  icon={faStrikethrough}  title="Barré"/>
+                        </ButtonGroup>
+                    </ButtonToolbar>
+                </div>;
+
+        return main;
     }
 }
 
