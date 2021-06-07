@@ -1,0 +1,208 @@
+@charset "UTF-8";
+html.canvas-content {
+  margin: 0;
+  padding: 0; }
+  html.canvas-content body {
+    margin: 0;
+    padding: 15px;
+    /* Those elements have priority over the previous ones*/ }
+    html.canvas-content body div:empty:not(.col):not(.col-12):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before {
+      content: "Div"; }
+    html.canvas-content body div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.dropping-zone):not(.carousel-item) {
+      border: 2px dashed #c9c5c5; }
+    html.canvas-content body section {
+      border: 2px dashed #c9c5c5; }
+    html.canvas-content body table {
+      border: 2px dashed #c9c5c5;
+      border-width: 3px; }
+    html.canvas-content body section:empty::before {
+      content: "Section"; }
+    html.canvas-content body .container, html.canvas-content body .container-fluid {
+      border: 2px dashed #c9c5c5;
+      padding: 1rem !important; }
+    html.canvas-content body .row {
+      border: 2px dashed #c9c5c5;
+      padding: 1rem; }
+    html.canvas-content body .col, html.canvas-content body .col-12 {
+      border: 2px dashed #c9c5c5;
+      min-height: 30px; }
+    html.canvas-content body .btn:empty::after {
+      content: "Button"; }
+    html.canvas-content body .alert:empty::after {
+      content: "Alerte"; }
+    html.canvas-content body .card-header:empty::before {
+      content: "Header"; }
+    html.canvas-content body .card-body:empty::before {
+      content: "Body"; }
+    html.canvas-content body .card-footer:empty::before {
+      content: "Footer"; }
+    html.canvas-content body td:empty::before {
+      content: "Cell"; }
+    html.canvas-content body td:empty {
+      min-width: 50px;
+      min-height: 15px; }
+    html.canvas-content body th:empty::before {
+      content: "Cell Header"; }
+    html.canvas-content body th:empty {
+      min-width: 50px;
+      min-height: 15px; }
+    html.canvas-content body .carousel, html.canvas-content body .carousel-inner {
+      border: none !important; }
+    html.canvas-content body .slide-pos, html.canvas-content body .carousel-item:nth-of-type(1):after, html.canvas-content body .carousel-item:nth-of-type(2):after, html.canvas-content body .carousel-item:nth-of-type(3):after, html.canvas-content body .carousel-item:nth-of-type(4):after, html.canvas-content body .carousel-item:nth-of-type(5):after {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 45px;
+      font-weight: 100;
+      color: #fff; }
+    html.canvas-content body .carousel-item:nth-of-type(1):after {
+      content: '1st slide'; }
+    html.canvas-content body .carousel-item:nth-of-type(2):after {
+      content: '2nd slide'; }
+    html.canvas-content body .carousel-item:nth-of-type(3):after {
+      content: '3rd slide'; }
+    html.canvas-content body .carousel-item:nth-of-type(4):after {
+      content: '4th slide'; }
+    html.canvas-content body .carousel-item:nth-of-type(5):after {
+      content: '5th slide'; }
+    html.canvas-content body .flipcard .back {
+      display: none; }
+    html.canvas-content body .flipcard.hover .front {
+      display: none; }
+    html.canvas-content body .flipcard.hover .back {
+      display: block; }
+    html.canvas-content body .flipcard .front::before {
+      content: 'Front';
+      color: #fff;
+      background-color: #007bff;
+      padding: 7px;
+      border-radius: 24px;
+      font-size: 11px; }
+    html.canvas-content body .flipcard .back::before {
+      content: 'Back';
+      color: #fff;
+      background-color: #007bff;
+      padding: 7px;
+      border-radius: 24px;
+      font-size: 11px; }
+    html.canvas-content body *[data-hovering="1"] {
+      border: 2px dashed #0099ff !important; }
+    html.canvas-content body *[data-selected="1"] {
+      border: 2px dashed #0099ff !important;
+      border-style: solid !important; }
+    html.canvas-content body *[draggable="true"]:not([contenteditable]) {
+      cursor: grab; }
+    html.canvas-content body .dropping-zone {
+      border: 2px dashed #0099ff;
+      height: 50px;
+      width: 100%;
+      transform: scale(0.97);
+      display: inline-flex;
+      margin-left: .5rem;
+      margin-right: .5rem;
+      margin-top: .5rem; }
+    html.canvas-content body .dropping-zone-hover {
+      background-color: rgba(0, 153, 255, 0.5) !important; }
+    html.canvas-content body .dropping-zone-hover::before {
+      content: "Drop here..."; }
+    html.canvas-content body .imgclick a:empty::before {
+      content: "Lien de l'image cliquable"; }
+    html.canvas-content body .imgclick {
+      text-align: center;
+      position: relative;
+      width: fit-content; }
+    html.canvas-content body .imgclick .imgclickcontent {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center; }
+  html.canvas-content .tagName, html.canvas-content [data-dragging="1"]::before, html.canvas-content [data-dragging="1"]::after, html.canvas-content *[data-dragging="1"] section::before, html.canvas-content *[data-dragging="1"] section::after, html.canvas-content *[data-dragging="1"] .container::before, html.canvas-content *[data-dragging="1"] .container-fluid::before, html.canvas-content *[data-dragging="1"] .container::after, html.canvas-content *[data-dragging="1"] .container-fluid::after, html.canvas-content *[data-dragging="1"] .row::before, html.canvas-content *[data-dragging="1"] .row::after, html.canvas-content *[data-dragging="1"] .col::before, html.canvas-content *[data-dragging="1"] .col-12::before, html.canvas-content *[data-dragging="1"] .col::after, html.canvas-content *[data-dragging="1"] .col-12::after, html.canvas-content *[data-dragging="1"] .alert::before, html.canvas-content *[data-dragging="1"] .alert::after, html.canvas-content *[data-dragging="1"] .card::before, html.canvas-content *[data-dragging="1"] .card::after, html.canvas-content *[data-dragging="1"] .card-header::before, html.canvas-content *[data-dragging="1"] .card-header::after, html.canvas-content *[data-dragging="1"] .card-body::before, html.canvas-content *[data-dragging="1"] .card-body::after, html.canvas-content *[data-dragging="1"] .card-footer::before, html.canvas-content *[data-dragging="1"] .card-footer::after, html.canvas-content *[data-dragging="1"] .carousel-inner::before, html.canvas-content *[data-dragging="1"] .carousel-inner::after, html.canvas-content *[data-dragging="1"] table::before, html.canvas-content *[data-dragging="1"] tbody::before, html.canvas-content *[data-dragging="1"] table::after, html.canvas-content *[data-dragging="1"] tr::before, html.canvas-content *[data-dragging="1"] tr::after, html.canvas-content *[data-dragging="1"] td::after, html.canvas-content *[data-dragging="1"] th::after {
+    display: inline-flex;
+    background-color: #ffd75e !important;
+    padding: 3px;
+    margin: 3px;
+    font-size: 10px;
+    font-weight: 500;
+    align-items: center; }
+  html.canvas-content *[data-dragging="1"]::before {
+    content: "Début body"; }
+  html.canvas-content *[data-dragging="1"]::after {
+    content: "Fin body"; }
+  html.canvas-content *[data-dragging="1"] section::before {
+    content: "Début de la section"; }
+  html.canvas-content *[data-dragging="1"] section::after {
+    content: "Fin de la section"; }
+  html.canvas-content *[data-dragging="1"] .container::before, html.canvas-content *[data-dragging="1"] body .container-fluid::before, html.canvas-content body *[data-dragging="1"] .container-fluid::before, html.canvas-content *[data-dragging="1"] .container-fluid::before {
+    content: "Début du container"; }
+  html.canvas-content *[data-dragging="1"] .container::after, html.canvas-content *[data-dragging="1"] body .container-fluid::after, html.canvas-content body *[data-dragging="1"] .container-fluid::after, html.canvas-content *[data-dragging="1"] .container-fluid::after {
+    content: "Fin du container"; }
+  html.canvas-content *[data-dragging="1"] .row::before {
+    content: "Début du row"; }
+  html.canvas-content *[data-dragging="1"] .row::after {
+    content: "Fin du row"; }
+  html.canvas-content *[data-dragging="1"] .col::before, html.canvas-content *[data-dragging="1"] .col-12::before {
+    content: "Début du col"; }
+  html.canvas-content *[data-dragging="1"] .col::after, html.canvas-content *[data-dragging="1"] .col-12::after {
+    content: "Fin du col"; }
+  html.canvas-content *[data-dragging="1"] .alert::before {
+    content: "Début du alerte"; }
+  html.canvas-content *[data-dragging="1"] .alert::after {
+    content: "Fin du alerte"; }
+  html.canvas-content *[data-dragging="1"] .card::before {
+    content: "Début du card"; }
+  html.canvas-content *[data-dragging="1"] .card::after {
+    content: "Fin du card"; }
+  html.canvas-content *[data-dragging="1"] .card-header::before {
+    content: "Début du card-header"; }
+  html.canvas-content *[data-dragging="1"] .card-header::after {
+    content: "Fin du card-header"; }
+  html.canvas-content *[data-dragging="1"] .card-body::before {
+    content: "Début du card-body"; }
+  html.canvas-content *[data-dragging="1"] .card-body::after {
+    content: "Fin du card-body"; }
+  html.canvas-content *[data-dragging="1"] .card-footer::before {
+    content: "Début du card-footer"; }
+  html.canvas-content *[data-dragging="1"] .card-footer::after {
+    content: "Fin du card-footer"; }
+  html.canvas-content *[data-dragging="1"] .carousel-inner::before {
+    content: "Première diapositive"; }
+  html.canvas-content *[data-dragging="1"] .carousel-inner::after {
+    content: "Dernière diapositive"; }
+  html.canvas-content *[data-dragging="1"] table::before, html.canvas-content *[data-dragging="1"] tbody::before {
+    content: "Début de la table"; }
+  html.canvas-content *[data-dragging="1"] table::after, html.canvas-content *[data-dragging="1"] tbody::before {
+    content: "Fin de la table"; }
+  html.canvas-content *[data-dragging="1"] tr::before {
+    content: "Début de la ligne de la table"; }
+  html.canvas-content *[data-dragging="1"] tr::after {
+    content: "Fin de la ligne de la table"; }
+  html.canvas-content *[data-dragging="1"] td::after, html.canvas-content *[data-dragging="1"] th::after {
+    content: "Case de la table"; }
+
+.border-1 {
+  border-width: 1px !important; }
+
+.border-2 {
+  border-width: 2px !important; }
+
+.border-3 {
+  border-width: 3px !important; }
+
+.border-4 {
+  border-width: 4px !important; }
+
+.border-5 {
+  border-width: 5px !important; }
+
+.rounded-1 {
+  border-radius: 0.2rem !important; }
+
+.rounded-2 {
+  border-radius: 0.25rem !important; }
+
+.rounded-3 {
+  border-radius: 0.3rem !important; }
+
+/*# sourceMappingURL=canvas-content.css.map */

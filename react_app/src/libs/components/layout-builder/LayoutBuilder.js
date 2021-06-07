@@ -5,13 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {TreeView} from './TreeView';
 import {Canvas, CanvasElement, FloatingMenu, NodeTextEditing} from './Canvas';
 import {ComponentProperties, VisualComponentList} from './ComponentsCollection';
-import RecitLogo from '../assets/recit.png';
 import {CustomHtmlComponents} from './CustomHtmlComponents';
 import {SourceCodeEditor} from '../Components';
 import { HTMLElementData } from './HTMLElementData';
 import { Templates } from './Templates';
 import Utils, {UtilsHTML} from '../../utils/Utils';
-import "../css/content.scss";
+import {Assets} from '../../components/assets/Assets';
 import html2canvas from 'html2canvas';
 
 export class LayoutBuilder extends Component
@@ -36,7 +35,7 @@ export class LayoutBuilder extends Component
 			<div className="layout-builder">                
                 <Navbar bg="dark" variant="dark" onSelect={this.onNavbarSelect} expand="sm">
                     <Navbar.Brand>
-                        <img alt="RÉCIT" src={`.${RecitLogo}`} width="30" height="30" className="d-inline-block align-top" />{' '}
+                        <img alt="RÉCIT" src={`.${Assets.RecitLogo}`} width="30" height="30" className="d-inline-block align-top" />{' '}
                         Éditeur RÉCIT
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -346,22 +345,22 @@ class DrawnerState extends CanvasState{
         let body = this.window.document.body;
 
         let el = document.createElement("link");
-		el.setAttribute("href", `bootstrap.min.c9ac70f5.css`);
+		el.setAttribute("href", Assets.Bootstrap);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
         el = document.createElement("link");
-		el.setAttribute("href", `fontello/css/fontello.css`);
+		el.setAttribute("href", Assets.Fontello);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
         el = document.createElement("link");
-		el.setAttribute("href", `canvas-content.css?v=${Math.floor(Math.random() * 100)}`);
+		el.setAttribute("href", `${Assets.CanvasContentCSS}?v=${Math.floor(Math.random() * 100)}`);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
         el = document.createElement("link");
-		el.setAttribute("href", `fontawesome/css/font-awesome.css`);
+		el.setAttribute("href", Assets.FontAwesome);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
@@ -626,27 +625,27 @@ class PreviewState extends CanvasState{
         let head = this.iFrame.document.head;
 
         let el = document.createElement("link");
-		el.setAttribute("href", `bootstrap.min.c9ac70f5.css`);
+		el.setAttribute("href", Assets.Bootstrap);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
         el = document.createElement("link");
-		el.setAttribute("href", `fontello/css/fontello.css`);
+		el.setAttribute("href", Assets.Fontello);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
         el = document.createElement("link");
-		el.setAttribute("href", `fontawesome/css/font-awesome.css`);
+		el.setAttribute("href", Assets.FontAwesome);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
         el = document.createElement("link");
-		el.setAttribute("href", `editor/content.css`);
+		el.setAttribute("href", Assets.ContentCSS);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
         el = document.createElement("script");
-		el.setAttribute("src", `editor/script.js`);
+		el.setAttribute("src", Assets.ContentScript);
 		el.setAttribute("type", "text/javascript");
 		head.appendChild(el);
     }

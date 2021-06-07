@@ -1,8 +1,7 @@
 import React from 'react';
 import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus, faEllipsisH, faGripLines, faSquare, faRuler} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ImageEmpty from '../assets/empty.jpg';
-import ImageEmptyHD from '../assets/emptyHD.jpg';
+import {Assets} from '../assets/Assets';
 import { LayoutSpacingEditor} from '../Components';
 import Utils from '../../utils/Utils';
 
@@ -1192,7 +1191,7 @@ export class HTMLElementData{
                         el.classList.add("w-25");
                         el.classList.add("rounded-circle");
                         el.classList.add("shadow");
-                        el.setAttribute("src", `.${ImageEmptyHD}`);
+                        el.setAttribute("src", `.${Assets.ImageEmptyHD}`);
                         head2.appendChild(el);
                         
                         el = document.createElement("h3");
@@ -1232,7 +1231,7 @@ export class HTMLElementData{
                     
                     let el = document.createElement("img");
                     el.classList.add("mr-3");
-                    el.setAttribute("src", `.${ImageEmpty}`);
+                    el.setAttribute("src", `.${Assets.ImageEmpty}`);
                     media.appendChild(el);
 
                     let body = document.createElement("div");
@@ -1267,7 +1266,7 @@ export class HTMLElementData{
                     
                     let el = document.createElement("img");
                     el.classList.add("w-100");
-                    el.setAttribute("src", `.${ImageEmptyHD}`);
+                    el.setAttribute("src", `.${Assets.ImageEmptyHD}`);
                     slide.appendChild(el);
 
                     slide = document.createElement("div");
@@ -1276,7 +1275,7 @@ export class HTMLElementData{
                     
                     el = document.createElement("img");
                     el.classList.add("w-100");
-                    el.setAttribute("src", `.${ImageEmptyHD}`);
+                    el.setAttribute("src", `.${Assets.ImageEmptyHD}`);
                     slide.appendChild(el);
 
                     body.appendChild(slide.cloneNode(true));
@@ -1322,7 +1321,7 @@ export class HTMLElementData{
             {name: "Image", type: 'bootstrap', tagName: 'img', properties: ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout'],
                 create:function(){
                     let el = document.createElement("img");
-                    el.setAttribute('src', `.${ImageEmpty}`);
+                    el.setAttribute('src', `.${Assets.ImageEmpty}`);
                     el.classList.add("img-fluid");
                     return el;
                 },
@@ -1334,7 +1333,7 @@ export class HTMLElementData{
                     div.classList.add('text-center');
                     
                     let el = document.createElement("img");
-                    el.setAttribute('src', `.${ImageEmpty}`);
+                    el.setAttribute('src', `.${Assets.ImageEmpty}`);
                     el.classList.add("img-fluid");
                     el.classList.add("img-popup");
                     div.appendChild(el);
@@ -1352,7 +1351,7 @@ export class HTMLElementData{
                     div.classList.add('imgclick');
                     
                     let el = document.createElement("img");
-                    el.setAttribute('src', `.${ImageEmpty}`);
+                    el.setAttribute('src', `.${Assets.ImageEmpty}`);
                     el.classList.add("img-fluid");
                     div.appendChild(el);
 

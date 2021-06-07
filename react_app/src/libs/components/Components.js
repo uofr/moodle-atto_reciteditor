@@ -2,7 +2,8 @@
 // Note: the "export *" will only export the classes marked with "export" in their definition
 //////////////////////////////////////////////////
 
-import "./css/components.scss";
+import "./assets/css/components.scss";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export * from './ToggleButtons';
 export * from './InputNumber';

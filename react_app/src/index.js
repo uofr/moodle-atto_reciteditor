@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {RecitRichEditor} from './libs/components/Components';
 import {Options} from './Options';
- 
+
 // Find all DOM containers
 /*document.addEventListener('DOMContentLoaded', function(){ 
     let items = document.querySelectorAll("[data-recit-rich-editor='placeholder']");
@@ -16,14 +16,17 @@ import {Options} from './Options';
 }, false);*/
 if(process.env.NODE_ENV === "development"){    
     // Bootstrap is loaded only in dev mode because Moodle already has Bootstrap files
-    React.lazy(() => import('bootstrap/dist/css/bootstrap.min.css'));
+    //React.lazy(() => import('bootstrap/dist/css/bootstrap.min.css'));
+    console.log(`Dev: ${Options.appName()} - v:${Options.appVersion()}`); 
     ReactDOM.render(<RecitRichEditor />, document.getElementById('root')); 
 }
 else{
-    window.RecitRichEditorCreateInstance = function(placeholder, onChange){
+    /*window.RecitRichEditorCreateInstance = function(placeholder, onChange){
         let name = placeholder.getAttribute("id") || `recit_rich_editor_${Date.now()}`;
         console.log(`${Options.appName()} - v:${Options.appVersion()}`, name); 
         ReactDOM.render(<RecitRichEditor name={name} content={placeholder.innerHTML} onChange={onChange}/>, placeholder);
-    }
+    }*/
+    console.log(`Prod: ${Options.appName()} - v:${Options.appVersion()}`); 
+    ReactDOM.render(<RecitRichEditor />, document.getElementById('root')); 
 }
 

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Button, Modal, FormControl } from 'react-bootstrap';
-import './assets/fontello/css/fontello.css';
-import './assets/fontawesome/css/fontello.css';
-import fontData from './assets/fontello/config.json';
-import faData from './assets/fontawesome/config.json';
+//import './assets/fontello/css/fontello.css';
+//import './assets/fontawesome/css/fontello.css';
+//import fontData from './assets/fontello/config.json';
+//import faData from './assets/fontawesome/config.json';
 import { faIcons} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 export class IconSelector extends Component {
@@ -23,7 +23,7 @@ export class IconSelector extends Component {
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.state = {modal:false, search: ''};
-        this.icons = {'Fontello': fontData, FontAwesome: faData};
+        this.icons = {'Fontello': FontelloData, FontAwesome: FontAwesomeData};
     }
 
 
