@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {RecitRichEditor} from './libs/components/Components';
+import {UtilsMoodle} from './libs/utils/Utils';
 import {Options} from './Options';
 
 // Find all DOM containers
@@ -20,8 +21,7 @@ if(process.env.NODE_ENV === "development"){
     //React.lazy(() => import('bootstrap/dist/css/bootstrap.min.css'));
     console.log(`Dev: ${Options.appName()} - v:${Options.appVersion()}`); 
     
-    let attoInterface = Options.getAttoInterface();
-    ReactDOM.render(<RecitRichEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent}/>, document.getElementById('root')); 
+    ReactDOM.render(<RecitRichEditor />, document.getElementById('root')); 
 }
 else{
     /*window.RecitRichEditorCreateInstance = function(placeholder, onChange){
@@ -30,7 +30,7 @@ else{
         ReactDOM.render(<RecitRichEditor name={name} content={placeholder.innerHTML} onChange={onChange}/>, placeholder);
     }*/
     console.log(`Prod: ${Options.appName()} - v:${Options.appVersion()}`); 
-    let attoInterface = Options.getAttoInterface();
+    let attoInterface = UtilsMoodle.getAttoInterface();
     ReactDOM.render(<RecitRichEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent}/>, document.getElementById('root')); 
 }
 

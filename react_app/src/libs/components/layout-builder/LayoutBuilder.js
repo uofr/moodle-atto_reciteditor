@@ -6,11 +6,10 @@ import {TreeView} from './TreeView';
 import {Canvas, CanvasElement, FloatingMenu, NodeTextEditing} from './Canvas';
 import {ComponentProperties, VisualComponentList} from './ComponentsCollection';
 import {CustomHtmlComponents} from './CustomHtmlComponents';
-import {SourceCodeEditor} from '../Components';
+import {SourceCodeEditor, Assets} from '../Components';
 import { HTMLElementData } from './HTMLElementData';
 import { Templates } from './Templates';
-import Utils, {UtilsHTML} from '../../utils/Utils';
-import {Assets} from '../../components/assets/Assets';
+import Utils, {UtilsHTML, UtilsMoodle} from '../../utils/Utils';
 import html2canvas from 'html2canvas';
 
 export class LayoutBuilder extends Component
@@ -314,9 +313,13 @@ class CanvasState{
         this.onCloneNode = this.onCloneNode.bind(this);
         this.onEditNodeText = this.onEditNodeText.bind(this);
         this.onSaveTemplate = this.onSaveTemplate.bind(this);
+        this.onLoadFrame = this.onLoadFrame.bind(this);
+
+        this.onLoadFrame();
     }
 
-    onInit(){ console.log("Abstract method...");}
+    onLoadFrame(){} // Abstract method
+    onInit(iframe){ console.log("Abstract method...");}
     render(show, selectedElement){ console.log("Abstract method...");}
     onDragEnd(){ console.log("Abstract method...");}
     onDropElement(){console.log("Abstract method...");}
@@ -352,6 +355,20 @@ class CanvasState{
 
         return device;
     }
+
+    getBaseCss(){
+        let attoInterface = UtilsMoodle.getAttoInterface();
+
+        if(attoInterface !== null){
+            console.log("Loading theme Moodle")
+            let settings = attoInterface.getSettings();
+            return `${settings.wwwroot}/theme/styles.php/${settings.theme}/${settings.themerev}_1/all`;
+        }
+        else{
+            console.log("Loading theme Bootstrap")
+            return Assets.Bootstrap;
+        }
+    }
 }
 
 class DrawnerState extends CanvasState{
@@ -362,14 +379,26 @@ class DrawnerState extends CanvasState{
         this.window = null;
     }
 
-    onInit(event){
-        this.iFrame = event.target;
+    onLoadFrame(){
+        let iframe = window.document.getElementById("drawner-canvas");
+        if(iframe){
+            this.onInit(iframe);
+            return;
+        }
+        else{
+            console.log("Loading drawner iframe...");
+            setTimeout(this.onLoadFrame, 500);
+        }
+    }
+
+    onInit(iframe){
+        this.iFrame = iframe;
         this.window = this.iFrame.contentWindow || this.iFrame.contentDocument;
         let head = this.window.document.head;
         let body = this.window.document.body;
 
         let el = document.createElement("link");
-		el.setAttribute("href", Assets.Bootstrap);
+		el.setAttribute("href", this.getBaseCss());
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
@@ -402,7 +431,7 @@ class DrawnerState extends CanvasState{
 
         let main = 
             <Canvas style={{display: (show ? 'flex' : 'none') }}>
-                <iframe onLoad={this.onInit} className="canvas" style={this.getDeviceDimension()}></iframe>
+                <iframe id="drawner-canvas" className="canvas" style={this.getDeviceDimension()}></iframe>
                 <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement}  onEdit={this.mainView.onEditNodeText}
                             onDeleteElement={this.mainView.onDeleteElement} onMoveNodeUp={this.mainView.onMoveNodeUp} onMoveNodeDown={this.mainView.onMoveNodeDown} 
                              onCloneNode={this.mainView.onCloneNode} onSaveCustomComponent={this.mainView.onSaveCustomComponent} onSaveTemplate={this.mainView.onSaveTemplate} />
@@ -552,10 +581,10 @@ class DrawnerState extends CanvasState{
             }
             else{
                 console.log("Loading drawner canvas...");
-                setTimeout(loading, 250);
+                setTimeout(loading, 500);
             }
         }
-        setTimeout(loading, 250);
+        setTimeout(loading, 500);
     }
 
     onEditNodeText(selectedElement){ 
@@ -655,12 +684,24 @@ class PreviewState extends CanvasState{
         this.iFrame = null;
     }
 
-    onInit(event){
-        this.iFrame = event.target.contentWindow || event.target.contentDocument;
+    onLoadFrame(){
+        let iframe = window.document.getElementById("preview-canvas");
+        if(iframe){
+            this.onInit(iframe);
+            return;
+        }
+        else{
+            console.log("Loading preview iframe...");
+            setTimeout(this.onLoadFrame, 500);
+        }
+    }
+
+    onInit(iframe){
+        this.iFrame =  iframe.contentWindow || iframe.contentDocument;
         let head = this.iFrame.document.head;
 
         let el = document.createElement("link");
-		el.setAttribute("href", Assets.Bootstrap);
+		el.setAttribute("href", this.getBaseCss());
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
@@ -674,21 +715,21 @@ class PreviewState extends CanvasState{
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
-        el = document.createElement("link");
+        /*el = document.createElement("link");
 		el.setAttribute("href", Assets.ContentCSS);
 		el.setAttribute("rel", "stylesheet");
-		head.appendChild(el);
+		head.appendChild(el);*/
 
-        el = document.createElement("script");
+       /* el = document.createElement("script");
 		el.setAttribute("src", Assets.ContentScript);
 		el.setAttribute("type", "text/javascript");
-		head.appendChild(el);
+		head.appendChild(el);*/
     }
 
     render(show, selectedElement){
         let main = 
             <Canvas style={{display: (show ? 'flex' : 'none') }}> 
-                <iframe onLoad={this.onInit} className="canvas" style={this.getDeviceDimension()}></iframe>
+                <iframe id="preview-canvas" className="canvas" style={this.getDeviceDimension()}></iframe>
             </Canvas>;
         return main;
     }

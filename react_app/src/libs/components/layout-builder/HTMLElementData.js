@@ -1,8 +1,7 @@
 import React from 'react';
 import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus, faEllipsisH, faGripLines, faSquare, faRuler} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {Assets} from '../assets/Assets';
-import { LayoutSpacingEditor} from '../Components';
+import { LayoutSpacingEditor, Assets} from '../Components';
 import Utils from '../../utils/Utils';
 
 export class HTMLElementData{

@@ -369,6 +369,25 @@ export class UtilsMoodle
     static wwwRoot(){
  //       return M.cfg.wwwroot;
     };
+
+    static getAttoInterface(){
+        if(window.attoInterface){
+            let result = {setContent: null, getContent: null, getSettings: null};
+            result.getContent = window.attoInterface.getContent || window.parent.attoInterface.getContent; // the editor content here is text and not html
+            result.setContent = window.attoInterface.setContent || window.parent.attoInterface.setContent;
+            result.getSettings = window.attoInterface.getSettings || window.parent.attoInterface.getSettings;
+            return result;
+        }
+        else{
+            alert('Atto interface not defined. Unable to transfer content.');
+
+            if(process.env.NODE_ENV !== "development"){  
+                window.close();
+            }
+
+            return null;
+        }
+    }
 }
 
 export class UtilsString

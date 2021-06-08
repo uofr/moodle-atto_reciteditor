@@ -1,4 +1,8 @@
-class Popup {
+M = M || {};
+M.recit = M.recit || {};
+M.recit.reciteditor = M.recit.reciteditor || {};
+
+M.recit.reciteditor.Popup = class {
     constructor(content) {
       this.popup = document.createElement('div');
       this.popup.classList.add('r_popup-overlay');
@@ -13,13 +17,14 @@ class Popup {
         this.popup.remove();
     }
 }
+
 document.body.addEventListener('click',function(e){
     if(e.target && e.target.classList.contains('videobtn')){
         let url = e.target.getAttribute('data-videourl');
         if (url){
             let iframe = document.createElement('iframe');
             iframe.src = url;
-            new Popup(iframe);
+            new M.recit.reciteditor.Popup(iframe);
         }
         e.preventDefault();
     }else if(e.target && e.target.classList.contains('img-popup')){
@@ -27,8 +32,9 @@ document.body.addEventListener('click',function(e){
         if (url){
             let img = document.createElement('img');
             img.src = url;
-            new Popup(img);
+            new M.recit.reciteditor.Popup(img);
         }
         e.preventDefault();
     }
 });
+

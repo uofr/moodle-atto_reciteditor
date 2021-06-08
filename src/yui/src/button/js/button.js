@@ -46,6 +46,7 @@ Y.namespace('M.atto_reciteditor').Button = Y.Base.create('button', Y.M.editor_at
         popup.attoInterface.getSettings = function(){
             var result = {};
             result.contextId = M.cfg.contextid;
+            result.wwwroot = M.cfg.wwwroot;
             result.theme = M.cfg.theme;
             result.themerev = M.cfg.themerev;
             return result;
