@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Nav, Card, Navbar, Collapse  } from 'react-bootstrap';
-import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faFileWord, faEye, faCode, faAngleRight, faAngleDown, faBars, faPuzzlePiece, faSlidersH, faStream} from '@fortawesome/free-solid-svg-icons';
+import { Nav, Card, Navbar, Collapse, Button  } from 'react-bootstrap';
+import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faFileWord, faEye, faCode, faAngleRight, faAngleDown, faBars, faPuzzlePiece, faSlidersH, faStream, faSave} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {TreeView} from './TreeView';
 import {Canvas, CanvasElement, FloatingMenu, NodeTextEditing} from './Canvas';
@@ -16,18 +16,23 @@ import html2canvas from 'html2canvas';
 export class LayoutBuilder extends Component
 {
     static defaultProps = {
-        input: "",
-        onSelectBuilder: null
+        content: "",
+        onSelectBuilder: null,
+        onSaveAndClose: null,
+        onChange: null
     };
 
     constructor(props){
         super(props);
 
         this.onNavbarSelect = this.onNavbarSelect.bind(this);
+        this.onSaveAndClose = this.onSaveAndClose.bind(this);
 
         this.state = {
             device: 'xl', view: 'drawner', leftPanel: false 
         };
+
+        this.mainViewRef = React.createRef();
     }  
 
 	render(){
@@ -55,9 +60,10 @@ export class LayoutBuilder extends Component
                             <Nav.Link eventKey="lg"><FontAwesomeIcon icon={faLaptop} title="LG"/></Nav.Link>
                             <Nav.Link eventKey="xl"><FontAwesomeIcon icon={faDesktop} title="XL"/></Nav.Link>    
                         </Nav>
+                        <Button variant="outline-success" onClick={this.onSaveAndClose}><FontAwesomeIcon icon={faSave} title="Enregistrer"/>{" Enregistrer"}</Button>
                     </Navbar.Collapse>
                 </Navbar>
-                <MainView data={this.state.data} device={this.state.device} view={this.state.view} leftPanel={this.state.leftPanel}/>
+                <MainView ref={this.mainViewRef} content={this.props.content} device={this.state.device} view={this.state.view} leftPanel={this.state.leftPanel}/>
             </div>;
 
 		return (main);
@@ -82,11 +88,16 @@ export class LayoutBuilder extends Component
             this.setState({device: eventKey});
         }
     }
+
+    onSaveAndClose(){
+        let content = this.mainViewRef.current.getData();
+        this.props.onSaveAndClose(content);
+    }
 }
 
 class MainView extends Component{
     static defaultProps = {
-        data: null,
+        content: "",
         device: "",
         view: "drawner",
         leftPanel: false
@@ -108,6 +119,7 @@ class MainView extends Component{
         this.onDragEnd = this.onDragEnd.bind(this);
         this.onMouseEnter = this.onMouseEnter.bind(this);
         this.onMouseLeave = this.onMouseLeave.bind(this);
+        this.getData = this.getData.bind(this);
 
         this.canvasState = {
             drawner: new DrawnerState(this),
@@ -124,12 +136,24 @@ class MainView extends Component{
         };
     }
 
+    componentDidMount(){
+        this.canvasState[this.props.view].setData(this.props.content);
+    }
+
     componentDidUpdate(prevProps){
         if(prevProps.view !== this.props.view){
             let data = this.canvasState[prevProps.view].getData();
             this.canvasState[this.props.view].setData(data);
             this.setState({canvasState: this.props.view},  this.onCollapse);
         }
+
+        if(prevProps.content !== this.props.content){
+            this.canvasState[this.props.view].setData(this.props.content);
+        }
+    }
+
+    getData(){
+        return this.canvasState[this.props.view].getData();
     }
 
     render(){
@@ -518,9 +542,20 @@ class DrawnerState extends CanvasState{
     }
 
     setData(value){
-        let body = this.window.document.body;
-        body.innerHTML = value;
-        CanvasElement.create(body, this.mainView.onSelectElement, this.onDropElement, this.mainView.onEditNodeText);
+        let that = this;
+
+        let loading = function(){
+            if(that.window){
+                let body = that.window.document.body;
+                body.innerHTML = value;
+                CanvasElement.create(body, that.mainView.onSelectElement, that.onDropElement, that.mainView.onEditNodeText);
+            }
+            else{
+                console.log("Loading drawner canvas...");
+                setTimeout(loading, 250);
+            }
+        }
+        setTimeout(loading, 250);
     }
 
     onEditNodeText(selectedElement){ 

@@ -14,11 +14,14 @@ import {Options} from './Options';
         ReactDOM.render(<RecitRichEditor ref={(instance) => {window.name = instance}} content={placeholder.innerHTML}/>, placeholder);
     }
 }, false);*/
+
 if(process.env.NODE_ENV === "development"){    
     // Bootstrap is loaded only in dev mode because Moodle already has Bootstrap files
     //React.lazy(() => import('bootstrap/dist/css/bootstrap.min.css'));
     console.log(`Dev: ${Options.appName()} - v:${Options.appVersion()}`); 
-    ReactDOM.render(<RecitRichEditor />, document.getElementById('root')); 
+    
+    let attoInterface = Options.getAttoInterface();
+    ReactDOM.render(<RecitRichEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent}/>, document.getElementById('root')); 
 }
 else{
     /*window.RecitRichEditorCreateInstance = function(placeholder, onChange){
@@ -27,6 +30,7 @@ else{
         ReactDOM.render(<RecitRichEditor name={name} content={placeholder.innerHTML} onChange={onChange}/>, placeholder);
     }*/
     console.log(`Prod: ${Options.appName()} - v:${Options.appVersion()}`); 
-    ReactDOM.render(<RecitRichEditor />, document.getElementById('root')); 
+    let attoInterface = Options.getAttoInterface();
+    ReactDOM.render(<RecitRichEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent}/>, document.getElementById('root')); 
 }
 

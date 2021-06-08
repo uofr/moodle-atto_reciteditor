@@ -6,7 +6,7 @@ export class RecitRichEditor extends Component{
     static defaultProps = {
         name: "",
         content: "",
-        onChange: null
+        onSaveAndClose: null
     };
 
     constructor(props){
@@ -26,16 +26,12 @@ export class RecitRichEditor extends Component{
                 this.state.builder === "word" ? 
                     <VisualWordProcessor content={this.content} onSelectBuilder={this.onSelectBuilder} onChange={this.onChange}/> 
                     : 
-                    <LayoutBuilder content={this.content} onSelectBuilder={this.onSelectBuilder}/>
+                    <LayoutBuilder content={this.content} onSelectBuilder={this.onSelectBuilder} onSaveAndClose={this.props.onSaveAndClose}/>
 		return (main);
     }
     
     onChange(content, forceUpdate){
         this.content = content;
-
-        if(this.props.onChange){
-            this.props.onChange({target:{value: this.content, name: this.props.name}});
-        }
 
         if(forceUpdate){
             this.forceUpdate();
@@ -46,7 +42,7 @@ export class RecitRichEditor extends Component{
         this.setState({builder: option});
     }
 
-    onVisualBuilder(){
+    /*onVisualBuilder(){
         let Moodle = (M ? M : {}); // M = Moodle global variable
 
         let url = Moodle.cfg.wwwroot;
@@ -74,5 +70,5 @@ export class RecitRichEditor extends Component{
             popup.close();
             that.forceUpdate();
         };
-    }
+    }*/
 }
