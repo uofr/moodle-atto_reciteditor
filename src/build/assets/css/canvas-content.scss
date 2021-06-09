@@ -22,7 +22,7 @@ html.canvas-content{
         .row{ border: $border-invisible-element;  padding: 1rem; }
         .col, .col-12{ border: $border-invisible-element; min-height: 30px;}
 
-        .btn:empty::after{content: "Button"}
+        //.btn:empty::after{content: "Button"}
         .alert:empty::after{content: "Alerte"}
         .card-header:empty::before{content: "Header"; }
         .card-body:empty::before{content: "Body"; }
