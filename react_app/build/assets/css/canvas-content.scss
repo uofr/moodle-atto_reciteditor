@@ -5,9 +5,10 @@ html.canvas-content{
     margin: 0; padding: 0;
 
     body{
-        margin:0; padding: 15px;
-
+        margin:0; padding: 15px; 
         
+        /* for firefox */
+        height: 100%; 
 
         //div:not(.container):not(.row):not(.col):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.carousel):not(.carousel-inner)::before{content: "Div"}
         div:empty:not(.col):not(.col-12):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before{content: "Div"}

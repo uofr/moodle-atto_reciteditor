@@ -17,6 +17,7 @@ export class LayoutBuilder extends Component
     static defaultProps = {
         content: "",
         onSelectBuilder: null,
+        onChange: null,
         onSaveAndClose: null,
         onChange: null
     };
@@ -70,6 +71,7 @@ export class LayoutBuilder extends Component
 
     onNavbarSelect(eventKey, event){
         if(eventKey === 'wordbuilder'){
+            this.props.onChange(this.mainViewRef.current.getData());
             this.props.onSelectBuilder('word');
         }
         else if('preview' === eventKey){
@@ -360,12 +362,12 @@ class CanvasState{
         let attoInterface = UtilsMoodle.getAttoInterface();
 
         if(attoInterface !== null){
-            console.log("Loading theme Moodle")
+            console.log(`Loading theme Moodle on ${this.constructor.name}`);
             let settings = attoInterface.getSettings();
             return `${settings.wwwroot}/theme/styles.php/${settings.theme}/${settings.themerev}_1/all`;
         }
         else{
-            console.log("Loading theme Bootstrap")
+            console.log(`Loading theme Bootstrap on ${this.constructor.name}`)
             return Assets.Bootstrap;
         }
     }

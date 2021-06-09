@@ -5,6 +5,8 @@ html.canvas-content {
   html.canvas-content body {
     margin: 0;
     padding: 15px;
+    /* for firefox */
+    height: 100%;
     /* Those elements have priority over the previous ones*/ }
     html.canvas-content body div:empty:not(.col):not(.col-12):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before {
       content: "Div"; }

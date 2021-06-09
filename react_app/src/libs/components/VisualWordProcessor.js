@@ -59,7 +59,7 @@ export class VisualWordProcessor extends Component
                         buttonsBar={<ButtonsBar selection={this.state.selection} history={this.state.history} onUndo={this.undoHistory} onRedo={this.redoHistory}
                                 flags={this.state.flags} onHighlighter={() => this.onSetFlag('highlighter')} onCodeSource={this.onCodeSource}
                                 onMathFormula={() => this.onSetFlag('mathFormula')} onScreenCapture={this.onScreenCapture}
-                                    onShowHtmlEditor={() => this.props.onSelectBuilder('layout')}/>} 
+                                    onShowHtmlEditor={() => this.props.onSelectBuilder('layout', this.state.tmpContent)}/>} 
                         workArea={this.getWorkArea()}
                         footerBar={<StatusBar selection={this.state.selection} />}>
                         {this.state.flags.mathFormula && (this.state.selection !== null) &&

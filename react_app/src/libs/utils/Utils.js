@@ -697,7 +697,7 @@ export class UtilsHTML{
                 result.selectionDirection = 'rtl';
             }
              
-            let mainNode = result.sel.baseNode;
+            let mainNode = result.sel.baseNode || result.sel.anchorNode; // Chromme || Firefox
             if (!mainNode) return null;
             result.node = (mainNode instanceof Element ? mainNode :  mainNode.parentElement);
             result.subSelection = (result.sel.anchorOffset > 0 && result.sel.focusOffset > 0);

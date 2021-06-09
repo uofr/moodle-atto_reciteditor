@@ -288,7 +288,8 @@ export class BtnSetCssProp extends Component{
         defaultValue: "",
         value: "",
         onClick: null,
-        title: ""
+        title: "",
+        variant: ""
     };
 
     constructor(props){
@@ -299,6 +300,10 @@ export class BtnSetCssProp extends Component{
 
     render(){
         let variant = (this.getCurrentValue() === this.props.value ? ButtonsBar.Layout.btnToggled : ButtonsBar.Layout.btnNormal );
+
+        if(this.props.variant.length > 0){
+            variant = this.props.variant;
+        }
 
         let main = 
             <Button variant={variant} title={this.props.title} onClick={this.onClick}>

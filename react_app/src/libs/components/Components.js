@@ -29,8 +29,8 @@ export class Assets{
     static ImageEmptyHD = require('./assets/images/empty-hd.jpg');
 
     static CanvasContentCSS = './assets/css/canvas-content.css';
-    static ContentCSS = './assets/css/content.css';
-    static ContentScript = './assets/js/script.js';
+   // static ContentCSS = './assets/css/content.css'; it is already in Moodle theme
+    //static ContentScript = './assets/js/script.js'; 
 
     static Fontello = './assets/fontello/css/fontello.css';
     static FontelloData = require('../../../build/assets/fontello/config.json');

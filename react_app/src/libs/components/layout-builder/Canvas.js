@@ -288,10 +288,10 @@ export class NodeTextEditing extends Component{
                 <div style={style}>
                    <ButtonToolbar >
                         <ButtonGroup size="sm">
-                            <BtnSetCssProp window={this.props.window}  cssProp="font-weight" defaultValue="normal" value="bold"  icon={faBold}  title="Gras"/>
-                            <BtnSetCssProp window={this.props.window}  cssProp="font-style" defaultValue="normal" value="italic"  icon={faItalic}  title="Italique"/>
-                            <BtnSetCssProp window={this.props.window}  cssProp="text-decoration" defaultValue="normal" value="underline"  icon={faUnderline}  title="Souligné"/>
-                            <BtnSetCssProp window={this.props.window}  cssProp="text-decoration" defaultValue="normal" value="line-through"  icon={faStrikethrough}  title="Barré"/>
+                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="font-weight" defaultValue="normal" value="bold"  icon={faBold}  title="Gras"/>
+                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="font-style" defaultValue="normal" value="italic"  icon={faItalic}  title="Italique"/>
+                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="text-decoration" defaultValue="normal" value="underline"  icon={faUnderline}  title="Souligné"/>
+                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="text-decoration" defaultValue="normal" value="line-through"  icon={faStrikethrough}  title="Barré"/>
                         </ButtonGroup>
                     </ButtonToolbar>
                 </div>;

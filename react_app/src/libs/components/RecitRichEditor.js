@@ -26,7 +26,7 @@ export class RecitRichEditor extends Component{
                 this.state.builder === "word" ? 
                     <VisualWordProcessor content={this.content} onSelectBuilder={this.onSelectBuilder} onChange={this.onChange}/> 
                     : 
-                    <LayoutBuilder content={this.content} onSelectBuilder={this.onSelectBuilder} onSaveAndClose={this.props.onSaveAndClose}/>
+                    <LayoutBuilder content={this.content} onSelectBuilder={this.onSelectBuilder} onChange={this.onChange} onSaveAndClose={this.props.onSaveAndClose}/>
 		return (main);
     }
     
@@ -41,34 +41,4 @@ export class RecitRichEditor extends Component{
     onSelectBuilder(option){
         this.setState({builder: option});
     }
-
-    /*onVisualBuilder(){
-        let Moodle = (M ? M : {}); // M = Moodle global variable
-
-        let url = Moodle.cfg.wwwroot;
-        url += "/lib/editor/atto/plugins/vvvebjs/editor/index.php";
-        url += "?contextid="+Moodle.cfg.contextid;
-        url += "&theme="+Moodle.cfg.theme;
-        url += "&themerev="+Moodle.cfg.themerev;
-
-        let popup = window.open(url,'VvvEbJs','scrollbars=1');
-
-        if (popup.outerWidth < window.screen.availWidth || popup.outerHeight < window.screen.availHeight)
-        {
-          popup.moveTo(0,0);
-          popup.resizeTo(window.screen.availWidth, window.screen.availHeight);
-        }
-
-        let that = this;
-        popup.getEditorContent = function(){
-            return that.content;
-        };
-        
-        popup.onSave = function(frameDocument){
-            let html = frameDocument.body.outerHTML;
-            that.content = html;
-            popup.close();
-            that.forceUpdate();
-        };
-    }*/
 }
