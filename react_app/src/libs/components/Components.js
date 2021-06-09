@@ -18,6 +18,7 @@ export * from './LayoutSpacing';
 export * from './RecitRichEditor';
 export * from './ColorSelector';
 export * from './SourceCodeEditor';
+export * from './IconSelector';
 
 export default class Components{
     static version = 1.0;
@@ -33,10 +34,10 @@ export class Assets{
     //static ContentScript = './assets/js/script.js'; 
 
     static Fontello = './assets/fontello/css/fontello.css';
-    static FontelloData = require('../../../build/assets/fontello/config.json');
+    static FontelloData = require('./assets/fontello/config.json');
 
     static FontAwesome = './assets/fontawesome/css/fontello.css';
-    static FontAwesomeData = require('../../../build/assets/fontawesome/config.json');
+    static FontAwesomeData = require('./assets/fontawesome/config.json');
 
     static Bootstrap = './assets/bootstrap/css/bootstrap.min.css';
 }

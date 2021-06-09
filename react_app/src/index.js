@@ -20,8 +20,8 @@ if(process.env.NODE_ENV === "development"){
     // Bootstrap is loaded only in dev mode because Moodle already has Bootstrap files
     //React.lazy(() => import('bootstrap/dist/css/bootstrap.min.css'));
     console.log(`Dev: ${Options.appName()} - v:${Options.appVersion()}`); 
-    
-    ReactDOM.render(<RecitRichEditor />, document.getElementById('root')); 
+    let attoInterface = UtilsMoodle.getAttoInterface();
+    ReactDOM.render(<RecitRichEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent} />, document.getElementById('root')); 
 }
 else{
     /*window.RecitRichEditorCreateInstance = function(placeholder, onChange){

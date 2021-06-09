@@ -1371,7 +1371,7 @@ export class HTMLElementData{
             },
             {name: "Icon", type: 'native', tagName: 'i', properties: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'icon', 'font'],
                 init:function(el){
-                    el.classList.add('icon-emo-happy-1');//TODO: Default icon
+                    el.classList.add('icon-ampoule');//Default icon
                 },
             }
         ]},
