@@ -998,6 +998,7 @@ export class HTMLElementData{
                     let el = document.createElement("button");
                     el.classList.add('btn');
                     el.classList.add('btn-primary');
+                    el.innerHTML = "Bouton";
                     return el;
                 },
             },
@@ -1230,7 +1231,7 @@ export class HTMLElementData{
                     
                     let el = document.createElement("img");
                     el.classList.add("mr-3");
-                    el.setAttribute("src", `.${Assets.ImageEmpty}`);
+                    el.setAttribute("src", `${Assets.ImageEmpty}`);
                     media.appendChild(el);
 
                     let body = document.createElement("div");
@@ -1254,52 +1255,64 @@ export class HTMLElementData{
                     slider.classList.add("slide");
                     slider.setAttribute("data-ride", "carousel");
 
-                    let body = document.createElement("div");
-                    body.classList.add("carousel-inner");
-                    slider.appendChild(body);
-
-                    let slide = document.createElement("div");
-                    slide.classList.add("carousel-item");
-                    slide.classList.add("active");
-                    body.appendChild(slide);
-                    
-                    let el = document.createElement("img");
-                    el.classList.add("w-100");
-                    el.setAttribute("src", `.${Assets.ImageEmptyHD}`);
-                    slide.appendChild(el);
-
-                    slide = document.createElement("div");
-                    slide.classList.add("carousel-item");
-                    body.appendChild(slide);
-                    
-                    el = document.createElement("img");
-                    el.classList.add("w-100");
-                    el.setAttribute("src", `.${Assets.ImageEmptyHD}`);
-                    slide.appendChild(el);
-
-                    body.appendChild(slide.cloneNode(true));
-
-                    let btn = document.createElement("a");
-                    btn.classList.add("carousel-control-prev");
-                    btn.setAttribute("role", 'button');
-                    btn.setAttribute("data-slide", 'prev');
-                    slider.appendChild(btn);
-
-                    el = document.createElement("span");
-                    el.classList.add("carousel-control-prev-icon");
-                    el.setAttribute("aria-hidden", 'true');
-                    btn.appendChild(el);
-
-                    btn = document.createElement("a");
-                    btn.classList.add("carousel-control-next");
-                    btn.setAttribute("role", 'button');
-                    btn.setAttribute("data-slide", 'next');
-                    slider.appendChild(btn);
-
-                    el = document.createElement("span");
-                    el.classList.add("carousel-control-next-icon");
-                    el.setAttribute("aria-hidden", 'true');
-                    btn.appendChild(el);
+                    slider.innerHTML = 
+                        `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-tag-id="3">
+                    <ol class="carousel-indicators" data-tag-id="4">
+                      <li data-target="#carouselExampleIndicators" data-slide-to="0" data-tag-id="5">
+                      </li>
+                      <li data-target="#carouselExampleIndicators" data-slide-to="1" data-tag-id="6">
+                      </li>
+                      <li data-target="#carouselExampleIndicators" data-slide-to="2" data-tag-id="7">
+                      </li>
+                    </ol>
+                    <div class="carousel-inner" data-tag-id="8">
+                      <div class="carousel-item active" data-tag-id="9">
+                        <img class="d-block w-100" src="https://picsum.photos/1500/480" alt="First slide" data-tag-id="10">
+                        <div class="carousel-caption d-none d-md-block" data-tag-id="11">
+                          <h3 class="h5" data-tag-id="12">
+                            Titre 1
+                          </h3>
+                          <p data-tag-id="13">
+                            Paragraphe 1
+                          </p>
+                        </div>
+                      </div>
+                      <div class="carousel-item" data-tag-id="14">
+                        <img class="d-block w-100" src="https://picsum.photos/1500/480" alt="Second slide" data-tag-id="15">
+                        <div class="carousel-caption d-none d-md-block" data-tag-id="16">
+                          <h3 class="h5" data-tag-id="17">
+                            Titre 2
+                          </h3>
+                          <p data-tag-id="18">
+                            Paragraphe 2
+                          </p>
+                        </div>
+                      </div>
+                      <div class="carousel-item" data-tag-id="19">
+                        <img class="d-block w-100" src="https://picsum.photos/1500/480" alt="Third slide" data-tag-id="20">
+                        <div class="carousel-caption d-none d-md-block" data-tag-id="21">
+                          <h3 class="h5" data-tag-id="22">
+                            Titre 3
+                          </h3>
+                          <p data-tag-id="23">
+                            Paragraphe 3
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev" data-tag-id="24">
+                      <i class="fa-3x fa fa-arrow-circle-left" data-tag-id="25"></i>
+                      <span class="sr-only" data-tag-id="26">
+                            Précédent
+                          </span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next" data-tag-id="27">
+                      <i class="fa-3x fa fa-arrow-circle-right" data-tag-id="28"></i>
+                      <span class="sr-only" data-tag-id="29">
+                            Suivant
+                          </span>
+                    </a>
+                  </div>`;
 
                     return slider;
                 },
@@ -1320,7 +1333,7 @@ export class HTMLElementData{
             {name: "Image", type: 'bootstrap', tagName: 'img', properties: ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout'],
                 create:function(){
                     let el = document.createElement("img");
-                    el.setAttribute('src', `.${Assets.ImageEmpty}`);
+                    el.setAttribute('src', `${Assets.ImageEmpty}`);
                     el.classList.add("img-fluid");
                     return el;
                 },
@@ -1332,7 +1345,7 @@ export class HTMLElementData{
                     div.classList.add('text-center');
                     
                     let el = document.createElement("img");
-                    el.setAttribute('src', `.${Assets.ImageEmpty}`);
+                    el.setAttribute('src', `${Assets.ImageEmpty}`);
                     el.classList.add("img-fluid");
                     el.classList.add("img-popup");
                     div.appendChild(el);
@@ -1350,7 +1363,7 @@ export class HTMLElementData{
                     div.classList.add('imgclick');
                     
                     let el = document.createElement("img");
-                    el.setAttribute('src', `.${Assets.ImageEmpty}`);
+                    el.setAttribute('src', `${Assets.ImageEmpty}`);
                     el.classList.add("img-fluid");
                     div.appendChild(el);
 
@@ -1362,7 +1375,7 @@ export class HTMLElementData{
                     el.classList.add('rounded');
                     el.classList.add('p-2');
                     el.href = '#';
-                    el.innerHTML = 'Link';
+                    el.innerHTML = 'Commencer';
                     div2.appendChild(el);
                     div.appendChild(div2);
 
@@ -1371,7 +1384,7 @@ export class HTMLElementData{
             },
             {name: "Icon", type: 'native', tagName: 'i', properties: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'icon', 'font'],
                 init:function(el){
-                    el.classList.add('icon-emo-happy-1');//TODO: Default icon
+                    el.classList.add('icon-ampoule');//Default icon
                 },
             }
         ]},

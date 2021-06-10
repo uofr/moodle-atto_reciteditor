@@ -371,21 +371,28 @@ export class UtilsMoodle
     };
 
     static getAttoInterface(){
+        let result = {
+            setContent: function(){console.log('Atto interface not defined.'); }, 
+            getContent: function(){console.log('Atto interface not defined.'); return null;}, 
+            getSettings: function(){console.log('Atto interface not defined.'); }
+        };
+
         if(window.attoInterface){
-            let result = {setContent: null, getContent: null, getSettings: null};
             result.getContent = window.attoInterface.getContent || window.parent.attoInterface.getContent; // the editor content here is text and not html
             result.setContent = window.attoInterface.setContent || window.parent.attoInterface.setContent;
             result.getSettings = window.attoInterface.getSettings || window.parent.attoInterface.getSettings;
             return result;
         }
         else{
-            alert('Atto interface not defined. Unable to transfer content.');
-
             if(process.env.NODE_ENV !== "development"){  
+                alert('Atto interface not defined. Unable to transfer content.');
                 window.close();
             }
+            else{
+                console.log('Atto interface not defined. Unable to transfer content.');
+            }
 
-            return null;
+            return result;
         }
     }
 }

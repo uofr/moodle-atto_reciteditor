@@ -6,6 +6,8 @@ import { Button, Modal, FormControl } from 'react-bootstrap';
 //import faData from './assets/fontawesome/config.json';
 import { faIcons} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Assets} from './Components';
+
 export class IconSelector extends Component {
     static defaultProps = {
         name: '',
@@ -23,7 +25,7 @@ export class IconSelector extends Component {
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.state = {modal:false, search: ''};
-        this.icons = {'Fontello': FontelloData, FontAwesome: FontAwesomeData};
+        this.icons = {'Fontello': Assets.FontelloData, FontAwesome: Assets.FontAwesomeData};
     }
 
 
@@ -41,8 +43,8 @@ export class IconSelector extends Component {
           <Modal.Title>Icons</Modal.Title>
         </Modal.Header>
         <Modal.Body style={{overflowY: 'scroll', maxHeight: '50vh'}}>
-            <FormControl className={"InputText"} type="text" value={this.state.search} onChange={this.onSearch} placeholder={"Recherche"} style={{marginLeft: '15px', width: '91%'}}/>
-            <div className={"d-f"}>
+            <FormControl className={"InputText mb-3"} type="text" value={this.state.search} onChange={this.onSearch} placeholder={"Recherche"} />
+            <div className={"IconSelector"}>
                 {items}
             </div>
         </Modal.Body>
@@ -65,31 +67,21 @@ export class IconSelector extends Component {
     getIconTable(){
         let icons = this.getIconList(this.state.search);
         let items = [];
-        let style = {
-            'width': '70px',
-            'height': '62px',
-            'textAlign': 'center',
-            'cursor': 'pointer',
-            'fontSize': '10px',
-            'border': '1px solid #c6c6c6',
-            'margin': '20px',
-            'marginBottom': '30px',
-        }
+       
         let key = 0;
         for (let cat in icons){
             items.push(<h3 key={key}>{cat}</h3>)
             key++;
             let content = [];
             for (let val of icons[cat]){
-                content.push(<div key={key} style={style} onClick={() => this.onChange(this.icons[cat].css_prefix_text+val.css)}>
+                content.push(<div key={key} className="IconItem" onClick={() => this.onChange(this.icons[cat].css_prefix_text+val.css)}>
                     <i className={this.icons[cat].css_prefix_text+val.css} style={{fontSize:'40px'}}></i>
                     <br/>{val.css}
                 </div>);
                 key++;
             }
-            items.push(<div className={"d-flex flex-wrap"}>
-            {content}
-        </div>)
+            items.push(<div key={key} className={"d-flex flex-wrap mb-3"}>{content}</div>);
+            key++;
         }
         return items;
     }
