@@ -683,15 +683,11 @@ class PreviewState extends CanvasState{
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
-        /*el = document.createElement("link");
-		el.setAttribute("href", Assets.ContentCSS);
-		el.setAttribute("rel", "stylesheet");
-		head.appendChild(el);*/
-
-       /* el = document.createElement("script");
-		el.setAttribute("src", Assets.ContentScript);
-		el.setAttribute("type", "text/javascript");
-		head.appendChild(el);*/
+        this.iFrame.addEventListener("click", function(e) {//Prevent links from working on preview
+            if (e.target.tagName == 'A' || e.target.tagName == 'BUTTON'){
+                e.preventDefault();
+            }
+        });
     }
 
     render(show, selectedElement){
