@@ -66,20 +66,20 @@ html.canvas-content {
       content: '4th slide'; }
     html.canvas-content body .carousel-item:nth-of-type(5):after {
       content: '5th slide'; }
-    html.canvas-content body .flipcard .back {
+    html.canvas-content body .flipcard2 .back {
       display: none; }
-    html.canvas-content body .flipcard.hover .front {
+    html.canvas-content body .flipcard2.hover .front {
       display: none; }
-    html.canvas-content body .flipcard.hover .back {
+    html.canvas-content body .flipcard2.hover .back {
       display: block; }
-    html.canvas-content body .flipcard .front::before {
+    html.canvas-content body .flipcard2 .front::before {
       content: 'Front';
       color: #fff;
       background-color: #007bff;
       padding: 7px;
       border-radius: 24px;
       font-size: 11px; }
-    html.canvas-content body .flipcard .back::before {
+    html.canvas-content body .flipcard2 .back::before {
       content: 'Back';
       color: #fff;
       background-color: #007bff;

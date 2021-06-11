@@ -4,6 +4,7 @@
 
 //export * from './WebApi';
 export * from './Cookies';
+import {Assets} from '../components/Components';
 //export * from './I18n';
 
 export class JsNx{
@@ -271,6 +272,21 @@ export default class Utils{
         return list;
     }
 
+    static getCSSClasses(){
+        let iframe = window.document.getElementById("drawner-canvas");
+        let allRules = [];
+        let sSheetList = iframe.contentDocument.styleSheets;
+        for (let sSheet = 0; sSheet < sSheetList.length; sSheet++) {
+            let ruleList = sSheetList[sSheet].cssRules;
+            for (let rule = 0; rule < ruleList.length; rule ++) {
+                if (ruleList[rule].selectorText){
+                    allRules.push( ruleList[rule] );
+                }
+            }
+        }
+        return allRules;
+    }
+
     static RGBToHex(rgb) {
         rgb = rgb || "rgb(0,0,0)";
 
@@ -394,6 +410,20 @@ export class UtilsMoodle
 
             return result;
         }
+    }
+
+    static getBaseCss(){
+        let attoInterface = UtilsMoodle.getAttoInterface();
+
+        if(attoInterface !== null){
+            console.log(`Loading theme Moodle on ${this.constructor.name}`);
+            let settings = attoInterface.getSettings();
+            if (settings){
+                return `${settings.wwwroot}/theme/styles.php/${settings.theme}/${settings.themerev}_1/all`;
+            }
+        }
+        console.log(`Loading theme Bootstrap on ${this.constructor.name}`)
+        return Assets.Bootstrap;
     }
 }
 

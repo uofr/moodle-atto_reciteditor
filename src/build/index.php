@@ -2,8 +2,6 @@
 <html>
     <head>
 		<link rel="stylesheet" type="text/css"  href="./index.css?v=<?php echo rand(0,100); ?>">
-        <link rel="stylesheet" type="text/css"  href="./assets/fontawesome/css/fontello.css"/>
-        <link rel="stylesheet" type="text/css"  href="./assets/fontello/css/fontello.css"/>
 		<link rel="shortcut icon" type="image/jpg" href="./recit.bb33f696.png"/>
     </head>
     <body>

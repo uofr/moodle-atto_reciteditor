@@ -33,11 +33,5 @@ export class Assets{
    // static ContentCSS = './assets/css/content.css'; it is already in Moodle theme
     //static ContentScript = './assets/js/script.js'; 
 
-    static Fontello = './assets/fontello/css/fontello.css';
-    static FontelloData = require('./assets/fontello/config.json');
-
-    static FontAwesome = './assets/fontawesome/css/fontello.css';
-    static FontAwesomeData = require('./assets/fontawesome/config.json');
-
     static Bootstrap = './assets/bootstrap/css/bootstrap.min.css';
 }

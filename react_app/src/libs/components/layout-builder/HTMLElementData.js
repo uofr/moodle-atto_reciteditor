@@ -156,14 +156,14 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'icon', description: 'Icon',  type: 'bootstrap',
+            name: 'icon', description: 'Icône',  type: 'bootstrap',
             children: [
                 {
                     name: 'icon', 
-                    text: "Icon",
+                    text: "Icône",
                     input: { 
                         type: 'iconselector',
-                        text: 'Select icon',
+                        text: 'Selectionner icône',
                         onChange: function(el, value, data){
                            el.setAttribute('class', value);
                         }
@@ -233,7 +233,7 @@ export class HTMLElementData{
             children: [
                 {
                     name: 'src', 
-                    text: 'Video embed URL',
+                    text: 'URL du vidéo',
                     input: { 
                         type: 'text', 
                         defaultValue: '',
@@ -259,7 +259,7 @@ export class HTMLElementData{
             children: [
                 {
                     name: 'src', 
-                    text: 'Video embed URL',
+                    text: 'URL du vidéo',
                     input: {
                         type: 'text', 
                         defaultValue: '',
@@ -288,7 +288,7 @@ export class HTMLElementData{
             name: 'marginborderpadding', description: 'Marge - Bordure - Padding',  type: 'styleattr',
             children: [{
                 name: 'layoutspacing',
-                text: "Layout Spacing",
+                text: "Espacement",
                 input: { 
                     type: 'layoutspacingeditor',
                     flags: {showLabel: false},
@@ -490,7 +490,7 @@ export class HTMLElementData{
             },
             {
                 name: 'borderradius',
-                text: "Border radius",
+                text: "Angles des coins",
                 input: { 
                     type: 'combobox',
                     options:[
@@ -629,7 +629,7 @@ export class HTMLElementData{
                 },
                 {
                     name: 'shadow',
-                    text: "Shadow",
+                    text: "Ombre",
                     input: { 
                         type: 'radio',
                         options:[
@@ -862,8 +862,8 @@ export class HTMLElementData{
                 input: { 
                     type: 'radio',
                     options: [
-                        {text: "No", value:0},
-                        {text: "Yes", value:1},
+                        {text: "Non", value:0},
+                        {text: "Oui", value:1},
                     ],
                     onChange: function(el, value, data){
                         if(value == 1){
@@ -879,12 +879,12 @@ export class HTMLElementData{
             },
             {
                 name: 'tablestriped',
-                text: "Striped",
+                text: "Barré",
                 input: { 
                     type: 'radio',
                     options: [
-                        {text: "No", value:0},
-                        {text: "Yes", value:1},
+                        {text: "Non", value:0},
+                        {text: "Oui", value:1},
                     ],
                     onChange: function(el, value, data){
                         if(value == 1){
@@ -949,7 +949,7 @@ export class HTMLElementData{
     }
 
     static elementList = [
-        {name: 'Text', children: [
+        {name: 'Texte', children: [
             {
                 name: "H1", type: 'native', tagName: 'h1', properties: HTMLElementData.propsAssignmentFacade.text,
                 init: function (el) {
@@ -986,14 +986,14 @@ export class HTMLElementData{
                     el.innerText = el.tagName.toLowerCase();
                 },
             },
-            {name: "Paragraph", type: 'native', tagName: 'p', properties:  HTMLElementData.propsAssignmentFacade.text,
+            {name: "Paragraphe", type: 'native', tagName: 'p', properties:  HTMLElementData.propsAssignmentFacade.text,
                 init:function(el){
-                    el.innerText = "Paragraph";
+                    el.innerText = "Paragraphe";
                 }
             }
         ]},
-        {name: 'Controls', children: [
-            {name: "Button", type: 'bootstrap', tagName: 'button', properties: HTMLElementData.propsAssignmentFacade.controls,
+        {name: 'Contrôle', children: [
+            {name: "Bouton", type: 'bootstrap', tagName: 'button', properties: HTMLElementData.propsAssignmentFacade.controls,
                 create: function(){
                     let el = document.createElement("button");
                     el.classList.add('btn');
@@ -1002,9 +1002,9 @@ export class HTMLElementData{
                     return el;
                 },
             },
-            {name: "Link", type: 'native', tagName: 'a', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'link', 'font', 'layout', 'background'],
+            {name: "Lien", type: 'native', tagName: 'a', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'link', 'font', 'layout', 'background'],
                 init:function(el){
-                    el.innerText = "Link";
+                    el.innerText = "Lien";
                     el.setAttribute('href', '#');
                     el.setAttribute('target', '_self');
                 },
@@ -1014,7 +1014,7 @@ export class HTMLElementData{
                      el.setAttribute('controls', '');
                 }, 
             },
-            {name: "Video", type: 'bootstrap', tagName: 'video', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'videosource', 'layout'],
+            {name: "Vidéo", type: 'bootstrap', tagName: 'video', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'videosource', 'layout'],
                 create: function(){
                     let el = document.createElement("div");
                     el.classList.add('embed-responsive');
@@ -1028,7 +1028,7 @@ export class HTMLElementData{
                     return el;
                 },
             },
-            {name: "Video Button", type: 'bootstrap', tagName: 'videobtn', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'videobtn', 'font', 'layout', 'background'],
+            {name: "Bouton vidéo", type: 'bootstrap', tagName: 'videobtn', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'videobtn', 'font', 'layout', 'background'],
                 create: function(){
                     let el = document.createElement("button");
                     el.innerHTML = 'Video Button';
@@ -1046,7 +1046,7 @@ export class HTMLElementData{
                 }
             }
         ]},
-        {name: 'Containers', children: [
+        {name: 'Containeurs', children: [
             {name: "Div", type: 'native', tagName: 'div', properties: HTMLElementData.propsAssignmentFacade.containers,
                 init:function(el){
                 }, 
@@ -1057,7 +1057,7 @@ export class HTMLElementData{
             {name: "Section", type: 'native', tagName: 'section', properties: HTMLElementData.propsAssignmentFacade.containers,
                 init:function(el){}, 
             },         
-            {name: "Grid", type: 'bootstrap', tagName: 'grid', properties: HTMLElementData.propsAssignmentFacade.containers,
+            {name: "Grille", type: 'bootstrap', tagName: 'grid', properties: HTMLElementData.propsAssignmentFacade.containers,
                 create: function(){
                     let el = document.createElement("div");
                     el.classList.add("container");
@@ -1095,14 +1095,14 @@ export class HTMLElementData{
                     return el;
                 }
             },
-            {name: "Unordered list", type: 'native', tagName: 'ul', properties:  HTMLElementData.propsAssignmentFacade.containers,
+            {name: "Liste", type: 'native', tagName: 'ul', properties:  HTMLElementData.propsAssignmentFacade.containers,
                 init:function(el){
-                    el.innerHTML = "<li>List</li>";
+                    el.innerHTML = "<li>Liste</li>";
                 }
             },
-            {name: "Ordered list", type: 'native', tagName: 'ol', properties:  HTMLElementData.propsAssignmentFacade.containers,
+            {name: "Liste ordonnée", type: 'native', tagName: 'ol', properties:  HTMLElementData.propsAssignmentFacade.containers,
                 init:function(el){
-                    el.innerHTML = "<li>List</li>";
+                    el.innerHTML = "<li>Liste</li>";
                 }
             },
             {name: "Table", type: 'bootstrap', tagName: 'table', properties:  ['table', ...HTMLElementData.propsAssignmentFacade.containers],
@@ -1126,12 +1126,12 @@ export class HTMLElementData{
                     return el;
                 }
             },
-            {name: "Table Cell", type: 'native', tagName: 'td', properties:  ['tablecell', ...HTMLElementData.propsAssignmentFacade.containers],
+            {name: "Cellule de table", type: 'native', tagName: 'td', properties:  ['tablecell', ...HTMLElementData.propsAssignmentFacade.containers],
                 init:function(el){
                     el.innerHTML = "Cell";
                 }
             },
-            {name: "List Item", type: 'native', tagName: 'li', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'font', 'layout', 'background'],
+            {name: "Élément de liste", type: 'native', tagName: 'li', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'font', 'layout', 'background'],
                 init:function(el){
                     el.innerText = "Item";
                 }
@@ -1165,7 +1165,7 @@ export class HTMLElementData{
                     return card;
                 }
             },
-            {name: "Flip Card", type: 'bootstrap', tagName: 'flipcard', properties:  HTMLElementData.propsAssignmentFacade.containers,
+            {name: "Carte pivotante", type: 'bootstrap', tagName: 'flipcard', properties:  HTMLElementData.propsAssignmentFacade.containers,
                 create: function(){
                     let card = document.createElement("div");
                     card.style.maxWidth = '340px';
@@ -1382,9 +1382,9 @@ export class HTMLElementData{
                     return div;
                 },
             },
-            {name: "Icon", type: 'native', tagName: 'i', properties: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'icon', 'font'],
+            {name: "Icône", type: 'native', tagName: 'i', properties: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'icon', 'font'],
                 init:function(el){
-                    el.classList.add('icon-ampoule');//Default icon
+                    el.classList.add('fa', 'fa-anchor');//Default icon
                 },
             }
         ]},
@@ -1466,7 +1466,7 @@ export class HTMLElementData{
             result.prefix = 'bg';
         }
         else if(el.classList.contains('row')){
-            result.text = 'Row';
+            result.text = 'Ligne';
             result.tagName = 'grid';
             result.prefix = 'bg';
         }
@@ -1480,12 +1480,12 @@ export class HTMLElementData{
             result.prefix = 'bg';
         }
         else if(el.classList.contains('flipcard2')){
-            result.text = 'Flip Card';
+            result.text = 'Carte pivotante';
             result.tagName = 'flipcard';
             result.prefix = 'bg';
         }
         else if(el.classList.contains('video')){
-            result.text = 'Video';
+            result.text = 'Vidéo';
             result.tagName = 'video';
             result.prefix = 'bg';
         }
@@ -1495,17 +1495,17 @@ export class HTMLElementData{
             result.prefix = 'bg';
         }
         else if(el.classList.contains('videobtn')){
-            result.text = 'Video button';
+            result.text = 'Bouton vidéo';
             result.tagName = 'videobtn';
             result.prefix = 'bg';
         }
         else if(el.classList.contains('front')){
-            result.text = 'Front Side';
+            result.text = 'Devant';
             result.tagName = 'flipcard';
             result.prefix = 'bg';
         }
         else if(el.classList.contains('back')){
-            result.text = 'Back Side';
+            result.text = 'Arrière';
             result.tagName = 'flipcard';
             result.prefix = 'bg';
         }
@@ -1522,20 +1522,20 @@ export class HTMLElementData{
             result.prefix = 'bg';
         }
         else if(el.classList.contains('alert')){
-            result.text = 'Alert';
+            result.text = 'Alerte';
             result.prefix = 'alert';
         }
         else if(el.classList.contains('fa') || (el.classList[0] && el.classList[0].includes('icon-'))){
-            result.text = 'Icon';
+            result.text = 'Icône';
             result.prefix = 'bg';
         }
         else if(el.classList.contains('btn')){
-            result.text = 'Button';
+            result.text = 'Bouton';
             result.tagName = 'button';
             result.prefix = 'btn';
         }
         else if(el.className.search('border-') >=0 ){
-            result.text = 'Border';
+            result.text = 'Bordure';
             result.prefix = 'border';
         }
         else if(el.classList.contains('img-popup')){

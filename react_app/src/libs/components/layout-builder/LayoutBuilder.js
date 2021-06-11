@@ -357,20 +357,6 @@ class CanvasState{
 
         return device;
     }
-
-    getBaseCss(){
-        let attoInterface = UtilsMoodle.getAttoInterface();
-
-        if(attoInterface !== null){
-            console.log(`Loading theme Moodle on ${this.constructor.name}`);
-            let settings = attoInterface.getSettings();
-            return `${settings.wwwroot}/theme/styles.php/${settings.theme}/${settings.themerev}_1/all`;
-        }
-        else{
-            console.log(`Loading theme Bootstrap on ${this.constructor.name}`)
-            return Assets.Bootstrap;
-        }
-    }
 }
 
 class DrawnerState extends CanvasState{
@@ -400,22 +386,12 @@ class DrawnerState extends CanvasState{
         let body = this.window.document.body;
 
         let el = document.createElement("link");
-		el.setAttribute("href", this.getBaseCss());
-		el.setAttribute("rel", "stylesheet");
-		head.appendChild(el);
-
-        el = document.createElement("link");
-		el.setAttribute("href", Assets.Fontello);
+		el.setAttribute("href", UtilsMoodle.getBaseCss());
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
         el = document.createElement("link");
 		el.setAttribute("href", `${Assets.CanvasContentCSS}?v=${Math.floor(Math.random() * 100)}`);
-		el.setAttribute("rel", "stylesheet");
-		head.appendChild(el);
-
-        el = document.createElement("link");
-		el.setAttribute("href", Assets.FontAwesome);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
@@ -703,17 +679,7 @@ class PreviewState extends CanvasState{
         let head = this.iFrame.document.head;
 
         let el = document.createElement("link");
-		el.setAttribute("href", this.getBaseCss());
-		el.setAttribute("rel", "stylesheet");
-		head.appendChild(el);
-
-        el = document.createElement("link");
-		el.setAttribute("href", Assets.Fontello);
-		el.setAttribute("rel", "stylesheet");
-		head.appendChild(el);
-
-        el = document.createElement("link");
-		el.setAttribute("href", Assets.FontAwesome);
+		el.setAttribute("href", UtilsMoodle.getBaseCss());
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
