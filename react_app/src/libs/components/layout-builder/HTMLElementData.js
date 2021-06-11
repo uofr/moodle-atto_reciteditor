@@ -1440,8 +1440,8 @@ export class HTMLElementData{
             let component = HTMLElementData.getElementData(componentData);
             el = component.create();
         }
-        else if(componentData.type === 'custom'){
-            el = new DOMParser().parseFromString(componentData.htmlString, "text/html");
+        else if((componentData.type === 'c') || (componentData.type === 'l')){
+            el = new DOMParser().parseFromString(componentData.htmlStr, "text/html");
             el = el.body.firstChild;
         }
         else{

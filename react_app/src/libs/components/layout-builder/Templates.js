@@ -3,90 +3,88 @@ import { JsNx } from '../../utils/Utils';
 import { ButtonGroup, ButtonToolbar, Button, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloud, faFile, faSave, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import {WebApi} from '../WebApi';
 
 export class Templates{
-    static data = [];
+    static componentList = [];
+    static layoutList = [];
+
+    static webApi = new WebApi();
 
     static onLoad(){
-        let result = new Promise((resolve, reject) => {
-            try{
-                let tmp = localStorage.getItem('Templates');
-                
-                if(tmp){
-                    tmp = JSON.parse(tmp);
-                    if (tmp){
-                        Templates.data = tmp;
-                    }
-                }
+        let p = Templates.webApi.getTemplateList();
+
+        let p2 = p.then((webApiResult) => {
+            if(webApiResult.success){
+                Templates.componentList = webApiResult.data.c;
+                Templates.layoutList = webApiResult.data.l;
             }
-            catch(err){
-                alert("Error on getting Cookie appData. See console for more information.");
-                console.log(err);
+            else{
+                alert(`Error: ${webApiResult.msg}`);
             }
-            
-            resolve();
+            return webApiResult;
+        },
+        (err, response) => {
+            console.log(err, response);
         });
 
-        return result;
+        return p2;
     }
 
-    static onSave(name, image, html){
-        let that = this;
-        let result = new Promise((resolve, reject) => {
-            let item = JsNx.getItem(Templates.data, 'name', name, null);
-
-            if(item){
-                item.htmlString = html;
-                item.image = image;
-            }else{
-                Templates.data[Templates.data.length] = {name: name, htmlString: html, image: image};
-            }
-
-            that.sortCollection();
-            that.saveAsCookie();
-            resolve();
-        });
-
-        return result;
-    }
-
-    static sortCollection(){
-        Templates.data.sort((a,b) =>{
-            return a.name.toString().localeCompare(b.name.toString());
-        })
-    }
-
-    static saveAsCookie(){
-        try{
-            let str = JSON.stringify(Templates.data)
-            localStorage.setItem('Templates', str);
-        }
-        catch(err){
-            alert("Error on setting Cookie appData. See console for more information.");
-            console.log(err);
-        }
+    static onSave(section, name, type, htmlStr, img){
+        let data = {};
+        data.name = name;
+        data.section = section;
+        data.htmlStr = htmlStr;
+        data.type = type;
+        data.img = img || '';
+        return Templates.webApi.saveTemplate(data);
     }
 
     static onDelete(item){
-        let that = this;
-       
-        let result = new Promise((resolve, reject) => {
-            if(!window.confirm("Êtes-vous sur de vouloir supprimer l'item ?")){ 
+        if(window.confirm("Êtes-vous sur de vouloir supprimer l'item ?")){ 
+            return Templates.webApi.deleteTemplate(item.id);
+        }
+
+        return null;
+    }
+
+    static onImport(fileCtrl){
+        let p1 = new Promise((resolve, reject) => {
+            if(fileCtrl.length === 0) {  
                 reject(); 
             }
 
-            JsNx.removeItem(Templates.data, 'name', item.name);
-            
-            that.saveAsCookie();
-           // console.log("deleting")
+            let reader = new FileReader();
+            reader.addEventListener('load', function(e) {
+                try{
+                    let fileContent = (e.target.result);
+                    resolve(fileContent);
+                }
+                catch(err){
+                    alert("Error on importing data. See console for more information.");
+                    console.log(err);
+                    reject();
+                }
+            });
 
-            resolve();
+            reader.readAsText(fileCtrl.files[0]);
         });
+
+        let result = p1.then((fileContent) => {
+            //console.log("imported")
+            return Templates.webApi.importTemplates(fileContent);
+        },
+        () => { 
+                //console.log("canceled")
+            }
+        );
 
         return result;
     }
 
-    static onImport(data){
+
+    /*static onImport(data){
         let that = this;
        
         let result = new Promise((resolve, reject) => {
@@ -133,7 +131,7 @@ export class Templates{
         });
 
         return result;
-    }
+    }*/
 
     static onExport(item){
         return  "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(item));
@@ -145,7 +143,6 @@ export class TemplateList extends Component{
     static defaultProps = {
         dataProvider: [],
         onDragEnd: null,
-        showMenu: false,
         onChange: null
     };
 
@@ -168,7 +165,6 @@ export class TemplateList extends Component{
     }
 
     componentDidMount(){
-        Templates.onLoad().then(() => this.props.onChange());
         window.addEventListener("message", this.receiveMessageFromIframe, false);
     }
 
