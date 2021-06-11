@@ -1429,6 +1429,7 @@ export class HTMLElementData{
 
     static createElement(componentData){
         let el = null;
+
         if(componentData.type === 'native'){
             el = document.createElement(componentData.tagName);
             let component = HTMLElementData.getElementData(componentData);

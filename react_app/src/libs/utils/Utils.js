@@ -336,35 +336,39 @@ export default class Utils{
     }
     
 
-    static resizeImageFromSize(imgBase64, maxWidth, maxHeight, fileType, callback){
-        let img = new Image();
+    static resizeImageFromSize(imgBase64, maxWidth, maxHeight, fileType){
+        let promise = new Promise((resolve, reject) => {
+            let img = new Image();
 
-        img.src = imgBase64;
-        img.onload = function() {
-            let width = this.width;
-            let height = this.height;
-    
-            if (width > height) {
-                if (width > maxWidth) {
-                    height *= maxWidth / width;
-                    width = maxWidth;
+            img.src = imgBase64;
+            img.onload = function() {
+                let width = this.width;
+                let height = this.height;
+        
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height *= maxWidth / width;
+                        width = maxWidth;
+                    }
+                } 
+                else {
+                    if (height > maxHeight) {
+                        width *= maxHeight / height;
+                        height = maxHeight;
+                    }
                 }
-            } 
-            else {
-                if (height > maxHeight) {
-                    width *= maxHeight / height;
-                    height = maxHeight;
-                }
-            }
-    
-            let canvas = document.createElement("canvas");
-            canvas.width = width;
-            canvas.height = height;
-            let ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, width, height);
-    
-            callback(canvas.toDataURL(fileType));
-        };
+        
+                let canvas = document.createElement("canvas");
+                canvas.width = width;
+                canvas.height = height;
+                let ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+        
+                resolve(canvas.toDataURL(fileType));
+            };
+        });
+
+        return promise;        
     }
 }
 

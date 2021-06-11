@@ -277,23 +277,22 @@ class MainView extends Component{
         let p = null;
 
         if(type === 'l'){
-            let htmlStr = '';
             let body = this.state.selectedElement;
-            html2canvas(body, {useCORS: true}).then(canvas =>{
-                    let data = canvas.toDataURL();
-                    let MAX_WIDTH = 600;
-                    let MAX_HEIGHT = 600;
-                    let fileType = "png"
-                    Utils.resizeImageFromSize(data, MAX_WIDTH, MAX_HEIGHT, fileType, function(img){
-                        htmlStr = body.outerHTML;
-                        image = img;
-                        let p = Templates.onSave(section, name, type, htmlStr, image);
-                    });
+            p = html2canvas(body, {useCORS: true}).then((canvas) => {
+                let data = canvas.toDataURL();
+                let MAX_WIDTH = 600;
+                let MAX_HEIGHT = 600;
+                let fileType = "png"
+                let p2 = Utils.resizeImageFromSize(data, MAX_WIDTH, MAX_HEIGHT, fileType);
+               
+                return p2.then((img) => {
+                    return Templates.onSave(section, name, type, body.outerHTML, img);
+                });
             });
         }
         else{
             p = Templates.onSave(section, name, type, this.state.selectedElement.outerHTML);
-    }
+        }
 
         let that = this;
 

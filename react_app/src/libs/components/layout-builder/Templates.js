@@ -190,9 +190,9 @@ export class TemplateList extends Component{
                 {this.props.dataProvider.map((item, index) => {
 
                     let branch = 
-                            <div key={index} className='template' onMouseEnter={() => this.onMouseEnter(item.image)} onMouseLeave={this.onMouseLeave} onMouseDown={this.onMouseLeave} onDragEnd={this.props.onDragEnd} draggable="true" onDragStart={(e) => this.onDragStart(e, item)}>
+                            <div key={index} className='template' onMouseEnter={() => this.onMouseEnter(item.img)} onMouseLeave={this.onMouseLeave} onMouseDown={this.onMouseLeave} onDragEnd={this.props.onDragEnd} draggable="true" onDragStart={(e) => this.onDragStart(e, item)}>
                                 <div className='tplimg'>
-                                    <img src={item.image}/>
+                                    <img src={item.img}/>
                                 </div>
                                 <p>{item.name}</p>
                                 {this.state.showMenu &&
@@ -234,7 +234,6 @@ export class TemplateList extends Component{
 
     
     onDragStart(event, data){
-        data.type = 'custom';
         event.dataTransfer.setData("componentData", JSON.stringify(data));
     }
 
@@ -301,6 +300,9 @@ export class TemplateList extends Component{
         event.stopPropagation();
 
         let promise = Templates.onDelete(item);
+
+        if(promise === null){ return;}
+        
         let that = this;
 
         promise.then(() => {
