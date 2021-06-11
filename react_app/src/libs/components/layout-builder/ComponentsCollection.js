@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import { IconSelector } from '../iconSelector';
 import { ColorSelector } from '../ColorSelector';
-import {CustomHtmlComponents} from './CustomHtmlComponents';
 import { TemplateList, Templates } from './Templates';
 
 export class ComponentProperties extends Component{
@@ -215,8 +214,9 @@ export class VisualComponentList extends Component{
         super(props);
 
         this.onSelectTab = this.onSelectTab.bind(this);
+        this.loadTemplates = this.loadTemplates.bind(this);
 
-        this.state = {tab: '0'};
+        this.state = {tab: '2'};
     }
 
     render(){
@@ -224,23 +224,23 @@ export class VisualComponentList extends Component{
             <div className='component-list'>
                 <Nav variant="tabs" activeKey={this.state.tab} onSelect={this.onSelectTab}>
                     <Nav.Item>
-                        <Nav.Link eventKey="0">Base HTML</Nav.Link>
+                        <Nav.Link eventKey="2">Mes gabarits</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
                         <Nav.Link eventKey="1">Mes composants</Nav.Link>
-                    </Nav.Item>
+                    </Nav.Item>                   
                     <Nav.Item>
-                        <Nav.Link eventKey="2">Mes gabarits</Nav.Link>
+                        <Nav.Link eventKey="0">Base HTML</Nav.Link>
                     </Nav.Item>
                 </Nav>
                 
                 {this.state.tab === "0" && <TokenList dataProvider={HTMLElementData.elementList} onDragEnd={this.props.onDragEnd}/>}
 
                 {this.state.tab === "1" && 
-                                <TokenList dataProvider={CustomHtmlComponents.data} onDragEnd={this.props.onDragEnd} showMenu={true} onChange={this.forceUpdate.bind(this)}/>}
+                                <TokenList2 dataProvider={Templates.componentList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates}/>}
 
                 {this.state.tab === "2" &&
-                                <TemplateList dataProvider={Templates.data} onDragEnd={this.props.onDragEnd} onChange={this.forceUpdate.bind(this)}/>}
+                                <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates}/>}
             </div>;
 
         return main;
@@ -249,13 +249,78 @@ export class VisualComponentList extends Component{
     onSelectTab(k){
         this.setState({tab: k});
     }
+
+    loadTemplates(){
+        let p = Templates.onLoad();
+        let that = this;
+        
+        p.then((webApiResult) => {
+            if(webApiResult.success){
+                that.forceUpdate();
+            }
+            else{
+                alert(`Error: ${webApiResult.msg}`);
+            }
+        },
+        (err, response) => {
+            console.log(err, response);
+        });
+    }
 }
 
 class TokenList extends Component{
     static defaultProps = {
         dataProvider: [],
+        onDragEnd: null
+    };
+
+    constructor(props){
+        super(props);
+
+        this.onCollapse = this.onCollapse.bind(this);
+
+        this.state = {collapsed: {}};
+    }    
+
+    render(){       
+        let main =
+            <div className="tab-content">
+                {this.props.dataProvider.map((item, index) => {
+                    let collapsed = ((typeof this.state.collapsed[item.name] !== "undefined") && (this.state.collapsed[item.name]));
+                    let icon = collapsed ? faAngleRight : faAngleDown;
+
+                    let branch = 
+                        <ul key={index} className='mt-2'>
+                            <li key={index} className='token-section' onClick={(event) => this.onCollapse(event, item.name)}>
+                                <FontAwesomeIcon className="mr-1" icon={icon} />
+                                {item.name}
+                            </li>
+                            {!collapsed && item.children.map((item2, index2) => {
+                                return (<Token data={item2} key={index2} onDragEnd={this.props.onDragEnd} />);
+                            })}
+                        </ul>
+
+                    return (branch);
+                })}
+            </div>;
+
+        return main;
+    }
+
+    onCollapse(event, id){
+        event.stopPropagation();
+        event.preventDefault();
+
+        let collapsed = this.state.collapsed;
+        collapsed[id] = !collapsed[id] || false;
+        this.setState({collapsed: collapsed});
+    }
+}
+
+class TokenList2 extends Component{
+    static defaultProps = {
+        dataProvider: [],
         onDragEnd: null,
-        showMenu: false,
         onChange: null
     };
 
@@ -266,59 +331,34 @@ class TokenList extends Component{
         this.onExport = this.onExport.bind(this);
         this.showMenu = this.showMenu.bind(this);
         this.showImport = this.showImport.bind(this);
-        this.onCollapse = this.onCollapse.bind(this);
         this.onDelete = this.onDelete.bind(this);
-
+       
         this.state = {showMenu: false, showImport: false, collapsed: {}};
-    }
-
-    componentDidMount(){
-        CustomHtmlComponents.onLoad();
-    }
+    }    
 
     render(){       
         let main =
             <div className="tab-content">
-                {this.props.showMenu && 
-                    <div>
-                        <ButtonToolbar style={{justifyContent: 'flex-end'}}>
-                            <ButtonGroup >
-                                    <Button onClick={() => this.showImport(!this.state.showImport)}><FontAwesomeIcon  icon={faFile} title="Importer la collection"/></Button>
-                                    <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faSave} title="Exporter"/></Button>
-                                    <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
-                            </ButtonGroup>
-                        </ButtonToolbar>
-                        {this.state.showImport && <input type="file" onChange={this.onImport} accept=".json"/>}
-                        {this.state.showMenu && <Button onClick={(event) => this.onExport(event, this.props.dataProvider)}><FontAwesomeIcon  icon={faSave}/>{" Exporter la collection"}</Button>}
-                    </div>
-                }
-                {this.props.dataProvider.map((item, index) => {
-                    let collapsed = ((typeof this.state.collapsed[item.name] !== "undefined") && (this.state.collapsed[item.name]));
-                    let icon = collapsed ? faAngleRight : faAngleDown;
+                <div>
+                    <ButtonToolbar style={{justifyContent: 'flex-end'}}>
+                        <ButtonGroup >
+                                <Button onClick={() => this.showImport(!this.state.showImport)}><FontAwesomeIcon  icon={faFile} title="Importer la collection"/></Button>
+                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faSave} title="Exporter"/></Button>
+                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                        </ButtonGroup>
+                    </ButtonToolbar>
+                    {this.state.showImport && <input type="file" onChange={this.onImport} accept=".json"/>}
+                    {this.state.showMenu && <Button onClick={(event) => this.onExport(event, this.props.dataProvider)}><FontAwesomeIcon  icon={faSave}/>{" Exporter la collection"}</Button>}
+                </div>
+                <ul className='mt-2'>
+                    {this.props.dataProvider.map((item, index) => {
+                        let ret = 
+                            <Token showMenu={this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} 
+                                                onExport={(event) => this.onExport(event, [item])} onDelete={this.onDelete}/>
 
-                    let branch = 
-                        <ul key={index} className='mt-2'>
-                            <li key={index} className='token-section' onClick={(event) => this.onCollapse(event, item.name)}>
-                                <FontAwesomeIcon className="mr-1" icon={icon} />
-                                {item.name}
-                                {this.state.showMenu &&
-                                    <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
-                                        <ButtonGroup size="sm">
-                                            <Button onClick={(event) => this.onExport(event, [item])}><FontAwesomeIcon  icon={faSave} title="Export"/></Button>
-                                            <Button onClick={(event) => this.onDelete(event, item, 's')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
-                                        </ButtonGroup>
-                                    </ButtonToolbar>
-                                }
-                            </li>
-                            {!collapsed && item.children.map((item2, index2) => {
-                                return (<Token showMenu={this.state.showMenu} data={item2} key={index2} onDragEnd={this.props.onDragEnd} 
-                                            onExport={(event) => this.onExport(event, [{"name": item.name,children: [item2]}])}
-                                            onDelete={this.onDelete}/>);
-                            })}
-                        </ul>
-
-                    return (branch);
-                })}
+                        return (ret);
+                    })}
+                </ul>
             </div>;
 
         return main;
@@ -334,57 +374,56 @@ class TokenList extends Component{
 
     onImport(event){
         let fileCtrl = event.target;
+        let that = this;        
+        let promise = Templates.onImport(fileCtrl);
         
-        let promise = CustomHtmlComponents.onImport(fileCtrl);
-        let that = this;
-
-        promise.then(() => {
-            //console.log("imported")
-            that.showImport(false);
-            that.props.onChange();
-        },
-        () => { 
-                //console.log("canceled")
+        promise.then((webApiResult) => {
+            if(webApiResult.success){
+                that.showImport(false);
+                that.props.onChange();
             }
-        );
+            else{
+                alert(`Error: ${webApiResult.msg}`);
+            }
+        },
+        (err, response) => {
+            console.log(err, response);
+        });
     }
 
     onExport(event, item){
-        item = item || null
+        item = item || [];
         event.stopPropagation();
 
-        let dataStr = CustomHtmlComponents.onExport(item);
+        let dataStr = Templates.onExport(item);
         let node = document.createElement('a');
         node.setAttribute("href",     dataStr);
-        node.setAttribute("download", "my-collection.json");
+        node.setAttribute("download", (item.length === 1 ? `${item[0].name}.json` : "my-collection.json"));
         window.document.body.appendChild(node); // required for firefox
         node.click();
         node.remove();
     }
 
-    onCollapse(event, id){
-        event.stopPropagation();
-        event.preventDefault();
-
-        let collapsed = this.state.collapsed;
-        collapsed[id] = !collapsed[id] || false;
-        this.setState({collapsed: collapsed});
-    }
-
-    onDelete(event, item, type){
+    onDelete(event, item){
         event.stopPropagation();
 
-        let promise = CustomHtmlComponents.onDelete(item, type);
+        let promise = Templates.onDelete(item);
+
+        if(promise === null){ return;}
+
         let that = this;
 
-        promise.then(() => {
-           // console.log("deleted")
-            that.props.onChange();
-        },
-        () => { 
-              // console.log("canceled")
+        promise.then((webApiResult) => {
+            if(webApiResult.success){
+                that.props.onChange();
             }
-        );
+            else{
+                alert(`Error: ${webApiResult.msg}`);
+            }
+        },
+        (err, response) => {
+            console.log(err, response);
+        });
     }
 }
 
@@ -413,7 +452,7 @@ class Token extends Component
                     <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                         <ButtonGroup size="sm">
                             <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faSave} title="Export"/></Button>
-                            <Button onClick={(event) => this.props.onDelete(event, this.props.data, 'c')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                            <Button onClick={(event) => this.props.onDelete(event, this.props.data)}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                 }             

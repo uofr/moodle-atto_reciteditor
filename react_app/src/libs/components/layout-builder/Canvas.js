@@ -205,7 +205,6 @@ export class FloatingMenu extends Component{
         onMoveNodeDown: null,
         onDeleteElement: null,
         onCloneNode: null,
-        onSaveCustomComponent: null,
         onSaveTemplate: null
     };      
 
@@ -214,6 +213,7 @@ export class FloatingMenu extends Component{
 
         this.showModal = this.showModal.bind(this);
         this.onSaveCustomComponent = this.onSaveCustomComponent.bind(this);
+        this.onSaveCustomLayout = this.onSaveCustomLayout.bind(this);
 
         this.state = {showModal: false};
     }
@@ -237,7 +237,7 @@ export class FloatingMenu extends Component{
                     <ButtonGroup size="sm">
                         <Button onClick={this.props.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
                         <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faPuzzlePiece} title="Créer un composant"/></Button>
-                        <Button onClick={this.props.onSaveTemplate}><FontAwesomeIcon icon={faObjectGroup} title="Créer un gabarit"/></Button>
+                        <Button onClick={this.onSaveCustomLayout}><FontAwesomeIcon icon={faObjectGroup} title="Créer un gabarit"/></Button>
                         <Button onClick={this.props.onMoveNodeUp}  ><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
                         <Button onClick={this.props.onMoveNodeDown}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>
                         <Button onClick={this.props.onCloneNode}><FontAwesomeIcon icon={faClone} title="Dupliquer"/></Button>
@@ -255,8 +255,17 @@ export class FloatingMenu extends Component{
     }
 
     onSaveCustomComponent(data){
-        this.props.onSaveCustomComponent(data);
+        this.props.onSaveTemplate(data.section, data.name, 'c');
         this.showModal(false);
+    }
+
+    onSaveCustomLayout(){
+        let name = prompt('Nom du gabarit');
+        if (!name) {
+            return null;
+        }
+
+        this.props.onSaveTemplate('', name, 'l');
     }
 }
 

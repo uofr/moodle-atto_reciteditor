@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {TreeView} from './TreeView';
 import {Canvas, CanvasElement, FloatingMenu, NodeTextEditing} from './Canvas';
 import {ComponentProperties, VisualComponentList} from './ComponentsCollection';
-import {CustomHtmlComponents} from './CustomHtmlComponents';
 import {SourceCodeEditor, Assets} from '../Components';
 import { HTMLElementData } from './HTMLElementData';
 import { Templates } from './Templates';
@@ -113,7 +112,6 @@ class MainView extends Component{
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
         this.onEditNodeText = this.onEditNodeText.bind(this);
-        this.onSaveCustomComponent = this.onSaveCustomComponent.bind(this);
         this.onSaveTemplate = this.onSaveTemplate.bind(this);
         this.onCollapse = this.onCollapse.bind(this);
         this.setCollapse = this.setCollapse.bind(this);
@@ -139,6 +137,24 @@ class MainView extends Component{
 
     componentDidMount(){
         this.canvasState[this.props.view].setData(this.props.content);
+        this.loadTemplates();
+    }
+
+    loadTemplates(){
+        let p = Templates.onLoad();
+        let that = this;
+        
+        p.then((webApiResult) => {
+            if(webApiResult.success){
+                that.forceUpdate();
+            }
+            else{
+                alert(`Error: ${webApiResult.msg}`);
+            }
+        },
+        (err, response) => {
+            console.log(err, response);
+        });
     }
 
     componentDidUpdate(prevProps){
@@ -257,25 +273,37 @@ class MainView extends Component{
         }
     }
 
-    onSaveCustomComponent(data){
-        //this.canvasState[this.state.canvasState].onSaveCustomComponent(data, this.state.selectedElement, this.forceUpdate);
-        let p = CustomHtmlComponents.onSave(data, this.state.selectedElement);
+    onSaveTemplate(section, name, type){
+        let p = null;
+
+        if(type === 'l'){
+            let body = this.state.selectedElement;
+            p = html2canvas(body, {useCORS: true}).then((canvas) => {
+                let data = canvas.toDataURL();
+                let MAX_WIDTH = 600;
+                let MAX_HEIGHT = 600;
+                let fileType = "png"
+                let p2 = Utils.resizeImageFromSize(data, MAX_WIDTH, MAX_HEIGHT, fileType);
+               
+                return p2.then((img) => {
+                    return Templates.onSave(section, name, type, body.outerHTML, img);
+                });
+            });
+        }
+        else{
+            p = Templates.onSave(section, name, type, this.state.selectedElement.outerHTML);
+        }
+
         let that = this;
 
-        p.then(() => {
-            that.forceUpdate();
-        })
-    }
-
-    onSaveTemplate(){
-        let p = this.canvasState[this.state.canvasState].onSaveTemplate(this.state.selectedElement);
-
-        if(p !== null){
-            let that = this;
-            p.then(() => {
-                that.forceUpdate();
-            })
+        p.then((webApiResult) => {
+            if(webApiResult.success){
+                that.loadTemplates();                
+            }
+            else{
+                alert(`Error: ${webApiResult.msg}`);
         }
+        });
     }
 
     onCollapse(){       
@@ -314,7 +342,6 @@ class CanvasState{
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
         this.onEditNodeText = this.onEditNodeText.bind(this);
-        this.onSaveTemplate = this.onSaveTemplate.bind(this);
         this.onLoadFrame = this.onLoadFrame.bind(this);
 
         this.onLoadFrame();
@@ -332,7 +359,6 @@ class CanvasState{
     onMoveNodeDown(selectedElement){console.log("Abstract method...");}
     onCloneNode(selectedElement){console.log("Abstract method...");}
     onEditNodeText(selectedElement){console.log("Abstract method...");}
-    onSaveTemplate(selectedElement){console.log("Abstract method...");}
 
     onCollapse(collapsed){ 
         return collapsed;
@@ -412,7 +438,7 @@ class DrawnerState extends CanvasState{
                 <iframe id="drawner-canvas" className="canvas" style={this.getDeviceDimension()}></iframe>
                 <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement}  onEdit={this.mainView.onEditNodeText}
                             onDeleteElement={this.mainView.onDeleteElement} onMoveNodeUp={this.mainView.onMoveNodeUp} onMoveNodeDown={this.mainView.onMoveNodeDown} 
-                             onCloneNode={this.mainView.onCloneNode} onSaveCustomComponent={this.mainView.onSaveCustomComponent} onSaveTemplate={this.mainView.onSaveTemplate} />
+                             onCloneNode={this.mainView.onCloneNode} onSaveTemplate={this.mainView.onSaveTemplate} />
                 <NodeTextEditing posCanvas={posCanvas} window={this.window} selectedElement={selectedElement} />
             </Canvas>;
 
@@ -584,32 +610,6 @@ class DrawnerState extends CanvasState{
 
         selectedElement.setAttribute('contenteditable', 'true');
         setCaretToEnd(selectedElement);
-    }
-
-    onSaveTemplate(selectedElement){
-        let name = prompt('Nom du gabarit');
-        if (!name) {
-            return null;
-        }
-        
-        let result = null;
-        /*let body = this.window.document.body;
-        let height = '100%';
-        body.style.height = 'auto';*/
-        let body = selectedElement;
-        html2canvas(body, {useCORS: true}).then(canvas =>{
-                let data = canvas.toDataURL();
-                let MAX_WIDTH = 600;
-                let MAX_HEIGHT = 600;
-                let fileType = "png"
-                Utils.resizeImageFromSize(data, MAX_WIDTH, MAX_HEIGHT, fileType, function(img){
-                    //body.innerHTML
-                    result = Templates.onSave(name, img, body.outerHTML);
-                });
-                //body.style.height = height;
-        });
-
-        return result;
     }
 }
 
