@@ -62,6 +62,14 @@ export class InputColor extends Component {
             target: {name: this.props.name, value: ''}
         };
 
-        this.props.onChange(eventData)
+        this.setState({value:''});
+
+        if (this.props.onChange){
+            this.props.onChange(eventData);
+        }
+
+        if (this.props.onBlur){ // Fire onBlur too as it's a button, it'll never get fired
+            this.props.onBlur(eventData);
+        }
     }
 }

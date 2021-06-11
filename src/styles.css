@@ -19,6 +19,7 @@
   
   .r_popup .modal-body {
       padding: 0;
+      overflow: hidden;
   }
 
   .r_popup iframe {
