@@ -8,26 +8,19 @@
   margin-left: -15px; }
 
 /* Popup */
-.r_popup-overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.5); }
 
-.r_popup {
-  max-width: 90vw;
-  max-height: 90vh;
-  width: fit-content;
-  width: -moz-fit-content;
-  position: relative;
-  top: 50%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  margin: auto;
-  background-color: #fff;
-  padding: 10px; }
+  .r_popup, .r_popup .modal-dialog {
+      max-width: 93vw;
+      max-height: 90vh;
+      width: fit-content;
+      width: -moz-fit-content;
+      margin: auto;
+  }
+  
+  .r_popup .modal-body {
+      padding: 0;
+  }
+
   .r_popup iframe {
     width: 90vw;
     height: 85vh;
@@ -49,7 +42,7 @@
   .imgclick img {
     -webkit-transition: all 0.4s linear;
     transition: all 0.4s linear; }
-  .imgclick a {
+  .imgclick a, .imgclick a:hover {
     display: block;
     color: #fff; }
   .imgclick .imgclickcontent {
@@ -66,4 +59,9 @@
 .imgclick:hover .imgclickcontent {
   display: block; }
 
-/*# sourceMappingURL=content.css.map */
+/* Flipcard */
+
+.flipcard2 {cursor: pointer;}
+.flipcard2 .back {display: none;}
+.flipcard2.hover .front {display: none;}
+.flipcard2.hover .back {display: block;}

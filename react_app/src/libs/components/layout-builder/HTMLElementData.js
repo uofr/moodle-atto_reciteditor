@@ -505,7 +505,7 @@ export class HTMLElementData{
                     ],
                     onChange: function(el, value, data){                       
                         for(let item of data.input.options){
-                            el.classList.remove(value);
+                            el.classList.remove(item);
                         }
 
                         if(value.length > 0){
@@ -1170,8 +1170,8 @@ export class HTMLElementData{
                     let card = document.createElement("div");
                     card.style.maxWidth = '340px';
                     card.classList.add("card");
-                    card.classList.add("flipcard");
-                    card.classList.add("manual-flip");
+                    card.classList.add("flipcard2");
+                    card.classList.add("manual-flip-click");
                     
                     for (let v of ['front', 'back']){
                         let face = document.createElement("div");
@@ -1479,7 +1479,7 @@ export class HTMLElementData{
             result.text = 'Card';
             result.prefix = 'bg';
         }
-        else if(el.classList.contains('flipcard')){
+        else if(el.classList.contains('flipcard2')){
             result.text = 'Flip Card';
             result.tagName = 'flipcard';
             result.prefix = 'bg';

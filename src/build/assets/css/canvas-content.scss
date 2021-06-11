@@ -40,11 +40,11 @@ html.canvas-content{
         .carousel-item:nth-of-type(4):after{content:'4th slide'; @extend .slide-pos;}
         .carousel-item:nth-of-type(5):after{content:'5th slide'; @extend .slide-pos;}
         
-        .flipcard .back {display: none;}
-        .flipcard.hover .front {display: none;}
-        .flipcard.hover .back {display: block;}
-        .flipcard .front::before{content:'Front'; color:#fff; background-color: #007bff; padding: 7px; border-radius: 24px; font-size: 11px;}
-        .flipcard .back::before{content:'Back'; color:#fff; background-color: #007bff; padding: 7px; border-radius: 24px; font-size: 11px;}
+        .flipcard2 .back {display: none;}
+        .flipcard2.hover .front {display: none;}
+        .flipcard2.hover .back {display: block;}
+        .flipcard2 .front::before{content:'Front'; color:#fff; background-color: #007bff; padding: 7px; border-radius: 24px; font-size: 11px;}
+        .flipcard2 .back::before{content:'Back'; color:#fff; background-color: #007bff; padding: 7px; border-radius: 24px; font-size: 11px;}
         
         
         /* Those elements have priority over the previous ones*/
