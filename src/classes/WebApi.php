@@ -131,16 +131,16 @@ class WebApi{
             $data = $this->request->data;
             $prefix = $CFG->prefix;
 
-            $fileContent = json_decode($data->fileContent);
+            $data->fileContent = json_decode($data->fileContent);
 
             $values = array();
-            foreach($fileContent as $item){
+            foreach($data->fileContent as $item){
                 $item->name = $this->mysqli->real_escape_string($item->name);
                 $item->htmlStr = $this->mysqli->real_escape_string($item->htmlStr);
                 $values[] = "('$item->name', '$item->type', $USER->id, '$item->htmlStr', '$item->img')";
             }
 
-            $query = sprintf("insert into {$prefix}atto_reciteditor_template_list (name, type, userid, htmlstr, img) values(%s)", implode(",", $values));
+            $query = sprintf("insert into {$prefix}atto_reciteditor_template_list (name, type, userid, htmlstr, img) values %s", implode(",", $values));
 
             $this->execSQL($query);
 
