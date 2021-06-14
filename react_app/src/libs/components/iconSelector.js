@@ -62,7 +62,7 @@ export class IconSelector extends Component {
             <IFrame style={{width: '100%', height: '70vh', border: '0'}}>
                 <div style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
                     <link rel="stylesheet" href={UtilsMoodle.getBaseCss()}/>
-                    <div className={"IconSelector"}>
+                    <div style={{backgroundColor: '#fff'}}>
                         {items}
                     </div>
                 </div>
