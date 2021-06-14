@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button, Modal  } from 'react-bootstrap';
-import { faFile, faSave, faTrashAlt, faAngleRight, faAngleDown, faCloud, faTimes} from '@fortawesome/free-solid-svg-icons';
-import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox, TableActions} from '../Components';
+import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCloud, faTimes, faCloudUploadAlt, faCloudDownloadAlt} from '@fortawesome/free-solid-svg-icons';
+import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox, TableActions, ImageSrc, BtnUpload} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import { IconSelector,Assets, ColorSelector } from '../Components';
@@ -173,6 +173,9 @@ class FormProperties extends Component{
             case 'tableactions':
                 result = <TableActions showRmCol={data.input.showRmCol}
                                 onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'ImageSrc':
+                result = <ImageSrc name={data.name} value={value} size="sm" onChange={(event) => this.onDataChange(event, data)}  />;
                 break;
            /* case 'number':
                 result = <InputNumber name={data.name} value={value} size="sm"
@@ -352,14 +355,13 @@ class TemplateList extends Component{
                 <div>
                     <ButtonToolbar style={{justifyContent: 'flex-end'}}>
                         <ButtonGroup >
-                                <Button onClick={() => this.showImport(!this.state.showImport)}><FontAwesomeIcon  icon={faFile} title="Importer la collection"/></Button>
-                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faSave} title="Exporter"/></Button>
+                                <BtnUpload id="import-collection"  accept=".json" onChange={this.onImport} title="Importer la collection"/>
+                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faCloudDownloadAlt} title="Exporter"/></Button>
                                 <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                                 {this.props.type === 'l' && <Button onClick={() => this.showVitrine(true)}><FontAwesomeIcon  icon={faCloud} title="Voir la vitrine de gabarits"/></Button>}
                         </ButtonGroup>
                     </ButtonToolbar>
-                    {this.state.showImport && <input type="file" onChange={this.onImport} accept=".json"/>}
-                    {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider)}><FontAwesomeIcon  icon={faSave}/>{" Exporter la collection"}</Button>}
+                    {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider)}><FontAwesomeIcon  icon={faCloudDownloadAlt}/>{" Exporter la collection"}</Button>}
                 </div>
                 <ul className='mt-2 d-flex flex-wrap'>
                     {this.props.dataProvider.map((item, index) => {
@@ -493,7 +495,7 @@ class Token extends Component
                 {this.props.showMenu && 
                     <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                         <ButtonGroup size="sm">
-                            <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faSave} title="Export"/></Button>
+                            <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faCloudDownloadAlt} title="Export"/></Button>
                             <Button onClick={this.props.onDelete}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
@@ -535,7 +537,7 @@ class TokenTemplate extends Token{
                     {this.props.showMenu &&
                         <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                             <ButtonGroup size="sm">
-                                <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faSave} title="Exporter"/></Button>
+                                <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faCloudDownloadAlt} title="Exporter"/></Button>
                                 <Button onClick={this.props.onDelete}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                             </ButtonGroup>
                         </ButtonToolbar>

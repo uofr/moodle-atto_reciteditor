@@ -47,15 +47,16 @@ Y.namespace('M.atto_reciteditor').Button = Y.Base.create('button', Y.M.editor_at
 
         popup.attoInterface.getSettings = function(){
             var result = {};
-            result.contextId = M.cfg.contextid;
+            result.contextid = M.cfg.contextid;
             result.wwwroot = M.cfg.wwwroot;
             result.theme = M.cfg.theme;
             result.themerev = M.cfg.themerev;
+            result.sesskey = M.cfg.sesskey;
             return result;
         }
 
         popup.attoInterface.getFileTransferData = function(){
-            var host = this.get('host');
+            var host = that.get('host');
             var options = host.get('filepickeroptions').image || {};
             
             var result = {};

@@ -394,13 +394,15 @@ export class UtilsMoodle
         let result = {
             setContent: function(){console.log('Atto interface not defined.'); }, 
             getContent: function(){console.log('Atto interface not defined.'); return null;}, 
-            getSettings: function(){console.log('Atto interface not defined.'); }
+            getSettings: function(){console.log('Atto interface not defined.'); },
+            getFileTransferData: function(){console.log('Atto interface not defined.'); }
         };
 
         if(window.attoInterface){
             result.getContent = window.attoInterface.getContent || window.parent.attoInterface.getContent; // the editor content here is text and not html
             result.setContent = window.attoInterface.setContent || window.parent.attoInterface.setContent;
             result.getSettings = window.attoInterface.getSettings || window.parent.attoInterface.getSettings;
+            result.getFileTransferData = window.attoInterface.getFileTransferData || window.parent.attoInterface.getFileTransferData;
             return result;
         }
         else{
@@ -428,6 +430,214 @@ export class UtilsMoodle
         }
         console.log(`Loading theme Bootstrap on ${this.constructor.name}`)
         return Assets.Bootstrap;
+    }
+}
+
+export class MoodleUploadFile{
+    static instance = null;
+
+    constructor(){
+        this.onReadyStateChange = this.onReadyStateChange.bind(this);
+
+        this.xhr = new XMLHttpRequest();
+        this.xhr.onreadystatechange = this.onReadyStateChange;
+       // this.M = window.opener.M;
+        this.onUploadDone = null;
+    }
+
+    onReadyStateChange(){
+        let that = this;
+
+        if (this.xhr.readyState === 4) {
+            if (this.xhr.status === 200) {
+                let result = JSON.parse(this.xhr.responseText);
+                if (result) {
+                    if (result.error) {
+                        //return new this.M.core.ajaxException(result);
+                        alert("error");
+                        console.log(result);
+                    }
+
+                    let file = result;
+                    if (result.event && result.event === 'fileexists') {
+                        // A file with this name is already in use here - rename to avoid conflict.
+                        // Chances are, it's a different image (stored in a different folder on the user's computer).
+                        // If the user wants to reuse an existing image, they can copy/paste it within the editor.
+                        file = result.newfile;
+                    }
+
+                    // Replace placeholder with actual image.
+                    /*newhtml = template({
+                        url: file.url,
+                        presentation: true
+                    });
+                    newimage = Y.Node.create(newhtml);
+                    if (placeholder) {
+                        placeholder.replace(newimage);
+                    } else {
+                        self.editor.appendChild(newimage);
+                    }
+                    self.markUpdated();*/
+                    if(this.onUploadDone){
+                        this.onUploadDone(file.url);
+                    }
+                }
+            } else {
+               /* Y.use('moodle-core-notification-alert', function() {
+                    new that.M.core.alert({message: this.M.util.get_string('servererror', 'moodle')});
+                });*/
+                alert("server error");
+            }
+        }
+        return true;
+    }
+
+    onSelectFileToUpload(event, callback){
+        let reader = new FileReader();
+        let file = event.target.files[0];
+        let that = this;
+
+        this.onUploadDone = callback;
+
+        reader.readAsDataURL(file);
+
+        reader.onloadend = () => {                        
+            if (file.type.match('image.*')){
+                let callback = function(dataURL){
+                    let fileContent = that.convertbase64ToBin(dataURL);
+                    that.upload(file.name, fileContent);
+                }
+                
+                that.resizeImage(reader.result, file.type, callback);
+
+                return;
+            }
+
+            /*let fileInMB = file.size / 1024 / 1024;
+            let maxFileSize = 5;
+            if(fileInMB > maxFileSize){
+                alert(`Le fichier est trop grand pour le dossier de destination. La taille maximale du fichier est de ${maxFileSize} mégaoctets.`);
+                return;
+            }*/
+            
+            let fileContent = that.convertbase64ToBin(reader.result);
+
+            that.upload(file.name, fileContent);
+        };
+    }
+
+    /**
+     * An Javascript function to remove accents, spaces and set lower case from an input string.
+     * @param {string} str 
+     */
+    slugify(str) {
+        var map = {
+            '-' : ' ',
+            '-' : '_',
+            'a' : 'á|à|ã|â|À|Á|Ã|Â',
+            'e' : 'é|è|ê|É|È|Ê',
+            'i' : 'í|ì|î|Í|Ì|Î',
+            'o' : 'ó|ò|ô|õ|Ó|Ò|Ô|Õ',
+            'u' : 'ú|ù|û|ü|Ú|Ù|Û|Ü',
+            'c' : 'ç|Ç',
+            'n' : 'ñ|Ñ'
+        };
+        
+        for (var pattern in map) {
+            str = str.replace(new RegExp(map[pattern], 'g'), pattern);
+        };
+    
+        return str;
+    };
+
+    resizeImage(imgBase64, fileType, callback){
+            let MAX_WIDTH = 1500;
+            let MAX_HEIGHT = 1300;
+            return this.resizeImageFromSize(imgBase64, MAX_WIDTH, MAX_HEIGHT, fileType, callback)
+    }
+
+    resizeImageFromSize(imgBase64, maxWidth, maxHeight, fileType, callback){
+        let img = new Image();
+
+        img.src = imgBase64;
+        img.onload = function() {
+            let width = this.width;
+            let height = this.height;
+    
+            if (width > height) {
+                if (width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+            } 
+            else {
+                if (height > maxHeight) {
+                    width *= maxHeight / height;
+                    height = maxHeight;
+                }
+            }
+    
+            let canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            let ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+    
+            callback(canvas.toDataURL(fileType));
+        };
+    }
+
+    upload(filename, binFile){
+        let atto = UtilsMoodle.getAttoInterface();
+        
+        if(atto === null){ return; }
+
+        let fileTransferData = atto.getFileTransferData();
+        let settings = atto.getSettings();
+
+        let formData = new FormData();
+        formData.append('repo_upload_file', binFile);
+        formData.append('itemid', fileTransferData.itemid);
+        formData.append('env', fileTransferData.env);
+        formData.append('repo_id', fileTransferData.repo_id); 
+        formData.append('sesskey', settings.sesskey);
+        formData.append('client_id', fileTransferData.client_id);
+        formData.append('savepath', "/"); //(options.savepath === undefined) ? '/' : options.savepath,
+        formData.append('ctx_id', settings.contextid);
+        formData.append('license', fileTransferData.license);
+        formData.append('author', fileTransferData.author);
+
+        let tmp = this.slugify(filename).split(".");
+        filename = [(tmp[0] || ""), (tmp[1] || "")];
+        formData.append('title', `${filename[0].substr(0,255)}.${filename[1]}`);
+    
+        this.xhr.open("POST", settings.wwwroot + '/repository/repository_ajax.php?action=upload', true);
+        this.xhr.send(formData);
+    }
+
+    /**
+     * @param {string} dataURI
+     * @return {Blob} Binary object.
+     */
+    convertbase64ToBin(dataURI) {
+        // convert base64/URLEncoded data component to raw binary data held in a string
+        var byteString;
+        
+        if (dataURI.split(',')[0].indexOf('base64') >= 0) {
+            byteString = atob(dataURI.split(',')[1]);
+        } else {
+            byteString = decodeURI(dataURI.split(',')[1]);
+        }
+        // separate out the mime component
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+        // write the bytes of the string to a typed array
+        var ia = new Uint8Array(byteString.length);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+
+        return new Blob([ia], {type: mimeString});
     }
 }
 
