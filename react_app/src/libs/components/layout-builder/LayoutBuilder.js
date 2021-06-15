@@ -277,7 +277,7 @@ class MainView extends Component{
         }
     }
 
-    onSaveTemplate(section, name, type){
+    onSaveTemplate(name, type){
         let p = null;
 
         if(type === 'l'){
@@ -290,12 +290,12 @@ class MainView extends Component{
                 let p2 = Utils.resizeImageFromSize(data, MAX_WIDTH, MAX_HEIGHT, fileType);
                
                 return p2.then((img) => {
-                    return Templates.onSave(section, name, type, body.outerHTML, img);
+                    return Templates.onSave(name, type, body.outerHTML, img);
                 });
             });
         }
         else{
-            p = Templates.onSave(section, name, type, this.state.selectedElement.outerHTML);
+            p = Templates.onSave(name, type, this.state.selectedElement.outerHTML);
         }
 
         let that = this;

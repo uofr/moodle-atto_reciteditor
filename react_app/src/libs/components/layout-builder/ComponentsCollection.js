@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button  } from 'react-bootstrap';
-import { faFile, faSave, faTrashAlt, faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
-import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox, TableActions} from '../Components';
+import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button, Modal  } from 'react-bootstrap';
+import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCloud, faTimes, faCloudUploadAlt, faCloudDownloadAlt} from '@fortawesome/free-solid-svg-icons';
+import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox, TableActions, ImageSrc, BtnUpload} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
-import { IconSelector } from '../iconSelector';
-import { ColorSelector } from '../ColorSelector';
-import { TemplateList, Templates } from './Templates';
+import { IconSelector,Assets, ColorSelector } from '../Components';
+import { Templates } from './Templates';
 
 export class ComponentProperties extends Component{
     static defaultProps = {
@@ -175,6 +174,9 @@ class FormProperties extends Component{
                 result = <TableActions showRmCol={data.input.showRmCol}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
+            case 'ImageSrc':
+                result = <ImageSrc name={data.name} value={value} size="sm" onChange={(event) => this.onDataChange(event, data)}  />;
+                break;
            /* case 'number':
                 result = <InputNumber name={data.name} value={value} size="sm"
                                 onChange={(event) => this.onDataChange(event, data)} onCommit={(event) => this.onDataCommit(event, data, this.props.element)}/>;
@@ -237,10 +239,10 @@ export class VisualComponentList extends Component{
                 {this.state.tab === "0" && <TokenList dataProvider={HTMLElementData.elementList} onDragEnd={this.props.onDragEnd}/>}
 
                 {this.state.tab === "1" && 
-                                <TokenList2 dataProvider={Templates.componentList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates}/>}
+                                <TemplateList dataProvider={Templates.componentList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} type='c' />}
 
                 {this.state.tab === "2" &&
-                                <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates}/>}
+                                <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} type='l'/>}
             </div>;
 
         return main;
@@ -317,11 +319,12 @@ class TokenList extends Component{
     }
 }
 
-class TokenList2 extends Component{
+class TemplateList extends Component{
     static defaultProps = {
         dataProvider: [],
         onDragEnd: null,
-        onChange: null
+        onChange: null,
+        type: 'c'
     };
 
     constructor(props){
@@ -332,9 +335,19 @@ class TokenList2 extends Component{
         this.showMenu = this.showMenu.bind(this);
         this.showImport = this.showImport.bind(this);
         this.onDelete = this.onDelete.bind(this);
+        this.showVitrine = this.showVitrine.bind(this);
+        this.receiveMessageFromIframe = this.receiveMessageFromIframe.bind(this);
        
-        this.state = {showMenu: false, showImport: false, collapsed: {}};
+        this.state = {showMenu: false, showImport: false, showVitrine: false };
     }    
+
+    componentDidMount(){
+        window.addEventListener("message", this.receiveMessageFromIframe, false);
+    }
+
+    componentWillUnmount(){
+        window.removeEventListener("message", this.receiveMessageFromIframe, false);
+    }
 
     render(){       
         let main =
@@ -342,23 +355,29 @@ class TokenList2 extends Component{
                 <div>
                     <ButtonToolbar style={{justifyContent: 'flex-end'}}>
                         <ButtonGroup >
-                                <Button onClick={() => this.showImport(!this.state.showImport)}><FontAwesomeIcon  icon={faFile} title="Importer la collection"/></Button>
-                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faSave} title="Exporter"/></Button>
+                                <BtnUpload id="import-collection"  accept=".json" onChange={this.onImport} title="Importer la collection"/>
+                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faCloudDownloadAlt} title="Exporter"/></Button>
                                 <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                                {this.props.type === 'l' && <Button onClick={() => this.showVitrine(true)}><FontAwesomeIcon  icon={faCloud} title="Voir la vitrine de gabarits"/></Button>}
                         </ButtonGroup>
                     </ButtonToolbar>
-                    {this.state.showImport && <input type="file" onChange={this.onImport} accept=".json"/>}
-                    {this.state.showMenu && <Button onClick={(event) => this.onExport(event, this.props.dataProvider)}><FontAwesomeIcon  icon={faSave}/>{" Exporter la collection"}</Button>}
+                    {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider)}><FontAwesomeIcon  icon={faCloudDownloadAlt}/>{" Exporter la collection"}</Button>}
                 </div>
-                <ul className='mt-2'>
+                <ul className='mt-2 d-flex flex-wrap'>
                     {this.props.dataProvider.map((item, index) => {
-                        let ret = 
-                            <Token showMenu={this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} 
-                                                onExport={(event) => this.onExport(event, [item])} onDelete={this.onDelete}/>
-
-                        return (ret);
+                        return (this.getToken(item, index));
                     })}
                 </ul>
+                {this.state.showVitrine && 
+                    <Modal show={true} onHide={() => this.showVitrine(false)} backdrop="static" keyboard={false} className='templatevitrine'>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Vitrine</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <iframe src={Assets.UrlVitrine}/>
+                        </Modal.Body>
+                    </Modal>
+                }
             </div>;
 
         return main;
@@ -372,10 +391,10 @@ class TokenList2 extends Component{
         this.setState({showImport: show});
     }
 
-    onImport(event){
-        let fileCtrl = event.target;
+    onImport(event, data){
+        let fileCtrl = (event !== null ? event.target : null);
         let that = this;        
-        let promise = Templates.onImport(fileCtrl);
+        let promise = Templates.onImport(fileCtrl, data);
         
         promise.then((webApiResult) => {
             if(webApiResult.success){
@@ -425,6 +444,31 @@ class TokenList2 extends Component{
             console.log(err, response);
         });
     }
+
+    showVitrine(show){
+        this.setState({showVitrine: show});
+    }
+
+    getToken(item, index){
+        if(this.props.type === 'l'){
+            return <TokenTemplate showMenu={this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} 
+                        onExport={(event) => this.onExport(event, [item])} onDelete={(event) => this.onDelete(event, item)}/>
+        }
+        else{
+            return <Token showMenu={this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} 
+                            onExport={(event) => this.onExport(event, [item])} onDelete={(event) => this.onDelete(event, item)}/>
+        }
+    }
+
+    receiveMessageFromIframe(event) {
+        switch (event.data.message){
+            case 'import':
+                let data = [{name: event.data.value.name, htmlStr: event.data.value.htmlString, img: event.data.value.image, type: 'l'}];
+                this.onImport(null, data);
+                this.showVitrine(false);
+                break;
+        }
+    }
 }
 
 class Token extends Component
@@ -451,8 +495,8 @@ class Token extends Component
                 {this.props.showMenu && 
                     <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                         <ButtonGroup size="sm">
-                            <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faSave} title="Export"/></Button>
-                            <Button onClick={(event) => this.props.onDelete(event, this.props.data)}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                            <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faCloudDownloadAlt} title="Export"/></Button>
+                            <Button onClick={this.props.onDelete}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                 }             
@@ -467,5 +511,104 @@ class Token extends Component
     
     onDragEnd(event){
         this.props.onDragEnd();
+    }
+}
+
+class TokenTemplate extends Token{
+    constructor(props){
+        super(props);
+
+        this.onMouseEnter = this.onMouseEnter.bind(this);
+        this.onMouseLeave = this.onMouseLeave.bind(this);
+
+        this.state = {imagePreview: false};
+    }
+
+    render(){       
+        let item = this.props.data;
+
+        let main =
+                <div className='template' onMouseEnter={() => this.onMouseEnter(this.props.data.img)} onMouseLeave={this.onMouseLeave} onMouseDown={this.onMouseLeave} 
+                        onDragEnd={this.props.onDragEnd} draggable="true" onDragStart={this.onDragStart}>
+                    <div className='tplimg'>
+                        <img src={item.img}/>
+                    </div>
+                    <p>{item.name}</p>
+                    {this.props.showMenu &&
+                        <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
+                            <ButtonGroup size="sm">
+                                <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faCloudDownloadAlt} title="Exporter"/></Button>
+                                <Button onClick={this.props.onDelete}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                            </ButtonGroup>
+                        </ButtonToolbar>
+                    }
+
+                    {this.state.imagePreview && 
+                        <div className='templatepreview'>
+                            <img src={this.state.imagePreview}/>
+                    </div>}
+                </div>
+        return main;
+    }
+
+    onMouseEnter(img){
+        this.setState({imagePreview: img});
+    }
+
+    onMouseLeave(){
+        this.setState({imagePreview: false});
+    }
+}
+
+export class TemplateForm extends Component{
+    static defaultProps = {
+        onClose: null,
+        onSave: null
+    };    
+
+    constructor(props){
+        super(props);
+
+        this.onDataChange = this.onDataChange.bind(this);
+
+        this.state = {data: {type: ["l"], name: ""}};
+    }
+
+    render(){
+        let main = 
+            <Modal show={true} onHide={this.props.onClose} backdrop="static" keyboard={false} >
+                <Modal.Header closeButton>
+                    <Modal.Title>Créer un nouveau composant</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form >                       
+                        <Form.Row>
+                            <Form.Group as={Col}>
+                                <Form.Label>{"Nom"}</Form.Label>
+                                <Form.Control type="text" required value={this.state.data.name} name="name" onChange={this.onDataChange}/>
+                            </Form.Group>
+                        </Form.Row>
+                        <Form.Row>
+                            <Form.Group as={Col}>
+                                <Form.Label>{"Type"}</Form.Label>
+                                <ToggleButtons type="checkbox" name="type" value={this.state.data.type} bsSize="sm" defaultValue={['l']}
+                                options={[{text:"Composant",  value:"c"}, {text: "Layout", value:'l'}]} onChange={this.onDataChange}/>
+                            </Form.Group>                           
+                        </Form.Row>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={this.props.onClose}><FontAwesomeIcon  icon={faTimes} title="Annuler"/>{" "}Annuler</Button>
+                    <Button variant="success" onClick={() => this.props.onSave({name: this.state.data.name, type: this.state.data.type[0]})}><FontAwesomeIcon  icon={faSave} title="Enregistrer"/>{" "}Enregistrer</Button>
+                </Modal.Footer>
+            </Modal>
+
+        return main;
+    }
+
+    onDataChange(event){
+        let data = this.state.data;
+        data[event.target.name] = event.target.value;
+        this.setState({data: data});
     }
 }

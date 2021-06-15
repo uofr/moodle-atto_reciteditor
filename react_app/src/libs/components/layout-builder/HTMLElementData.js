@@ -216,7 +216,7 @@ export class HTMLElementData{
                     name: 'src', 
                     text: 'Source',
                     input: { 
-                        type: 'text', 
+                        type: 'ImageSrc', 
                         defaultValue: '',
                         onChange: function(el, value, data){
                             el.src = value;

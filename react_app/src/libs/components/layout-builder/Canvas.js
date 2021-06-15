@@ -4,6 +4,7 @@ import {faObjectGroup, faEdit, faBold, faArrowUp,faArrowDown, faTrashAlt, faClon
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import {BtnSetCssProp} from '../ButtonsBar';
+import {TemplateForm} from './ComponentsCollection';
 
 export class Canvas extends Component
 {
@@ -212,8 +213,7 @@ export class FloatingMenu extends Component{
         super(props);
 
         this.showModal = this.showModal.bind(this);
-        this.onSaveCustomComponent = this.onSaveCustomComponent.bind(this);
-        this.onSaveCustomLayout = this.onSaveCustomLayout.bind(this);
+        this.onSaveTemplate = this.onSaveTemplate.bind(this);
 
         this.state = {showModal: false};
     }
@@ -237,14 +237,13 @@ export class FloatingMenu extends Component{
                     <ButtonGroup size="sm">
                         <Button onClick={this.props.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
                         <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faPuzzlePiece} title="Créer un composant"/></Button>
-                        <Button onClick={this.onSaveCustomLayout}><FontAwesomeIcon icon={faObjectGroup} title="Créer un gabarit"/></Button>
                         <Button onClick={this.props.onMoveNodeUp}  ><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
                         <Button onClick={this.props.onMoveNodeDown}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>
                         <Button onClick={this.props.onCloneNode}><FontAwesomeIcon icon={faClone} title="Dupliquer"/></Button>
                         <Button onClick={this.props.onDeleteElement}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                     </ButtonGroup>
                 </ButtonToolbar>
-                {this.state.showModal && <CustomComponentForm onClose={() => this.showModal(false)} onSave={this.onSaveCustomComponent}/>}
+                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate}/>}
             </div>
             //disabled={this.props.selectedElement.previousSibling === null}
         return main;
@@ -254,18 +253,9 @@ export class FloatingMenu extends Component{
         this.setState({showModal: show});
     }
 
-    onSaveCustomComponent(data){
-        this.props.onSaveTemplate(data.section, data.name, 'c');
+    onSaveTemplate(data){
+        this.props.onSaveTemplate(data.name, data.type);
         this.showModal(false);
-    }
-
-    onSaveCustomLayout(){
-        let name = prompt('Nom du gabarit');
-        if (!name) {
-            return null;
-        }
-
-        this.props.onSaveTemplate('', name, 'l');
     }
 }
 
@@ -306,57 +296,5 @@ export class NodeTextEditing extends Component{
                 </div>;
 
         return main;
-    }
-}
-
-class CustomComponentForm extends Component{
-    static defaultProps = {
-        onClose: null,
-        onSave: null
-    };    
-
-    constructor(props){
-        super(props);
-
-        this.onDataChange = this.onDataChange.bind(this);
-
-        this.state = {data: {section: "", name: ""}};
-    }
-
-    render(){
-        let main = 
-            <Modal show={true} onHide={this.props.onClose} backdrop="static" keyboard={false} >
-                <Modal.Header closeButton>
-                    <Modal.Title>Créer un nouveau composant</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form >
-                        <Form.Row>
-                            <Form.Group as={Col}>
-                                <Form.Label>{"Section"}</Form.Label>
-                                <Form.Control type="text" required value={this.state.data.section} name="section" onChange={this.onDataChange}/>
-                            </Form.Group>                           
-                        </Form.Row>
-                        <Form.Row>
-                            <Form.Group as={Col}>
-                                <Form.Label>{"Nom"}</Form.Label>
-                                <Form.Control type="text" required value={this.state.data.name} name="name" onChange={this.onDataChange}/>
-                            </Form.Group>
-                        </Form.Row>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={this.props.onClose}><FontAwesomeIcon  icon={faTimes} title="Annuler"/>{" "}Annuler</Button>
-                    <Button variant="success" onClick={() => this.props.onSave(this.state.data)}><FontAwesomeIcon  icon={faSave} title="Enregistrer"/>{" "}Enregistrer</Button>
-                </Modal.Footer>
-            </Modal>
-
-        return main;
-    }
-
-    onDataChange(event){
-        let data = this.state.data;
-        data[event.target.name] = event.target.value;
-        this.setState({data: data});
     }
 }

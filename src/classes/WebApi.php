@@ -114,7 +114,7 @@ class WebApi{
 
             $data = $this->request->data;
             $data->name = $this->mysqli->real_escape_string($data->name);
-            $query = "insert into {$prefix}atto_reciteditor_template_list (name, type, userid, htmlstr, img)
+            $query = "insert into {$prefix}atto_reciteditor_templates (name, type, userid, htmlstr, img)
             values('$data->name', '$data->type', $USER->id, '$data->htmlStr', '$data->img')";
 
             $this->execSQL($query);
@@ -131,16 +131,16 @@ class WebApi{
             $data = $this->request->data;
             $prefix = $CFG->prefix;
 
-            $fileContent = json_decode($data->fileContent);
+            $data->fileContent = json_decode($data->fileContent);
 
             $values = array();
-            foreach($fileContent as $item){
+            foreach($data->fileContent as $item){
                 $item->name = $this->mysqli->real_escape_string($item->name);
                 $item->htmlStr = $this->mysqli->real_escape_string($item->htmlStr);
                 $values[] = "('$item->name', '$item->type', $USER->id, '$item->htmlStr', '$item->img')";
             }
 
-            $query = sprintf("insert into {$prefix}atto_reciteditor_template_list (name, type, userid, htmlstr, img) values(%s)", implode(",", $values));
+            $query = sprintf("insert into {$prefix}atto_reciteditor_templates (name, type, userid, htmlstr, img) values %s", implode(",", $values));
 
             $this->execSQL($query);
 
@@ -159,7 +159,7 @@ class WebApi{
             $prefix = $CFG->prefix;
 
             $data = $this->request->data;
-            $query = "select id, name, userid as userId, htmlstr as htmlStr, type, img from {$prefix}atto_reciteditor_template_list 
+            $query = "select id, name, userid as userId, htmlstr as htmlStr, type, img from {$prefix}atto_reciteditor_templates 
                         where userid = $USER->id order by name ";
 
             $rst = $this->execSQL($query);
@@ -184,7 +184,7 @@ class WebApi{
             $prefix = $CFG->prefix;
 
             $data = $this->request->data;
-            $query = "delete from {$prefix}atto_reciteditor_template_list where id = $data->id";
+            $query = "delete from {$prefix}atto_reciteditor_templates where id = $data->id";
 
             $this->execSQL($query);
 

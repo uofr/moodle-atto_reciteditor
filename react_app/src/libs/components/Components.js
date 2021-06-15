@@ -10,6 +10,7 @@ export * from './InputNumber';
 export * from './InputText';
 export * from './ComboBox';
 export * from './InputColor';
+export * from './ImageSrc';
 export * from './MultipleSelect';
 export * from './MinValueMax';
 export * from './TableActions'
@@ -19,6 +20,7 @@ export * from './RecitRichEditor';
 export * from './ColorSelector';
 export * from './SourceCodeEditor';
 export * from './IconSelector';
+export * from './BtnUpload';
 
 export default class Components{
     static version = 1.0;
@@ -34,4 +36,6 @@ export class Assets{
     //static ContentScript = './assets/js/script.js'; 
 
     static Bootstrap = './assets/bootstrap/css/bootstrap.min.css';
+
+    static UrlVitrine = 'https://recitfad.ca/moodledocs/vitrine_editeur_v2/index.php';
 }
