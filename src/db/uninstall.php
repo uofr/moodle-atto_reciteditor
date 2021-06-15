@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-function xmldb_atto_recit_editor_uninstall() {
-    $pluginname = "recit_editor";
+function xmldb_atto_reciteditor_uninstall() {
+    $pluginname = "reciteditor";
 
     // Remove 'recit_editor' from the toolbar editor_atto config variable.
     $toolbar = get_config('editor_atto', 'toolbar');

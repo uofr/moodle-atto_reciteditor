@@ -28,8 +28,8 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Enable recit_editor for Atto buttons on installation.
  */
-function xmldb_atto_recit_editor_install() {
-    $pluginname = "recit_editor";
+function xmldb_atto_reciteditor_install() {
+    $pluginname = "reciteditor";
 
     $toolbar = get_config('editor_atto', 'toolbar');
     if (strpos($toolbar, $pluginname) === false && $toolbar && $toolbar != '') {
