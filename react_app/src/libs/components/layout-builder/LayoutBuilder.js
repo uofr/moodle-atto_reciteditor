@@ -164,7 +164,7 @@ class MainView extends Component{
     componentDidUpdate(prevProps){
         if(prevProps.view !== this.props.view){
             let data = this.canvasState[prevProps.view].getData();
-            this.canvasState[this.props.view].setData(data);
+            this.canvasState[this.props.view].setData(data, this.state.selectedElement);
             this.setState({canvasState: this.props.view},  this.onCollapse);
         }
 
@@ -569,6 +569,8 @@ class DrawnerState extends CanvasState{
     getData(){
         if(this.window === null){ return null; }
 
+        //this.htmlCleaning();
+
         return this.window.document.body.innerHTML;
     }
 
@@ -641,7 +643,8 @@ class SourceCodeState extends CanvasState{
         return UtilsHTML.removeTagId(this.data);
     }
 
-    setData(value){
+    setData(value, el){
+        this.queryStr = el.getAttribute("data-tag-id") || "";
         this.data = UtilsHTML.assignTagId(value);
     }
 
