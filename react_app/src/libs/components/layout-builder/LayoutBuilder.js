@@ -32,6 +32,10 @@ export class LayoutBuilder extends Component
         };
 
         this.mainViewRef = React.createRef();
+
+        if (screen.width < 1400){//If screen is small, set layout to lg instead of xl
+            this.state.device = 'lg';
+        }
     }  
 
 	render(){
