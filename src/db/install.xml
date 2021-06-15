@@ -7,7 +7,7 @@
           <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" />
           <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="true" />
           <FIELD NAME="htmlstr" TYPE="text" NOTNULL="false" />
-          <FIELD NAME="img" TYPE="mediumtext" NOTNULL="false" />
+          <FIELD NAME="img" TYPE="text" NOTNULL="false" />
         </FIELDS>
         <KEYS>
           <KEY NAME="primary" TYPE="primary" FIELDS="id" />
