@@ -174,7 +174,7 @@ class MainView extends Component{
     }
 
     getData(){
-        return this.canvasState[this.props.view].getData();
+        return this.canvasState[this.props.view].getData(true);
     }
 
     render(){
@@ -347,6 +347,7 @@ class CanvasState{
         this.onCloneNode = this.onCloneNode.bind(this);
         this.onEditNodeText = this.onEditNodeText.bind(this);
         this.onLoadFrame = this.onLoadFrame.bind(this);
+        this.htmlCleaning = this.htmlCleaning.bind(this);
 
         this.onLoadFrame();
     }
@@ -356,13 +357,14 @@ class CanvasState{
     render(show, selectedElement){ console.log("Abstract method...");}
     onDragEnd(){ console.log("Abstract method...");}
     onDropElement(){console.log("Abstract method...");}
-    getData(){console.log("Abstract method...");}
+    getData(htmlCleaning){console.log("Abstract method...");}
     setData(value){console.log("Abstract method...");}
     onDeleteElement(selectedElement){console.log("Abstract method...");}
     onMoveNodeUp(selectedElement){console.log("Abstract method...");}
     onMoveNodeDown(selectedElement){console.log("Abstract method...");}
     onCloneNode(selectedElement){console.log("Abstract method...");}
     onEditNodeText(selectedElement){console.log("Abstract method...");}
+    htmlCleaning(){console.log("Abstract method...");}
 
     onCollapse(collapsed){ 
         return collapsed;
@@ -566,10 +568,12 @@ class DrawnerState extends CanvasState{
         });
     }
 
-    getData(){
+    getData(htmlCleaning){
         if(this.window === null){ return null; }
 
-        //this.htmlCleaning();
+        if(htmlCleaning){
+            this.htmlCleaning();
+        }
 
         return this.window.document.body.innerHTML;
     }
@@ -639,7 +643,7 @@ class SourceCodeState extends CanvasState{
         this.data = value;
     }
 
-    getData(){
+    getData(htmlCleaning){
         return UtilsHTML.removeTagId(this.data);
     }
 
@@ -710,12 +714,16 @@ class PreviewState extends CanvasState{
         return result;
     }
 
-    getData(){
+    htmlCleaning(){
         //Clean up popups before returning html
         let popup = this.iFrame.document.body.querySelectorAll('.r_popup-overlay');
         for (let el of popup){
             el.remove();
         }
+    }
+
+    getData(htmlCleaning){
+        this.htmlCleaning();
         return this.iFrame.document.body.innerHTML;
     }
 
