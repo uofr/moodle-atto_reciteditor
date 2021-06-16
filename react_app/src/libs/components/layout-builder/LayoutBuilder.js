@@ -364,7 +364,6 @@ class CanvasState{
     onMoveNodeDown(selectedElement){console.log("Abstract method...");}
     onCloneNode(selectedElement){console.log("Abstract method...");}
     onEditNodeText(selectedElement){console.log("Abstract method...");}
-    htmlCleaning(){console.log("Abstract method...");}
 
     onCollapse(collapsed){ 
         return collapsed;
@@ -388,6 +387,26 @@ class CanvasState{
         }
 
         return device;
+    }
+
+    htmlCleaning(){
+        // remove the class dropping-zone of all elements
+        let items = this.window.document.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable], [data-dragging], [data-selected], [draggable]");
+
+        items.forEach(function(item) {
+            //item.classList.remove('dropping-zone');
+            if(item.classList.contains("dropping-zone")){
+                item.remove();
+            }
+            else if(item.classList.contains("dropping-zone-hover")){
+                item.classList.remove('dropping-zone-hover');
+            }
+            
+            item.removeAttribute("data-dragging");
+            item.removeAttribute("contenteditable");
+            item.removeAttribute("data-selected");
+            item.removeAttribute("draggable");
+        });
     }
 }
 
@@ -547,27 +566,7 @@ class DrawnerState extends CanvasState{
     onDragEnd(){
         this.htmlCleaning();
     }
-
-    htmlCleaning(){
-        // remove the class dropping-zone of all elements
-        let items = this.window.document.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable], [data-dragging], [data-selected], [draggable]");
-
-        items.forEach(function(item) {
-            //item.classList.remove('dropping-zone');
-            if(item.classList.contains("dropping-zone")){
-                item.remove();
-            }
-            else if(item.classList.contains("dropping-zone-hover")){
-                item.classList.remove('dropping-zone-hover');
-            }
-            
-            item.removeAttribute("data-dragging");
-            item.removeAttribute("contenteditable");
-            item.removeAttribute("data-selected");
-            item.removeAttribute("draggable");
-        });
-    }
-
+   
     getData(htmlCleaning){
         if(this.window === null){ return null; }
 
@@ -644,12 +643,16 @@ class SourceCodeState extends CanvasState{
     }
 
     getData(htmlCleaning){
+        if(htmlCleaning){
+            this.htmlCleaning();
+        }
+        
         return UtilsHTML.removeTagId(this.data);
     }
 
     setData(value, el){
         el = el || null;
-        
+
         if(el !== null){
             this.queryStr = el.getAttribute("data-tag-id") || "";
         }        
@@ -720,6 +723,8 @@ class PreviewState extends CanvasState{
     }
 
     htmlCleaning(){
+        super.htmlCleaning();
+        
         //Clean up popups before returning html
         let popup = this.iFrame.document.body.querySelectorAll('.r_popup-overlay');
         for (let el of popup){
