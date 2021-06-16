@@ -394,8 +394,8 @@ export class UtilsMoodle
         let result = {
             setContent: function(){console.log('Atto interface not defined.'); }, 
             getContent: function(){console.log('Atto interface not defined.'); return null;}, 
-            getSettings: function(){console.log('Atto interface not defined.'); },
-            getFileTransferData: function(){console.log('Atto interface not defined.'); }
+            getSettings: function(){console.log('Atto interface not defined.'); return null; },
+            getFileTransferData: function(){console.log('Atto interface not defined.'); return null;}
         };
 
         if(window.attoInterface){

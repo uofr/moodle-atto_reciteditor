@@ -648,7 +648,12 @@ class SourceCodeState extends CanvasState{
     }
 
     setData(value, el){
-        this.queryStr = el.getAttribute("data-tag-id") || "";
+        el = el || null;
+        
+        if(el !== null){
+            this.queryStr = el.getAttribute("data-tag-id") || "";
+        }        
+        
         this.data = UtilsHTML.assignTagId(value);
     }
 
