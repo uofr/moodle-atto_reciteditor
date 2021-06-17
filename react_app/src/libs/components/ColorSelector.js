@@ -24,7 +24,7 @@ export class ColorSelector extends Component {
                 {this.props.options.map(function(item, index){
                     
                     let result =
-                        <Button style={{width: 23, height: 23}} key={index} onClick={() => that.onChange(item.value)} variant={item.value} size='sm' title={item.text} className='m-1'>
+                        <Button   key={index} onClick={() => that.onChange(item.value)} variant={item.value} size='sm' title={item.text} className='m-1'>
                             {that.props.value === item.value && <FontAwesomeIcon  icon={faCheck} />}
                         </Button>
 
