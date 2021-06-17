@@ -114,6 +114,7 @@ class WebApi{
 
             $data = $this->request->data;
             $data->name = $this->mysqli->real_escape_string($data->name);
+            $data->htmlStr = $this->mysqli->real_escape_string($data->htmlStr);
             $query = "insert into {$prefix}atto_reciteditor_templates (name, type, userid, htmlstr, img)
             values('$data->name', '$data->type', $USER->id, '$data->htmlStr', '$data->img')";
 
