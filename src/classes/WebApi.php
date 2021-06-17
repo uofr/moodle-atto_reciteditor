@@ -133,6 +133,10 @@ class WebApi{
 
             $data->fileContent = json_decode($data->fileContent);
 
+            if(!is_array($data->fileContent)){
+                $data->fileContent = array($data->fileContent);
+            }
+
             $values = array();
             foreach($data->fileContent as $item){
                 $item->name = $this->mysqli->real_escape_string($item->name);

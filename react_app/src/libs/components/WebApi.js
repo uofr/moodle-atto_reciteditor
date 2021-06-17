@@ -10,8 +10,14 @@ export class WebApi{
 
     getGateway(){
         let atto = UtilsMoodle.getAttoInterface();
+        
         let settings = atto.getSettings();
-        return `${settings.wwwroot}/lib/editor/atto/plugins/reciteditor/classes/WebApi.php`;
+        if(settings){
+            return `${settings.wwwroot}/lib/editor/atto/plugins/reciteditor/classes/WebApi.php`;
+        }
+        else{
+            return "Unknown gateway."
+        }
     }
 
     post(url, data){

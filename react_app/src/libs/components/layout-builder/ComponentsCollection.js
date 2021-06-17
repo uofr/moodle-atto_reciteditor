@@ -452,11 +452,11 @@ class TemplateList extends Component{
     getToken(item, index){
         if(this.props.type === 'l'){
             return <TokenTemplate showMenu={this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} 
-                        onExport={(event) => this.onExport(event, [item])} onDelete={(event) => this.onDelete(event, item)}/>
+                        onExport={(event) => this.onExport(event, item)} onDelete={(event) => this.onDelete(event, item)}/>
         }
         else{
             return <Token showMenu={this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} 
-                            onExport={(event) => this.onExport(event, [item])} onDelete={(event) => this.onDelete(event, item)}/>
+                            onExport={(event) => this.onExport(event, item)} onDelete={(event) => this.onDelete(event, item)}/>
         }
     }
 

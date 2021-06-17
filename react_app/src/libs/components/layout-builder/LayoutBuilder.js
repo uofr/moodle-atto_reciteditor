@@ -180,7 +180,7 @@ class MainView extends Component{
     componentDidUpdate(prevProps){
         if(prevProps.view !== this.props.view){
             let data = this.canvasState[prevProps.view].getData();
-            this.canvasState[this.props.view].setData(data);
+            this.canvasState[this.props.view].setData(data, this.state.selectedElement);
             this.setState({canvasState: this.props.view},  this.onCollapse);
         }
 
@@ -190,7 +190,7 @@ class MainView extends Component{
     }
 
     getData(){
-        return this.canvasState[this.props.view].getData();
+        return this.canvasState[this.props.view].getData(true);
     }
 
     setData(data){
@@ -367,6 +367,7 @@ class CanvasState{
         this.onCloneNode = this.onCloneNode.bind(this);
         this.onEditNodeText = this.onEditNodeText.bind(this);
         this.onLoadFrame = this.onLoadFrame.bind(this);
+        this.htmlCleaning = this.htmlCleaning.bind(this);
 
         this.onLoadFrame();
     }
@@ -376,7 +377,7 @@ class CanvasState{
     render(show, selectedElement){ console.log("Abstract method...");}
     onDragEnd(){ console.log("Abstract method...");}
     onDropElement(){console.log("Abstract method...");}
-    getData(){console.log("Abstract method...");}
+    getData(htmlCleaning){console.log("Abstract method...");}
     setData(value){console.log("Abstract method...");}
     onDeleteElement(selectedElement){console.log("Abstract method...");}
     onMoveNodeUp(selectedElement){console.log("Abstract method...");}
@@ -406,6 +407,26 @@ class CanvasState{
         }
 
         return device;
+    }
+
+    htmlCleaning(){
+        // remove the class dropping-zone of all elements
+        let items = this.window.document.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable], [data-dragging], [data-selected], [draggable]");
+
+        items.forEach(function(item) {
+            //item.classList.remove('dropping-zone');
+            if(item.classList.contains("dropping-zone")){
+                item.remove();
+            }
+            else if(item.classList.contains("dropping-zone-hover")){
+                item.classList.remove('dropping-zone-hover');
+            }
+            
+            item.removeAttribute("data-dragging");
+            item.removeAttribute("contenteditable");
+            item.removeAttribute("data-selected");
+            item.removeAttribute("draggable");
+        });
     }
 }
 
@@ -577,29 +598,13 @@ class DrawnerState extends CanvasState{
     onDragEnd(){
         this.htmlCleaning();
     }
-
-    htmlCleaning(){
-        // remove the class dropping-zone of all elements
-        let items = this.window.document.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable], [data-dragging], [data-selected], [draggable]");
-
-        items.forEach(function(item) {
-            //item.classList.remove('dropping-zone');
-            if(item.classList.contains("dropping-zone")){
-                item.remove();
-            }
-            else if(item.classList.contains("dropping-zone-hover")){
-                item.classList.remove('dropping-zone-hover');
-            }
-            
-            item.removeAttribute("data-dragging");
-            item.removeAttribute("contenteditable");
-            item.removeAttribute("data-selected");
-            item.removeAttribute("draggable");
-        });
-    }
-
-    getData(){
+   
+    getData(htmlCleaning){
         if(this.window === null){ return null; }
+
+        if(htmlCleaning){
+            this.htmlCleaning();
+        }
 
         return this.window.document.body.innerHTML;
     }
@@ -669,11 +674,21 @@ class SourceCodeState extends CanvasState{
         this.data = value;
     }
 
-    getData(){
+    getData(htmlCleaning){
+        if(htmlCleaning){
+            this.htmlCleaning();
+        }
+        
         return UtilsHTML.removeTagId(this.data);
     }
 
-    setData(value){
+    setData(value, el){
+        el = el || null;
+
+        if(el !== null){
+            this.queryStr = el.getAttribute("data-tag-id") || "";
+        }        
+        
         this.data = UtilsHTML.assignTagId(value);
     }
 
@@ -739,12 +754,18 @@ class PreviewState extends CanvasState{
         return result;
     }
 
-    getData(){
+    htmlCleaning(){
+        super.htmlCleaning();
+        
         //Clean up popups before returning html
         let popup = this.iFrame.document.body.querySelectorAll('.r_popup-overlay');
         for (let el of popup){
             el.remove();
         }
+    }
+
+    getData(htmlCleaning){
+        this.htmlCleaning();
         return this.iFrame.document.body.innerHTML;
     }
 
