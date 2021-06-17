@@ -238,13 +238,7 @@ export class HTMLElementData{
                         type: 'text', 
                         defaultValue: '',
                         onChange: function(el, value, data){
-                            if (!value.includes('rel=')){
-                                if (value.includes('?')){
-                                    value = value + '&rel=0';
-                                }else{
-                                    value = value + '?rel=0';
-                                }
-                            }
+                            value = Utils.formatVideoURLEmbed(value);
                             el.setAttribute('data-videourl', value);
                         }
                     },
@@ -265,13 +259,7 @@ export class HTMLElementData{
                         defaultValue: '',
                         onChange: function(el, value, data){
                             let iframe = el;
-                            if (!value.includes('rel=')){
-                                if (value.includes('?')){
-                                    value = value + '&rel=0';
-                                }else{
-                                    value = value + '?rel=0';
-                                }
-                            }
+                            value = Utils.formatVideoURLEmbed(value);
                             if (el.tagName == 'DIV') iframe = el.querySelector('iframe');
                             iframe.src = value;
                         }
@@ -1023,6 +1011,8 @@ export class HTMLElementData{
                     let iframe = document.createElement("iframe");
                     iframe.classList.add('embed-responsive-item');
                     iframe.classList.add('video');
+                    iframe.setAttribute('frameborder', '0');
+                    iframe.setAttribute('allowfullscreen', '1');
                     iframe.src = 'https://www.youtube.com/embed/WvljI0VIq-E?rel=0'
                     el.appendChild(iframe)
                     return el;

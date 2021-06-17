@@ -370,6 +370,30 @@ export default class Utils{
 
         return promise;        
     }
+
+    static getYoutubeIDFromURL(url){
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const match = url.match(regExp);
+
+        return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    static formatVideoURLEmbed(url){
+        if (url.includes('youtube') && url.includes('watch?v=')){//URL is not embed
+            let id = Utils.getYoutubeIDFromURL(url);
+            if (id){
+                url = '//www.youtube.com/embed/' + id;
+            }
+        }
+        if (!url.includes('rel=')){
+            if (url.includes('?')){
+                url = url + '&rel=0';
+            }else{
+                url = url + '?rel=0';
+            }
+        }
+        return url;
+    }
 }
 
 export class UtilsMoodle

@@ -76,6 +76,14 @@ html.canvas-content{
             transform: translate(-50%, -50%);
             text-align: center;
         }
+
+        iframe.video {
+            pointer-events: none;
+            content: 'video';
+        }
+        .embed-responsive {
+            border: 2px dashed rgba(0, 0, 0, .5);
+        }
     }  
     .tagName{display: inline-flex; background-color: #ffd75e!important; padding: 3px; margin: 3px; font-size: 10px; font-weight: 500; align-items: center;}
     

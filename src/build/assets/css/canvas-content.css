@@ -118,6 +118,11 @@ html.canvas-content {
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center; }
+    html.canvas-content body iframe.video {
+      pointer-events: none;
+      content: 'video'; }
+    html.canvas-content body .embed-responsive {
+      border: 2px dashed rgba(0, 0, 0, 0.5); }
   html.canvas-content .tagName, html.canvas-content [data-dragging="1"]::before, html.canvas-content [data-dragging="1"]::after, html.canvas-content *[data-dragging="1"] section::before, html.canvas-content *[data-dragging="1"] section::after, html.canvas-content *[data-dragging="1"] .container::before, html.canvas-content *[data-dragging="1"] .container-fluid::before, html.canvas-content *[data-dragging="1"] .container::after, html.canvas-content *[data-dragging="1"] .container-fluid::after, html.canvas-content *[data-dragging="1"] .row::before, html.canvas-content *[data-dragging="1"] .row::after, html.canvas-content *[data-dragging="1"] .col::before, html.canvas-content *[data-dragging="1"] .col-12::before, html.canvas-content *[data-dragging="1"] .col::after, html.canvas-content *[data-dragging="1"] .col-12::after, html.canvas-content *[data-dragging="1"] .alert::before, html.canvas-content *[data-dragging="1"] .alert::after, html.canvas-content *[data-dragging="1"] .card::before, html.canvas-content *[data-dragging="1"] .card::after, html.canvas-content *[data-dragging="1"] .card-header::before, html.canvas-content *[data-dragging="1"] .card-header::after, html.canvas-content *[data-dragging="1"] .card-body::before, html.canvas-content *[data-dragging="1"] .card-body::after, html.canvas-content *[data-dragging="1"] .card-footer::before, html.canvas-content *[data-dragging="1"] .card-footer::after, html.canvas-content *[data-dragging="1"] .carousel-inner::before, html.canvas-content *[data-dragging="1"] .carousel-inner::after, html.canvas-content *[data-dragging="1"] table::before, html.canvas-content *[data-dragging="1"] tbody::before, html.canvas-content *[data-dragging="1"] table::after, html.canvas-content *[data-dragging="1"] tr::before, html.canvas-content *[data-dragging="1"] tr::after, html.canvas-content *[data-dragging="1"] td::after, html.canvas-content *[data-dragging="1"] th::after {
     display: inline-flex;
     background-color: #ffd75e !important;
