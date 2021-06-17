@@ -505,7 +505,7 @@ export class HTMLElementData{
                     ],
                     onChange: function(el, value, data){                       
                         for(let item of data.input.options){
-                            el.classList.remove(item);
+                            el.classList.remove(item.value);
                         }
 
                         if(value.length > 0){
