@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Nav, Card, Navbar, Collapse, Button  } from 'react-bootstrap';
-import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faFileWord, faEye, faCode, faAngleRight, faAngleDown, faBars, faPuzzlePiece, faSlidersH, faStream, faSave} from '@fortawesome/free-solid-svg-icons';
+import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faFileWord, faEye, faCode, faAngleRight, faAngleDown, faBars, faPuzzlePiece, faSlidersH, faStream, faSave, faRedo, faUndo} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {TreeView} from './TreeView';
 import {Canvas, CanvasElement, FloatingMenu, NodeTextEditing} from './Canvas';
@@ -8,6 +8,7 @@ import {ComponentProperties, VisualComponentList} from './ComponentsCollection';
 import {SourceCodeEditor, Assets} from '../Components';
 import { HTMLElementData } from './HTMLElementData';
 import { Templates } from './Templates';
+import { HistoryManager } from './HistoryManager';
 import Utils, {UtilsHTML, UtilsMoodle} from '../../utils/Utils';
 import html2canvas from 'html2canvas';
 
@@ -32,6 +33,7 @@ export class LayoutBuilder extends Component
         };
 
         this.mainViewRef = React.createRef();
+        this.historyManager = new HistoryManager();
 
         if (screen.width < 1400){//If screen is small, set layout to lg instead of xl
             this.state.device = 'lg';
@@ -51,6 +53,11 @@ export class LayoutBuilder extends Component
                         <Nav className="mr-auto" activeKey={(this.state.leftPanel ? 'collapse' : '')}>
                             <Nav.Link eventKey="wordbuilder"><FontAwesomeIcon icon={faFileWord} title="Word Builder"/></Nav.Link>
                             <Nav.Link eventKey="collapse"><FontAwesomeIcon icon={faBars} title="Collapser"/></Nav.Link>
+                        {this.state.view == 'drawner' && <>
+                            <Nav.Link eventKey="undo"><FontAwesomeIcon icon={faUndo} title="Undo"/></Nav.Link>
+                            <Nav.Link eventKey="redo"><FontAwesomeIcon icon={faRedo} title="Redo"/></Nav.Link>
+                            </>
+                        }
                         </Nav>
                         <Nav className="mr-auto" activeKey={this.state.view}>
                             <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title="Preview"/></Nav.Link>
@@ -66,7 +73,7 @@ export class LayoutBuilder extends Component
                         <Button variant="outline-success" onClick={this.onSaveAndClose}><FontAwesomeIcon icon={faSave} title="Enregistrer"/>{" Enregistrer"}</Button>
                     </Navbar.Collapse>
                 </Navbar>
-                <MainView ref={this.mainViewRef} content={this.props.content} device={this.state.device} view={this.state.view} leftPanel={this.state.leftPanel}/>
+                <MainView ref={this.mainViewRef} content={this.props.content} device={this.state.device} view={this.state.view} leftPanel={this.state.leftPanel} historyManager={this.historyManager}/>
             </div>;
 
 		return (main);
@@ -77,16 +84,22 @@ export class LayoutBuilder extends Component
             this.props.onChange(this.mainViewRef.current.getData());
             this.props.onSelectBuilder('word');
         }
-        else if('preview' === eventKey){
+        else if(eventKey === 'preview'){
             let value = (this.state.view === eventKey);
             this.setState({view: value ? 'drawner' : eventKey});
         }
-        else if('sourceCode' === eventKey){
+        else if(eventKey === 'sourceCode'){
             let value = (this.state.view === eventKey);
             this.setState({view: value ? 'drawner' : eventKey});
         }
         else if(eventKey === 'collapse'){
             this.setState({leftPanel: !this.state.leftPanel});
+        }
+        else if(eventKey === 'undo'){
+            this.historyManager.onUndo(this.mainViewRef.current.setData, this.mainViewRef.current.getData());
+        }
+        else if(eventKey === 'redo'){
+            this.historyManager.onRedo(this.mainViewRef.current.setData, this.mainViewRef.current.getData());
         }
         else{
             this.setState({device: eventKey});
@@ -104,7 +117,8 @@ class MainView extends Component{
         content: "",
         device: "",
         view: "drawner",
-        leftPanel: false
+        leftPanel: false,
+        historyManager: null,
     };
 
     constructor(props){
@@ -123,9 +137,10 @@ class MainView extends Component{
         this.onMouseEnter = this.onMouseEnter.bind(this);
         this.onMouseLeave = this.onMouseLeave.bind(this);
         this.getData = this.getData.bind(this);
+        this.setData = this.setData.bind(this);
 
         this.canvasState = {
-            drawner: new DrawnerState(this),
+            drawner: new DrawnerState(this, this.props.historyManager),
             preview: new PreviewState(this),
             sourceCode: new SourceCodeState(this),
         }
@@ -141,6 +156,7 @@ class MainView extends Component{
 
     componentDidMount(){
         this.canvasState[this.props.view].setData(this.props.content);
+        this.historyManager.addHistoryItem(this.props.content);
         this.loadTemplates();
     }
 
@@ -177,6 +193,10 @@ class MainView extends Component{
         return this.canvasState[this.props.view].getData();
     }
 
+    setData(data){
+        return this.canvasState[this.props.view].setData(data);
+    }
+
     render(){
         let main =
             <div className="main" data-left-area-collapsed={(this.props.leftPanel ? "1" : "0")}>
@@ -206,7 +226,7 @@ class MainView extends Component{
                                     <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/>Proprietés
                                 </Card.Header>
                                 <Collapse in={!this.state.collapsed.properties}>
-                                    <Card.Body>
+                                    <Card.Body className="properties">
                                         <ComponentProperties element={this.state.selectedElement}/>
                                     </Card.Body>
                                 </Collapse>
@@ -390,11 +410,12 @@ class CanvasState{
 }
 
 class DrawnerState extends CanvasState{
-    constructor(mainView){
+    constructor(mainView, historyManager){
         super(mainView);
 
         this.iFrame = null;
         this.window = null;
+        this.historyManager = historyManager;
     }
 
     onLoadFrame(){
@@ -508,21 +529,31 @@ class DrawnerState extends CanvasState{
         return collapsed;
     }
 
+    onContentChange(){
+        if (this.historyManager){
+            this.historyManager.onContentChange(this.getData());
+        }
+    }
+
     onDropElement(){
         this.onDragEnd();
+        this.onContentChange();
     } 
 
     onDeleteElement(selectedElement){
+        this.onContentChange();
         selectedElement.remove();
     }
     
     onMoveNodeUp(selectedElement){
+        this.onContentChange();
         let parent = selectedElement.parentElement;
         let previousSibling = selectedElement.previousSibling;
         parent.insertBefore(selectedElement, previousSibling);
     }
 
     onMoveNodeDown(selectedElement){
+        this.onContentChange();
         let parent = selectedElement.parentElement;
         let nextSibling = selectedElement.nextSibling;
         if(nextSibling){
@@ -534,6 +565,7 @@ class DrawnerState extends CanvasState{
     }
 
     onCloneNode(selectedElement){
+        this.onContentChange();
         let parent = selectedElement.parentElement;
         let el = selectedElement.cloneNode(true)
         el.removeAttribute("data-selected");

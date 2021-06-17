@@ -166,10 +166,10 @@ export class VisualWordProcessor extends Component
         if(history.undo.length === 0){
             history.undo.push("");
         }
-        else if(history.undo.length > 15){
+        if(history.undo.length > 15){
             history.undo.unshift();
         }
-        else if(history.undo[history.undo.length - 1] !== content){
+        if(history.undo[history.undo.length - 1] !== content){
             history.undo.push(this.state.tmpContent);
         }
 
@@ -180,7 +180,7 @@ export class VisualWordProcessor extends Component
         let history = this.state.history;
         let content = history.undo.pop() || "";
         
-        if(content !== null){
+        if(content){
             history.redo.push(this.editorRef.current.innerHTML);
 
             this.editorRef.current.innerHTML = content;
@@ -193,9 +193,9 @@ export class VisualWordProcessor extends Component
 
     redoHistory(){
         let history = this.state.history;
-        let content = history.redo.pop() || "";
+        let content = history.redo.pop();
         
-        if(content !== null){
+        if(content){
             history.undo.push(this.editorRef.current.innerHTML);
 
             this.editorRef.current.innerHTML  = content;
