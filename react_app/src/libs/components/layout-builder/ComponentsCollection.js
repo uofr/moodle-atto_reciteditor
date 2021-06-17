@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button, Modal  } from 'react-bootstrap';
 import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCloud, faTimes, faCloudUploadAlt, faCloudDownloadAlt, faCog} from '@fortawesome/free-solid-svg-icons';
-import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox, TableActions, ImageSrc, BtnUpload} from '../Components';
+import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox, TableActions, ImageSrc, BtnUpload,  IconSelector,Assets, ColorSelector } from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
-import { IconSelector,Assets, ColorSelector } from '../Components';
 import { Templates } from './Templates';
 
 export class ComponentProperties extends Component{
@@ -209,7 +208,8 @@ class FormProperties extends Component{
 
 export class VisualComponentList extends Component{
     static defaultProps = {
-        onDragEnd: null
+        onDragEnd: null,
+        onSaveTemplate: null
     };
   
     constructor(props){
@@ -242,7 +242,7 @@ export class VisualComponentList extends Component{
                                 <TemplateList dataProvider={Templates.componentList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} type='c' />}
 
                 {this.state.tab === "2" &&
-                                <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} type='l'/>}
+                                <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} onSaveTemplate={this.props.onSaveTemplate} type='l'/>}
             </div>;
 
         return main;
@@ -324,7 +324,8 @@ class TemplateList extends Component{
         dataProvider: [],
         onDragEnd: null,
         onChange: null,
-        type: 'c'
+        type: 'c',
+        onSaveTemplate: null
     };
 
     constructor(props){
@@ -337,8 +338,10 @@ class TemplateList extends Component{
         this.onDelete = this.onDelete.bind(this);
         this.showVitrine = this.showVitrine.bind(this);
         this.receiveMessageFromIframe = this.receiveMessageFromIframe.bind(this);
-       
-        this.state = {showMenu: false, showImport: false, showVitrine: false };
+        this.showModal = this.showModal.bind(this);
+        this.onSaveTemplate = this.onSaveTemplate.bind(this);
+
+        this.state = {showModal: false, showMenu: false, showImport: false, showVitrine: false };
     }    
 
     componentDidMount(){
@@ -355,6 +358,7 @@ class TemplateList extends Component{
                 <div>
                     <ButtonToolbar style={{justifyContent: 'flex-end'}}>
                         <ButtonGroup >
+                                {this.props.type === 'l' && <Button onClick={() => this.showModal(true)}><FontAwesomeIcon  icon={faSave} title="Enregistrer un gabarit"/></Button>}
                                 <BtnUpload id="import-collection"  accept=".json" onChange={this.onImport} title="Importer la collection"/>
                                 {this.props.type === 'l' && <Button onClick={() => this.showVitrine(true)}><FontAwesomeIcon  icon={faCloud} title="Voir la vitrine de gabarits"/></Button>}
                                 <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faCog} title="Options"/></Button>
@@ -377,9 +381,19 @@ class TemplateList extends Component{
                         </Modal.Body>
                     </Modal>
                 }
+                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate}/>}
             </div>;
 
         return main;
+    }
+
+    showModal(show){
+        this.setState({showModal: show});
+    }
+
+    onSaveTemplate(data){
+        this.props.onSaveTemplate(data.name, 'l');
+        this.showModal(false);
     }
 
     showMenu(show){
@@ -529,7 +543,7 @@ class TokenTemplate extends Token{
         let main =
                 <div className='template' onMouseEnter={() => this.onMouseEnter(this.props.data.img)} onMouseLeave={this.onMouseLeave} onMouseDown={this.onMouseLeave} 
                         onDragEnd={this.props.onDragEnd} draggable="true" onDragStart={this.onDragStart}>
-                    <div className='tplimg'>
+                    <div className="tplimg">
                         <img src={item.img}/>
                     </div>
                     <p>{item.name}</p>
@@ -570,7 +584,7 @@ export class TemplateForm extends Component{
 
         this.onDataChange = this.onDataChange.bind(this);
 
-        this.state = {data: {type: ["l"], name: ""}};
+        this.state = {data: {name: ""}};
     }
 
     render(){
@@ -580,28 +594,28 @@ export class TemplateForm extends Component{
                     <Modal.Title>Créer un nouveau composant</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form >                       
+                    <Form onSubmit={e => { e.preventDefault(); }}>                       
                         <Form.Row>
                             <Form.Group as={Col}>
                                 <Form.Label>{"Nom"}</Form.Label>
                                 <Form.Control type="text" required value={this.state.data.name} name="name" onChange={this.onDataChange}/>
                             </Form.Group>
                         </Form.Row>
-                        <Form.Row>
+                        
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={this.props.onClose}><FontAwesomeIcon  icon={faTimes} title="Annuler"/>{" "}Annuler</Button>
+                    <Button variant="success" onClick={() => this.props.onSave(this.state.data)}><FontAwesomeIcon  icon={faSave} title="Enregistrer"/>{" "}Enregistrer</Button>
+                </Modal.Footer>
+            </Modal>
+/*<Form.Row>
                             <Form.Group as={Col}>
                                 <Form.Label>{"Type"}</Form.Label>
                                 <ToggleButtons type="checkbox" name="type" value={this.state.data.type} bsSize="sm" defaultValue={['l']}
                                 options={[{text:"Composant",  value:"c"}, {text: "Layout", value:'l'}]} onChange={this.onDataChange}/>
                             </Form.Group>                           
-                        </Form.Row>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={this.props.onClose}><FontAwesomeIcon  icon={faTimes} title="Annuler"/>{" "}Annuler</Button>
-                    <Button variant="success" onClick={() => this.props.onSave({name: this.state.data.name, type: this.state.data.type[0]})}><FontAwesomeIcon  icon={faSave} title="Enregistrer"/>{" "}Enregistrer</Button>
-                </Modal.Footer>
-            </Modal>
-
+                        </Form.Row>*/
         return main;
     }
 

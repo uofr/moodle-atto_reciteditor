@@ -254,7 +254,7 @@ export class FloatingMenu extends Component{
     }
 
     onSaveTemplate(data){
-        this.props.onSaveTemplate(data.name, data.type);
+        this.props.onSaveTemplate(data.name, 'c');
         this.showModal(false);
     }
 }

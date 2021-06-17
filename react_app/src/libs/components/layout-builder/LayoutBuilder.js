@@ -216,7 +216,7 @@ class MainView extends Component{
                                 </Card.Header>
                                 <Collapse in={!this.state.collapsed.components}>
                                     <Card.Body>
-                                        <VisualComponentList onDragEnd={this.onDragEnd}/>
+                                        <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate}/>
                                     </Card.Body>
                                 </Collapse>
                             </Card>
@@ -301,8 +301,11 @@ class MainView extends Component{
         let p = null;
 
         if(type === 'l'){
-            let body = this.state.selectedElement;
-            p = html2canvas(body, {useCORS: true}).then((canvas) => {
+            let el = this.canvasState.drawner.getBody() || null;
+            if(el === null){ return; }
+
+            el = el.firstChild;
+            p = html2canvas(el, {useCORS: true}).then((canvas) => {
                 let data = canvas.toDataURL();
                 let MAX_WIDTH = 600;
                 let MAX_HEIGHT = 600;
@@ -310,7 +313,7 @@ class MainView extends Component{
                 let p2 = Utils.resizeImageFromSize(data, MAX_WIDTH, MAX_HEIGHT, fileType);
                
                 return p2.then((img) => {
-                    return Templates.onSave(name, type, body.outerHTML, img);
+                    return Templates.onSave(name, type, el.outerHTML, img);
                 });
             });
         }
@@ -409,9 +412,14 @@ class CanvasState{
         return device;
     }
 
-    htmlCleaning(){
+    htmlCleaning(window){
+        window = window || null;
+        if(window === null){
+            return;
+        }
+
         // remove the class dropping-zone of all elements
-        let items = this.window.document.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable], [data-dragging], [data-selected], [draggable]");
+        let items = window.document.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable], [data-dragging], [data-selected], [draggable]");
 
         items.forEach(function(item) {
             //item.classList.remove('dropping-zone');
@@ -596,14 +604,14 @@ class DrawnerState extends CanvasState{
     }
 
     onDragEnd(){
-        this.htmlCleaning();
+        this.htmlCleaning(this.window);
     }
    
     getData(htmlCleaning){
         if(this.window === null){ return null; }
 
         if(htmlCleaning){
-            this.htmlCleaning();
+            this.htmlCleaning(this.window);
         }
 
         return this.window.document.body.innerHTML;
@@ -755,7 +763,7 @@ class PreviewState extends CanvasState{
     }
 
     htmlCleaning(){
-        super.htmlCleaning();
+        super.htmlCleaning(this.iFrame);
         
         //Clean up popups before returning html
         let popup = this.iFrame.document.body.querySelectorAll('.r_popup-overlay');
