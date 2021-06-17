@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button, Modal  } from 'react-bootstrap';
-import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCloud, faTimes, faCloudUploadAlt, faCloudDownloadAlt} from '@fortawesome/free-solid-svg-icons';
+import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCloud, faTimes, faCloudUploadAlt, faCloudDownloadAlt, faCog} from '@fortawesome/free-solid-svg-icons';
 import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox, TableActions, ImageSrc, BtnUpload} from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
@@ -356,9 +356,8 @@ class TemplateList extends Component{
                     <ButtonToolbar style={{justifyContent: 'flex-end'}}>
                         <ButtonGroup >
                                 <BtnUpload id="import-collection"  accept=".json" onChange={this.onImport} title="Importer la collection"/>
-                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faCloudDownloadAlt} title="Exporter"/></Button>
-                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                                 {this.props.type === 'l' && <Button onClick={() => this.showVitrine(true)}><FontAwesomeIcon  icon={faCloud} title="Voir la vitrine de gabarits"/></Button>}
+                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faCog} title="Options"/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                     {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider)}><FontAwesomeIcon  icon={faCloudDownloadAlt}/>{" Exporter la collection"}</Button>}
@@ -463,7 +462,7 @@ class TemplateList extends Component{
     receiveMessageFromIframe(event) {
         switch (event.data.message){
             case 'import':
-                let data = [{name: event.data.value.name, htmlStr: event.data.value.htmlString, img: event.data.value.image, type: 'l'}];
+                let data = [{name: event.data.value.name, htmlStr: event.data.value.htmlStr || event.data.value.htmlString, img: event.data.value.img || event.data.value.image, type: 'l'}];
                 this.onImport(null, data);
                 this.showVitrine(false);
                 break;
