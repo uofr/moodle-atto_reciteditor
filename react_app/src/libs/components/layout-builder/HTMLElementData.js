@@ -1351,7 +1351,7 @@ export class HTMLElementData{
                     div.appendChild(el);
 
                     el = document.createElement("figcaption");
-                    el.innerHTML = "Source : Nom de l'auteur, titre de  la photo ou de l'oeuvre (année), nom de l'institution qui possède l'œuvre.";
+                    el.innerHTML = "Source : Nom de l'auteur, <span class='font-italic'>titre de la photo ou de l'oeuvre</span> (année), nom de l'institution qui possède l'œuvre.";
                     div.appendChild(el);
 
                     return div;
