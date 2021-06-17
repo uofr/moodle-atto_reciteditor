@@ -9,16 +9,15 @@ export class HistoryManager {
     }
 
     onContentChange(oldContent){
-        if(this.history.undo.length > HistoryManager.MAX_HISTORY){
-            this.history.undo.unshift();
-        }
-        if(this.history.undo[this.history.undo.length - 1] !== oldContent){
-            this.history.undo.push(oldContent);
-        }
+        this.addHistoryItem(oldContent);
     }    
 
     onUndo(callback, currentHTML){
         let content = this.history.undo.pop();
+
+        if (content == currentHTML && this.history.undo.length > 1){
+            content = this.history.undo.pop();
+        }
         
         if(content){
             this.history.redo.push(currentHTML);
@@ -33,19 +32,20 @@ export class HistoryManager {
         }
     }
 
-    addHistoryItem(html){
-        this.history.undo.push(html);
+    addHistoryItem(content){
+        if(this.history.undo.length > HistoryManager.MAX_HISTORY){
+            this.history.undo.unshift();
+        }
+        if(this.history.undo[this.history.undo.length - 1] !== content){
+            this.history.undo.push(content);
+        }
     }
 
     onRedo(callback, currentHTML){
         let content = this.history.redo.pop();
         
         if(content){
-            this.history.undo.push(currentHTML);
-
-            if(this.history.undo.length > HistoryManager.MAX_HISTORY){
-                this.history.undo.unshift();
-            }
+            this.addHistoryItem(currentHTML);
             
             callback(content);
         }

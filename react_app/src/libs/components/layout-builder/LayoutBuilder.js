@@ -156,7 +156,7 @@ class MainView extends Component{
 
     componentDidMount(){
         this.canvasState[this.props.view].setData(this.props.content);
-        this.historyManager.addHistoryItem(this.props.content);
+        this.props.historyManager.addHistoryItem(this.props.content);
         this.loadTemplates();
     }
 
