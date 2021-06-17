@@ -376,6 +376,11 @@
     max-width: 70vw !important;
 }
 
-.properties, .properties .btn, .properties .choices .item {
+.properties{
     font-size: 0.8rem !important;
+    .btn{ font-size: 0.8rem !important; }
+    .choices{
+        .item{font-size: 0.8rem !important; }
+    }
+    h6{font-size: 0.8rem !important; }
 }
