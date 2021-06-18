@@ -379,7 +379,7 @@ export default class Utils{
     }
 
     static formatVideoURLEmbed(url){
-        if (url.includes('youtube') && url.includes('watch?v=')){//URL is not embed
+        if ((url.includes('youtube') && url.includes('watch?v=')) || url.includes('youtu.be')){//URL is not embed
             let id = Utils.getYoutubeIDFromURL(url);
             if (id){
                 url = '//www.youtube.com/embed/' + id;
