@@ -412,14 +412,14 @@ class CanvasState{
         return device;
     }
 
-    htmlCleaning(window){
-        window = window || null;
-        if(window === null){
+    htmlCleaning(htmlDoc){
+        htmlDoc = htmlDoc || null;
+        if(htmlDoc === null){
             return;
         }
 
         // remove the class dropping-zone of all elements
-        let items = window.document.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable], [data-dragging], [data-selected], [draggable]");
+        let items = htmlDoc.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable], [data-dragging], [data-selected], [draggable]");
 
         items.forEach(function(item) {
             //item.classList.remove('dropping-zone');
@@ -508,7 +508,7 @@ class DrawnerState extends CanvasState{
 
         // if the selected element receives another click then it deselects it
         if(Object.is(result.el, selectedElement)){
-            this.htmlCleaning();
+            this.htmlCleaning(this.window.document);
             
             result.collapsed.components = false;
             result.collapsed.properties = true;
@@ -525,7 +525,7 @@ class DrawnerState extends CanvasState{
             return result; 
         }*/
         else{
-            this.htmlCleaning();
+            this.htmlCleaning(this.window.document);
 
             if(result.el !== null){
                 if(result.el.getAttribute('data-selected') === '1'){
@@ -604,14 +604,14 @@ class DrawnerState extends CanvasState{
     }
 
     onDragEnd(){
-        this.htmlCleaning(this.window);
+        this.htmlCleaning(this.window.document);
     }
    
     getData(htmlCleaning){
         if(this.window === null){ return null; }
 
         if(htmlCleaning){
-            this.htmlCleaning(this.window);
+            this.htmlCleaning(this.window.document);
         }
 
         return this.window.document.body.innerHTML;
@@ -682,12 +682,20 @@ class SourceCodeState extends CanvasState{
         this.data = value;
     }
 
+    htmlCleaning(){
+        let htmlDoc = new DOMParser().parseFromString(this.data, "text/html");
+        super.htmlCleaning(htmlDoc);
+        return htmlDoc.body.innerHTML;
+    }
+
     getData(htmlCleaning){
+        let result = this.data;
+
         if(htmlCleaning){
-            this.htmlCleaning();
+            result = this.htmlCleaning();
         }
         
-        return UtilsHTML.removeTagId(this.data);
+        return UtilsHTML.removeTagId(result);
     }
 
     setData(value, el){
@@ -763,7 +771,7 @@ class PreviewState extends CanvasState{
     }
 
     htmlCleaning(){
-        super.htmlCleaning(this.iFrame);
+        super.htmlCleaning(this.iFrame.document);
         
         //Clean up popups before returning html
         let popup = this.iFrame.document.body.querySelectorAll('.r_popup-overlay');
