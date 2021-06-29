@@ -1007,6 +1007,7 @@ export class HTMLElementData{
                     let el = document.createElement("div");
                     el.classList.add('embed-responsive');
                     el.classList.add('embed-responsive-16by9');
+                    el.classList.add('video-container');
                     
                     let iframe = document.createElement("iframe");
                     iframe.classList.add('embed-responsive-item');
@@ -1480,6 +1481,11 @@ export class HTMLElementData{
         }
         else if(el.classList.contains('video')){
             result.text = 'Vidéo';
+            result.tagName = 'video';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('video-container')){
+            result.text = 'Container de vidéo';
             result.tagName = 'video';
             result.prefix = 'bg';
         }
