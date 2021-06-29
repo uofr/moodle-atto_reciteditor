@@ -69,10 +69,10 @@ document.body.addEventListener('click',function(e){
             }
         }
         if (!el) return;
-        if(el.classList.contains("hover")){
-            el.classList.remove('hover');
+        if(el.classList.contains("hover2")){
+            el.classList.remove('hover2');
         }else{
-            el.classList.add('hover');
+            el.classList.add('hover2');
         }
         e.preventDefault();
     }

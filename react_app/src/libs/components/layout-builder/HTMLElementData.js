@@ -1162,11 +1162,14 @@ export class HTMLElementData{
                     card.classList.add("card");
                     card.classList.add("flipcard2");
                     card.classList.add("manual-flip-click");
+                    let cardinner = document.createElement("div");
+                    cardinner.classList.add("flipcard-inner");
+                    card.appendChild(cardinner);
                     
                     for (let v of ['front', 'back']){
                         let face = document.createElement("div");
                         face.classList.add(v);
-                        card.appendChild(face);
+                        cardinner.appendChild(face);
                         
                         let head = document.createElement("div");
                         head.classList.add("card-header");
