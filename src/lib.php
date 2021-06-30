@@ -29,3 +29,14 @@ function atto_reciteditor_before_standard_top_of_body_html() {
 
     $PAGE->requires->js('/lib/editor/atto/plugins/reciteditor/content.js');
 }
+/**
+ * Initialise the js strings required for this module.
+ */
+function atto_reciteditor_strings_for_js() {
+    global $PAGE; 
+
+    $PAGE->requires->strings_for_js(array('pluginname',
+                                          'htmleditor',
+                                        ),
+                                    'atto_reciteditor');
+}
