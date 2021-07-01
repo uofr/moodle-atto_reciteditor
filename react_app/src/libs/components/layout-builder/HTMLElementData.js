@@ -172,6 +172,53 @@ export class HTMLElementData{
                         return el.getAttribute('class');
                     }
                 },
+                {
+                    name: 'iconsize',
+                    text: "Taille des icônes",
+                    input: { 
+                        type: 'combobox',
+                        options:[
+                            {text:"fa-lg", value: "fa-lg"},
+                            {text:"fa-xs", value: "fa-xs"},
+                            {text:"fa-sm", value: "fa-sm"},
+                            {text:"fa-1x", value: "fa-1x"},
+                            {text:"fa-2x", value: "fa-2x"},
+                            {text:"fa-3x", value: "fa-3x"},
+                            {text:"fa-4x", value: "fa-4x"},
+                            {text:"fa-5x", value: "fa-5x"},
+                            {text:"fa-6x", value: "fa-6x"},
+                            {text:"fa-7x", value: "fa-7x"},
+                            {text:"fa-8x", value: "fa-8x"},
+                            {text:"fa-9x", value: "fa-9x"},
+                            {text:"fa-10x", value: "fa-10x"},
+                            {text:"fa-fw", value: "fa-fw"},
+                        
+                        ],
+                        onChange: function(el, value, data){                       
+                            for(let item of data.input.options){
+                                el.classList.remove(item.value);
+                            }
+    
+                            if(value.length > 0){
+                                el.classList.add(value);
+                            }
+                        }
+                    },
+                    getValue: function(el, data){
+                        let result = "";
+    
+                        let classList = [...el.classList]
+    
+                        for(let item of data.input.options){
+                            if(classList.includes(item.value)){
+                                result = item.value;
+                                break;
+                            }
+                        }
+    
+                        return result;
+                    }
+                }
             ]
         },
         {
