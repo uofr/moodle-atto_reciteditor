@@ -176,6 +176,8 @@ class FormProperties extends Component{
             case 'ImageSrc':
                 result = <ImageSrc name={data.name} value={value} size="sm" onChange={(event) => this.onDataChange(event, data)}  />;
                 break;
+            case 'button':
+                result = <Button onClick={() => this.onDataChange({target:{value:''}}, data)}>{data.input.text}</Button>
            /* case 'number':
                 result = <InputNumber name={data.name} value={value} size="sm"
                                 onChange={(event) => this.onDataChange(event, data)} onCommit={(event) => this.onDataCommit(event, data, this.props.element)}/>;

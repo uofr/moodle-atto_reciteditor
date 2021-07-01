@@ -273,6 +273,135 @@ export class HTMLElementData{
             ]
         },
         {
+            name: 'tab', description: 'Paramètres d\'onglet',  type: 'bootstrap',
+            children: [
+                {
+                    name: 'style', 
+                    text: 'Style',
+                    input: {
+                        type: 'radio',
+                        options:[
+                            {text: 'Pastille', value:'nav-pills'},
+                            {text: 'Onglet', value:''},
+                        ],
+                        onChange: function(el, value, data){
+                            let tab = el;
+                            if (el.classList.contains('nav-link')) tab = el.parentElement.parentElement;
+                            if (el.classList.contains('tab-pane')) tab = el.parentElement.parentElement.querySelector('.nav');
+                            if (el.classList.contains('tabs')) tab = el.querySelector('.nav');
+                            
+                            tab.classList.remove('nav-pills');
+                            tab.classList.add(value);
+                        }
+                    },
+                    getValue: function(el){
+                        let tab = el;
+                        if (el.classList.contains('nav-link')) tab = el.parentElement.parentElement;
+                        if (el.classList.contains('tab-pane')) tab = el.parentElement.parentElement.querySelector('.nav');
+                        if (el.classList.contains('tabs')) tab = el.querySelector('.nav');
+
+                        if (tab.classList.contains('nav-pills')) return 'nav-pills';
+                        return '';
+                    }
+                },
+                {
+                    name: 'justify',
+                    text: 'Justifier',
+                    input: {
+                        type: 'radio',
+                        options:[
+                            {text: 'Pleine largeur', value:'nav-fill'},
+                            {text: 'Gauche', value:''},
+                            {text: 'Centrer', value:'justify-content-center'},
+                            {text: 'Droite', value:'justify-content-end'},
+                            {text: 'Horizontal', value:'flex-column'},
+                        ],
+                        onChange: function(el, value, data){
+                            let tab = el;
+                            if (el.classList.contains('nav-link')) tab = el.parentElement.parentElement;
+                            if (el.classList.contains('tab-pane')) tab = el.parentElement.parentElement.querySelector('.nav');
+                            if (el.classList.contains('tabs')) tab = el.querySelector('.nav');
+                            
+                            if (tab.classList.length > 0){
+                                for(let item of data.input.options){
+                                    if (item.value.length > 0)
+                                        tab.classList.remove(item.value);
+                                }
+                            }
+                            tab.classList.add(value);
+                        }
+                    },
+                    getValue: function(el, data){
+                        let tab = el;
+                        if (el.classList.contains('nav-link')) tab = el.parentElement.parentElement;
+                        if (el.classList.contains('tab-pane')) tab = el.parentElement.parentElement.querySelector('.nav');
+                        if (el.classList.contains('tabs')) tab = el.querySelector('.nav');
+
+                        for(let item of data.input.options){
+                            if (tab.classList.contains(item.value)) return item.value;
+                        }
+                        return '';
+                    }
+                },
+                {
+                    name: 'addtab',
+                    text: 'Actions',
+                    input: {
+                        type: 'button',
+                        text: '+ onglet',
+                        onChange: function(el, value, data){
+                            let tab = el;
+                            if (el.classList.contains('nav-link')) tab = el.parentElement.parentElement;
+                            if (el.classList.contains('tab-pane')) tab = el.parentElement.parentElement.querySelector('.nav');
+                            if (el.classList.contains('tabs')) tab = el.querySelector('.nav');
+                            
+                            let nav = document.createElement('li');
+                            nav.classList.add('nav-item');
+                            tab.appendChild(nav);
+                            let tabid = 'tab'+tab.querySelectorAll('.nav-link').length;
+                            let link = document.createElement('a');
+                            link.classList.add('nav-link');
+                            link.innerText = 'Onglet';
+                            link.setAttribute('data-toggle', 'tab');
+                            link.setAttribute('role', 'tab');
+                            link.setAttribute('href', '#'+tabid);
+                            link.setAttribute('arial-controls', tabid);
+                            nav.appendChild(link)
+
+                            let content = tab.parentElement.querySelector('.tab-content');
+                            let div = document.createElement('div');
+                            div.classList.add('tab-pane', 'fade', 'mt-3');
+                            div.setAttribute('role', 'tabpanel');
+                            div.setAttribute('id', tabid);
+                            div.setAttribute('arial-labelledby', tabid);
+                            div.innerText = tabid;
+                            content.appendChild(div);
+                        }
+                    },
+                    getValue: function(el, data){
+                        return el;
+                    }
+                },
+            ]
+        },
+        {
+            name: 'collapse', description: 'Collapse',  type: 'htmlattr',
+            children: [{
+                name: 'collapse target',
+                text: "ID de l'élément cible",
+                input: { 
+                    type: 'text',
+                    defaultValue: '',
+                    onChange: function(el, value, data){
+                        el.setAttribute('data-bs-target', value);
+                    }
+                },
+                getValue: function(el, data){
+                    return el.getAttribute('data-bs-target');
+                }
+            },]
+        },
+        {
             name: 'marginborderpadding', description: 'Marge - Bordure - Padding',  type: 'styleattr',
             children: [{
                 name: 'layoutspacing',
@@ -990,6 +1119,16 @@ export class HTMLElementData{
                     return el;
                 },
             },
+            {name: "Bouton collapse", type: 'bootstrap', tagName: 'buttoncollapse', properties: [...HTMLElementData.propsAssignmentFacade.controls, 'collapse'],
+                create: function(){
+                    let el = document.createElement("button");
+                    el.classList.add('btn');
+                    el.classList.add('btn-primary', 'btn-collapse');
+                    el.setAttribute('data-bs-toggle', 'collapse');
+                    el.innerHTML = "Bouton collapse";
+                    return el;
+                },
+            },
             {name: "Lien", type: 'native', tagName: 'a', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'link', 'font', 'layout', 'background'],
                 init:function(el){
                     el.innerText = "Lien";
@@ -1321,6 +1460,55 @@ export class HTMLElementData{
                     }
                 }
             },
+            {name: "Onglet", type: 'bootstrap', tagName: 'tab', properties: [...HTMLElementData.propsAssignmentFacade.containers, 'tab'],
+                create: function(){
+                    let slider = document.createElement("div");
+                    slider.classList.add("tabs");
+
+                    slider.innerHTML = 
+                        `
+                        <ul class="nav" role="tablist">
+                            <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1">
+                                Onglet 1
+                            </a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2">
+                                Onglet 2
+                            </a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-controls="tab3">
+                                Onglet 3
+                            </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active mt-3" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                                Contenu de l'onglet 1
+                            </div>
+                            <div class="tab-pane fade mt-3" id="tab2" role="tabpanel" aria-labelledby="tab2">
+                                Contenu de l'onglet 2
+                            </div>
+                            <div class="tab-pane fade mt-3" id="tab3" role="tabpanel" aria-labelledby="tab3">
+                                Contenu de l'onglet 3
+                            </div>
+                        </div>`;
+
+                    return slider;
+                },
+                onSelect: function(el){
+                    if(el.classList.contains("tab-pane")){
+                        let slider = el.parentElement.parentElement;
+                        let slides = slider.querySelectorAll('.tab-pane');
+                        for(let slide of slides){
+                            slide.classList.remove('active', 'show');
+                        }
+                        el.classList.add('active', 'show');
+                    }
+                }
+            },
             {name: "Séparateur", type: 'native', tagName: 'hr', properties: HTMLElementData.propsAssignmentFacade.containers}
         ]},
         {name: 'Images', children: [
@@ -1529,12 +1717,31 @@ export class HTMLElementData{
             result.text = 'Icône';
             result.prefix = 'bg';
         }
+        else if(el.classList.contains('btn-collapse')){
+            result.text = 'Bouton collapse';
+            result.tagName = 'buttoncollapse';
+            result.prefix = 'btn';
+        }
         else if(el.classList.contains('btn')){
             result.text = 'Bouton';
             result.tagName = 'button';
             result.prefix = 'btn';
         }
-        else if(el.className.search('border-') >=0 ){
+        else if(el.classList.contains('tabs')){
+            result.text = 'Onglets';
+            result.tagName = 'tab';
+            result.prefix = 'tab';
+        }
+        else if(el.classList.contains('tab-pane')){
+            result.text = 'Contenu onglet #'+el.id;
+            result.tagName = 'tab';
+            result.prefix = 'tab';
+        }
+        else if(el.classList.contains('nav-link')){
+            result.text = 'Onglet #'+el.getAttribute('aria-controls');
+            result.prefix = 'btn';
+        }
+        else if(el.className.search('border-') >=0){
             result.text = 'Bordure';
             result.prefix = 'border';
         }
