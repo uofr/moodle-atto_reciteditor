@@ -52,9 +52,9 @@ export class ComponentProperties extends Component{
                         <Nav.Link eventKey="2">Style</Nav.Link>
                     </Nav.Item>
                 </Nav>
-                {this.state.tab === "0" && <FormProperties element={this.props.element} properties={bootstrapProps} />}
-                {this.state.tab === "1" && <FormProperties element={this.props.element} properties={attributes} />}
-                {this.state.tab === "2" && <FormProperties element={this.props.element} properties={styleAttr} />}
+                {this.state.tab === "0" && <FormProperties element={this.props.element} updateCallback={this.props.updateCallback} properties={bootstrapProps} />}
+                {this.state.tab === "1" && <FormProperties element={this.props.element} updateCallback={this.props.updateCallback} properties={attributes} />}
+                {this.state.tab === "2" && <FormProperties element={this.props.element} updateCallback={this.props.updateCallback} properties={styleAttr} />}
             </div>
                 
                 
@@ -171,7 +171,7 @@ class FormProperties extends Component{
                 break;
             case 'tableactions':
                 result = <TableActions showRmCol={data.input.showRmCol}
-                                onChange={(event) => this.onDataChange(event, data)} />;
+                                onChange={(event) => this.onDataChange(event, data, true)} />;
                 break;
             case 'ImageSrc':
                 result = <ImageSrc name={data.name} value={value} size="sm" onChange={(event) => this.onDataChange(event, data)}  />;
@@ -187,10 +187,13 @@ class FormProperties extends Component{
         return result;
     }
 
-    onDataChange(event, componentData){
+    onDataChange(event, componentData, updateTree){
         if (componentData.input.onChange){
             componentData.input.onChange(this.props.element, event.target.value, componentData);
             this.forceUpdate();
+            if (updateTree){
+                this.props.updateCallback();
+            }
         }
     }
 

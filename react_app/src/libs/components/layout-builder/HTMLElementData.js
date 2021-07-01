@@ -1029,6 +1029,7 @@ export class HTMLElementData{
                         let table = el.parentElement.parentElement;
                         if (value == 'rmcol'){
                             for (let row of table.rows){
+                                el.deleted = true;
                                 row.deleteCell(el.cellIndex);
                             }
                         }else if (value == 'addcol'){

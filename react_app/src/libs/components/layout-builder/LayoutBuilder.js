@@ -197,6 +197,15 @@ class MainView extends Component{
         return this.canvasState[this.props.view].setData(data);
     }
 
+    forceRefresh(){
+        //Wait to see if selectedElement gets destroyed
+        if (typeof(this.state.selectedElement) == 'undefined' || this.state.selectedElement.deleted){
+            this.setState({selectedElement:null});
+        }else{
+            this.forceUpdate();
+        }
+    }
+
     render(){
         let main =
             <div className="main" data-left-area-collapsed={(this.props.leftPanel ? "1" : "0")}>
@@ -227,7 +236,7 @@ class MainView extends Component{
                                 </Card.Header>
                                 <Collapse in={!this.state.collapsed.properties}>
                                     <Card.Body className="properties">
-                                        <ComponentProperties element={this.state.selectedElement}/>
+                                        <ComponentProperties updateCallback={() => this.forceRefresh()} element={this.state.selectedElement}/>
                                     </Card.Body>
                                 </Collapse>
                             </Card>
