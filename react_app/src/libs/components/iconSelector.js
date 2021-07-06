@@ -32,7 +32,8 @@ export class IconSelector extends Component {
         for (let c of classes){
             if (c.cssText.includes('content:')){
                 if (c.selectorText.startsWith('.fa-')){//FontAwesome
-                    let css = c.selectorText.replace('::before', '').substr(1);
+                    let css = c.selectorText.replace('::before', '')
+                    css = css.replace(':before', '').substr(1);
                     this.icons.FontAwesome.push({name: css.replace('fa-', ''), css: 'fa '+css});
                 }
                 if (c.selectorText.startsWith('.icon-')){//Fontello
