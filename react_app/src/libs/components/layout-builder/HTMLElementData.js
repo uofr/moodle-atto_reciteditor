@@ -1,5 +1,5 @@
 import React from 'react';
-import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus, faEllipsisH, faGripLines, faSquare, faRuler} from '@fortawesome/free-solid-svg-icons';
+import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus, faEllipsisH, faGripLines, faSquare, faRuler, faEllipsisV, faFolder} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LayoutSpacingEditor, Assets} from '../Components';
 import Utils from '../../utils/Utils';
@@ -328,8 +328,8 @@ export class HTMLElementData{
                     input: {
                         type: 'radio',
                         options:[
-                            {text: 'Pastille', value:'nav-pills'},
-                            {text: 'Onglet', value:''},
+                            {text: <FontAwesomeIcon icon={faFolder} title="Onglet"/>, value:'nav-tabs'},
+                            {text: <FontAwesomeIcon icon={faEllipsisH} title="Pastille"/>, value:'nav-pills'}
                         ],
                         onChange: function(el, value, data){
                             let tab = el;
@@ -337,8 +337,11 @@ export class HTMLElementData{
                             if (el.classList.contains('tab-pane')) tab = el.parentElement.parentElement.querySelector('.nav');
                             if (el.classList.contains('tabs')) tab = el.querySelector('.nav');
                             
-                            tab.classList.remove('nav-pills');
-                            tab.classList.add(value);
+                            if(tab){
+                                tab.classList.remove('nav-pills');
+                                tab.classList.remove('nav-tabs');
+                                tab.classList.add(value);
+                            }
                         }
                     },
                     getValue: function(el){
@@ -356,12 +359,12 @@ export class HTMLElementData{
                     text: 'Justifier',
                     input: {
                         type: 'radio',
-                        options:[
-                            {text: 'Pleine largeur', value:'nav-fill'},
-                            {text: 'Gauche', value:''},
-                            {text: 'Centrer', value:'justify-content-center'},
-                            {text: 'Droite', value:'justify-content-end'},
-                            {text: 'Horizontal', value:'flex-column'},
+                        options:[                            
+                            {text: <FontAwesomeIcon icon={faAlignLeft} title="Left"/>, value:''},
+                            {text: <FontAwesomeIcon icon={faAlignCenter} title="Center"/>, value:'justify-content-center'},
+                            {text: <FontAwesomeIcon icon={faAlignRight} title="Right"/>, value:'justify-content-end'},
+                            {text: <FontAwesomeIcon icon={faAlignJustify} title="Pleine largeur"/>, value:'nav-fill'},
+                            {text: <FontAwesomeIcon icon={faEllipsisV} title="Horizontal"/>, value:'flex-column'},
                         ],
                         onChange: function(el, value, data){
                             let tab = el;
@@ -369,13 +372,15 @@ export class HTMLElementData{
                             if (el.classList.contains('tab-pane')) tab = el.parentElement.parentElement.querySelector('.nav');
                             if (el.classList.contains('tabs')) tab = el.querySelector('.nav');
                             
-                            if (tab.classList.length > 0){
-                                for(let item of data.input.options){
-                                    if (item.value.length > 0)
-                                        tab.classList.remove(item.value);
+                            if(tab){
+                                if (tab.classList.length > 0){
+                                    for(let item of data.input.options){
+                                        if (item.value.length > 0)
+                                            tab.classList.remove(item.value);
+                                    }
                                 }
+                                tab.classList.add(value);
                             }
-                            tab.classList.add(value);
                         }
                     },
                     getValue: function(el, data){
@@ -395,7 +400,7 @@ export class HTMLElementData{
                     text: 'Actions',
                     input: {
                         type: 'button',
-                        text: '+ onglet',
+                        text: <span><FontAwesomeIcon icon={faPlus} title="Ajouter une onglet"/>{" Onglet"}</span>,
                         onChange: function(el, value, data){
                             let tab = el;
                             if (el.classList.contains('nav-link')) tab = el.parentElement.parentElement;
@@ -405,10 +410,14 @@ export class HTMLElementData{
                             let nav = document.createElement('li');
                             nav.classList.add('nav-item');
                             tab.appendChild(nav);
-                            let tabid = 'tab'+tab.querySelectorAll('.nav-link').length;
+                            
                             let link = document.createElement('a');
                             link.classList.add('nav-link');
-                            link.innerText = 'Onglet';
+
+                            let tabid = tab.querySelectorAll('.nav-link').length + 1;
+                            link.innerText = `Onglet ${tabid}`;
+                            tabid = `tab${tabid}`;
+
                             link.setAttribute('data-toggle', 'tab');
                             link.setAttribute('role', 'tab');
                             link.setAttribute('href', '#'+tabid);
@@ -431,7 +440,7 @@ export class HTMLElementData{
                 },
             ]
         },
-        {
+        /*{
             name: 'collapse', description: 'Collapse',  type: 'htmlattr',
             children: [{
                 name: 'collapse target',
@@ -447,7 +456,7 @@ export class HTMLElementData{
                     return el.getAttribute('data-bs-target');
                 }
             },]
-        },
+        },*/
         {
             name: 'marginborderpadding', description: 'Marge - Bordure - Padding',  type: 'styleattr',
             children: [{
@@ -877,7 +886,7 @@ export class HTMLElementData{
                 },
                 {
                     name: 'alignment', 
-                    text: 'Alignment',
+                    text: 'Alignement',
                     input: { 
                         type: 'radio', 
                         options:[
@@ -1515,7 +1524,7 @@ export class HTMLElementData{
 
                     slider.innerHTML = 
                         `
-                        <ul class="nav" role="tablist">
+                        <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item">
                             <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1">
                                 Onglet 1
@@ -1780,10 +1789,23 @@ export class HTMLElementData{
             result.tagName = 'tab';
             result.prefix = 'tab';
         }
+        else if(el.classList.contains('tab-content')){
+            result.text = 'Contenu Tabs';
+            result.tagName = 'tab';
+            result.prefix = 'tab';
+        }
         else if(el.classList.contains('tab-pane')){
             result.text = 'Contenu onglet #'+el.id;
             result.tagName = 'tab';
             result.prefix = 'tab';
+        }
+        else if(el.classList.contains('nav')){
+            result.text = 'Nav';
+            result.prefix = 'bg';
+        }
+        else if(el.classList.contains('nav-item')){
+            result.text = 'NavItem';
+            result.prefix = 'bg';
         }
         else if(el.classList.contains('nav-link')){
             result.text = 'Onglet #'+el.getAttribute('aria-controls');
