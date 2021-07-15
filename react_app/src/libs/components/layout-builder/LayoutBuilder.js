@@ -129,6 +129,7 @@ class MainView extends Component{
         this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
+        this.onInsertNode = this.onInsertNode.bind(this);
         this.onEditNodeText = this.onEditNodeText.bind(this);
         this.onSaveTemplate = this.onSaveTemplate.bind(this);
         this.onCollapse = this.onCollapse.bind(this);
@@ -236,7 +237,7 @@ class MainView extends Component{
                                 </Card.Header>
                                 <Collapse in={!this.state.collapsed.properties}>
                                     <Card.Body className="properties">
-                                        <ComponentProperties updateCallback={() => this.forceRefresh()} element={this.state.selectedElement}/>
+                                        <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement}/>
                                     </Card.Body>
                                 </Collapse>
                             </Card>
@@ -292,6 +293,11 @@ class MainView extends Component{
 
     onCloneNode(){
         this.canvasState[this.state.canvasState].onCloneNode(this.state.selectedElement);
+        this.forceUpdate();
+    }
+
+    onInsertNode(elems){
+        this.canvasState[this.state.canvasState].onInsertNode(elems);
         this.forceUpdate();
     }
 
@@ -377,6 +383,7 @@ class CanvasState{
         this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
+        this.onInsertNode = this.onInsertNode.bind(this);
         this.onEditNodeText = this.onEditNodeText.bind(this);
         this.onLoadFrame = this.onLoadFrame.bind(this);
         this.htmlCleaning = this.htmlCleaning.bind(this);
@@ -395,6 +402,7 @@ class CanvasState{
     onMoveNodeUp(selectedElement){console.log("Abstract method...");}
     onMoveNodeDown(selectedElement){console.log("Abstract method...");}
     onCloneNode(selectedElement){console.log("Abstract method...");}
+    onInsertNode(elems){console.log("Abstract method...");}
     onEditNodeText(selectedElement){console.log("Abstract method...");}
 
     onCollapse(collapsed){ 
@@ -612,6 +620,14 @@ class DrawnerState extends CanvasState{
         CanvasElement.create(el, this.mainView.onSelectElement, this.onDropElement, this.mainView.onEditNodeText);
     }
 
+    onInsertNode(elems){
+        this.onContentChange();
+
+        for(let el of elems){
+            CanvasElement.create(el, this.mainView.onSelectElement, this.onDropElement, this.mainView.onEditNodeText);
+        }
+    }
+
     onDragEnd(){
         this.htmlCleaning(this.window.document);
     }
@@ -665,6 +681,10 @@ class DrawnerState extends CanvasState{
             // set scroll to the end if multiline
             el.scrollTop = el.scrollHeight; 
         }    
+
+        if(selectedElement === null){
+            return;
+        }
 
         selectedElement.setAttribute('contenteditable', 'true');
         setCaretToEnd(selectedElement);

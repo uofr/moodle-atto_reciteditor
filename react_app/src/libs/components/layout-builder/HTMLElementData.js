@@ -1,8 +1,8 @@
 import React from 'react';
-import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus, faEllipsisH, faGripLines, faSquare, faRuler, faEllipsisV, faFolder} from '@fortawesome/free-solid-svg-icons';
+import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus, faMinus, faEllipsisH, faGripLines, faSquare, faRuler, faEllipsisV, faFolder} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LayoutSpacingEditor, Assets} from '../Components';
-import Utils from '../../utils/Utils';
+import Utils, {UtilsHTML} from '../../utils/Utils';
 
 export class HTMLElementData{
 
@@ -1000,30 +1000,31 @@ export class HTMLElementData{
                 name: 'tableaction',
                 text: "Actions",
                 input: { 
-                    type: 'tableactions',
-                    showRmCol: false,
-                    onChange: function(el, value, data){
-                        let table = el;
-                        if (value == 'addcol'){
-                            let rows = table.querySelectorAll('tr');
-                            for (let row of rows){
-                                let tag = 'td';
-                                if (row.children[0] && row.children[0].tagName == 'TH') tag = 'th';
-                                let td = document.createElement(tag);
-                                row.appendChild(td);
+                    type: 'buttongroup',
+                    options: [ 
+                        {
+                            text: <span><FontAwesomeIcon icon={faPlus}/>{" Colonne"}</span>, 
+                            onClick: function(el){
+                                let table = el;                                
+                                let result = UtilsHTML.tableAddCol(table);
+                                return {action: 'insert', nodes: result};
                             }
-                        }else if (value == 'addline'){
-                            let td = document.createElement('tr');
-                            let tr = table.children[0];
-                            if (tr){
-                                let count = tr.children.length;
-                                for (let i = 0; i < count; i++){
-                                    td.innerHTML = td.innerHTML + '<td></td>';
+                        },
+                        {
+                            text: <span><FontAwesomeIcon icon={faPlus}/>{" Ligne"}</span>, 
+                            onClick: function(el){
+                                let result = {action: '', nodes: null};
+                                let table = el;
+                                result.nodes = UtilsHTML.tableAddRow(table);
+
+                                if(result.nodes.length > 0){
+                                    result.action = 'insert';
                                 }
-                                table.appendChild(td);
+
+                                return result;
                             }
                         }
-                    }
+                    ]
                 },
                 getValue: function(el, data){
                     return el;
@@ -1079,39 +1080,60 @@ export class HTMLElementData{
                 name: 'tableaction',
                 text: "Actions",
                 input: { 
-                    type: 'tableactions',
-                    showRmCol: true,
-                    onChange: function(el, value, data){
-                        let table = el.parentElement.parentElement;
-                        if (value == 'rmcol'){
-                            for (let row of table.rows){
-                                el.deleted = true;
-                                row.deleteCell(el.cellIndex);
-                            }
-                        }else if (value == 'addcol'){
-                            for (let row of table.rows){
-                                let tag = 'td';
-                                if (row.children[0] && row.children[0].tagName == 'TH') tag = 'th';
-                                let td = document.createElement(tag);
-                                row.appendChild(td);
-                            }
-                        }else if (value == 'addline'){
-                            let td = document.createElement('tr');
-                            let tr = table.children[0];
-                            if (tr){
-                                let count = tr.children.length;
-                                for (let i = 0; i < count; i++){
-                                    td.innerHTML = td.innerHTML + '<td></td>';
+                    type: 'buttongroup',
+                    options: [ 
+                        {
+                            text: <span><FontAwesomeIcon icon={faMinus}/>{" Colonne"}</span>, 
+                            onClick: function(el){
+                                let table = el.parentElement.parentElement;
+                                for (let row of table.rows){
+                                    
+                                    try{
+                                        el.deleted = true;
+                                        row.deleteCell(el.cellIndex);
+                                    }
+                                    catch(ex){
+                                        console.log(ex);
+                                    }
+                                    
                                 }
-                                table.appendChild(td);
+                                //deleteRow
+                                return {action: 'delete', nodes: null};;
+                            }
+                        },
+                        {
+                            text: <span><FontAwesomeIcon icon={faPlus}/>{" Colonne"}</span>, 
+                            onClick: function(el){
+                                let table = el.parentElement.parentElement;
+                                let result = UtilsHTML.tableAddCol(table);
+                                return {action: 'insert', nodes: result};
+                            }
+                        },
+                        {
+                            text: <span><FontAwesomeIcon icon={faPlus}/>{" Ligne"}</span>, 
+                            onClick: function(el){
+                                let result = {action: '', nodes: null};
+                                let table = UtilsHTML.getTableFromCell(el);
+                                
+                                if(table === null){
+                                    return result;
+                                }
+                                
+                                result.nodes = UtilsHTML.tableAddRow(table);
+
+                                if(result.nodes.length > 0){
+                                    result.action = 'insert';
+                                }
+                                
+                                return result;
                             }
                         }
-                    }
+                    ]
                 },
                 getValue: function(el, data){
                     return el;
                 }
-            },]
+            }]
         }
     ];
 

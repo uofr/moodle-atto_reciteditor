@@ -8,7 +8,9 @@ import { Templates } from './Templates';
 
 export class ComponentProperties extends Component{
     static defaultProps = {
-        element: null
+        element: null,
+        onInsertNode: null,
+        onDeleteElement: null
     };
 
     constructor(props){
@@ -52,9 +54,9 @@ export class ComponentProperties extends Component{
                         <Nav.Link eventKey="2">Style</Nav.Link>
                     </Nav.Item>
                 </Nav>
-                {this.state.tab === "0" && <FormProperties element={this.props.element} updateCallback={this.props.updateCallback} properties={bootstrapProps} />}
-                {this.state.tab === "1" && <FormProperties element={this.props.element} updateCallback={this.props.updateCallback} properties={attributes} />}
-                {this.state.tab === "2" && <FormProperties element={this.props.element} updateCallback={this.props.updateCallback} properties={styleAttr} />}
+                {this.state.tab === "0" && <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={bootstrapProps} />}
+                {this.state.tab === "1" && <FormProperties element={this.props.element} properties={attributes} />}
+                {this.state.tab === "2" && <FormProperties element={this.props.element} properties={styleAttr} />}
             </div>
                 
                 
@@ -69,7 +71,9 @@ export class ComponentProperties extends Component{
 class FormProperties extends Component{
     static defaultProps = {
         element: null,
-        properties: []
+        properties: [],
+        onInsertNode: null,
+        onDeleteElement: null
     };
 
     constructor(props){
@@ -169,31 +173,44 @@ class FormProperties extends Component{
                 result = <ColorSelector name={data.name} value={value} options={data.input.options}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
-            case 'tableactions':
-                result = <TableActions showRmCol={data.input.showRmCol}
-                                onChange={(event) => this.onDataChange(event, data, true)} />;
+            case 'buttongroup':
+                result = 
+                    <ButtonGroup>
+                        {data.input.options.map((item, index) => {
+                            let btn = <Button key={index} onClick={() => this.onClick(item)}>{item.text}</Button>;
+                            return (btn);
+                        })}
+                    </ButtonGroup>
+              
                 break;
             case 'ImageSrc':
                 result = <ImageSrc name={data.name} value={value} size="sm" onChange={(event) => this.onDataChange(event, data)}  />;
                 break;
             case 'button':
                 result = <Button onClick={() => this.onDataChange({target:{value:''}}, data)}>{data.input.text}</Button>
-           /* case 'number':
-                result = <InputNumber name={data.name} value={value} size="sm"
-                                onChange={(event) => this.onDataChange(event, data)} onCommit={(event) => this.onDataCommit(event, data, this.props.element)}/>;
-                break;*/
+                break;
         }
-
+  
+       /* <TableActions showRmCol={data.input.showRmCol}
+        onChange={(event) => this.onDataChange(event, data, true)} />;*/
         return result;
     }
 
-    onDataChange(event, componentData, updateTree){
+    onDataChange(event, componentData){
         if (componentData.input.onChange){
             componentData.input.onChange(this.props.element, event.target.value, componentData);
             this.forceUpdate();
-            if (updateTree){
-                this.props.updateCallback();
-            }
+        }
+    }
+
+    onClick(item){
+        let result = item.onClick(this.props.element);
+
+        if(result.action === 'insert'){
+            this.props.onInsertNode(result.nodes);
+        }
+        else if(result.action === 'delete'){
+            this.props.onDeleteElement();
         }
     }
 

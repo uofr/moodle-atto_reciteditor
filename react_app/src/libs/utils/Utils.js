@@ -4,6 +4,7 @@
 
 //export * from './WebApi';
 export * from './Cookies';
+import { faExternalLinkSquareAlt } from '@fortawesome/free-solid-svg-icons';
 import {Assets} from '../components/Components';
 //export * from './I18n';
 
@@ -897,6 +898,64 @@ export class UtilsTreeStruct
 }
 
 export class UtilsHTML{
+    static getTableFromCell(cell){
+        let table = cell;
+        let counter = 0;
+        while(!(table.tagName.toLowerCase() === 'table') && (counter <= 5)){
+            table = table.parentElement;
+            counter++;
+        }
+
+        return (table.tagName.toLowerCase() === 'table' ? table : null);
+    }
+
+    static tableAddCol(table){
+        let result = [];
+
+        for (let row of table.rows){
+            let tag = 'td';
+            if (row.children[0] && row.children[0].tagName == 'TH'){
+                tag = 'th';
+            }
+
+            let td = document.createElement(tag);
+            result.push(td);
+            row.appendChild(td);
+        }
+
+        return result;
+    }
+
+    static tableAddRow(table){
+        let result = [];
+        let tBody = table.tBodies[0] || null;
+
+        if(tBody === null){
+            return result;
+        }
+
+        let tr = tBody.children[0];
+        
+        if (tr){
+            let newRow = document.createElement('tr');
+            let count = tr.children.length;
+            
+            for (let i = 0; i < count; i++){
+                newRow.insertCell();
+            }
+            
+            if(table.tBodies[0]){
+                table.tBodies[0].appendChild(newRow);
+            }
+            else{
+                table.appendChild(newRow);
+            }
+
+            result.push(newRow);
+        }
+
+        return result;
+    }
 
     static assignTagId(node){
         let convertToString = false;
