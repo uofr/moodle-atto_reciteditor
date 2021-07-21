@@ -53,6 +53,11 @@ export class ImageSrc extends Component {
         let eventData = {
             target: {name: this.props.name, value: url}                
         };
-        this.props.onChange(eventData);
+        if (this.props.onChange){
+            this.props.onChange(eventData);
+        }
+        if (this.props.onCommit){
+            this.props.onCommit(eventData);
+        }
     }
 }

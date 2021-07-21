@@ -41,6 +41,7 @@ export class VisualWordProcessor extends Component
         this.redoHistory = this.redoHistory.bind(this);
         this.onCodeSource = this.onCodeSource.bind(this);
         this.onScreenCapture = this.onScreenCapture.bind(this);
+        this.onAddImage = this.onAddImage.bind(this);
 
         this.state = {
             selection: null,
@@ -58,7 +59,7 @@ export class VisualWordProcessor extends Component
         let main = <EditorFrame flags={this.state.flags} 
                         buttonsBar={<ButtonsBar selection={this.state.selection} history={this.state.history} onUndo={this.undoHistory} onRedo={this.redoHistory}
                                 flags={this.state.flags} onHighlighter={() => this.onSetFlag('highlighter')} onCodeSource={this.onCodeSource}
-                                onMathFormula={() => this.onSetFlag('mathFormula')} onScreenCapture={this.onScreenCapture}
+                                onMathFormula={() => this.onSetFlag('mathFormula')} onScreenCapture={this.onScreenCapture} onAddImage={this.onAddImage}
                                     onShowHtmlEditor={() => this.props.onSelectBuilder('layout', this.state.tmpContent)}/>} 
                         workArea={this.getWorkArea()}
                         footerBar={<StatusBar selection={this.state.selection} />}>
@@ -77,6 +78,12 @@ export class VisualWordProcessor extends Component
     onScreenCapture(screenCapture){
         let img = document.createElement("img");
         img.src = screenCapture;
+        this.editorRef.current.appendChild(img);
+    }
+
+    onAddImage(src){
+        let img = document.createElement("img");
+        img.src = src;
         this.editorRef.current.appendChild(img);
     }
 
@@ -419,13 +426,14 @@ class StatusBar extends Component{
 
     getStatusDesc(){
         let sel = this.props.selection;
-        if(sel === null){ return ""; }
+        if(sel === null) return "";
 
-        if(sel.isNodeRoot){ return ""; }
+        if(sel.isNodeRoot) return "";
                 
         let node = sel.node;
 
-        if(!sel.editorRef.current.contains(node)){ return "";}
+        if(!sel.editorRef.current) return "";
+        if(!sel.editorRef.current.contains(node)) return "";
         
         let result = [node.nodeName.toLowerCase()];
         

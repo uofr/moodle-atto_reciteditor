@@ -3,10 +3,11 @@ import React, { Component } from 'react';
 import { Button, ButtonToolbar, ButtonGroup, Modal, Form, Dropdown, DropdownButton} from 'react-bootstrap';
 import {faFont, faCode, faFileCode, faBold, faItalic, faAlignLeft, faAlignRight, faAlignJustify, faAlignCenter,
         faOutdent, faIndent, faUnderline, faStrikethrough, faListUl, faListOl, faRemoveFormat, faLink, faUnlink, faUndo, faRedo,
-        faFillDrip, faHighlighter, faCamera } from '@fortawesome/free-solid-svg-icons';
+        faFillDrip, faHighlighter, faCamera, faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ScreenCapture from '../components/ScreenCapture';
 import { UtilsHTML } from '../utils/Utils';
+import { ImageSrc } from './ImageSrc';
 
 export class ButtonsBar extends Component{
     static defaultProps = {
@@ -20,7 +21,7 @@ export class ButtonsBar extends Component{
         onMathFormula: null,
         onShowHtmlEditor: null,
         onScreenCapture: null,
-        onMyScript: null
+        onAddImage: null,
     };
 
     static Layout = {
@@ -32,6 +33,8 @@ export class ButtonsBar extends Component{
         super(props);  
         
         this.onAddLink = this.onAddLink.bind(this);
+        this.onAddImage = this.onAddImage.bind(this);
+        this.onAddImageModal = this.onAddImageModal.bind(this);
         this.onCloseInputLink = this.onCloseInputLink.bind(this);    
         this.onRemoveLink = this.onRemoveLink.bind(this);
 
@@ -39,7 +42,7 @@ export class ButtonsBar extends Component{
         this.applyIndentTypeset = this.applyIndentTypeset.bind(this);
         this.onRemoveTypeset = this.onRemoveTypeset.bind(this);
 
-        this.state = {modalInputLink: false};
+        this.state = {modalInputLink: false, modalInputImage: false};
     }
 
     render(){
@@ -107,7 +110,8 @@ export class ButtonsBar extends Component{
                 </ButtonGroup>
                 <ButtonGroup className="mr-2 mb-2" size="sm"  style={{border: style.border, borderRadius: style.borderRadius}}>
                     <Button variant={(this.props.flags.highlighter ? 'warning' : ButtonsBar.Layout.btnNormal)} onClick={this.props.onHighlighter} title="Outil de surlignage"><FontAwesomeIcon icon={faHighlighter}/></Button>
-                    <Button variant={(this.props.flags.mathFormula ? 'warning' : ButtonsBar.Layout.btnNormal)}  onClick={this.props.onMathFormula} title="Math Formula"><i><b>f(x)</b></i></Button>
+                    <Button variant={(this.props.flags.mathFormula ? 'warning' : ButtonsBar.Layout.btnNormal)} onClick={this.props.onMathFormula} title="Math Formula"><i><b>f(x)</b></i></Button>
+                    <Button variant={(this.props.flags.mathFormula ? 'warning' : ButtonsBar.Layout.btnNormal)} id="btn-addimg" onClick={() => this.onAddImageModal(true)} title="Ajouter une image"><FontAwesomeIcon icon={faImage}/></Button>
                     <ScreenCapture onEndCapture={this.props.onScreenCapture}>
                         {({ onStartCapture }) => (
                             <Button variant={ButtonsBar.Layout.btnNormal}  onClick={onStartCapture} title="Capture d'écran"><FontAwesomeIcon icon={faCamera}/></Button>
@@ -117,17 +121,35 @@ export class ButtonsBar extends Component{
                 <ButtonGroup className="mr-2 mb-2" size="sm"  style={{border: style.border, borderRadius: style.borderRadius}}>
                     <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.onRemoveTypeset} title="Supprimer la mise en forme"><FontAwesomeIcon icon={faRemoveFormat}/></Button>
                 </ButtonGroup>
-            </ButtonToolbar>     
-            {this.state.modalInputLink && <InputLink selection={this.props.selection} onClose={this.onCloseInputLink}/>}                           
+            </ButtonToolbar> 
+            {this.state.modalInputLink && <InputLink selection={this.props.selection} onClose={this.onCloseInputLink}/>}
+            {this.state.modalInputImage && <Modal key="2" show={this.state.modalInputImage} onHide={() => this.onAddImageModal(false)}>
+                <Modal.Header closeButton>
+                <Modal.Title>Ajouter une image</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <ImageSrc name="Image" value="" placeholder="Image URL" size="sm" onCommit={this.onAddImage} /> 
+                </Modal.Body>
+            </Modal>}
         </div>;
 
         return main;
     }
 
+    onAddImageModal(toggle){
+        document.getElementById('btn-addimg').blur(); //Unselect the button as popup will reopen when pressing enter
+        this.setState({modalInputImage: toggle});
+    }
+
+    onAddImage(event){
+        this.props.onAddImage(event.target.value);
+        this.onAddImageModal(false);
+    }
+
     applyNumerationTypeset(option){
         let sel = this.props.selection;
         
-        if(sel === null || !sel.isSelection){ return; }
+        if(sel === null || !sel.isSelection) return;
 
         let newNode = document.createElement(option);
         let li = document.createElement("li");
