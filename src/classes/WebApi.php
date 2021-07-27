@@ -38,9 +38,6 @@ class WebApi{
     /** @var mysqli_native_moodle_database */
     protected $db = null;
 
-    /** @var mysqli */
-    protected $mysqli = null;
-
     /** @var stdClass */
     protected $request = null;
 
@@ -49,28 +46,7 @@ class WebApi{
      */
     public function __construct($db){
         $this->db = $db;
-        $refmoodledb = new ReflectionObject($db);
-        $refprop1 = $refmoodledb->getProperty('mysqli');
-        $refprop1->setAccessible(true);
-        $this->mysqli = $refprop1->getValue($db);
     }
-
-    public function execSQL($query){
-		try{
-			$result = $this->mysqli->query($query);
-			
-			if($result === FALSE){
-				$msg  = sprintf("MySQL Error: %s", $this->mysqli->error);
-				$msg .= '<b>Query:</b>' . $query . '<br/><br/>';
-				throw new Exception($msg);
-			}
-			
-			return $result;
-		}
-		catch(Exception $e){
-			throw $e;
-		}
-	}
 
     /**
      * Read the input data
@@ -110,15 +86,10 @@ class WebApi{
     protected function saveTemplate() {
         global $CFG, $USER;
         try {
-            $prefix = $CFG->prefix;
 
-            $data = $this->request->data;
-            $data->name = $this->mysqli->real_escape_string($data->name);
-            $data->htmlStr = $this->mysqli->real_escape_string($data->htmlStr);
-            $query = "insert into {$prefix}atto_reciteditor_templates (name, type, userid, htmlstr, img)
-            values('$data->name', '$data->type', $USER->id, '$data->htmlStr', '$data->img')";
+            $item = $this->request->data;
 
-            $this->execSQL($query);
+            $this->db->insert_record('atto_reciteditor_templates', array('name' => $item->name, 'type' => $item->type, 'userid' => $USER->id, 'htmlstr' => $item->htmlStr, 'img' => $item->img));
             $this->reply(true);
         } catch (Exception $ex) {
             $this->reply(false, null, $ex->GetMessage());
@@ -126,11 +97,10 @@ class WebApi{
     }
 
     protected function importTemplates() {
-        global $CFG, $USER;
+        global $USER;
 
         try {
             $data = $this->request->data;
-            $prefix = $CFG->prefix;
 
             $data->fileContent = json_decode($data->fileContent);
 
@@ -138,16 +108,10 @@ class WebApi{
                 $data->fileContent = array($data->fileContent);
             }
 
-            $values = array();
             foreach($data->fileContent as $item){
-                $item->name = $this->mysqli->real_escape_string($item->name);
-                $item->htmlStr = $this->mysqli->real_escape_string($item->htmlStr);
-                $values[] = "('$item->name', '$item->type', $USER->id, '$item->htmlStr', '$item->img')";
+                $this->db->insert_record('atto_reciteditor_templates', array('name' => $item->name, 'type' => $item->type, 'userid' => $USER->id, 'htmlstr' => $item->htmlStr, 'img' => $item->img));
             }
 
-            $query = sprintf("insert into {$prefix}atto_reciteditor_templates (name, type, userid, htmlstr, img) values %s", implode(",", $values));
-
-            $this->execSQL($query);
 
             $this->reply(true);
 
@@ -157,20 +121,14 @@ class WebApi{
     }
 
     protected function getTemplateList() {
-        global $CFG, $USER;
+        global $USER;
 
         try {
-            $data = $this->request->data;
-            $prefix = $CFG->prefix;
 
-            $data = $this->request->data;
-            $query = "select id, name, userid as userId, htmlstr as htmlStr, type, img from {$prefix}atto_reciteditor_templates 
-                        where userid = $USER->id order by name ";
-
-            $rst = $this->execSQL($query);
+            $rst = $this->db->get_records('atto_reciteditor_templates', array('userid' => $USER->id), 'name');
 
             $result = array('c' => array(), 'l' => array());
-            while($obj = $rst->fetch_object()){
+            foreach($rst as $obj){
                 $result[$obj->type][] = $obj;
             }
 
@@ -182,16 +140,10 @@ class WebApi{
     }
 
     protected function deleteTemplate() {
-        global $CFG;
-
         try {
             $data = $this->request->data;
-            $prefix = $CFG->prefix;
 
-            $data = $this->request->data;
-            $query = "delete from {$prefix}atto_reciteditor_templates where id = $data->id";
-
-            $this->execSQL($query);
+            $this->db->delete_records('atto_reciteditor_templates', array('id' => $data->id));
 
             $this->reply(true);
 

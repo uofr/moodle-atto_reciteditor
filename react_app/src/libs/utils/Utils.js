@@ -1,12 +1,9 @@
 //////////////////////////////////////////////////
-// Note: the "export *" will only export the classes marqued with "export" in their definition
+// Note: the "export *" will only export the classes marked with "export" in their definition
 //////////////////////////////////////////////////
 
-//export * from './WebApi';
 export * from './Cookies';
-import { faExternalLinkSquareAlt } from '@fortawesome/free-solid-svg-icons';
 import {Assets} from '../components/Components';
-//export * from './I18n';
 
 export class JsNx{
     /**
@@ -428,6 +425,9 @@ export class UtilsMoodle
             result.setContent = window.attoInterface.setContent || window.parent.attoInterface.setContent;
             result.getSettings = window.attoInterface.getSettings || window.parent.attoInterface.getSettings;
             result.getFileTransferData = window.attoInterface.getFileTransferData || window.parent.attoInterface.getFileTransferData;
+            return result;
+        }else if (M && M.cfg){
+            result.getSettings = function(){ return M.cfg};
             return result;
         }
         else{

@@ -6,6 +6,7 @@ export class RecitRichEditor extends Component{
     static defaultProps = {
         name: "",
         content: "",
+        builder: "layout",
         onSaveAndClose: null
     };
 
@@ -15,7 +16,7 @@ export class RecitRichEditor extends Component{
         this.onSelectBuilder = this.onSelectBuilder.bind(this);
         this.onChange = this.onChange.bind(this);
 
-        this.state = {builder: 'layout'};
+        this.state = {builder: this.props.builder};
 
         // the content is not in the state because we don't want to refresh the component every time the user types something. This moves the caret to the beginning of the content.
         this.content = props.content; 

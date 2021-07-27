@@ -71,13 +71,8 @@ export class Templates{
         });
 
         let result = p1.then((fileContent) => {
-            //console.log("imported")
             return Templates.webApi.importTemplates(fileContent);
-        },
-        () => { 
-                //console.log("canceled")
-            }
-        );
+        });
 
         return result;
     }
