@@ -426,7 +426,7 @@ export class UtilsMoodle
             result.getSettings = window.attoInterface.getSettings || window.parent.attoInterface.getSettings;
             result.getFileTransferData = window.attoInterface.getFileTransferData || window.parent.attoInterface.getFileTransferData;
             return result;
-        }else if (M && M.cfg){
+        }else if (typeof M !== 'undefined' && M.cfg){
             result.getSettings = function(){ return M.cfg};
             return result;
         }

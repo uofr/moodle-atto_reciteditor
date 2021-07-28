@@ -10,7 +10,7 @@ export class Templates{
         let p = Templates.webApi.getTemplateList();
 
         let p2 = p.then((webApiResult) => {
-            if(webApiResult.success){
+            if(webApiResult && webApiResult.success){
                 Templates.componentList = webApiResult.data.c;
                 Templates.layoutList = webApiResult.data.l;
             }

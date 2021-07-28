@@ -268,13 +268,16 @@ export class VisualWordProcessor extends Component
 
     getWorkArea(){
         let result = null;
+        let textArea = <TextArea onComponentDidMount={this.onTextAreaDidMount} value={this.props.content} onChange={this.onChange} onSelect={this.onSelect} />
 
-        if(this.state.flags.codeSource){
-            result = <CodeMirror  value={this.state.tmpContent}  options={{mode: 'xml', tabSize: 4, theme: 'material', lineNumbers: true, electricChars: true}} 
-                            onBeforeChange={(editor, data, value) => this.onChangeTmpContent(value)}/>;
+        if(this.state.flags.codeSource){ //Continue rendering textarea, so getValue when saving still works
+            result = <>
+                <div style={{display:'none'}}>{textArea}</div>
+                <CodeMirror  value={this.state.tmpContent}  options={{mode: 'xml', tabSize: 4, theme: 'material', lineNumbers: true, electricChars: true}} onBeforeChange={(editor, data, value) => this.onChangeTmpContent(value)}/>
+                </>;
         }
         else{
-            result = <TextArea onComponentDidMount={this.onTextAreaDidMount} value={this.props.content} onChange={this.onChange} onSelect={this.onSelect} />;
+            result = textArea;
         }
 
         return result;
