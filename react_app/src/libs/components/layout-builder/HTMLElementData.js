@@ -1703,7 +1703,13 @@ export class HTMLElementData{
             el = component.create();
         }
         else if((componentData.type === 'c') || (componentData.type === 'l')){
-            el = new DOMParser().parseFromString(componentData.htmlStr, "text/html");
+            let html = componentData.htmlStr || componentData.htmlstr; //Save file sometimes void caps
+            if (!html){
+                alert('Erreur: invalid component');
+                console.log(componentData);
+                return;
+            }
+            el = new DOMParser().parseFromString(html, "text/html");
             el = el.body.firstChild;
         }
         else{
