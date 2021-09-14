@@ -1,7 +1,8 @@
+import { Assets } from '../Components';
 import {WebApi} from '../WebApi';
 
 export class Templates{
-    static componentList = [];
+    static componentList = {myComponents: [], components: []};
     static layoutList = [];
 
     static webApi = new WebApi();
@@ -11,7 +12,7 @@ export class Templates{
 
         let p2 = p.then((webApiResult) => {
             if(webApiResult && webApiResult.success){
-                Templates.componentList = webApiResult.data.c;
+                Templates.componentList.myComponents = webApiResult.data.c;
                 Templates.layoutList = webApiResult.data.l;
             }
             else{
@@ -21,6 +22,11 @@ export class Templates{
         },
         (err, response) => {
             console.log(err, response);
+        });
+        
+        fetch(Assets.ComponentUrl).then(res => res.json())
+        .then((result) => {
+            Templates.componentList.components = result;
         });
 
         return p2;

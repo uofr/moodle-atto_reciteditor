@@ -37,5 +37,7 @@ export class Assets{
 
     static Bootstrap = './assets/bootstrap/css/bootstrap.min.css';
 
+    static ComponentUrl = './assets/components.json';
+
     static UrlVitrine = 'https://recitfad.ca/moodledocs/vitrine_editeur_v2/index.php';
 }

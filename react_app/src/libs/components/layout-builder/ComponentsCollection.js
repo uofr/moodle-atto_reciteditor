@@ -248,13 +248,13 @@ export class VisualComponentList extends Component{
             <div className='component-list'>
                 <Nav variant="tabs" activeKey={this.state.tab} onSelect={this.onSelectTab}>
                     <Nav.Item>
-                        <Nav.Link eventKey="2">Mes gabarits</Nav.Link>
+                        <Nav.Link eventKey="2">Gabarits</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="1">Mes composants</Nav.Link>
+                        <Nav.Link eventKey="1">Composants</Nav.Link>
                     </Nav.Item>                   
                     <Nav.Item>
-                        <Nav.Link eventKey="0">Base HTML</Nav.Link>
+                        <Nav.Link eventKey="0">HTML</Nav.Link>
                     </Nav.Item>
                 </Nav>
                 
@@ -363,7 +363,7 @@ class TemplateList extends Component{
         this.showModal = this.showModal.bind(this);
         this.onSaveTemplate = this.onSaveTemplate.bind(this);
 
-        this.state = {showModal: false, showMenu: false, showImport: false, showVitrine: false };
+        this.state = {showModal: false, showMenu: false, showImport: false, showVitrine: false, collapse: {} };
     }    
 
     componentDidMount(){
@@ -382,17 +382,34 @@ class TemplateList extends Component{
                         <ButtonGroup >
                                 {this.props.type === 'l' && <Button onClick={() => this.showModal(true)}><FontAwesomeIcon  icon={faSave} title="Enregistrer un gabarit"/></Button>}
                                 <BtnUpload id="import-collection"  accept=".json" onChange={this.onImport} title="Importer la collection"/>
-                                {this.props.type === 'l' && <Button onClick={() => this.showVitrine(true)}><FontAwesomeIcon  icon={faCloud} title="Voir la vitrine de gabarits"/></Button>}
+                                {this.props.type === 'l' && <Button onClick={() => this.showVitrine(true)}><FontAwesomeIcon  icon={faCloud} title="Voir la vitrine de gabarits"/> Vitrine</Button>}
                                 <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faCog} title="Options"/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
-                    {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider)}><FontAwesomeIcon  icon={faCloudDownloadAlt}/>{" Exporter la collection"}</Button>}
+                    {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider.myComponents)}><FontAwesomeIcon  icon={faCloudDownloadAlt}/>{" Exporter la collection"}</Button>}
                 </div>
-                <ul className='mt-2 d-flex flex-wrap'>
+                {this.props.type === 'l' && <ul className='mt-2 d-flex flex-wrap'>
                     {this.props.dataProvider.map((item, index) => {
-                        return (this.getToken(item, index));
+                        return (this.getToken(item, index, true));
                     })}
-                </ul>
+                </ul>}
+                {this.props.type === 'c' && <>
+                    <span onClick={() => this.onCollapse('my')}>
+                        <FontAwesomeIcon className="mr-1" icon={faAngleDown}/> Mes composants
+                    </span>
+                    <ul className='mt-2 d-flex flex-wrap'>
+                    {!this.state.collapse['my'] && this.props.dataProvider.myComponents.map((item, index) => {
+                        return (this.getToken(item, index, true));
+                    })}
+                    </ul>
+                    <span onClick={() => this.onCollapse('base')}>
+                        <FontAwesomeIcon className="mr-1" icon={faAngleDown}/> Composants de base
+                    </span>
+                    <ul className='mt-2 d-flex flex-wrap'>
+                    {!this.state.collapse['base'] && this.props.dataProvider.components.map((item, index) => {
+                        return (this.getToken(item, index, false));
+                    })}
+                </ul></>}
                 {this.state.showVitrine && 
                     <Modal show={true} onHide={() => this.showVitrine(false)} backdrop="static" keyboard={false} className='templatevitrine'>
                         <Modal.Header closeButton>
@@ -407,6 +424,12 @@ class TemplateList extends Component{
             </div>;
 
         return main;
+    }
+    
+    onCollapse(id){
+        let c = this.state.collapse;
+        c[id] = !c[id];
+        this.setState({collapse: c});
     }
 
     showModal(show){
@@ -484,13 +507,13 @@ class TemplateList extends Component{
         this.setState({showVitrine: show});
     }
 
-    getToken(item, index){
+    getToken(item, index, editable){
         if(this.props.type === 'l'){
             return <TokenTemplate showMenu={this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} 
                         onExport={(event) => this.onExport(event, item)} onDelete={(event) => this.onDelete(event, item)}/>
         }
         else{
-            return <Token showMenu={this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} 
+            return <Token showMenu={editable && this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} hoverimg={item.img}
                             onExport={(event) => this.onExport(event, item)} onDelete={(event) => this.onDelete(event, item)}/>
         }
     }
@@ -513,7 +536,8 @@ class Token extends Component
         onDragEnd: null,
         showMenu: false,
         onExport: null,
-        onDelete: null
+        onDelete: null,
+        hoverimg: null,
     };
     
     constructor(props){
@@ -521,20 +545,26 @@ class Token extends Component
 
         this.onDragStart = this.onDragStart.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
+        this.onMouseLeave = this.onMouseLeave.bind(this);
+        this.state = {imagePreview: false};
     }
 	
 	render(){
 		let main = 
-            <li className="token" data-type={this.props.data.type} draggable="true" onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}>
+            <li className="token" data-type={this.props.data.type} draggable="true" onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}  onMouseEnter={() => this.onMouseEnter(this.props.hoverimg)} onMouseLeave={this.onMouseLeave} onMouseDown={this.onMouseLeave}>
                 {this.props.data.name}   
                 {this.props.showMenu && 
                     <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                         <ButtonGroup size="sm">
-                            <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faCloudDownloadAlt} title="Export"/></Button>
+                            <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faCloudDownloadAlt} title="Exporter"/></Button>
                             <Button onClick={this.props.onDelete}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
-                }             
+                }
+                {this.state.imagePreview && 
+                    <div className='templatepreview'>
+                        <img src={this.state.imagePreview}/>
+                </div>}   
             </li>;
 
 		return main;
@@ -546,6 +576,15 @@ class Token extends Component
     
     onDragEnd(event){
         this.props.onDragEnd();
+    }
+
+    onMouseEnter(img){
+        if (!img) return;
+        this.setState({imagePreview: img});
+    }
+
+    onMouseLeave(){
+        this.setState({imagePreview: false});
     }
 }
 
@@ -563,7 +602,7 @@ class TokenTemplate extends Token{
         let item = this.props.data;
 
         let main =
-                <div className='template' onMouseEnter={() => this.onMouseEnter(this.props.data.img)} onMouseLeave={this.onMouseLeave} onMouseDown={this.onMouseLeave} 
+                <div className='template' onMouseEnter={() => this.onMouseEnter(this.props.data.img)} onMouseLeave={this.onMouseLeave} onMouseDown={this.onMouseLeave}
                         onDragEnd={this.props.onDragEnd} draggable="true" onDragStart={this.onDragStart}>
                     <div className="tplimg">
                         <img src={item.img}/>

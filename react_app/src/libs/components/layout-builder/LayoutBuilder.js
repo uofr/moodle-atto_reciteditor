@@ -332,8 +332,18 @@ class MainView extends Component{
                 });
             });
         }
-        else{
-            p = Templates.onSave(name, type, this.state.selectedElement.outerHTML);
+        else{ //Component
+            p = html2canvas(this.state.selectedElement, {useCORS: true}).then((canvas) => {
+                let data = canvas.toDataURL();
+                let MAX_WIDTH = 300;
+                let MAX_HEIGHT = 300;
+                let fileType = "png"
+                let p2 = Utils.resizeImageFromSize(data, MAX_WIDTH, MAX_HEIGHT, fileType);
+               
+                return p2.then((img) => {
+                    return Templates.onSave(name, type, this.state.selectedElement.outerHTML, img);
+                });
+            });
         }
 
         let that = this;
