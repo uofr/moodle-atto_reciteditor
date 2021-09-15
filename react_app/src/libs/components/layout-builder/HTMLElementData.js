@@ -1402,7 +1402,7 @@ export class HTMLElementData{
                         el.classList.add("w-25");
                         el.classList.add("rounded-circle");
                         el.classList.add("shadow");
-                        el.setAttribute("src", `.${Assets.ImageEmptyHD}`);
+                        el.setAttribute("src", `${Assets.ImageEmptyHD}`);
                         head2.appendChild(el);
                         
                         el = document.createElement("h3");

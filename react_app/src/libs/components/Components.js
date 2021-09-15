@@ -29,7 +29,7 @@ export default class Components{
 export class Assets{
     static RecitLogo = require('./assets/images/recit.png');
     static ImageEmpty = 'https://recitfad.ca/widgets/assets/images/header4.jpg'; //require('./assets/images/empty.jpg');
-    static ImageEmptyHD = require('./assets/images/empty-hd.jpg');
+    static ImageEmptyHD = Assets.ImageEmpty; //require('./assets/images/empty-hd.jpg');
 
     static CanvasContentCSS = './assets/css/canvas-content.css';
    // static ContentCSS = './assets/css/content.css'; it is already in Moodle theme
