@@ -43,6 +43,7 @@ html.canvas-content{
         .flipcard2 .back {display: none;}
         .flipcard2.hover .front {display: none;}
         .flipcard2.hover .back {display: block;}
+        .flipcard2 .back {position: unset; transform: none;}
         .flipcard2 .front::before{content:'Front'; color:#fff; background-color: #007bff; padding: 7px; border-radius: 24px; font-size: 11px;}
         .flipcard2 .back::before{content:'Back'; color:#fff; background-color: #007bff; padding: 7px; border-radius: 24px; font-size: 11px;}
         

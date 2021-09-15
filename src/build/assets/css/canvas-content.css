@@ -72,6 +72,9 @@ html.canvas-content {
       display: none; }
     html.canvas-content body .flipcard2.hover .back {
       display: block; }
+    html.canvas-content body .flipcard2 .back {
+      position: unset;
+      transform: none; }
     html.canvas-content body .flipcard2 .front::before {
       content: 'Front';
       color: #fff;

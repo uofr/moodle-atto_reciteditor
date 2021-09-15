@@ -1377,7 +1377,6 @@ export class HTMLElementData{
             {name: "Carte pivotante", type: 'bootstrap', tagName: 'flipcard', properties:  HTMLElementData.propsAssignmentFacade.containers,
                 create: function(){
                     let card = document.createElement("div");
-                    card.style.maxWidth = '340px';
                     card.classList.add("card");
                     card.classList.add("flipcard2");
                     card.classList.add("manual-flip-click");
@@ -1428,7 +1427,7 @@ export class HTMLElementData{
                     return card;
                 },
                 onSelect: function(el){
-                    let card = el.parentElement;
+                    let card = el.parentElement.parentElement;
                     if(el.classList.contains("back")){
                         card.classList.add('hover');
                     }else{
