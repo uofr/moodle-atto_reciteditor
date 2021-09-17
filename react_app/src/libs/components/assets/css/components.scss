@@ -385,3 +385,14 @@
     }
     h6{font-size: 0.8rem !important; }
 }
+
+
+/* Code Mirror */
+
+.recitricheditor {
+    .react-codemirror2, .CodeMirror {
+        min-height: 300px;
+        max-height: 90vh;
+        height: auto;
+    }
+}

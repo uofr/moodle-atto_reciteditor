@@ -1,4 +1,3 @@
-
 import React, { Component  } from 'react';
 import {Controlled  as CodeMirror} from 'react-codemirror2';
 import MathJax from 'react-mathjax';
@@ -273,7 +272,7 @@ export class VisualWordProcessor extends Component
         if(this.state.flags.codeSource){ //Continue rendering textarea, so getValue when saving still works
             result = <>
                 <div style={{display:'none'}}>{textArea}</div>
-                <CodeMirror  value={this.state.tmpContent}  options={{mode: 'xml', tabSize: 4, theme: 'material', lineNumbers: true, electricChars: true}} onBeforeChange={(editor, data, value) => this.onChangeTmpContent(value)}/>
+                <CodeMirror value={this.state.tmpContent} options={{mode: 'xml', tabSize: 4, theme: 'material', lineNumbers: true, electricChars: true}} onBeforeChange={(editor, data, value) => this.onChangeTmpContent(value)}/>
                 </>;
         }
         else{
@@ -301,7 +300,7 @@ class EditorFrame extends Component{
         let style = {backgroundColor: "#f7f7f7", border: "1px solid #dfdfdf", borderRadius: "4px"};
 
         let main =
-            <div style={{border: style.border, cursor: (this.props.flags.highlighter ? `url(${VisualWordProcessor.Assets.highlighter}),  auto` : 'inherit')}}>
+            <div className="recitricheditor" style={{border: style.border, cursor: (this.props.flags.highlighter ? `url(${VisualWordProcessor.Assets.highlighter}),  auto` : 'inherit')}}>
                 {this.props.buttonsBar}
                 {this.props.workArea}
                 {this.props.footerBar}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, ButtonToolbar, ButtonGroup, Modal, Form, Dropdown, DropdownButton} from 'react-bootstrap';
-import {faFont, faCode, faFileCode, faBold, faItalic, faAlignLeft, faAlignRight, faAlignJustify, faAlignCenter,
+import {faFont, faCode, faArrowLeft, faBold, faItalic, faAlignLeft, faAlignRight, faAlignJustify, faAlignCenter,
         faOutdent, faIndent, faUnderline, faStrikethrough, faListUl, faListOl, faRemoveFormat, faLink, faUnlink, faUndo, faRedo,
         faFillDrip, faHighlighter, faCamera, faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -68,8 +68,8 @@ export class ButtonsBar extends Component{
         <div style={{backgroundColor: style.backgroundColor, minHeight: 50, padding: ".5rem"}}>
             <ButtonToolbar aria-label="Toolbar with Button groups">
                 <ButtonGroup className="mr-2 mb-2" size="sm" style={{border: style.border, borderRadius: style.borderRadius}}>
-                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.props.onShowHtmlEditor}><FontAwesomeIcon icon={faFileCode} title="Éditeur visuel HTML"/></Button>
-                    <Button  variant={ButtonsBar.Layout.btnNormal} onClick={this.props.onCodeSource}><FontAwesomeIcon icon={faCode} title="Éditeur code source HTML"/></Button>
+                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.props.onShowHtmlEditor}><FontAwesomeIcon icon={faArrowLeft} title="Retourner à l'éditeur HTML"/></Button>
+                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.props.onCodeSource}><FontAwesomeIcon icon={faCode} title="Éditeur code source HTML"/></Button>
                 </ButtonGroup>
                 <ButtonGroup className="mr-2 mb-2" size="sm" style={{border: style.border, borderRadius: style.borderRadius}}>
                     <DropdownSetCssProp selection={selection} cssProp="font-size" defaultValue={"16px"} dataProvider={fontSizes}  />
