@@ -39,7 +39,6 @@ export class VisualWordProcessor extends Component
         this.undoHistory = this.undoHistory.bind(this);
         this.redoHistory = this.redoHistory.bind(this);
         this.onCodeSource = this.onCodeSource.bind(this);
-        this.onScreenCapture = this.onScreenCapture.bind(this);
         this.onAddImage = this.onAddImage.bind(this);
 
         this.state = {
@@ -58,7 +57,7 @@ export class VisualWordProcessor extends Component
         let main = <EditorFrame flags={this.state.flags} 
                         buttonsBar={<ButtonsBar selection={this.state.selection} history={this.state.history} onUndo={this.undoHistory} onRedo={this.redoHistory}
                                 flags={this.state.flags} onHighlighter={() => this.onSetFlag('highlighter')} onCodeSource={this.onCodeSource}
-                                onMathFormula={() => this.onSetFlag('mathFormula')} onScreenCapture={this.onScreenCapture} onAddImage={this.onAddImage}
+                                onMathFormula={() => this.onSetFlag('mathFormula')} onScreenCapture={this.onAddImage} onAddImage={this.onAddImage}
                                     onShowHtmlEditor={() => this.props.onSelectBuilder('layout', this.state.tmpContent)}/>} 
                         workArea={this.getWorkArea()}
                         footerBar={<StatusBar selection={this.state.selection} />}>
@@ -74,16 +73,14 @@ export class VisualWordProcessor extends Component
         return main;
     }
 
-    onScreenCapture(screenCapture){
-        let img = document.createElement("img");
-        img.src = screenCapture;
-        this.editorRef.current.appendChild(img);
-    }
-
     onAddImage(src){
         let img = document.createElement("img");
         img.src = src;
-        this.editorRef.current.appendChild(img);
+        this.insertElementAfterCaret(img);
+    }
+
+    insertElementAfterCaret(el){
+        document.execCommand('insertHTML', false, el.outerHTML);
     }
 
     onTextAreaDidMount(editorRef){
@@ -204,7 +201,7 @@ export class VisualWordProcessor extends Component
         if(content){
             history.undo.push(this.editorRef.current.innerHTML);
 
-            this.editorRef.current.innerHTML  = content;
+            this.editorRef.current.innerHTML = content;
             if(history.undo.length > 15){
                 history.undo.unshift();
             }
