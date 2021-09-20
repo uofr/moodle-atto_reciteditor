@@ -134,6 +134,7 @@ class MainView extends Component{
         this.onSaveTemplate = this.onSaveTemplate.bind(this);
         this.onCollapse = this.onCollapse.bind(this);
         this.setCollapse = this.setCollapse.bind(this);
+        this.onDragStart = this.onDragStart.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
         this.onMouseEnter = this.onMouseEnter.bind(this);
         this.onMouseLeave = this.onMouseLeave.bind(this);
@@ -262,6 +263,7 @@ class MainView extends Component{
                     {this.canvasState.sourceCode.render(this.props.view === 'sourceCode', this.state.selectedElement)}
                 </div>
             </div>;
+           
 
         return main;
     }
@@ -299,6 +301,13 @@ class MainView extends Component{
     onInsertNode(elems){
         this.canvasState[this.state.canvasState].onInsertNode(elems);
         this.forceUpdate();
+    }
+
+    onDragStart(event){
+        event.stopPropagation();
+        
+        CanvasElement.draggingItem = this.state.selectedElement;
+        event.dataTransfer.setDragImage(this.state.selectedElement, 0, 0);
     }
 
     onEditNodeText(el){
@@ -387,7 +396,6 @@ class CanvasState{
         this.mainView = mainView;
 
         this.onInit = this.onInit.bind(this);
-        this.onDropElement = this.onDropElement.bind(this);
         this.onSelectElement = this.onSelectElement.bind(this);
         this.onDeleteElement = this.onDeleteElement.bind(this);
         this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
@@ -405,7 +413,6 @@ class CanvasState{
     onInit(iframe){ console.log("Abstract method...");}
     render(show, selectedElement){ console.log("Abstract method...");}
     onDragEnd(){ console.log("Abstract method...");}
-    onDropElement(){console.log("Abstract method...");}
     getData(htmlCleaning){console.log("Abstract method...");}
     setData(value){console.log("Abstract method...");}
     onDeleteElement(selectedElement){console.log("Abstract method...");}
@@ -505,7 +512,7 @@ class DrawnerState extends CanvasState{
         body.parentElement.classList.add("canvas-content");
 
         // pure JS
-        CanvasElement.create(body, this.mainView.onSelectElement, this.onDropElement, this.mainView.onEditNodeText);
+        CanvasElement.create(body, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onEditNodeText);
 
         // React JS
         //body.appendChild(doc.firstChild);
@@ -517,7 +524,7 @@ class DrawnerState extends CanvasState{
         let main = 
             <Canvas style={{display: (show ? 'flex' : 'none') }}>
                 <iframe id="drawner-canvas" className="canvas" style={this.getDeviceDimension()}></iframe>
-                <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement}  onEdit={this.mainView.onEditNodeText}
+                <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement} onDragElement={this.mainView.onDragStart}  onEdit={this.mainView.onEditNodeText}
                             onDeleteElement={this.mainView.onDeleteElement} onMoveNodeUp={this.mainView.onMoveNodeUp} onMoveNodeDown={this.mainView.onMoveNodeDown} 
                              onCloneNode={this.mainView.onCloneNode} onSaveTemplate={this.mainView.onSaveTemplate} />
                 <NodeTextEditing posCanvas={posCanvas} window={this.window} selectedElement={selectedElement} />
@@ -590,11 +597,11 @@ class DrawnerState extends CanvasState{
             this.historyManager.onContentChange(this.getData());
         }
     }
-
-    onDropElement(){
-        this.onDragEnd();
+    
+    onDragEnd(){
         this.onContentChange();
-    } 
+        this.htmlCleaning(this.window.document);
+    }
 
     onDeleteElement(selectedElement){
         this.onContentChange();
@@ -627,19 +634,15 @@ class DrawnerState extends CanvasState{
         el.removeAttribute("data-selected");
         el.removeAttribute("contenteditable");
         parent.appendChild(el);
-        CanvasElement.create(el, this.mainView.onSelectElement, this.onDropElement, this.mainView.onEditNodeText);
+        CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onEditNodeText);
     }
 
     onInsertNode(elems){
         this.onContentChange();
 
         for(let el of elems){
-            CanvasElement.create(el, this.mainView.onSelectElement, this.onDropElement, this.mainView.onEditNodeText);
+            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onEditNodeText);
         }
-    }
-
-    onDragEnd(){
-        this.htmlCleaning(this.window.document);
     }
    
     getData(htmlCleaning){
@@ -665,7 +668,7 @@ class DrawnerState extends CanvasState{
             if(that.window){
                 let body = that.window.document.body;
                 body.innerHTML = value;
-                CanvasElement.create(body, that.mainView.onSelectElement, that.onDropElement, that.mainView.onEditNodeText);
+                CanvasElement.create(body, that.mainView.onSelectElement, that.mainView.onDragEnd, that.mainView.onEditNodeText);
             }
             else{
                 console.log("Loading drawner canvas...");

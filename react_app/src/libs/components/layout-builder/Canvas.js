@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ButtonToolbar, ButtonGroup, Button, Modal, Form, Col } from 'react-bootstrap';
-import {faObjectGroup, faEdit, faBold, faArrowUp,faArrowDown, faTrashAlt, faClone, faSave, faTimes, faItalic, faUnderline, faStrikethrough, faPuzzlePiece} from '@fortawesome/free-solid-svg-icons';
+import {faArrowsAlt, faEdit, faBold, faArrowUp,faArrowDown, faTrashAlt, faClone, faSave, faTimes, faItalic, faUnderline, faStrikethrough, faPuzzlePiece} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import {BtnSetCssProp} from '../ButtonsBar';
@@ -34,7 +34,7 @@ export class CanvasElement{
         this.onDragEnter = this.onDragEnter.bind(this);
         this.onDragLeave = this.onDragLeave.bind(this);
         this.onDrop = this.onDrop.bind(this);
-        this.onDragStart = this.onDragStart.bind(this);
+        //this.onDragStart = this.onDragStart.bind(this);
         this.onClickHandler = this.onClickHandler.bind(this);
         this.onClick = this.onClick.bind(this);
         this.onDblClick = this.onDblClick.bind(this);
@@ -48,7 +48,7 @@ export class CanvasElement{
         this.dom.ondragover = this.onDragOver;
         this.dom.ondragenter = this.onDragEnter;
         this.dom.ondragleave = this.onDragLeave;
-        this.dom.ondragstart = this.onDragStart;
+      //  this.dom.ondragstart = this.onDragStart;
         this.dom.ondrop = this.onDrop;
         this.dom.onclick = this.onClickHandler;
         this.dom.onmouseover = this.onMouseOver;
@@ -107,6 +107,7 @@ export class CanvasElement{
         if(eventData.length > 0){
             let componentData = JSON.parse(eventData);
             el = HTMLElementData.createElement(componentData);
+            CanvasElement.create(el, this.onSelectCallback, this.onDropCallback, this.onEditNodeText);
         }
         else if (CanvasElement.draggingItem !== null){
             el = CanvasElement.draggingItem;
@@ -114,8 +115,6 @@ export class CanvasElement{
         }
         
         if(el !== null){
-            CanvasElement.create(el, this.onSelectCallback, this.onDropCallback, this.onEditNodeText);
-
             if(event.target.classList.contains('dropping-zone')){
                 try{
                     event.target.replaceWith(el);
@@ -172,13 +171,13 @@ export class CanvasElement{
         }
     }
 
-    onDragStart(event){
+    /*onDragStart(event){
         event.stopPropagation();
 
         //let data = HTMLElementData.getElementData(null, this.dom);
         //event.dataTransfer.setData("componentData", JSON.stringify(data));
         CanvasElement.draggingItem = this.dom;
-    }
+    }*/
 
     createDroppingZone(pos){
         let el = document.createElement("div");
@@ -201,6 +200,7 @@ export class FloatingMenu extends Component{
     static defaultProps = {
         posCanvas: null,
         selectedElement: null,
+        onDragElement: null,
         onEdit: null,
         onMoveNodeUp: null,
         onMoveNodeDown: null,
@@ -219,6 +219,7 @@ export class FloatingMenu extends Component{
     }
 
     render(){
+        
         if(this.props.posCanvas === null){ return null;}
         if(this.props.selectedElement === null){ return null;}
         if(this.props.selectedElement.getAttribute('contenteditable') === 'true'){ return null; }
@@ -235,6 +236,7 @@ export class FloatingMenu extends Component{
             <div className='floating-menu' style={style}>
                 <ButtonToolbar aria-label="Toolbar with Button groups">
                     <ButtonGroup size="sm">
+                        <Button onDragStart={this.props.onDragElement} draggable="true" style={{cursor: 'grab'}}><FontAwesomeIcon  icon={faArrowsAlt} title="Glisser"/></Button>
                         <Button onClick={this.props.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
                         <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faPuzzlePiece} title="Créer un composant"/></Button>
                         <Button onClick={this.props.onMoveNodeUp}  ><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
