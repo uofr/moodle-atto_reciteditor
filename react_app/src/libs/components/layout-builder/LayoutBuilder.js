@@ -19,7 +19,8 @@ export class LayoutBuilder extends Component
         onSelectBuilder: null,
         onChange: null,
         onSaveAndClose: null,
-        onChange: null
+        onChange: null,
+        options: {}
     };
 
     constructor(props){
@@ -51,7 +52,7 @@ export class LayoutBuilder extends Component
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto" activeKey={(this.state.leftPanel ? 'collapse' : '')}>
-                            <Nav.Link eventKey="wordbuilder"><FontAwesomeIcon icon={faFileWord} title="Word Builder"/></Nav.Link>
+                            {this.props.options.wordProcessor && <Nav.Link eventKey="wordbuilder"><FontAwesomeIcon icon={faFileWord} title="Word Builder"/></Nav.Link>}
                             <Nav.Link eventKey="collapse"><FontAwesomeIcon icon={faBars} title="Collapser"/></Nav.Link>
                         {this.state.view == 'drawner' && <>
                             <Nav.Link eventKey="undo"><FontAwesomeIcon icon={faUndo} title="Undo"/></Nav.Link>

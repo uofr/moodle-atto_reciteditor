@@ -31,6 +31,6 @@ else{
     }*/
     console.log(`Prod: ${Options.appName()} - v:${Options.appVersion()}`); 
     let attoInterface = UtilsMoodle.getAttoInterface();
-    ReactDOM.render(<RecitRichEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent}/>, document.getElementById('root')); 
+    ReactDOM.render(<RecitRichEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent} />, document.getElementById('root')); 
 }
 

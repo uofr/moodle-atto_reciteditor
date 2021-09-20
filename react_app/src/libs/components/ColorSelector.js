@@ -22,11 +22,16 @@ export class ColorSelector extends Component {
         let main = 
             <div className="color-selector">
                 {this.props.options.map(function(item, index){
-                    
-                    let result =
-                        <Button   key={index} onClick={() => that.onChange(item.value)} variant={item.value} size='sm' title={item.text} className='m-1'>
-                            {that.props.value === item.value && <FontAwesomeIcon  icon={faCheck} />}
-                        </Button>
+                    let result = null;
+                    let props = {key:index,  onClick:() => that.onChange(item.value), size:'sm', title:item.text, className:'m-1'};
+                    let child = that.props.value === item.value && <FontAwesomeIcon  icon={faCheck} />;
+
+                    if(item.value === "white"){
+                        result = <Button {...props} variant="light" className="bg-white" >{child}</Button>
+                    }
+                    else{
+                        result =<Button {...props} variant={item.value}>{child}</Button>
+                    }
 
                     return result;
                 })}

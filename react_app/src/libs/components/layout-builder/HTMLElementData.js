@@ -633,7 +633,8 @@ export class HTMLElementData{
                         {text:"", value: "warning"},
                         {text:"", value: "info"},
                         {text:"", value: "light"},
-                        {text:"", value: "dark"}
+                        {text:"", value: "dark"},
+                        {text:"", value: "white"}
                     
                     ],
                     onChange: function(el, value, data){                       
@@ -739,7 +740,8 @@ export class HTMLElementData{
                             {text:"", value: "warning"},
                             {text:"", value: "info"},
                             {text:"", value: "light"},
-                            {text:"", value: "dark"}
+                            {text:"", value: "dark"},
+                            {text:"", value: "white"}
                         
                         ],
                         onChange: function(el, value, data){
@@ -856,7 +858,8 @@ export class HTMLElementData{
                             {text:"", value: "warning"},
                             {text:"", value: "info"},
                             {text:"", value: "light"},
-                            {text:"", value: "dark"}
+                            {text:"", value: "dark"},
+                            {text:"", value: "white"}
                         
                         ],
                         onChange: function(el, value, data){

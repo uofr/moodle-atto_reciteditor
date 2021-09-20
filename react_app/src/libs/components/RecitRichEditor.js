@@ -7,7 +7,8 @@ export class RecitRichEditor extends Component{
         name: "",
         content: "",
         builder: "layout",
-        onSaveAndClose: null
+        onSaveAndClose: null,
+        options: {wordProcessor: false, layoutBuilder: true}
     };
 
     constructor(props){
@@ -25,9 +26,9 @@ export class RecitRichEditor extends Component{
 	render(){
 		let main = 
                 this.state.builder === "word" ? 
-                    <VisualWordProcessor content={this.content} onSelectBuilder={this.onSelectBuilder} onChange={this.onChange}/> 
+                    <VisualWordProcessor content={this.content} onSelectBuilder={this.onSelectBuilder} onChange={this.onChange} options={this.props.options}/> 
                     : 
-                    <LayoutBuilder content={this.content} onSelectBuilder={this.onSelectBuilder} onChange={this.onChange} onSaveAndClose={this.props.onSaveAndClose}/>
+                    <LayoutBuilder content={this.content} onSelectBuilder={this.onSelectBuilder} onChange={this.onChange} onSaveAndClose={this.props.onSaveAndClose} options={this.props.options}/>
 		return (main);
     }
     
