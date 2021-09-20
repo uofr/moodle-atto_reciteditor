@@ -521,7 +521,7 @@ class TemplateList extends Component{
     receiveMessageFromIframe(event) {
         switch (event.data.message){
             case 'import':
-                let data = [{name: event.data.value.name, htmlStr: event.data.value.htmlStr || event.data.value.htmlString, img: event.data.value.img || event.data.value.image, type: 'l'}];
+                let data = [{name: event.data.value.name, htmlStr: event.data.value.htmlStr || event.data.value.htmlString || event.data.value.htmlstr, img: event.data.value.img || event.data.value.image, type: 'l'}];
                 this.onImport(null, data);
                 this.showVitrine(false);
                 break;
