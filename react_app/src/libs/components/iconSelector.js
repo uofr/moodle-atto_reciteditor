@@ -40,12 +40,14 @@ export class IconSelector extends Component {
                     let css = c.selectorText.replace('::before', '').substr(1);
                     this.icons.Fontello.push({name: css.replace('icon-', ''), css: css});
                 }
+                if (c.selectorText.startsWith('.recitfad-')){// recitfad old custom
+                    let css = c.selectorText.replace('::before', '').substr(1);
+                    this.icons.Fontello.push({name: css.replace('recitfad-', ''), css: css});
+                }
             }
         }
     }
 
-
-    
     render() {
         let items = this.getIconTable();
 
