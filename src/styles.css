@@ -113,4 +113,19 @@
   .g-xl-5,.gx-xl-5 {    --bs-gutter-x: 3rem;  }
   .g-xl-5,.gy-xl-5 {    --bs-gutter-y: 3rem;  }
 }
+
+.top-50 {    top: 50% !important;  }
+.top-100 {    top: 100% !important;  }  
+.bottom-0 {    bottom: 0 !important;  }
+.bottom-50 {    bottom: 50% !important;  }
+.bottom-100 {    bottom: 100% !important;  }
+.start-0 {    left: 0 !important;  }
+.start-50 {    left: 50% !important;  }
+.start-100 {    left: 100% !important;  }
+.end-0 {    right: 0 !important;  }
+.end-50 {    right: 50% !important;  }
+.end-100 {    right: 100% !important;  }
+.translate-middle {    transform: translate(-50%, -50%) !important;  }
+.translate-middle-x {    transform: translateX(-50%) !important;  }
+.translate-middle-y {    transform: translateY(-50%) !important;  }
 /* Fin ajout classe bootstrap 5.0 */
