@@ -1265,7 +1265,7 @@ export class HTMLElementData{
                     return el;
                 },
             },
-            {name: "Bouton vidéo", type: 'bootstrap', tagName: 'videobtn', properties: HTMLElementData.propsAssignmentFacade.buttons,
+            {name: "Bouton vidéo", type: 'bootstrap', tagName: 'videobtn', properties: [...HTMLElementData.propsAssignmentFacade.buttons, 'videobtn'],
                 create: function(){
                     let el = document.createElement("button");
                     el.innerHTML = 'Bouton vidéo';
