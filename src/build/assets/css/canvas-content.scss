@@ -1,6 +1,6 @@
 $border-onhover-element: 2px dashed rgb(0, 153, 255)!important;
 $border-invisible-element: 2px dashed rgb(201, 197, 197);
-
+.extra-landmark{ padding: 5px;}
 html.canvas-content{
     margin: 0; padding: 0;
 
@@ -24,6 +24,7 @@ html.canvas-content{
 
         //.btn:empty::after{content: "Button"}
         .alert:empty::after{content: "Alerte"}
+        .card{@extend .extra-landmark;}
         .card-header:empty::before{content: "Header"; }
         .card-body:empty::before{content: "Body"; }
         .card-footer:empty::before{content: "Footer"; }
@@ -47,7 +48,6 @@ html.canvas-content{
         .flipcard2 .front::before{content:'Front'; color:#fff; background-color: #007bff; padding: 7px; border-radius: 24px; font-size: 11px;}
         .flipcard2 .back::before{content:'Back'; color:#fff; background-color: #007bff; padding: 7px; border-radius: 24px; font-size: 11px;}
         
-        
         /* Those elements have priority over the previous ones*/
         //&:hover{ @extend .element-focus;}
         //h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover, button:hover, p:hover, div:hover, ul:hover, ol:hover, li:hover{@extend .element-focus;}
@@ -55,37 +55,25 @@ html.canvas-content{
         *[data-selected="1"]{border: $border-onhover-element; border-style: solid!important;}
         *[draggable="true"]:not([contenteditable]){cursor: grab;}
         
-        .dropping-zone{border: 2px dashed rgb(0, 153, 255); height: 50px; width: 100%;  transform: scale(0.97); 
-            display: inline-flex; margin-left: .5rem; margin-right: .5rem; margin-top: .5rem;
-        }
-    
+        .dropping-zone{border: 2px dashed rgb(0, 153, 255); height: 50px; width: 100%;  transform: scale(0.97); display: inline-flex; margin-left: .5rem; margin-right: .5rem; margin-top: .5rem;        }
         .dropping-zone-hover{background-color:  rgba(0, 153, 255, .5)!important;}
         .dropping-zone-hover::before{content: "Drop here..."}
         //.dropping-zone:empty::after{content: 'Déposer ici';}  
         
         .imgclick a:empty::before{content: "Lien de l'image cliquable"}
+        .imgclick {            text-align: center;            position: relative;            width: fit-content;        }
         .imgclick {
-            text-align: center;
-            position: relative;
-            width: fit-content;
+            .imgclickcontent {            position: absolute;            top: 50%;            left: 50%;            transform: translate(-50%, -50%);            text-align: center;        }
         }
 
-        .imgclick .imgclickcontent {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
+        iframe{@extend .extra-landmark;}
+        iframe.video {            pointer-events: none;            content: 'video';        }
+        
+        audio {@extend .extra-landmark;}
 
-        iframe.video {
-            pointer-events: none;
-            content: 'video';
-        }
-        .embed-responsive {
-            border: 2px dashed rgba(0, 0, 0, .5);
-        }
+        .embed-responsive {            border: 2px dashed rgba(0, 0, 0, .5);        }
     }  
+
     .tagName{display: inline-flex; background-color: #ffd75e!important; padding: 3px; margin: 3px; font-size: 10px; font-weight: 500; align-items: center;}
     
     *[data-dragging="1"]{

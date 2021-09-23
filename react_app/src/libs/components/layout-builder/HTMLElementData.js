@@ -153,6 +153,25 @@ export class HTMLElementData{
                         return (el.style.backgroundColor ? el.style.backgroundColor : '#FFFFFF');
                     }
                 },
+                {
+                    name: 'backgroundimage', 
+                    text: "Image d'arrière-plan",
+                    input: { 
+                        type: 'ImageSrc', 
+                        defaultValue: '',
+                        onChange: function(el, value, data){
+                            if(value.length > 0){
+                                el.style.backgroundImage = `url('${value}')`;
+                            }
+                            else{
+                                el.style.backgroundImage = "";
+                            }
+                        }
+                    },
+                    getValue: function(el){
+                        return (el.style.backgroundImage ? el.style.backgroundImage : '');
+                    }
+                }
             ]
         },
         {
@@ -674,6 +693,7 @@ export class HTMLElementData{
                         {text:"Rounded-Bottom", value: "rounded-bottom"},
                         {text:"Rounded-Left", value: "rounded-left"},
                         {text:"Rounded-Circle", value: "rounded-circle"},
+                        {text:"Rounded-Pill", value: "rounded-pill"},
                         {text:"Rounded-0", value: "rounded-0"},
                     
                     ],
@@ -771,37 +791,7 @@ export class HTMLElementData{
 
                         return result;
                     }
-                },
-                {
-                    name: 'btnblock',
-                    text: "Btn Block",
-                    input: { 
-                        type: 'radio',
-                        options:[
-                            {text:"Oui", value: "btn-block"},
-                            {text:"Non", value: ""}
-                        
-                        ],
-                        onChange: function(el, value, data){
-                            if(el.classList.contains("btn-block")){
-                                el.classList.remove("btn-block");
-                            }
-
-                            if(value.length > 0){
-                                el.classList.add(value);
-                            }
-                        }
-                    },
-                    getValue: function(el, data){
-                        let result = "";
-                        
-                        if(el.classList.contains("btn-block")){
-                            result = "btn-block";
-                        }
-
-                        return result;
-                    }
-                },
+                },               
                 {
                     name: 'shadow',
                     text: "Ombre",
@@ -979,6 +969,41 @@ export class HTMLElementData{
             ]
         },
         {
+            name: 'bs-button', description: "Bouton",  type: 'bootstrap',
+            children: [
+                {
+                    name: 'btnblock',
+                    text: "Bouton pleine largeur",
+                    input: { 
+                        type: 'radio',
+                        options:[
+                            {text:"Oui", value: "btn-block"},
+                            {text:"Non", value: ""}
+                        
+                        ],
+                        onChange: function(el, value, data){
+                            if(el.classList.contains("btn-block")){
+                                el.classList.remove("btn-block");
+                            }
+
+                            if(value.length > 0){
+                                el.classList.add(value);
+                            }
+                        }
+                    },
+                    getValue: function(el, data){
+                        let result = "";
+                        
+                        if(el.classList.contains("btn-block")){
+                            result = "btn-block";
+                        }
+
+                        return result;
+                    }
+                }
+            ]
+        },
+        {
             name: 'htmlattributes', description: 'Attributs HTML',  type: 'htmlattr',
             children: [
                 {
@@ -1143,6 +1168,7 @@ export class HTMLElementData{
     static propsAssignmentFacade = {
         text: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'marginborderpadding', 'font', 'layout', 'background'],
         controls: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'marginborderpadding', 'font', 'layout', 'background'],
+        buttons: ['bs-general', 'bs-button', 'bs-spacing', 'bs-border', 'htmlattributes', 'marginborderpadding', 'font'],
         containers: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'layout', 'background'],
 
     }
@@ -1192,7 +1218,7 @@ export class HTMLElementData{
             }
         ]},
         {name: 'Contrôle', children: [
-            {name: "Bouton", type: 'bootstrap', tagName: 'button', properties: HTMLElementData.propsAssignmentFacade.controls,
+            {name: "Bouton", type: 'bootstrap', tagName: 'button', properties: HTMLElementData.propsAssignmentFacade.buttons,
                 create: function(){
                     let el = document.createElement("button");
                     el.classList.add('btn');
@@ -1240,7 +1266,7 @@ export class HTMLElementData{
                     return el;
                 },
             },
-            {name: "Bouton vidéo", type: 'bootstrap', tagName: 'videobtn', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'videobtn', 'font', 'layout', 'background'],
+            {name: "Bouton vidéo", type: 'bootstrap', tagName: 'videobtn', properties: HTMLElementData.propsAssignmentFacade.buttons,
                 create: function(){
                     let el = document.createElement("button");
                     el.innerHTML = 'Bouton vidéo';
