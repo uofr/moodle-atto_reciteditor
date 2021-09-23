@@ -1169,8 +1169,7 @@ export class HTMLElementData{
         text: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'marginborderpadding', 'font', 'layout', 'background'],
         controls: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'marginborderpadding', 'font', 'layout', 'background'],
         buttons: ['bs-general', 'bs-button', 'bs-spacing', 'bs-border', 'htmlattributes', 'marginborderpadding', 'font'],
-        containers: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'layout', 'background'],
-
+        containers: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'layout', 'background']
     }
 
     static elementList = [
@@ -1237,7 +1236,7 @@ export class HTMLElementData{
                     return el;
                 },
             },
-            {name: "Lien", type: 'native', tagName: 'a', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'link', 'font', 'layout', 'background'],
+            {name: "Lien", type: 'native', tagName: 'a', properties: [...HTMLElementData.propsAssignmentFacade.buttons, 'link'],
                 init:function(el){
                     el.innerText = "Lien";
                     el.setAttribute('href', '#');
@@ -1751,17 +1750,12 @@ export class HTMLElementData{
         let result = {text: el.tagName, prefix: el.tagName.toLowerCase()};
         result.text = result.text.charAt(0).toUpperCase() + result.text.toLowerCase().slice(1);
 
-        if(el.classList.contains('container')){
+        if(el.classList.contains('container') || el.classList.contains('container-fluid')){
             result.text = 'Container';
             result.tagName = 'grid';
             result.prefix = 'bg';
         }
-        else if(el.classList.contains('container-fluid')){
-            result.text = 'Container';
-            result.tagName = 'grid';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('row')){
+        else if(el.classList.contains('row') || el.classList.contains('row-fluid')){
             result.text = 'Ligne';
             result.tagName = 'grid';
             result.prefix = 'bg';
@@ -1835,7 +1829,7 @@ export class HTMLElementData{
             result.tagName = 'buttoncollapse';
             result.prefix = 'btn';
         }
-        else if(el.classList.contains('btn')){
+        else if(el.classList.contains('btn') && el.tagName.toLowerCase() !== "a"){
             result.text = 'Bouton';
             result.tagName = 'button';
             result.prefix = 'btn';
@@ -1912,6 +1906,11 @@ export class HTMLElementData{
             result.text = 'Table Row';
             result.prefix = 'bg';
             result.tagName = 'tr';
+        }
+        else if(el.tagName == 'A'){
+            result.text = 'Lien';
+            result.prefix = 'btn';
+            result.tagName = 'a';
         }
         /*else if(el.className.search('text-') >=0 ){
             result.text = 'Text';
