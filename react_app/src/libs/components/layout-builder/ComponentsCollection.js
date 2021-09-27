@@ -375,6 +375,7 @@ class TemplateList extends Component{
     }
 
     render(){       
+        let that = this;
         let main =
             <div className="tab-content">
                 <div>
@@ -388,11 +389,13 @@ class TemplateList extends Component{
                     </ButtonToolbar>
                     {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider.myComponents)}><FontAwesomeIcon  icon={faCloudDownloadAlt}/>{" Exporter la collection"}</Button>}
                 </div>
-                {this.props.type === 'l' && <ul className='mt-2 d-flex flex-wrap'>
-                    {this.props.dataProvider.map((item, index) => {
-                        return (this.getToken(item, index, true));
-                    })}
-                </ul>}
+                {this.props.type === 'l' && 
+                    <ul className='mt-2 d-flex flex-wrap justify-content-center'>
+                        {this.props.dataProvider.map((item, index) => {
+                            return (that.getToken(item, index, true));
+                        })}
+                    </ul>
+                }
                 {this.props.type === 'c' && <>
                     <span onClick={() => this.onCollapse('my')}>
                         <FontAwesomeIcon className="mr-1" icon={faAngleDown}/> Mes composants
@@ -589,15 +592,6 @@ class Token extends Component
 }
 
 class TokenTemplate extends Token{
-    constructor(props){
-        super(props);
-
-        this.onMouseEnter = this.onMouseEnter.bind(this);
-        this.onMouseLeave = this.onMouseLeave.bind(this);
-
-        this.state = {imagePreview: false};
-    }
-
     render(){       
         let item = this.props.data;
 
@@ -623,14 +617,6 @@ class TokenTemplate extends Token{
                     </div>}
                 </div>
         return main;
-    }
-
-    onMouseEnter(img){
-        this.setState({imagePreview: img});
-    }
-
-    onMouseLeave(){
-        this.setState({imagePreview: false});
     }
 }
 

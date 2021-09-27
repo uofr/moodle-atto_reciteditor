@@ -52,14 +52,13 @@
         .template {
             margin: 13px;
             text-align: center;
-            width: 43%;
+            width: 40%;
             img {
                 max-width: 90%;
                 max-height: 100px;
             }
             p {
-                font-weight: 500;
-                text-overflow: ellipsis;
+                font-weight: 500; text-overflow: ellipsis; font-size: 13px;
             }
             .btn-toolbar {
                 position: relative;
@@ -121,6 +120,23 @@
         height: 100%;
         .CodeMirror {
             height: 100%;
+        }
+    }
+}
+
+@media screen and (max-width: 1800px){
+    .layout-builder{
+        .main{
+            .left-area{ 
+                .panel[data-status='open']{
+                    width: 370px; 
+                    .card{
+                        .card-body{
+                            max-height: 40vh;
+                        }
+                    }
+                }
+            }
         }
     }
 }

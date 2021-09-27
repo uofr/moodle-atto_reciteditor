@@ -30,15 +30,11 @@ export class LayoutBuilder extends Component
         this.onSaveAndClose = this.onSaveAndClose.bind(this);
 
         this.state = {
-            device: 'xl', view: 'drawner', leftPanel: false 
+            device: (window.screen.width > 1800 ? 'xl' : 'lg'), view: 'drawner', leftPanel: false 
         };
 
         this.mainViewRef = React.createRef();
         this.historyManager = new HistoryManager();
-
-        if (screen.width < 1400){//If screen is small, set layout to lg instead of xl
-            this.state.device = 'lg';
-        }
     }  
 
 	render(){
@@ -436,10 +432,10 @@ class CanvasState{
         let device = null;
         
         switch(this.mainView.props.device){
-            case 'xs': device = {width: 360, height: 1050}; break;
-            case 'sm': device = {width: 576, height: 1050}; break;
-            case 'md': device = {width: 768, height: 1050}; break;
-            case 'lg': device = {width: 992, height: 1050}; break;
+            case 'xs': device = {width: 360, height: 640}; break;
+            case 'sm': device = {width: 576, height: 640}; break;
+            case 'md': device = {width: 768, height: 640}; break;
+            case 'lg': device = {width: 992, height: 640}; break;
             case 'xl':
             default: device = {width: 1500, height: 1050}; 
         }
