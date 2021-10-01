@@ -377,15 +377,14 @@ export class BtnSetCssProp extends Component{
         }
         else{
             try{
-            sel.node.outerHTML = sel.node.innerHTML;
-        }
-            catch(err){
+                sel.node.style[prop] = this.getValue();
+            } catch(err){
                 console.log(err);
             }
         }
 
         if(sel.refreshSelection){
-        sel.refreshSelection()
+        	sel.refreshSelection()
         }
 
         if(this.props.onClick){
