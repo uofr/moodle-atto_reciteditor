@@ -752,6 +752,7 @@ export class HTMLElementData{
                     text: "Couleur de l'arrière plan",
                     input: { 
                         type: 'colorselector',
+                        flags: {prefix: 'bg-', fetchFromTheme: true},
                         options:[
                             {text:"", value: "primary"},
                             {text:"", value: "secondary"},
@@ -840,6 +841,7 @@ export class HTMLElementData{
                     text: "Couleur",
                     input: { 
                         type: 'colorselector',
+                        flags: {prefix: 'text-', fetchFromTheme: true},
                         options:[
                             {text:"", value: "primary"},
                             {text:"", value: "secondary"},

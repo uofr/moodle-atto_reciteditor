@@ -100,7 +100,7 @@ class FormProperties extends Component{
                     {!collapsed && item.children.map((item2, index2) => {
                         let formItem = null;
                         
-                        if((!item2.input.hasOwnProperty('flags')) || (item2.input.flags.showLabel)){
+                        if((!item2.input.hasOwnProperty('flags')) || (typeof item2.input.flags.showLabel == "undefined" || item2.input.flags.showLabel)){
                             formItem = 
                             <Form.Group size="sm" key={index2} as={Row} style={{alignItems: "center"}}  controlId={`formitem${index}${index2}`}>
                                 <Form.Label column sm="4">{item2.text}</Form.Label>
@@ -170,7 +170,7 @@ class FormProperties extends Component{
                                             onChange={(event) => this.onDataChange(event, data)} />;
                 break;
             case 'colorselector':
-                result = <ColorSelector name={data.name} value={value} options={data.input.options}
+                result = <ColorSelector name={data.name} value={value} options={data.input.options} flags={data.input.flags}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
             case 'buttongroup':
