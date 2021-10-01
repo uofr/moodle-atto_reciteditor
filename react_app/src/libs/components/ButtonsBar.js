@@ -362,27 +362,24 @@ export class BtnSetCssProp extends Component{
         if(sel.sel.isCollapsed){ return; }
 
         let prop = this.props.cssProp;
-        
-        if(sel.isNodeRoot){
-            let newNode = document.createElement("span");
-            newNode.appendChild(sel.range.extractContents());
-            newNode.style[prop] = this.props.value;
-            sel.range.insertNode(newNode);
-        }
-        else if(sel.subSelection){
-            let newNode = document.createElement("span");
-            newNode.appendChild(sel.range.extractContents());
-            newNode.style[prop] = this.getValue();
-            sel.range.insertNode(newNode);
-        }
-        else{
-            try{
-                sel.node.style[prop] = this.getValue();
-            } catch(err){
-                console.log(err);
-            }
-        }
 
+        
+        let selection = this.props.window.getSelection();
+        if (selection.rangeCount) {
+          let text = selection.toString();
+          let range = selection.getRangeAt(0);
+          let parent = range.startContainer.parentNode;
+          
+          if (range.startOffset > 0 && !parent.style[prop]) {
+            let inner = document.createElement("span");
+            inner.style[prop] = this.getValue();
+            inner.innerHTML = text;
+            parent.innerHTML = parent.innerHTML.replace(text, inner.outerHTML);
+          } else if (parent.style && parent.style[prop]) {
+            parent.outerHTML = parent.innerHTML;
+          }
+        }
+        
         if(sel.refreshSelection){
         	sel.refreshSelection()
         }
