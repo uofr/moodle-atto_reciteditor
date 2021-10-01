@@ -99,8 +99,12 @@ class FormProperties extends Component{
                     <h6  onClick={(event) => this.onCollapse(event, item.name)}><FontAwesomeIcon className="mr-1" icon={icon}/>{item.description}</h6>
                     {!collapsed && item.children.map((item2, index2) => {
                         let formItem = null;
+                        let flags = {};
+                        if(item2.input.getFlags){
+                            flags = item2.input.getFlags(this.props.element);
+                        }
                         
-                        if((!item2.input.hasOwnProperty('flags')) || (typeof item2.input.flags.showLabel == "undefined" || item2.input.flags.showLabel)){
+                        if(typeof flags.showLabel == "undefined" || flags.showLabel){
                             formItem = 
                             <Form.Group size="sm" key={index2} as={Row} style={{alignItems: "center"}}  controlId={`formitem${index}${index2}`}>
                                 <Form.Label column sm="4">{item2.text}</Form.Label>
@@ -131,6 +135,10 @@ class FormProperties extends Component{
     createFormControl(data){
         let result = null;
         let value = data.getValue(this.props.element, data);
+        let flags = {};
+        if (data.input.getFlags){
+            flags = data.input.getFlags(this.props.element);
+        }
         
         switch(data.input.type){
             case 'radio':
@@ -158,7 +166,7 @@ class FormProperties extends Component{
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
             case 'multipleselect':
-                result = <MultipleSelect name={data.name} values={value} options={data.input.options} autoAdd={data.input.flags.autoAdd}
+                result = <MultipleSelect name={data.name} values={value} options={data.input.options} autoAdd={flags.autoAdd}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
             case 'layoutspacingeditor':
@@ -170,7 +178,7 @@ class FormProperties extends Component{
                                             onChange={(event) => this.onDataChange(event, data)} />;
                 break;
             case 'colorselector':
-                result = <ColorSelector name={data.name} value={value} options={data.input.options} flags={data.input.flags}
+                result = <ColorSelector name={data.name} value={value} options={data.input.options} flags={flags}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
             case 'buttongroup':

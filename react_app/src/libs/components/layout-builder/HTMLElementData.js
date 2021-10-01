@@ -483,7 +483,9 @@ export class HTMLElementData{
                 text: "Espacement",
                 input: { 
                     type: 'layoutspacingeditor',
-                    flags: {showLabel: false},
+                    getFlags: function(){
+                        return {showLabel: false};
+                    },
                     defaultValue: '',
                     onChange: function(el, value, data){
                         el.style[value.name] = value.value;
@@ -644,6 +646,9 @@ export class HTMLElementData{
                 text: "Couleur de bordure",
                 input: { 
                     type: 'colorselector',
+                    getFlags: function(){
+                        return {prefix: 'border-', fetchFromTheme: true};
+                    },
                     options:[
                         {text:"", value: "primary"},
                         {text:"", value: "secondary"},
@@ -732,7 +737,9 @@ export class HTMLElementData{
                     text: "Liste des classes",
                     input: { 
                         type: 'multipleselect',
-                        flags: {autoAdd: true, showLabel: true},
+                        getFlags: function(){
+                            return {autoAdd: true, showLabel: true};
+                        },
                         options: [], 
                         defaultValue: '',
                         onChange: function(el, value, data){
@@ -752,7 +759,10 @@ export class HTMLElementData{
                     text: "Couleur de l'arrière plan",
                     input: { 
                         type: 'colorselector',
-                        flags: {prefix: 'bg-', fetchFromTheme: true},
+                        getFlags: function(el) {
+                            let bs = HTMLElementData.mapBootstrapComponents(el);
+                            return {fetchFromTheme: true, prefix: bs.prefix+'-'}
+                        },
                         options:[
                             {text:"", value: "primary"},
                             {text:"", value: "secondary"},
@@ -841,7 +851,9 @@ export class HTMLElementData{
                     text: "Couleur",
                     input: { 
                         type: 'colorselector',
-                        flags: {prefix: 'text-', fetchFromTheme: true},
+                        getFlags: function(){
+                            return {prefix: 'text-', fetchFromTheme: true};
+                        },
                         options:[
                             {text:"", value: "primary"},
                             {text:"", value: "secondary"},

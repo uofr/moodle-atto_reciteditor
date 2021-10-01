@@ -364,7 +364,7 @@ export class BtnSetCssProp extends Component{
         let prop = this.props.cssProp;
 
         
-        let selection = this.props.window.getSelection();
+        let selection = sel.sel;
         if (selection.rangeCount) {
           let text = selection.toString();
           let range = selection.getRangeAt(0);
