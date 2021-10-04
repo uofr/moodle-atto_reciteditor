@@ -777,13 +777,20 @@ export class HTMLElementData{
                         ],
                         onChange: function(el, value, data){
                             let bs = HTMLElementData.mapBootstrapComponents(el);
+                            let middlefix = '';
 
                             for(let item of data.input.options){
-                                el.classList.remove(`${bs.prefix}-${item.value}`);
+                                if (el.classList.contains(`${bs.prefix}-${item.value}`)){
+                                    el.classList.remove(`${bs.prefix}-${item.value}`);
+                                }
+                                if (el.classList.contains(`${bs.prefix}-outline-${item.value}`)){
+                                    el.classList.remove(`${bs.prefix}-outline-${item.value}`);
+                                    middlefix = '-outline';
+                                }
                             }
 
                             if(value.length > 0){
-                                el.classList.add(`${bs.prefix}-${value}`);
+                                el.classList.add(`${bs.prefix}${middlefix}-${value}`);
                             }
                         }
                     },
@@ -796,6 +803,10 @@ export class HTMLElementData{
                         for(let item of data.input.options){
                             if(classList.includes(`${bs.prefix}-${item.value}`)){
                                 result = item.value;
+                                break;
+                            }
+                            if(classList.includes(`${bs.prefix}-outline-${item.value}`)){
+                                result = item.value.replace('outline-', '');
                                 break;
                             }
                         }
@@ -1013,6 +1024,45 @@ export class HTMLElementData{
                         }
 
                         return result;
+                    }
+                },
+                {
+                    name: 'btnoutline',
+                    text: "Outline",
+                    input: { 
+                        type: 'radio',
+                        options:[
+                            {text:"Oui", value: true},
+                            {text:"Non", value: false}
+                        
+                        ],
+                        onChange: function(el, value, data){
+                            if (value == false){
+                                for (let c of el.classList){
+                                    if (c.includes('btn-outline')){
+                                        let classN = c.replace('outline-', '');
+                                        el.classList.remove(c);
+                                        el.classList.add(classN);
+                                    }
+                                }
+                            }else{
+                                for (let c of el.classList){
+                                    if (c.includes('btn-')){
+                                        let classN = c.replace('btn-', 'btn-outline-');
+                                        el.classList.remove(c);
+                                        el.classList.add(classN);
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    getValue: function(el, data){
+                        for (let c of el.classList){
+                            if (c.includes('btn-outline')){
+                                return true;
+                            }
+                        }
+                        return false;
                     }
                 },
                 {
