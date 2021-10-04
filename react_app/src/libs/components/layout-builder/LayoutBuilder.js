@@ -222,33 +222,33 @@ class MainView extends Component{
                                     <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.components ? faAngleRight : faAngleDown)}/>
                                     Composants
                                 </Card.Header>
-                                <Collapse in={!this.state.collapsed.components}>
+                                {!this.state.collapsed.components && <div className="heightanim">
                                     <Card.Body>
                                         <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate}/>
                                     </Card.Body>
-                                </Collapse>
+                                </div>}
                             </Card>
 
                             <Card>
                                 <Card.Header onClick={() => this.setCollapse('properties')}>
                                     <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/>Proprietés
                                 </Card.Header>
-                                <Collapse in={!this.state.collapsed.properties}>
+                                {!this.state.collapsed.properties && <div className="heightanim">
                                     <Card.Body className="properties">
                                         <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement}/>
                                     </Card.Body>
-                                </Collapse>
+                                </div>}
                             </Card>
 
                             <Card>
-                                <Card.Header  onClick={() => this.setCollapse('treeView')}>
+                                <Card.Header onClick={() => this.setCollapse('treeView')}>
                                     <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/>Arborescence
                                 </Card.Header>
-                                <Collapse in={!this.state.collapsed.treeView}>
+                                {!this.state.collapsed.treeView && <div className="heightanim">
                                     <Card.Body>
                                         <TreeView data={this.canvasState.drawner.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} view={this.props.view}/>
                                     </Card.Body>
-                                </Collapse>
+                                </div>}
                             </Card>
                         </div>
                     }
