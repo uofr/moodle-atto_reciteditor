@@ -1014,7 +1014,44 @@ export class HTMLElementData{
 
                         return result;
                     }
-                }
+                },
+                {
+                    name: 'btnsize',
+                    text: "Taille",
+                    input: { 
+                        type: 'radio',
+                        options:[
+                            {text:<FontAwesomeIcon icon={faRemoveFormat}/>, value: ""},
+                            {text:"Gros", value: "btn-lg"},
+                            {text:"Petit", value: "btn-sm"},
+                        ],
+                        onChange: function(el, value, data){                       
+                            for(let item of data.input.options){
+                                if (item.value.length > 0){
+                                    el.classList.remove(item.value);
+                                }
+                            }
+    
+                            if(value.length > 0){
+                                el.classList.add(value);
+                            }
+                        }
+                    },
+                    getValue: function(el, data){
+                        let result = "";
+    
+                        let classList = [...el.classList]
+    
+                        for(let item of data.input.options){
+                            if(classList.includes(item.value)){
+                                result = item.value;
+                                break;
+                            }
+                        }
+    
+                        return result;
+                    }
+                },
             ]
         },
         {
