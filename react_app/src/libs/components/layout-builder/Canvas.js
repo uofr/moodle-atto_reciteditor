@@ -149,16 +149,30 @@ export class CanvasElement{
     }
 
     onDragEnter(event){
+        // do not cascate the event towards the parents
+        event.preventDefault();
+        event.stopPropagation();
+
         if((this.dom.firstElementChild !== null) && (this.dom.firstElementChild.classList.contains("dropping-zone"))){
             return;
         }
 
-        if(this.dom.children.length > 0){
-            this.dom.setAttribute("data-dragging", "1");
-            this.dom.insertBefore(this.createDroppingZone(), this.dom.firstChild);    
-        }
+        // it flags the hovering event when dragging (because when dragging mouseover is not dispatched)
+        this.dom.setAttribute("data-hovering", "1");
 
-        this.dom.appendChild(this.createDroppingZone());
+        let that = this;
+        // wait 0.5 second to add the dropping zone
+        window.setTimeout(() => {
+            // if the user moved the mouse then we do not add the dropping zone
+            if(!that.dom.hasAttribute("data-hovering")){ return; }
+
+            if(that.dom.children.length > 0){
+                that.dom.setAttribute("data-dragging", "1");
+                that.dom.insertBefore(that.createDroppingZone(), that.dom.firstChild);    
+            } 
+
+            that.dom.appendChild(that.createDroppingZone());
+        }, 500);
     }
 
     onDragLeave(event){
@@ -169,6 +183,8 @@ export class CanvasElement{
         if(event.target.classList.contains('dropping-zone-hover')){
             event.target.classList.remove('dropping-zone-hover');
         }
+
+        this.dom.removeAttribute("data-hovering");
     }
 
     /*onDragStart(event){

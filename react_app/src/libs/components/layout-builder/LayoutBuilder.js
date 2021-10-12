@@ -67,7 +67,7 @@ export class LayoutBuilder extends Component
                             <Nav.Link eventKey="lg"><FontAwesomeIcon icon={faLaptop} title="LG"/></Nav.Link>
                             <Nav.Link eventKey="xl"><FontAwesomeIcon icon={faDesktop} title="XL"/></Nav.Link>    
                         </Nav>
-                        <Button variant="outline-success" onClick={this.onSaveAndClose}><FontAwesomeIcon icon={faSave} title="Enregistrer"/>{" Enregistrer"}</Button>
+                        <Button variant="success" onClick={this.onSaveAndClose}><FontAwesomeIcon icon={faSave} title="Enregistrer"/>{" Enregistrer"}</Button>
                     </Navbar.Collapse>
                 </Navbar>
                 <MainView ref={this.mainViewRef} content={this.props.content} device={this.state.device} view={this.state.view} leftPanel={this.state.leftPanel} historyManager={this.historyManager}/>

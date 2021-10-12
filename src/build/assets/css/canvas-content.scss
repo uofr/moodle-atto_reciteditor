@@ -81,6 +81,12 @@ html.canvas-content{
         &::after{content: "Fin body";  @extend .tagName;}
         section::before{content: "Début de la section";  @extend .tagName;}
         section::after{content: "Fin de la section";  @extend .tagName;}
+        p::before{content: "Début du paragraphe";  @extend .tagName;}
+        p::after{content: "Fin du paragraphe";  @extend .tagName;}
+        h1::before,h2::before,h3::before,h4::before,h5::before,h6::before{content: "Début du titre";  @extend .tagName;}
+        h1::after,h2::after,h3::after,h4::after,h5::after,h6::after{content: "Fin du titre";  @extend .tagName;}
+        .btn::before, button::before{content: "Début du bouton";  @extend .tagName;}
+        .btn::after, button::after{content: "Fin du bouton";  @extend .tagName;}
         .container::before, .container-fluid::before{content: "Début du container";  @extend .tagName;}
         .container::after, .container-fluid::after{content: "Fin du container";  @extend .tagName;}
         .row::before{content: "Début du row";  @extend .tagName;}
