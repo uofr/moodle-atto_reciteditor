@@ -1,6 +1,18 @@
 $border-onhover-element: 2px dashed rgb(0, 153, 255)!important;
 $border-invisible-element: 2px dashed rgb(201, 197, 197);
 .extra-landmark{ padding: 5px;}
+
+@keyframes append-dropping-zone {
+	from {
+		transform: scale(0);
+		opacity: 0;
+	}
+	to {
+		transform: scale(1);
+		opacity: 1;	
+	}
+}
+
 html.canvas-content{
     margin: 0; padding: 0;
 
@@ -55,9 +67,11 @@ html.canvas-content{
         *[data-selected="1"]{border: $border-onhover-element; border-style: solid!important;}
         *[draggable="true"]:not([contenteditable]){cursor: grab;}
         
-        .dropping-zone{border: 2px dashed rgb(0, 153, 255); height: 50px; width: 100%;  transform: scale(0.97); display: inline-flex; margin-left: .5rem; margin-right: .5rem; margin-top: .5rem;        }
+        .dropping-zone{border: 2px dashed rgb(0, 153, 255); height: 50px; width: 100%;  transform: scale(0.97); display: inline-flex; margin-left: .5rem; 
+            margin-right: .5rem; margin-top: .5rem; font-size:initial; color: initial; font-weight: initial; 
+            animation: append-dropping-zone .3s linear;}
         .dropping-zone-hover{background-color:  rgba(0, 153, 255, .5)!important;}
-        .dropping-zone-hover::before{content: "Drop here..."}
+        //.dropping-zone-hover::before{content: "Drop here..."}
         //.dropping-zone:empty::after{content: 'Déposer ici';}  
         
         .imgclick a:empty::before{content: "Lien de l'image cliquable"}
@@ -77,8 +91,8 @@ html.canvas-content{
     .tagName{display: inline-flex; background-color: #ffd75e!important; padding: 3px; margin: 3px; font-size: 10px; font-weight: 500; align-items: center;}
     
     *[data-dragging="1"]{
-        &::before{content: "Début body";  @extend .tagName;}
-        &::after{content: "Fin body";  @extend .tagName;}
+        &::before{content: "Début";  @extend .tagName;}
+        &::after{content: "Fin";  @extend .tagName;}
         section::before{content: "Début de la section";  @extend .tagName;}
         section::after{content: "Fin de la section";  @extend .tagName;}
         p::before{content: "Début du paragraphe";  @extend .tagName;}

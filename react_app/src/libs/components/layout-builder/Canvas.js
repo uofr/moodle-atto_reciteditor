@@ -150,8 +150,8 @@ export class CanvasElement{
 
     onDragEnter(event){
         // do not cascate the event towards the parents
-        event.preventDefault();
-        event.stopPropagation();
+        //event.preventDefault();
+        //event.stopPropagation();
 
         if((this.dom.firstElementChild !== null) && (this.dom.firstElementChild.classList.contains("dropping-zone"))){
             return;
@@ -161,18 +161,21 @@ export class CanvasElement{
         this.dom.setAttribute("data-hovering", "1");
 
         let that = this;
-        // wait 0.5 second to add the dropping zone
+        // wait 1 second to add the dropping zone
         window.setTimeout(() => {
             // if the user moved the mouse then we do not add the dropping zone
             if(!that.dom.hasAttribute("data-hovering")){ return; }
 
             if(that.dom.children.length > 0){
                 that.dom.setAttribute("data-dragging", "1");
-                that.dom.insertBefore(that.createDroppingZone(), that.dom.firstChild);    
+                that.dom.insertBefore(that.createDroppingZone("À l'intérieur au début"), that.dom.firstChild);    
             } 
 
-            that.dom.appendChild(that.createDroppingZone());
-        }, 500);
+            that.dom.appendChild(that.createDroppingZone("À l'intérieur à la fin"));
+
+            that.dom.parentNode.insertBefore(that.createDroppingZone('Avant'), that.dom);
+            that.dom.parentNode.insertBefore(that.createDroppingZone('Après'), that.dom.nextSibling);
+        }, 1000);
     }
 
     onDragLeave(event){
@@ -195,9 +198,10 @@ export class CanvasElement{
         CanvasElement.draggingItem = this.dom;
     }*/
 
-    createDroppingZone(pos){
+    createDroppingZone(desc){
         let el = document.createElement("div");
         el.classList.add("dropping-zone");
+        el.innerText = desc || "";
         return el;
     }
 
