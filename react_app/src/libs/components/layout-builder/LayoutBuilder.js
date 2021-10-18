@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Nav, Card, Navbar, Collapse, Button  } from 'react-bootstrap';
-import {faMobileAlt, faTabletAlt, faLaptop, faDesktop, faFileWord, faEye, faCode, faAngleRight, faAngleDown, faBars, faPuzzlePiece, faSlidersH, faStream, faSave, faRedo, faUndo} from '@fortawesome/free-solid-svg-icons';
+import { Nav, Card, Navbar, Button  } from 'react-bootstrap';
+import {faExpand, faMobileAlt, faTabletAlt, faTh, faLaptop, faDesktop, faFileWord, faEye, faCode, faAngleRight, faAngleDown, faBars, faPuzzlePiece, 
+        faSlidersH, faStream, faSave, faRedo, faUndo} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {TreeView} from './TreeView';
 import {Canvas, CanvasElement, FloatingMenu, NodeTextEditing} from './Canvas';
@@ -29,8 +30,17 @@ export class LayoutBuilder extends Component
         this.onNavbarSelect = this.onNavbarSelect.bind(this);
         this.onSaveAndClose = this.onSaveAndClose.bind(this);
 
+        let initZoom = "100%";
+        if(window.screen.width <= 1366){
+            initZoom = "67%";
+        }
+        else if(window.screen.width <= 1920){
+            initZoom = "75%";
+        }
+        
+
         this.state = {
-            device: (window.screen.width > 1800 ? 'xl' : 'lg'), view: 'drawner', leftPanel: false 
+            device: 'xl', zoom: initZoom, view: 'drawner', leftPanel: false 
         };
 
         this.mainViewRef = React.createRef();
@@ -38,6 +48,8 @@ export class LayoutBuilder extends Component
     }  
 
 	render(){
+        window.document.documentElement.style.zoom = this.state.zoom;
+
 		let main = 
 			<div className="layout-builder">                
                 <Navbar bg="dark" variant="dark" onSelect={this.onNavbarSelect} expand="sm">
@@ -47,19 +59,34 @@ export class LayoutBuilder extends Component
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto" activeKey={(this.state.leftPanel ? 'collapse' : '')}>
+                        <Nav activeKey={(this.state.leftPanel ? 'collapse' : '')}>
                             {this.props.options.wordProcessor && <Nav.Link eventKey="wordbuilder"><FontAwesomeIcon icon={faFileWord} title="Word Builder"/></Nav.Link>}
                             <Nav.Link eventKey="collapse"><FontAwesomeIcon icon={faBars} title="Collapser"/></Nav.Link>
+                        </Nav>
+
                         {this.state.view == 'drawner' && <>
-                            <Nav.Link eventKey="undo"><FontAwesomeIcon icon={faUndo} title="Undo"/></Nav.Link>
-                            <Nav.Link eventKey="redo"><FontAwesomeIcon icon={faRedo} title="Redo"/></Nav.Link>
+                            <Nav className="separator"></Nav> 
+                            <Nav>
+                                <Nav.Link eventKey="undo"><FontAwesomeIcon icon={faUndo} title="Undo"/></Nav.Link>
+                                <Nav.Link eventKey="redo"><FontAwesomeIcon icon={faRedo} title="Redo"/></Nav.Link>
+                            </Nav>
                             </>
                         }
-                        </Nav>
+                        
+                        <Nav className="mr-auto"></Nav>
+
                         <Nav className="mr-auto" activeKey={this.state.view}>
+                            <Nav.Link eventKey="drawner" ><FontAwesomeIcon icon={faTh} title="Canevas"/></Nav.Link>
                             <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title="Preview"/></Nav.Link>
                             <Nav.Link eventKey="sourceCode"><FontAwesomeIcon icon={faCode} title="Code source"/></Nav.Link>
                         </Nav>
+
+                        <Nav activeKey={this.state.zoom}>
+                            <Nav.Link eventKey="67%"><FontAwesomeIcon icon={faExpand} title="67%" style={{fontSize: '.7rem'}}/></Nav.Link>
+                            <Nav.Link eventKey="75%"><FontAwesomeIcon icon={faExpand} title="75%"/></Nav.Link>
+                            <Nav.Link eventKey="100%"><FontAwesomeIcon icon={faExpand} title="100%" style={{fontSize: '1.3rem'}}/></Nav.Link>
+                        </Nav>
+                        <Nav className="separator"></Nav>
                         <Nav activeKey={this.state.device}>
                             <Nav.Link eventKey="xs"><FontAwesomeIcon icon={faMobileAlt} title="XS"/></Nav.Link>
                             <Nav.Link eventKey="sm"><FontAwesomeIcon icon={faTabletAlt} title="SM"/></Nav.Link>
@@ -67,6 +94,7 @@ export class LayoutBuilder extends Component
                             <Nav.Link eventKey="lg"><FontAwesomeIcon icon={faLaptop} title="LG"/></Nav.Link>
                             <Nav.Link eventKey="xl"><FontAwesomeIcon icon={faDesktop} title="XL"/></Nav.Link>    
                         </Nav>
+                        <Nav className="separator"></Nav>
                         <Button variant="success" onClick={this.onSaveAndClose}><FontAwesomeIcon icon={faSave} title="Enregistrer"/>{" Enregistrer"}</Button>
                     </Navbar.Collapse>
                 </Navbar>
@@ -81,13 +109,11 @@ export class LayoutBuilder extends Component
             this.props.onChange(this.mainViewRef.current.getData());
             this.props.onSelectBuilder('word');
         }
-        else if(eventKey === 'preview'){
-            let value = (this.state.view === eventKey);
-            this.setState({view: value ? 'drawner' : eventKey});
+        else if(['drawner', 'preview', 'sourceCode'].includes(eventKey)){
+            this.setState({view: eventKey});
         }
-        else if(eventKey === 'sourceCode'){
-            let value = (this.state.view === eventKey);
-            this.setState({view: value ? 'drawner' : eventKey});
+        else if(['67%', '75%', '100%'].includes(eventKey)){
+            this.setState({zoom: eventKey});            
         }
         else if(eventKey === 'collapse'){
             this.setState({leftPanel: !this.state.leftPanel});

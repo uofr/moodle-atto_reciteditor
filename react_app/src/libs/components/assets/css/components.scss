@@ -4,9 +4,10 @@
     .navbar{
         .navbar-nav{
             .nav-link.active{
-                color: #ffc107;
+                color: #28a745;
             }
         }
+        .separator{ width: .5px; background-color: #555; height: 30px; margin-right: 1rem;margin-left: 1rem;}
     }
     .main{
         padding: 10px; display: grid; grid-column-gap: 5px; grid-row-gap: 5px; background-color: #212529; height: calc(100% - 56px);
