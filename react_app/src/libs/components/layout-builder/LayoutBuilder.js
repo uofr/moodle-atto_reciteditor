@@ -114,10 +114,10 @@ export class LayoutBuilder extends Component
         function getScale(device){
             let result = 1;
 
-            if(window.innerWidth < device.width){
+            if(window.innerWidth <= device.width){
                 result = (window.innerWidth - 380 - 10) / device.width;
             }
-            else if(window.innerHeight < device.height){
+            else if(window.innerHeight <= device.height){
                 result = (window.innerHeight - 56 -10) / device.height;
             }
 
