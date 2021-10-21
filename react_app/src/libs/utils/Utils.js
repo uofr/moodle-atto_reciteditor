@@ -271,7 +271,7 @@ export default class Utils{
     }
 
     static getCSSClasses(){
-        let iframe = window.document.getElementById("drawner-canvas");
+        let iframe = window.document.getElementById("designer-canvas");
         let allRules = [];
         let sSheetList = iframe.contentDocument.styleSheets;
         for (let sSheet = 0; sSheet < sSheetList.length; sSheet++) {
@@ -1065,5 +1065,23 @@ export class UtilsHTML{
         }
 
         return result;
+    }
+
+    static getBoundingClientRect(el, zoom){
+        zoom = zoom || 1;
+        let data = JSON.parse(JSON.stringify(el.getBoundingClientRect()));
+
+        if (zoom !== 1) {
+            data.x = data.x * zoom;
+            data.y = data.y * zoom;
+            data.top = data.top * zoom;
+            data.left = data.left * zoom;
+            data.right = data.right * zoom;
+            data.bottom = data.bottom * zoom;
+            data.width = data.width * zoom; 
+            data.height = data.height * zoom;
+        }
+
+        return data;
     }
 }

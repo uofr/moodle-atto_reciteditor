@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { ButtonToolbar, ButtonGroup, Button, Modal, Form, Col } from 'react-bootstrap';
+import { ButtonToolbar, ButtonGroup, Button } from 'react-bootstrap';
 import {faArrowsAlt, faEdit, faBold, faArrowUp,faArrowDown, faTrashAlt, faClone, faSave, faTimes, faItalic, faUnderline, faStrikethrough, faPuzzlePiece} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import {BtnSetCssProp} from '../ButtonsBar';
 import {TemplateForm} from './ComponentsCollection';
+import { UtilsHTML } from '../../utils/Utils';
 
 export class Canvas extends Component
 {
@@ -38,7 +39,7 @@ export class CanvasElement{
         this.onClickHandler = this.onClickHandler.bind(this);
         this.onClick = this.onClick.bind(this);
         this.onDblClick = this.onDblClick.bind(this);
-        this.onMouseOver = this.onMouseOver.bind(this);
+        this.onMouseOver = this.onMouseOver.bind(this); 
         this.onMouseOut = this.onMouseOut.bind(this);
         this.onSelectCallback = onSelectCallback;
         this.onDropCallback = onDropCallback;
@@ -226,7 +227,8 @@ export class FloatingMenu extends Component{
         onMoveNodeDown: null,
         onDeleteElement: null,
         onCloneNode: null,
-        onSaveTemplate: null
+        onSaveTemplate: null,
+        device: null
     };      
 
     constructor(props){
@@ -242,17 +244,18 @@ export class FloatingMenu extends Component{
         
         if(this.props.posCanvas === null){ return null;}
         if(this.props.selectedElement === null){ return null;}
+        if(this.props.device === null){ return null;}
         if(this.props.selectedElement.getAttribute('contenteditable') === 'true'){ return null; }
 
         let style = {display: 'block', top: 0, left: 0};
 
         let posCanvas = this.props.posCanvas;
-        let posEl = (this.props.selectedElement === null ? null : this.props.selectedElement.getBoundingClientRect());
+        let posEl = UtilsHTML.getBoundingClientRect(this.props.selectedElement, this.props.device.scale);
 
         style.top = Math.max(posCanvas.top + posEl.top - 32, 0);
         style.left = posCanvas.left + posEl.left;
 
-        let main = 
+        let main =  
             <div className='floating-menu' style={style}>
                 <ButtonToolbar aria-label="Toolbar with Button groups">
                     <ButtonGroup size="sm">
@@ -285,7 +288,8 @@ export class NodeTextEditing extends Component{
     static defaultProps = {
         posCanvas: null,
         selectedElement: null,
-        window: null
+        window: null,
+        device: null
     };      
 
     constructor(props){
@@ -295,12 +299,13 @@ export class NodeTextEditing extends Component{
     render(){
         if(this.props.posCanvas === null){ return null;}
         if(this.props.selectedElement === null){ return null;}
+        if(this.props.device === null){ return null;}
         if(this.props.selectedElement.getAttribute('contenteditable') !== 'true'){ return null; }
         
         let style = {position: 'absolute', display: 'block', top: 0, left: 0};
 
         let posCanvas = this.props.posCanvas;
-        let posEl = (this.props.selectedElement === null ? null : this.props.selectedElement.getBoundingClientRect());
+        let posEl = UtilsHTML.getBoundingClientRect(this.props.selectedElement, this.props.device.scale);
 
         style.top = Math.max(posCanvas.top + posEl.top - 32, 0);
         style.left = posCanvas.left + posEl.left;

@@ -30,17 +30,8 @@ export class LayoutBuilder extends Component
         this.onNavbarSelect = this.onNavbarSelect.bind(this);
         this.onSaveAndClose = this.onSaveAndClose.bind(this);
 
-        let initZoom = "100%";
-        if(window.screen.width <= 1366){
-            initZoom = "67%";
-        }
-        else if(window.screen.width <= 1920){
-            initZoom = "75%";
-        }
-        
-
         this.state = {
-            device: 'xl', zoom: initZoom, view: 'drawner', leftPanel: false 
+            device: 'xl', zoom: 1, view: 'designer', leftPanel: false 
         };
 
         this.mainViewRef = React.createRef();
@@ -48,8 +39,6 @@ export class LayoutBuilder extends Component
     }  
 
 	render(){
-        window.document.documentElement.style.zoom = this.state.zoom;
-
 		let main = 
 			<div className="layout-builder">                
                 <Navbar bg="dark" variant="dark" onSelect={this.onNavbarSelect} expand="sm">
@@ -64,7 +53,7 @@ export class LayoutBuilder extends Component
                             <Nav.Link eventKey="collapse"><FontAwesomeIcon icon={faBars} title="Collapser"/></Nav.Link>
                         </Nav>
 
-                        {this.state.view == 'drawner' && <>
+                        {this.state.view == 'designer' && <>
                             <Nav className="separator"></Nav> 
                             <Nav>
                                 <Nav.Link eventKey="undo"><FontAwesomeIcon icon={faUndo} title="Undo"/></Nav.Link>
@@ -76,15 +65,15 @@ export class LayoutBuilder extends Component
                         <Nav className="mr-auto"></Nav>
 
                         <Nav className="mr-auto" activeKey={this.state.view}>
-                            <Nav.Link eventKey="drawner" ><FontAwesomeIcon icon={faTh} title="Canevas"/></Nav.Link>
+                            <Nav.Link eventKey="designer" ><FontAwesomeIcon icon={faTh} title="Canevas"/></Nav.Link>
                             <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title="Preview"/></Nav.Link>
                             <Nav.Link eventKey="sourceCode"><FontAwesomeIcon icon={faCode} title="Code source"/></Nav.Link>
                         </Nav>
 
                         <Nav activeKey={this.state.zoom}>
-                            <Nav.Link eventKey="67%"><FontAwesomeIcon icon={faExpand} title="67%" style={{fontSize: '.7rem'}}/></Nav.Link>
-                            <Nav.Link eventKey="75%"><FontAwesomeIcon icon={faExpand} title="75%"/></Nav.Link>
-                            <Nav.Link eventKey="100%"><FontAwesomeIcon icon={faExpand} title="100%" style={{fontSize: '1.3rem'}}/></Nav.Link>
+                            <Nav.Link eventKey="0.7"><FontAwesomeIcon icon={faExpand} title="70%" style={{fontSize: '.7rem'}}/></Nav.Link>
+                            <Nav.Link eventKey="0.85"><FontAwesomeIcon icon={faExpand} title="85%"/></Nav.Link>
+                            <Nav.Link eventKey="1"><FontAwesomeIcon icon={faExpand} title="100%" style={{fontSize: '1.3rem'}}/></Nav.Link>
                         </Nav>
                         <Nav className="separator"></Nav>
                         <Nav activeKey={this.state.device}>
@@ -98,7 +87,7 @@ export class LayoutBuilder extends Component
                         <Button variant="success" onClick={this.onSaveAndClose}><FontAwesomeIcon icon={faSave} title="Enregistrer"/>{" Enregistrer"}</Button>
                     </Navbar.Collapse>
                 </Navbar>
-                <MainView ref={this.mainViewRef} content={this.props.content} device={this.state.device} view={this.state.view} leftPanel={this.state.leftPanel} historyManager={this.historyManager}/>
+                <MainView ref={this.mainViewRef} content={this.props.content} zoom={this.state.zoom} device={this.getDeviceDimension()} view={this.state.view} leftPanel={this.state.leftPanel} historyManager={this.historyManager}/>
             </div>;
 
 		return (main);
@@ -109,10 +98,10 @@ export class LayoutBuilder extends Component
             this.props.onChange(this.mainViewRef.current.getData());
             this.props.onSelectBuilder('word');
         }
-        else if(['drawner', 'preview', 'sourceCode'].includes(eventKey)){
+        else if(['designer', 'preview', 'sourceCode'].includes(eventKey)){
             this.setState({view: eventKey});
         }
-        else if(['67%', '75%', '100%'].includes(eventKey)){
+        else if(['0.7', '0.85', '1'].includes(eventKey)){
             this.setState({zoom: eventKey});            
         }
         else if(eventKey === 'collapse'){
@@ -133,13 +122,29 @@ export class LayoutBuilder extends Component
         let content = this.mainViewRef.current.getData();
         this.props.onSaveAndClose(content);
     }
+
+    getDeviceDimension(){
+        let device = null;
+        
+        switch(this.state.device){
+            case 'xs': device = {width: 375, height: 667, scale: 1}; break;
+            case 'sm': device = {width: 768, height: 1024, scale: 0.67}; break;
+            case 'md': device = {width: 1024, height: 768, scale: 0.89}; break;
+            case 'lg': device = {width: 1366, height: 768, scale: 0.83}; break;
+            case 'xl':
+            default: device = {width: 1500, height: 1050, scale: 1}; 
+        }
+
+        return device;
+    }
 }
 
 class MainView extends Component{
     static defaultProps = {
         content: "",
-        device: "",
-        view: "drawner",
+        device: null,
+        zoom: 1,
+        view: "designer",
         leftPanel: false,
         historyManager: null,
     };
@@ -165,13 +170,13 @@ class MainView extends Component{
         this.setData = this.setData.bind(this);
 
         this.canvasState = {
-            drawner: new DrawnerState(this, this.props.historyManager),
+            designer: new DesignerState(this, this.props.historyManager),
             preview: new PreviewState(this),
             sourceCode: new SourceCodeState(this),
         }
 
         this.state = {
-            canvasState: 'drawner',
+            canvasState: 'designer',
             selectedElement: null,
             collapsed: {
                 leftPanelOnHover: false, components: false, properties: true, treeView: false,
@@ -234,7 +239,7 @@ class MainView extends Component{
     render(){
         let main =
             <div className="main" data-left-area-collapsed={(this.props.leftPanel ? "1" : "0")}>
-                <div className="left-area" onMouseLeave={this.onMouseLeave} >
+                <div className="left-area" onMouseLeave={this.onMouseLeave} style={{transform: `scale(${this.props.zoom})`, transformOrigin: "0 0"}}>
                     {this.props.leftPanel && !this.state.collapsed.leftPanelOnHover ? 
                         <div className="panel" data-status='close' onMouseEnter={this.onMouseEnter} >
                             <div><FontAwesomeIcon icon={faPuzzlePiece} title="Composants"/></div>
@@ -272,7 +277,7 @@ class MainView extends Component{
                                 </Card.Header>
                                 {!this.state.collapsed.treeView && <div className="heightanim">
                                     <Card.Body>
-                                        <TreeView data={this.canvasState.drawner.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} view={this.props.view}/>
+                                        <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} view={this.props.view}/>
                                     </Card.Body>
                                 </div>}
                             </Card>
@@ -281,8 +286,8 @@ class MainView extends Component{
                 </div>
                 
                 <div className="center-area">
-                    {this.canvasState.drawner.render(this.props.view === 'drawner', this.state.selectedElement)}
-                    {this.canvasState.preview.render(this.props.view === 'preview', this.state.selectedElement)}
+                    {this.canvasState.designer.render(this.props.view === 'designer', this.state.selectedElement)}
+                    {this.canvasState.preview.render(this.props.view === 'preview', this.state.selectedElement)} 
                     {this.canvasState.sourceCode.render(this.props.view === 'sourceCode', this.state.selectedElement)}
                 </div>
             </div>;
@@ -348,7 +353,7 @@ class MainView extends Component{
         let p = null;
 
         if(type === 'l'){
-            let el = this.canvasState.drawner.getBody() || null;
+            let el = this.canvasState.designer.getBody() || null;
             if(el === null){ return; }
 
             el = el.firstChild;
@@ -452,22 +457,7 @@ class CanvasState{
     onSelectElement(el, selectedElement, collapsed){ 
         let result = {el: el, collapsed: collapsed };
         return result;
-    }
-
-    getDeviceDimension(){
-        let device = null;
-        
-        switch(this.mainView.props.device){
-            case 'xs': device = {width: 360, height: 640}; break;
-            case 'sm': device = {width: 576, height: 640}; break;
-            case 'md': device = {width: 768, height: 640}; break;
-            case 'lg': device = {width: 992, height: 640}; break;
-            case 'xl':
-            default: device = {width: 1500, height: 1050}; 
-        }
-
-        return device;
-    }
+    }  
 
     htmlCleaning(htmlDoc){
         htmlDoc = htmlDoc || null;
@@ -493,9 +483,19 @@ class CanvasState{
             item.removeAttribute("draggable");
         });
     }
+
+    getStyle(){
+        let style = {width: this.mainView.props.device.width, height: this.mainView.props.device.height};
+        if(this.mainView.props.device.scale !== 1){
+            style.transform = `scale(${this.mainView.props.device.scale})`;
+            style.transformOrigin = "0 0";
+        } 
+
+        return style;
+    }
 }
 
-class DrawnerState extends CanvasState{
+class DesignerState extends CanvasState{
     constructor(mainView, historyManager){
         super(mainView);
 
@@ -505,13 +505,13 @@ class DrawnerState extends CanvasState{
     }
 
     onLoadFrame(){
-        let iframe = window.document.getElementById("drawner-canvas");
+        let iframe = window.document.getElementById("designer-canvas");
         if(iframe){
             this.onInit(iframe);
             return;
         }
         else{
-            console.log("Loading drawner iframe...");
+            console.log("Loading designer iframe...");
             setTimeout(this.onLoadFrame, 500);
         }
     }
@@ -528,32 +528,30 @@ class DrawnerState extends CanvasState{
 		head.appendChild(el);
 
         el = document.createElement("link");
-		el.setAttribute("href", `${Assets.CanvasContentCSS}?v=${Math.floor(Math.random() * 100)}`);
+		el.setAttribute("href", `${Assets.CanvasDesignerCSS}`);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
-
-        body.parentElement.classList.add("canvas-content");
 
         // pure JS
         CanvasElement.create(body, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onEditNodeText);
 
         // React JS
-        //body.appendChild(doc.firstChild);
+        //body.appendChild(doc.firstChild);        
     }
 
     render(show, selectedElement){
-        let posCanvas = (this.iFrame === null ? null : this.iFrame.getBoundingClientRect());
-
+        let posCanvas = (this.iFrame === null ? null : this.iFrame.getBoundingClientRect());        
+ 
         let main = 
             <Canvas style={{display: (show ? 'flex' : 'none') }}>
-                <iframe id="drawner-canvas" className="canvas" style={this.getDeviceDimension()}></iframe>
+                <iframe id="designer-canvas" className="canvas" style={this.getStyle()}></iframe>
                 <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement} onDragElement={this.mainView.onDragStart}  onEdit={this.mainView.onEditNodeText}
                             onDeleteElement={this.mainView.onDeleteElement} onMoveNodeUp={this.mainView.onMoveNodeUp} onMoveNodeDown={this.mainView.onMoveNodeDown} 
-                             onCloneNode={this.mainView.onCloneNode} onSaveTemplate={this.mainView.onSaveTemplate} />
-                <NodeTextEditing posCanvas={posCanvas} window={this.window} selectedElement={selectedElement} />
+                             onCloneNode={this.mainView.onCloneNode} onSaveTemplate={this.mainView.onSaveTemplate} device={this.mainView.props.device} />
+                <NodeTextEditing posCanvas={posCanvas} window={this.window} selectedElement={selectedElement} device={this.mainView.props.device}/>
             </Canvas>;
 
-        return main;
+        return main; 
     }   
 
     onSelectElement(el, selectedElement, collapsed){
@@ -694,7 +692,7 @@ class DrawnerState extends CanvasState{
                 CanvasElement.create(body, that.mainView.onSelectElement, that.mainView.onDragEnd, that.mainView.onEditNodeText);
             }
             else{
-                console.log("Loading drawner canvas...");
+                console.log("Loading designer canvas...");
                 setTimeout(loading, 500);
             }
         }
@@ -738,8 +736,7 @@ class SourceCodeState extends CanvasState{
     }
 
     render(show, selectedElement){
-        let style = this.getDeviceDimension();
-        style.display = (show ? 'block' : 'none');
+        let style = {width: this.mainView.props.device.width, height: window.innerHeight - 70, display: (show ? 'block' : 'none')};
         return <SourceCodeEditor queryStr={this.queryStr} style={style} value={this.data} onChange={this.onChange}/>
     }
 
@@ -815,6 +812,11 @@ class PreviewState extends CanvasState{
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
+        el = document.createElement("link");
+		el.setAttribute("href", `${Assets.CanvasCSS}`);
+		el.setAttribute("rel", "stylesheet");
+		head.appendChild(el);
+
         this.iFrame.addEventListener("click", function(e) {//Prevent links from working on preview
             if (e.target.tagName == 'A' || e.target.tagName == 'BUTTON'){
                 e.preventDefault();
@@ -825,7 +827,7 @@ class PreviewState extends CanvasState{
     render(show, selectedElement){
         let main = 
             <Canvas style={{display: (show ? 'flex' : 'none') }}> 
-                <iframe id="preview-canvas" className="canvas" style={this.getDeviceDimension()}></iframe>
+                <iframe id="preview-canvas" className="canvas" style={this.getStyle()}></iframe>
             </Canvas>;
         return main;
     }

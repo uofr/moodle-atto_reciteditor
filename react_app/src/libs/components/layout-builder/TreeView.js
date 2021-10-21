@@ -10,7 +10,7 @@ export class TreeView extends Component{
         data: null,
         onSelect: null,
         selectedElement: null,
-        view: 'drawner'
+        view: 'designer'
     };
     
     constructor(props){

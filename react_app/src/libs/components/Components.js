@@ -31,7 +31,8 @@ export class Assets{
     static ImageEmpty = 'https://recitfad.ca/widgets/assets/images/header4.jpg'; //require('./assets/images/empty.jpg');
     static ImageEmptyHD = Assets.ImageEmpty; //require('./assets/images/empty-hd.jpg');
 
-    static CanvasContentCSS = './assets/css/canvas-content.css';
+    static CanvasCSS = './assets/css/canvas.css';
+    static CanvasDesignerCSS = './assets/css/designer-canvas.css';
    // static ContentCSS = './assets/css/content.css'; it is already in Moodle theme
     //static ContentScript = './assets/js/script.js'; 
 
