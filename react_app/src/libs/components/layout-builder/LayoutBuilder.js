@@ -30,12 +30,10 @@ export class LayoutBuilder extends Component
         this.onNavbarSelect = this.onNavbarSelect.bind(this);
         this.onSaveAndClose = this.onSaveAndClose.bind(this);
 
-        this.state = {
-            device: 'xl', zoom: 1, view: 'designer', leftPanel: false 
-        };
+        this.state = { device: (window.screen.width <= 1920 ? 'lg' : 'xl'), view: 'designer'}; 
 
         this.mainViewRef = React.createRef();
-        this.historyManager = new HistoryManager();
+        this.historyManager = new HistoryManager(); 
     }  
 
 	render(){
@@ -48,19 +46,9 @@ export class LayoutBuilder extends Component
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav activeKey={(this.state.leftPanel ? 'collapse' : '')}>
+                        <Nav>
                             {this.props.options.wordProcessor && <Nav.Link eventKey="wordbuilder"><FontAwesomeIcon icon={faFileWord} title="Word Builder"/></Nav.Link>}
-                            <Nav.Link eventKey="collapse"><FontAwesomeIcon icon={faBars} title="Collapser"/></Nav.Link>
                         </Nav>
-
-                        {this.state.view == 'designer' && <>
-                            <Nav className="separator"></Nav> 
-                            <Nav>
-                                <Nav.Link eventKey="undo"><FontAwesomeIcon icon={faUndo} title="Undo"/></Nav.Link>
-                                <Nav.Link eventKey="redo"><FontAwesomeIcon icon={faRedo} title="Redo"/></Nav.Link>
-                            </Nav>
-                            </>
-                        }
                         
                         <Nav className="mr-auto"></Nav>
 
@@ -70,12 +58,15 @@ export class LayoutBuilder extends Component
                             <Nav.Link eventKey="sourceCode"><FontAwesomeIcon icon={faCode} title="Code source"/></Nav.Link>
                         </Nav>
 
-                        <Nav activeKey={this.state.zoom}>
-                            <Nav.Link eventKey="0.7"><FontAwesomeIcon icon={faExpand} title="70%" style={{fontSize: '.7rem'}}/></Nav.Link>
-                            <Nav.Link eventKey="0.85"><FontAwesomeIcon icon={faExpand} title="85%"/></Nav.Link>
-                            <Nav.Link eventKey="1"><FontAwesomeIcon icon={faExpand} title="100%" style={{fontSize: '1.3rem'}}/></Nav.Link>
-                        </Nav>
-                        <Nav className="separator"></Nav>
+                        {this.state.view == 'designer' && <>
+                            <Nav>
+                                <Nav.Link eventKey="undo"><FontAwesomeIcon icon={faUndo} title="Undo"/></Nav.Link>
+                                <Nav.Link eventKey="redo"><FontAwesomeIcon icon={faRedo} title="Redo"/></Nav.Link>
+                            </Nav>
+                            <Nav className="separator"></Nav>
+                            </>
+                        }
+
                         <Nav activeKey={this.state.device}>
                             <Nav.Link eventKey="xs"><FontAwesomeIcon icon={faMobileAlt} title="XS"/></Nav.Link>
                             <Nav.Link eventKey="sm"><FontAwesomeIcon icon={faTabletAlt} title="SM"/></Nav.Link>
@@ -87,7 +78,7 @@ export class LayoutBuilder extends Component
                         <Button variant="success" onClick={this.onSaveAndClose}><FontAwesomeIcon icon={faSave} title="Enregistrer"/>{" Enregistrer"}</Button>
                     </Navbar.Collapse>
                 </Navbar>
-                <MainView ref={this.mainViewRef} content={this.props.content} zoom={this.state.zoom} device={this.getDeviceDimension()} view={this.state.view} leftPanel={this.state.leftPanel} historyManager={this.historyManager}/>
+                <MainView ref={this.mainViewRef} content={this.props.content} device={this.getDeviceDimension()} view={this.state.view} historyManager={this.historyManager}/>
             </div>;
 
 		return (main);
@@ -100,12 +91,6 @@ export class LayoutBuilder extends Component
         }
         else if(['designer', 'preview', 'sourceCode'].includes(eventKey)){
             this.setState({view: eventKey});
-        }
-        else if(['0.7', '0.85', '1'].includes(eventKey)){
-            this.setState({zoom: eventKey});            
-        }
-        else if(eventKey === 'collapse'){
-            this.setState({leftPanel: !this.state.leftPanel});
         }
         else if(eventKey === 'undo'){
             this.historyManager.onUndo(this.mainViewRef.current.setData, this.mainViewRef.current.getData());
@@ -126,14 +111,29 @@ export class LayoutBuilder extends Component
     getDeviceDimension(){
         let device = null;
         
+        function getScale(device){
+            let result = 1;
+
+            if(window.innerWidth < device.width){
+                result = (window.innerWidth - 380 - 10) / device.width;
+            }
+            else if(window.innerHeight < device.height){
+                result = (window.innerHeight - 56 -10) / device.height;
+            }
+
+            return result;
+        }
+
         switch(this.state.device){
             case 'xs': device = {width: 375, height: 667, scale: 1}; break;
-            case 'sm': device = {width: 768, height: 1024, scale: 0.67}; break;
-            case 'md': device = {width: 1024, height: 768, scale: 0.89}; break;
-            case 'lg': device = {width: 1366, height: 768, scale: 0.83}; break;
+            case 'sm': device = {width: 768, height: 1024, scale: 1}; break;
+            case 'md': device = {width: 1024, height: 768, scale: 1}; break;
+            case 'lg': device = {width: 1366, height: 768, scale: 1}; break;
             case 'xl':
             default: device = {width: 1500, height: 1050, scale: 1}; 
         }
+
+        device.scale = getScale(device);
 
         return device;
     }
@@ -143,9 +143,7 @@ class MainView extends Component{
     static defaultProps = {
         content: "",
         device: null,
-        zoom: 1,
         view: "designer",
-        leftPanel: false,
         historyManager: null,
     };
 
@@ -164,8 +162,6 @@ class MainView extends Component{
         this.setCollapse = this.setCollapse.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
-        this.onMouseEnter = this.onMouseEnter.bind(this);
-        this.onMouseLeave = this.onMouseLeave.bind(this);
         this.getData = this.getData.bind(this);
         this.setData = this.setData.bind(this);
 
@@ -178,9 +174,7 @@ class MainView extends Component{
         this.state = {
             canvasState: 'designer',
             selectedElement: null,
-            collapsed: {
-                leftPanelOnHover: false, components: false, properties: true, treeView: false,
-            }
+            collapsed: {components: false, properties: true, treeView: false}
         };
     }
 
@@ -237,52 +231,42 @@ class MainView extends Component{
     }
 
     render(){
+        let panelBodyHeight = 75;
+        let openPanels = (!this.state.collapsed.components ? 1 : 0) + (!this.state.collapsed.properties ? 1 : 0) + (!this.state.collapsed.treeView ? 1 : 0);
+        panelBodyHeight = `${panelBodyHeight / openPanels}vh`;
+
         let main =
-            <div className="main" data-left-area-collapsed={(this.props.leftPanel ? "1" : "0")}>
-                <div className="left-area" onMouseLeave={this.onMouseLeave} style={{transform: `scale(${this.props.zoom})`, transformOrigin: "0 0"}}>
-                    {this.props.leftPanel && !this.state.collapsed.leftPanelOnHover ? 
-                        <div className="panel" data-status='close' onMouseEnter={this.onMouseEnter} >
-                            <div><FontAwesomeIcon icon={faPuzzlePiece} title="Composants"/></div>
-                            <div><FontAwesomeIcon icon={faSlidersH} title="Proprietés"/></div>
-                            <div><FontAwesomeIcon icon={faStream} title="Arborescence"/></div>
-                        </div>
-                    :
-                        <div className="panel" data-status='open'>
-                            <Card>
-                                <Card.Header onClick={() => this.setCollapse('components')}>
-                                    <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.components ? faAngleRight : faAngleDown)}/>
-                                    Composants
-                                </Card.Header>
-                                {!this.state.collapsed.components && <div className="heightanim">
-                                    <Card.Body>
-                                        <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate}/>
-                                    </Card.Body>
-                                </div>}
-                            </Card>
+            <div className="main">
+                <div className="left-area" >
+                    <div className="panel">
+                        <Card>
+                            <Card.Header onClick={() => this.setCollapse('components')}>
+                                <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.components ? faAngleRight : faAngleDown)}/>
+                                Composants
+                            </Card.Header>
+                            <Card.Body data-collapsed={(this.state.collapsed.components ? 1 : 0)} style={{height: panelBodyHeight}}>
+                                <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate}/>
+                            </Card.Body>
+                        </Card>
 
-                            <Card>
-                                <Card.Header onClick={() => this.setCollapse('properties')}>
-                                    <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/>Proprietés
-                                </Card.Header>
-                                {!this.state.collapsed.properties && <div className="heightanim">
-                                    <Card.Body className="properties">
-                                        <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement}/>
-                                    </Card.Body>
-                                </div>}
-                            </Card>
+                        <Card>
+                            <Card.Header onClick={() => this.setCollapse('properties')}>
+                                <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/>Proprietés
+                            </Card.Header>
+                            <Card.Body className="properties"  data-collapsed={(this.state.collapsed.properties ? 1 : 0)}  style={{height: panelBodyHeight}}>
+                                <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement}/>
+                            </Card.Body>
+                        </Card>
 
-                            <Card>
-                                <Card.Header onClick={() => this.setCollapse('treeView')}>
-                                    <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/>Arborescence
-                                </Card.Header>
-                                {!this.state.collapsed.treeView && <div className="heightanim">
-                                    <Card.Body>
-                                        <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} view={this.props.view}/>
-                                    </Card.Body>
-                                </div>}
-                            </Card>
-                        </div>
-                    }
+                        <Card>
+                            <Card.Header onClick={() => this.setCollapse('treeView')}>
+                                <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/>Arborescence
+                            </Card.Header>
+                            <Card.Body data-collapsed={(this.state.collapsed.treeView ? 1 : 0)}  style={{height: panelBodyHeight}}>
+                                <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} view={this.props.view}/>
+                            </Card.Body>
+                        </Card>
+                    </div>
                 </div>
                 
                 <div className="center-area">
@@ -405,18 +389,6 @@ class MainView extends Component{
         data[attr] = !data[attr];
         this.setState({collapsed: data});
     }
-
-    onMouseEnter(){
-        if(this.props.leftPanel){
-            this.setCollapse('leftPanelOnHover');
-        }
-    }
-
-    onMouseLeave(){
-        if(this.props.leftPanel){
-            this.setCollapse('leftPanelOnHover');
-        }
-    }
 }
 
 class CanvasState{
@@ -486,7 +458,7 @@ class CanvasState{
 
     getStyle(){
         let style = {width: this.mainView.props.device.width, height: this.mainView.props.device.height};
-        if(this.mainView.props.device.scale !== 1){
+        if(this.mainView.props.device.height > window.innerHeight){
             style.transform = `scale(${this.mainView.props.device.scale})`;
             style.transformOrigin = "0 0";
         } 
@@ -567,7 +539,6 @@ class DesignerState extends CanvasState{
             
             result.collapsed.components = false;
             result.collapsed.properties = true;
-           // result.collapsed.leftPanelOnHover = false;
             result.el = null;
         }
        /* else if(selectedElement !== null){ 
@@ -575,7 +546,6 @@ class DesignerState extends CanvasState{
             
             result.collapsed.components = false;
             result.collapsed.properties = true;
-            result.collapsed.leftPanelOnHover = false;
             result.el = null;
             return result; 
         }*/
@@ -600,7 +570,6 @@ class DesignerState extends CanvasState{
     
             result.collapsed.components = true;
             result.collapsed.properties = false;
-            //result.collapsed.leftPanelOnHover = true;
         }
 
         return result;
