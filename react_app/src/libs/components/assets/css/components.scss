@@ -12,101 +12,102 @@
 
 html{
     background-color: #555;
-    body{overflow: hidden; background-color: transparent;}
-}
-
-.layout-builder{
-    height: 100%;
-
-    .navbar{
-        .navbar-nav{
-            .nav-link.active{
-                color: #28a745;
-            }
-        }
-        .separator{ width: .5px; background-color: #555; height: 30px; margin-right: 1rem;margin-left: 1rem;}
-    }
-    .main{
-        padding: 10px; display: grid; grid-column-gap: 5px; grid-row-gap: 5px; background-color: transparent; height: calc(100% - 56px);
-        grid-template-columns: min-content auto; grid-template-rows: auto;
-
-        .left-area{ 
-            .card{margin-bottom: 1rem;
-                .card-body[data-collapsed="1"]{display: none; max-height: 0; transition: max-height 0.15s ease-out;}
-                .card-body[data-collapsed="0"]{overflow: scroll; max-height: 1000px;transition: max-height 0.25s ease-in;}
-            }
-            .panel{background-color: #FFF; width: 380px; zoom: 0.85;}
-            .tab-content{    border: 1px solid rgb(222, 226, 230); margin-top: 12px; padding: 1rem;  margin-left: -10px;}
-        }
-    
-        .center-area{ 
-            grid-column-start: 2; grid-column-end: 2; 
-            .canvas{
-                background-color: #FFF; border: 0; 
-            }        
-        }
-    }
-  
-    .component-list{
-        .template {
-            margin: 13px;
-            text-align: center;
-            width: 40%;
-            img {
-                max-width: 90%;
-                max-height: 100px;
-            }
-            p {
-                font-weight: 500; text-overflow: ellipsis; font-size: 13px;
-            }
-            .btn-toolbar {
-                position: relative;
-                bottom: 0;
-                margin-left: 0 !important;
-            }
-            .tplimg{
-                height: 100px;
-            }
-        }
-        
-        ul{list-style: none; padding-left: 0;
-            .token-section{ font-weight: 500;}
-            .token{
+    body{
+        overflow: hidden; background-color: transparent; 
+        #root{
+            .layout-builder{
+                .navbar{
+                    .navbar-nav{
+                        .nav-link.active{
+                            color: #28a745;
+                        }
+                    }
+                    .separator{ width: .5px; background-color: #555; height: 30px; margin-right: 1rem;margin-left: 1rem;}
+                }
+                .main{
+                    padding: 10px; display: grid; grid-column-gap: 5px; grid-row-gap: 5px; background-color: transparent; 
+                    grid-template-columns: min-content auto; grid-template-rows: auto;
+            
+                    .left-area{ 
+                        width: 380px; transform: scale(0.86); transform-origin: 0 0;
+                        .card{margin-bottom: 1rem;
+                            .card-body[data-collapsed="1"]{display: none; max-height: 0; transition: max-height 0.15s ease-out;}
+                            .card-body[data-collapsed="0"]{overflow: scroll; max-height: 9999px;transition: max-height 0.25s ease-in;}
+                        }
+                        .tab-content{    border: 1px solid rgb(222, 226, 230); margin-top: 12px; padding: 1rem;  margin-left: -10px;}
+                    }
                 
-                 margin: 3px; padding: 5px; text-align: center; cursor: grab; display: inline-flex;
-                 font-weight: 500; border-radius: 6px;
+                    .center-area{ 
+                        grid-column-start: 2; grid-column-end: 2; 
+                        .canvas{
+                            background-color: #FFF; border: 0; 
+                        }        
+                    }
+                }
+              
+                .component-list{
+                    .template {
+                        margin: 13px;
+                        text-align: center;
+                        width: 40%;
+                        img {
+                            max-width: 90%;
+                            max-height: 100px;
+                        }
+                        p {
+                            font-weight: 500; text-overflow: ellipsis; font-size: 13px;
+                        }
+                        .btn-toolbar {
+                            position: relative;
+                            bottom: 0;
+                            margin-left: 0 !important;
+                        }
+                        .tplimg{
+                            height: 100px;
+                        }
+                    }
+                    
+                    ul{list-style: none; padding-left: 0;
+                        .token-section{ font-weight: 500;}
+                        .token{
+                            
+                             margin: 3px; padding: 5px; text-align: center; cursor: grab; display: inline-flex;
+                             font-weight: 500; border-radius: 6px;
+                        }
+                        .token[data-type='native']{background-color: #6c757d; color: #FFF;}
+                        .token[data-type='bootstrap']{background-color: #007bff; color: #FFF;}
+                        .token[data-type='c']{background-color: #28a745; color: #FFF;}
+                    }
+                }
+            
+                .templatepreview {        
+                    position: fixed;
+                    top: 5%;
+                    left: 50%;
+                    z-index: 222;
+                    transform: translate(-50%);
+                    img {
+                        max-height: 50% !important;
+                    }
+                }
+                
+                .floating-menu{ position:absolute;}
+            
+                .tree-view{
+                    list-style: none; padding-left: 0;
+                    ul{
+                        list-style: none; padding-left: 1rem; 
+                        button{text-align: left;}
+                    }
+                }   
+                
+                /* Code Mirror */
+                .react-codemirror2{
+                    height: 100%;
+                    .CodeMirror {min-height: 300px; max-height: 90vh; height: auto;}
+                }
             }
-            .token[data-type='native']{background-color: #6c757d; color: #FFF;}
-            .token[data-type='bootstrap']{background-color: #007bff; color: #FFF;}
-            .token[data-type='c']{background-color: #28a745; color: #FFF;}
         }
-    }
-
-    .templatepreview {        
-        position: fixed;
-        top: 5%;
-        left: 50%;
-        z-index: 222;
-        transform: translate(-50%);
-        img {
-            max-height: 50% !important;
-        }
-    }
-    
-    .floating-menu{ position:absolute;}
-
-    .tree-view{
-        list-style: none; padding-left: 0;
-        ul{
-            list-style: none; padding-left: 1rem; 
-            button{text-align: left;}
-        }
-    }   
-    
-    /* Code Mirror */
-    .react-codemirror2{
-        height: 100%;
-        .CodeMirror {min-height: 300px; max-height: 90vh; height: auto;}
     }
 }
 
@@ -228,15 +229,16 @@ html{
 
 .layout-spacing{
     display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto auto; grid-gap: 1rem; margin: 1rem;
-    .item-1{grid-column: 2/3; grid-row: 1/2;}
-    .item-2{grid-column: 3/4; grid-row: 2/3; align-self: center;}
-    .item-3{grid-column: 2/3; grid-row: 3/4;}
-    .item-4{grid-column: 1/2; grid-row: 2/3;  align-self: center;}
-    .item-5{ grid-column: 2/3; grid-row: 2/3;  display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto auto; }
+    .item-x{padding: 3px;}
+    .item-1{grid-column: 2/3; grid-row: 1/2; @extend .item-x;}
+    .item-2{grid-column: 3/4; grid-row: 2/3; align-self: center; @extend .item-x;}
+    .item-3{grid-column: 2/3; grid-row: 3/4; @extend .item-x;}
+    .item-4{grid-column: 1/2; grid-row: 2/3;  align-self: center; @extend .item-x;}
+    .item-5{ grid-column: 2/3; grid-row: 2/3;  display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto auto; @extend .item-x;}
 }
 
 .color-selector{
-    background-color: #333; border-radius: 6px; padding: 3px;
+    background-color: #666; border-radius: 6px; padding: 3px;
 }
   
 /**********************************************************

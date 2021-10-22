@@ -114,10 +114,12 @@ export class LayoutBuilder extends Component
         function getScale(device){
             let result = 1;
 
-            if(window.innerWidth <= device.width){
+            if(window.innerWidth - 380 <= device.width){
+                // 380 = left panel width; 10 = padding
                 result = (window.innerWidth - 380 - 10) / device.width;
             }
             else if(window.innerHeight <= device.height){
+                // 380 = top navbar; 10 = padding
                 result = (window.innerHeight - 56 -10) / device.height;
             }
 
@@ -174,7 +176,7 @@ class MainView extends Component{
         this.state = {
             canvasState: 'designer',
             selectedElement: null,
-            collapsed: {components: false, properties: true, treeView: false}
+            collapsed: {components: false, properties: true, treeView: true}
         };
     }
 
@@ -231,42 +233,40 @@ class MainView extends Component{
     }
 
     render(){
-        let panelBodyHeight = 75;
+        let panelHeight = window.innerHeight - 56 - 10 - 100; // 56px = top navbar; 10px padding; card header = 100px
         let openPanels = (!this.state.collapsed.components ? 1 : 0) + (!this.state.collapsed.properties ? 1 : 0) + (!this.state.collapsed.treeView ? 1 : 0);
-        panelBodyHeight = `${panelBodyHeight / openPanels}vh`;
+        panelHeight = `${panelHeight / openPanels}px`;
 
         let main =
             <div className="main">
                 <div className="left-area" >
-                    <div className="panel">
-                        <Card>
-                            <Card.Header onClick={() => this.setCollapse('components')}>
-                                <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.components ? faAngleRight : faAngleDown)}/>
-                                Composants
-                            </Card.Header>
-                            <Card.Body data-collapsed={(this.state.collapsed.components ? 1 : 0)} style={{height: panelBodyHeight}}>
-                                <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate}/>
-                            </Card.Body>
-                        </Card>
+                    <Card>
+                        <Card.Header onClick={() => this.setCollapse('components')}>
+                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.components ? faAngleRight : faAngleDown)}/>
+                            Composants
+                        </Card.Header>
+                        <Card.Body data-collapsed={(this.state.collapsed.components ? 1 : 0)} style={{height: panelHeight}}>
+                            <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate}/>
+                        </Card.Body>
+                    </Card>
 
-                        <Card>
-                            <Card.Header onClick={() => this.setCollapse('properties')}>
-                                <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/>Proprietés
-                            </Card.Header>
-                            <Card.Body className="properties"  data-collapsed={(this.state.collapsed.properties ? 1 : 0)}  style={{height: panelBodyHeight}}>
-                                <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement}/>
-                            </Card.Body>
-                        </Card>
+                    <Card>
+                        <Card.Header onClick={() => this.setCollapse('properties')}>
+                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/>Proprietés
+                        </Card.Header>
+                        <Card.Body className="properties"  data-collapsed={(this.state.collapsed.properties ? 1 : 0)}  style={{height: panelHeight}}>
+                            <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement}/>
+                        </Card.Body>
+                    </Card>
 
-                        <Card>
-                            <Card.Header onClick={() => this.setCollapse('treeView')}>
-                                <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/>Arborescence
-                            </Card.Header>
-                            <Card.Body data-collapsed={(this.state.collapsed.treeView ? 1 : 0)}  style={{height: panelBodyHeight}}>
-                                <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} view={this.props.view}/>
-                            </Card.Body>
-                        </Card>
-                    </div>
+                    <Card>
+                        <Card.Header onClick={() => this.setCollapse('treeView')}>
+                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/>Arborescence
+                        </Card.Header>
+                        <Card.Body data-collapsed={(this.state.collapsed.treeView ? 1 : 0)}  style={{height: panelHeight}}>
+                            <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} view={this.props.view}/>
+                        </Card.Body>
+                    </Card>
                 </div>
                 
                 <div className="center-area">
