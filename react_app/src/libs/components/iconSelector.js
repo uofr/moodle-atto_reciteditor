@@ -28,8 +28,9 @@ export class IconSelector extends Component {
 
     buildIconList(){
         this.icons = {Fontello: [], FontAwesome: []};
-        let classes = Utils.getCSSClasses();
-        for (let c of classes){
+        let cssRules = UtilsMoodle.getThemeMoodleCssRules();
+
+        for (let c of cssRules){
             if (c.cssText.includes('content:')){
                 if (c.selectorText.startsWith('.fa-')){//FontAwesome
                     let css = c.selectorText.replace('::before', '')
@@ -64,7 +65,7 @@ export class IconSelector extends Component {
             <FormControl className={"InputText mb-3"} type="text" value={this.state.search} onChange={this.onSearch} placeholder={"Recherche"} />
             <IFrame style={{width: '100%', height: '70vh', border: '0'}}>
                 <div style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
-                    <link rel="stylesheet" href={UtilsMoodle.getBaseCss()}/>
+                    <link rel="stylesheet" href={UtilsMoodle.getThemeMoodleUrl()}/>
                     <div style={{backgroundColor: '#fff'}}>
                         {items}
                     </div>

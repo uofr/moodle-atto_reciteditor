@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import { faCheck} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Utils from '../utils/Utils';
+import {UtilsMoodle} from '../utils/Utils';
 
 export class ColorSelector extends Component {
     static defaultProps = {
@@ -20,11 +20,12 @@ export class ColorSelector extends Component {
         this.options = this.props.options;
 
         if (this.props.flags && this.props.flags.fetchFromTheme){
-            let classes = Utils.getCSSClasses();
-            for (let c of classes){
+            let cssRules = UtilsMoodle.getThemeMoodleCssRules();
+
+            for (let c of cssRules){
                 for (let i in this.options){
                     let css = '.' + this.props.flags.prefix+this.options[i].value;
-                    if (c.selectorText == css){
+                    if (c.selectorText === css){
                         this.options[i].style = {backgroundColor: c.style.backgroundColor, color: c.style.color, borderColor: c.style.backgroundColor};
                     }
                 }

@@ -494,9 +494,9 @@ class DesignerState extends CanvasState{
         let head = this.window.document.head;
         let body = this.window.document.body;
 
-        let el = document.createElement("link");
-		el.setAttribute("href", UtilsMoodle.getBaseCss());
-		el.setAttribute("rel", "stylesheet");
+        let el = document.createElement("style");
+		el.setAttribute("title", "theme-moodle");
+        el.innerHTML = UtilsHTML.cssRules2Str(UtilsMoodle.getThemeMoodleCssRules());
 		head.appendChild(el);
 
         el = document.createElement("link");
@@ -776,9 +776,9 @@ class PreviewState extends CanvasState{
         this.iFrame =  iframe.contentWindow || iframe.contentDocument;
         let head = this.iFrame.document.head;
 
-        let el = document.createElement("link");
-		el.setAttribute("href", UtilsMoodle.getBaseCss());
-		el.setAttribute("rel", "stylesheet");
+        let el = document.createElement("style");
+		el.setAttribute("title", "theme-moodle");
+        el.innerHTML = UtilsHTML.cssRules2Str(UtilsMoodle.getThemeMoodleCssRules());
 		head.appendChild(el);
 
         el = document.createElement("link");

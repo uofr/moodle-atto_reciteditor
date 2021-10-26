@@ -221,69 +221,7 @@ export default class Utils{
         });
         
         return vars;
-    }
-
-    static getColumnsInRow(row){
-        var child = row.children;
-        var cols = [];
-        for (var col of child){
-            for (var classn of col.classList){
-                if (classn.includes('col-')){
-                    cols.push(col);
-                    break;
-                }
-            }
-        }
-        return cols;
-    }
-
-    static removeClassFromPartialClassName(el, partialName){
-        for (var classn of el.classList){
-            if (classn.includes(partialName)){
-                el.classList.remove(classn);
-            }
-        }
-    }
-
-    static getAvailableFonts(){
-        let { fonts } = document;
-        const it = fonts.entries();
-
-        let arr = [];
-        let done = false;
-
-        while (!done) {
-            const font = it.next();
-            if (!font.done) {
-            arr.push(font.value[0].family);
-            } else {
-            done = font.done;
-            }
-        }
-
-        // converted to set then arr to filter repetitive values
-        let fontlist = [...new Set(arr)];
-        let list = [];
-        for (let f of fontlist){
-            list.push({text:f, value:f})
-        }
-        return list;
-    }
-
-    static getCSSClasses(){
-        let iframe = window.document.getElementById("designer-canvas");
-        let allRules = [];
-        let sSheetList = iframe.contentDocument.styleSheets;
-        for (let sSheet = 0; sSheet < sSheetList.length; sSheet++) {
-            let ruleList = sSheetList[sSheet].cssRules;
-            for (let rule = 0; rule < ruleList.length; rule ++) {
-                if (ruleList[rule].selectorText){
-                    allRules.push( ruleList[rule] );
-                }
-            }
-        }
-        return allRules;
-    }
+    }    
 
     static RGBToHex(rgb) {
         rgb = rgb || "rgb(0,0,0)";
@@ -408,15 +346,13 @@ export class UtilsMoodle
         return intersection.size > 0;
     }
 
-    static wwwRoot(){
- //       return M.cfg.wwwroot;
-    };
-
     static getAttoInterface(){
         let result = {
             setContent: function(){console.log('Atto interface not defined.'); }, 
             getContent: function(){console.log('Atto interface not defined.'); return null;}, 
             getSettings: function(){console.log('Atto interface not defined.'); return null; },
+            getThemeCssRules: function(){console.log('Atto interface not defined.'); return null; },
+            getThemeUrl: function(){console.log('Atto interface not defined.'); return null; },
             getFileTransferData: function(){console.log('Atto interface not defined.'); return null;}
         };
 
@@ -424,6 +360,8 @@ export class UtilsMoodle
             result.getContent = window.attoInterface.getContent || window.parent.attoInterface.getContent; // the editor content here is text and not html
             result.setContent = window.attoInterface.setContent || window.parent.attoInterface.setContent;
             result.getSettings = window.attoInterface.getSettings || window.parent.attoInterface.getSettings;
+            result.getThemeCssRules = window.attoInterface.getThemeCssRules || window.parent.attoInterface.getThemeCssRules;
+            result.getThemeUrl = window.attoInterface.getThemeUrl || window.parent.attoInterface.getThemeUrl;
             result.getFileTransferData = window.attoInterface.getFileTransferData || window.parent.attoInterface.getFileTransferData;
             return result;
         }else if (typeof M !== 'undefined' && M.cfg){
@@ -443,17 +381,22 @@ export class UtilsMoodle
         }
     }
 
-    static getBaseCss(){
+    static getThemeMoodleCssRules(){
         let attoInterface = UtilsMoodle.getAttoInterface();
 
         if(attoInterface !== null){
-            console.log(`Loading theme Moodle on ${this.constructor.name}`);
-            let settings = attoInterface.getSettings();
-            if (settings){
-                return `${settings.wwwroot}/theme/styles.php/${settings.theme}/${settings.themerev}_1/all`;
-            }
+            return attoInterface.getThemeCssRules();
         }
-        console.log(`Loading theme Bootstrap on ${this.constructor.name}`)
+        return [];
+    }
+
+    static getThemeMoodleUrl(){
+        let attoInterface = UtilsMoodle.getAttoInterface();
+
+        if(attoInterface !== null){
+            return attoInterface.getThemeUrl();
+        }
+        console.log(`Loading theme Bootstrap on ${this.constructor.name}`);
         return Assets.Bootstrap;
     }
 }
@@ -898,6 +841,41 @@ export class UtilsTreeStruct
 }
 
 export class UtilsHTML{
+    static cssRules2Str(cssRules){
+        let result = "";
+        
+        for(let rule of cssRules){
+            result += rule.cssText;
+        }
+ 
+        return result;
+    }
+
+    static getAvailableFonts(){
+        let { fonts } = document;
+        const it = fonts.entries();
+
+        let arr = [];
+        let done = false;
+
+        while (!done) {
+            const font = it.next();
+            if (!font.done) {
+            arr.push(font.value[0].family);
+            } else {
+            done = font.done;
+            }
+        }
+
+        // converted to set then arr to filter repetitive values
+        let fontlist = [...new Set(arr)];
+        let list = [];
+        for (let f of fontlist){
+            list.push({text:f, value:f})
+        }
+        return list;
+    }
+
     static getTableFromCell(cell){
         let table = cell;
         let counter = 0;

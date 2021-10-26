@@ -109,7 +109,7 @@ export class HTMLElementData{
                             {text: 'Monospace', value:'monospace'},
                             {text: 'Cursive', value:'cursive'},
                             {text: 'Fantasy', value:'Fantasy'},
-                            ...Utils.getAvailableFonts(),
+                            ...UtilsHTML.getAvailableFonts(),
                         ],
                         defaultValue: '',
                         onChange: function(el, value, data){

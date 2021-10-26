@@ -55,6 +55,31 @@ Y.namespace('M.atto_reciteditor').Button = Y.Base.create('button', Y.M.editor_at
             return result;
         }
 
+        var cssRulesBuffer = [];
+        popup.attoInterface.getThemeCssRules = function(){
+            var styleSheets = window.document.styleSheets;
+
+            if(cssRulesBuffer.length > 0){ return cssRulesBuffer;}
+
+            cssRulesBuffer = [];
+            for(var sheet of styleSheets){
+                // the only css rules we are looking for is the current theme or some custom css from theme-recit
+                if((sheet.href !== `${M.cfg.wwwroot}/theme/styles.php/${M.cfg.theme}/${M.cfg.themerev}_1/all`) && (sheet.title !== 'theme-recit-custom-css')){
+                    continue;
+                }
+
+                for(var rule of sheet.rules){
+                    cssRulesBuffer.push(rule);
+                }
+            }
+
+            return cssRulesBuffer;
+        }
+
+        popup.attoInterface.getThemeUrl = function(){
+            return `${M.cfg.wwwroot}/theme/styles.php/${M.cfg.theme}/${M.cfg.themerev}_1/all`;
+        }
+
         popup.attoInterface.getFileTransferData = function(){
             var host = that.get('host');
             var options = host.get('filepickeroptions').image || {};
