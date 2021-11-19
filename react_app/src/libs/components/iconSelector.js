@@ -31,7 +31,7 @@ export class IconSelector extends Component {
         let cssRules = UtilsMoodle.getThemeMoodleCssRules();
 
         for (let c of cssRules){
-            if (c.cssText.includes('content:')){
+            if (c.cssText.includes('content:') && c.selectorText){
                 if (c.selectorText.startsWith('.fa-')){//FontAwesome
                     let css = c.selectorText.replace('::before', '')
                     css = css.replace(':before', '').substr(1);
