@@ -572,7 +572,7 @@ class Token extends Component
                         </ButtonGroup>
                     </ButtonToolbar>
                 }
-                {this.state.imagePreview && 
+                {this.state.imagePreview && !this.props.showMenu &&
                     <div className='templatepreview'>
                         <img src={this.state.imagePreview}/>
                 </div>}   
@@ -619,7 +619,7 @@ class TokenTemplate extends Token{
                         </ButtonToolbar>
                     }
 
-                    {this.state.imagePreview && 
+                    {this.state.imagePreview && !this.props.showMenu &&
                         <div className='templatepreview'>
                             <img src={this.state.imagePreview}/>
                     </div>}
