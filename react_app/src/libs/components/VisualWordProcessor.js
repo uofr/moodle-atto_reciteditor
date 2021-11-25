@@ -1,16 +1,15 @@
 import React, { Component  } from 'react';
-import {Controlled  as CodeMirror} from 'react-codemirror2';
+import CodeMirror from '@uiw/react-codemirror';
 import MathJax from 'react-mathjax';
 import {ButtonsBar} from './ButtonsBar';
 import {JsNx, UtilsHTML} from '../utils/Utils';
 
 import * as iink from 'iink-js';
 import 'codemirror/lib/codemirror.css';
+import { html } from '@codemirror/lang-html';
 import 'codemirror/theme/material.css';
 var beautifyingHTML = require("pretty");
 
-require('codemirror/mode/xml/xml');
-require('codemirror/mode/javascript/javascript');
 
 export class VisualWordProcessor extends Component
 {
@@ -270,7 +269,7 @@ export class VisualWordProcessor extends Component
         if(this.state.flags.codeSource){ //Continue rendering textarea, so getValue when saving still works
             result = <>
                 <div style={{display:'none'}}>{textArea}</div>
-                <CodeMirror value={this.state.tmpContent} options={{mode: 'xml', tabSize: 4, theme: 'material', lineNumbers: true, electricChars: true}} onBeforeChange={(editor, data, value) => this.onChangeTmpContent(value)}/>
+                <CodeMirror value={this.state.tmpContent} theme="dark" extensions={[html()]} maxHeight="80vh" onChange={(editor, data, value) => this.onChangeTmpContent(value)}/>
                 </>;
         }
         else{
