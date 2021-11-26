@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { EditorView } from '@codemirror/view';
-import { html } from '@codemirror/lang-html';
+import { lintGutter } from '@codemirror/lint';
+import { html, htmlCompletion, autoCloseTags } from '@codemirror/lang-html';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 var beautifyingHTML = require("pretty");
@@ -39,7 +40,22 @@ export class SourceCodeEditor extends Component{
         if((prevProps.queryStr !== this.props.queryStr) && (this.props.queryStr.length > 0) && this.codeMirror){
             let pos = this.state.data.search(`data-tag-id="${this.props.queryStr}"`);
             let line = (this.state.data.substr(0, pos).match(/\n/g) || []).length;
-            this.codeMirror.current.editor.focus();
+            
+            let el = this.codeMirror.current.editor.querySelector('.cm-content');
+            if (el.childNodes[line]){
+                setTimeout(() => {
+                    let range = document.createRange()
+                    let sel = window.getSelection()
+                    
+                    range.selectNodeContents(el.childNodes[line])
+                    range.collapse(false)
+                    
+                    sel.removeAllRanges()
+                    sel.addRange(range)
+                    this.codeMirror.current.editor.focus()
+                }, 500);
+
+            }
             //this.codeMirror.current.view.dispatch({selection: {anchor: line}});
         }
     }
@@ -47,9 +63,7 @@ export class SourceCodeEditor extends Component{
     render(){
         let main = 
             <div style={this.props.style} className="react-codemirror">
-                <CodeMirror ref={this.codeMirror} value={this.state.data} maxHeight="80vh" theme="dark" width="100%" extensions={[html(), EditorView.lineWrapping]}
-                        options={{mode: 'text/html', tabSize: 4, lineNumbers: true, autofocus: true, lineWrapping: true}} 
-                        onChange={this.onChange}/>
+                <CodeMirror ref={this.codeMirror} value={this.state.data} maxHeight="80vh" theme="dark" width="100%" extensions={[html(), EditorView.lineWrapping, lintGutter(), htmlCompletion, autoCloseTags]} onChange={this.onChange}/>
             </div>;
 
         return main;
