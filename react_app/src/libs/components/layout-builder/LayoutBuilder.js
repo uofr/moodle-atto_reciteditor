@@ -705,7 +705,12 @@ class SourceCodeState extends CanvasState{
     }
 
     render(show, selectedElement){
-        let style = {width: this.mainView.props.device.width, height: window.innerHeight - 70, display: (show ? 'block' : 'none')};
+        let style = {
+            width: Math.min(this.mainView.props.device.width, window.innerWidth - 380 - 10), 
+            height: Math.min(this.mainView.props.device.height, window.innerHeight - 56 - 10), 
+            display: (show ? 'block' : 'none'),
+            overflowY: 'auto'
+        };
         return <SourceCodeEditor queryStr={this.queryStr} style={style} value={this.data} onChange={this.onChange}/>
     }
 

@@ -63,7 +63,7 @@ export class SourceCodeEditor extends Component{
     render(){
         let main = 
             <div style={this.props.style} className="react-codemirror">
-                <CodeMirror ref={this.codeMirror} value={this.state.data} maxHeight="80vh" theme="dark" width="100%" extensions={[html(), EditorView.lineWrapping, lintGutter(), htmlCompletion, autoCloseTags]} onChange={this.onChange}/>
+                <CodeMirror ref={this.codeMirror} value={this.state.data} theme="dark" extensions={[html(), EditorView.lineWrapping, lintGutter(), htmlCompletion, autoCloseTags]} onChange={this.onChange}/>
             </div>;
 
         return main;
