@@ -24,17 +24,17 @@ export class ComponentProperties extends Component{
     render(){
         if(this.props.element === null){ return null; }
         
-        let componentData = HTMLElementData.getElementData(null, this.props.element);
+        let elClass = HTMLElementData.getElementClass(null, this.props.element);
 
-        if(componentData === null){ return null;}
+        if(elClass === null){ return null;}
 
-        let properties = HTMLElementData.propertyList.filter(item => componentData.properties.includes(item.name));
+        let properties = HTMLElementData.propertyList.filter(item => elClass.properties.includes(item.name));
 
         
         if((properties === null) || (properties.length === 0)){ return null; }
         
         properties.sort((el1, el2) => { 
-            return componentData.properties.indexOf(el1.name) - componentData.properties.indexOf(el2.name)
+            return elClass.properties.indexOf(el1.name) - elClass.properties.indexOf(el2.name)
         });
 
         let bootstrapProps = properties.filter(item => item.type === 'bootstrap');
@@ -318,6 +318,7 @@ class TokenList extends Component{
         let main =
             <div className="tab-content">
                 {this.props.dataProvider.map((item, index) => {
+
                     let collapsed = ((typeof this.state.collapsed[item.name] !== "undefined") && (this.state.collapsed[item.name]));
                     let icon = collapsed ? faAngleRight : faAngleDown;
 
@@ -328,6 +329,8 @@ class TokenList extends Component{
                                 {item.name}
                             </li>
                             {!collapsed && item.children.map((item2, index2) => {
+                                if(!item2.visible){ return null; }
+
                                 return (<Token data={item2} key={index2} onDragEnd={this.props.onDragEnd} />);
                             })}
                         </ul>

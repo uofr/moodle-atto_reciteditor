@@ -4,6 +4,975 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LayoutSpacingEditor, Assets} from '../Components';
 import Utils, {UtilsHTML} from '../../utils/Utils';
 
+class HTMLElement{
+    constructor(name, tagName, type, properties){
+        this.name = name || "";
+        this.tagName = tagName || "";
+        this.type = type || "native";
+        this.properties = properties || [];
+        this.cssProp = {prefix: "bg"};
+        this.visible = true;
+    }
+
+    create(){ 
+        let el = document.createElement(this.tagName);
+        return el;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.tagName.toLowerCase() === this.tagName.toLowerCase());
+    }
+
+    createElementDZ(desc){
+        let el = document.createElement("div");
+        el.classList.add("dropping-zone");
+        el.innerText = desc || "";
+        return el;
+    }
+
+    prepareDroppingZones(el){ 
+        if(el.children.length > 0){
+            el.insertBefore(this.createElementDZ("À l'intérieur au début"), el.firstChild);    
+            el.appendChild(this.createElementDZ("À l'intérieur à la fin"));
+        } 
+        else{
+            el.appendChild(this.createElementDZ("À l'intérieur"));
+        }
+
+        if(el.tagName.toLowerCase() !== "body"){
+            el.parentNode.insertBefore(this.createElementDZ('Avant'), el);
+            el.parentNode.insertBefore(this.createElementDZ('Après'), el.nextSibling);
+        }
+    }
+}
+
+class HTMLHeadingElement extends HTMLElement{
+    constructor(name, tagName){
+        super(name, tagName, 'native', HTMLElementData.propsAssignmentFacade.text);
+    }
+
+    create(){ 
+        let el = document.createElement(this.tagName);
+        el.innerText = el.tagName.toLowerCase();
+        return el;
+    }
+
+    prepareDroppingZones(el){        
+        el.parentNode.insertBefore(this.createElementDZ('Avant'), el);
+        el.parentNode.insertBefore(this.createElementDZ('Après'), el.nextSibling);
+    }
+}
+
+class HTMLParagraphElement extends HTMLElement{
+    constructor(){
+        super("Paragraphe", 'p', 'native', HTMLElementData.propsAssignmentFacade.text);
+    }
+
+    create(){ 
+        let el = document.createElement(this.tagName);
+        el.innerText = "Paragraphe";
+        return el;
+    }
+
+    prepareDroppingZones(el){        
+        el.parentNode.insertBefore(this.createElementDZ('Avant'), el);
+        el.parentNode.insertBefore(this.createElementDZ('Après'), el.nextSibling);
+    }
+}
+
+class HTMLLinkElement extends HTMLElement{
+    constructor(){
+        super("Lien", "a", 'native', [...HTMLElementData.propsAssignmentFacade.buttons, 'link']);
+        this.cssProp.prefix = 'btn';
+    }
+
+    create(){ 
+        let el = document.createElement(this.tagName);
+        el.innerText = "Lien";
+        el.setAttribute('href', '#');
+        el.setAttribute('target', '_self');
+        return el;
+    }
+}
+
+class HTMLButtonElement extends HTMLElement{
+    constructor(name, tagName, type, properties){
+        super(name, tagName, type, properties);
+        this.cssProp.prefix = 'btn';
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('btn') && el.tagName.toLowerCase() !== "a");
+    }
+
+    create(){ 
+        let el = document.createElement("button");
+        el.classList.add('btn');
+        el.classList.add('btn-primary');
+        el.innerHTML = "Bouton";
+        return el;
+    }
+}
+
+class HTMLButtonCollapseElement extends HTMLElement{
+    constructor(){
+        super("Bouton collapse", 'buttoncollapse', 'bootstrap', [...HTMLElementData.propsAssignmentFacade.controls, 'collapse']);
+        this.cssProp.prefix = 'btn';
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('btn-collapse'));
+    }
+
+    create(){ 
+        let el = document.createElement("button");
+        el.classList.add('btn');
+        el.classList.add('btn-primary', 'btn-collapse');
+        el.setAttribute('data-bs-toggle', 'collapse');
+        el.innerHTML = "Bouton collapse";
+        return el;
+    }
+}
+
+class HTMLButtonVideoElement extends HTMLElement{
+    constructor(){
+        super("Bouton vidéo", 'videobtn', 'bootstrap', [...HTMLElementData.propsAssignmentFacade.buttons, 'videobtn']);
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('videobtn'));
+    }
+
+    create(){ 
+        let el = document.createElement("button");
+        el.innerHTML = 'Bouton vidéo';
+        el.classList.add('btn');
+        el.classList.add('btn-primary');
+        el.classList.add('videobtn');
+        el.setAttribute('data-videourl', 'https://www.youtube.com/embed/WvljI0VIq-E?rel=0');
+        return el;
+    }
+}
+
+class HTMLMediaElement extends HTMLElement{
+    constructor(name, tagName, type, properties){
+        super(name, tagName, type, properties);
+    }
+}
+
+class HTMLAudioElement extends HTMLMediaElement{
+    constructor(){
+        super("Audio", 'audio', 'native', ['bs-general', 'bs-spacingborder', 'htmlattributes', 'source', 'layout']);
+    }
+
+    create(){ 
+        let el = document.createElement(this.tagName);
+        el.setAttribute('controls', '');
+        return el;
+    }
+}
+
+class HTMLVideoElement extends HTMLMediaElement{
+    constructor(name, tagName, type){
+        super(name, 'video', type, ['bs-general', 'bs-spacingborder', 'htmlattributes', 'videosource', 'layout']);
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('video'));
+    }
+
+    create(){
+        let el = document.createElement("div");
+        el.classList.add('embed-responsive');
+        el.classList.add('embed-responsive-16by9');
+        el.classList.add('video-container');
+        
+        let iframe = document.createElement("iframe");
+        iframe.classList.add('embed-responsive-item');
+        iframe.classList.add('video');
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allowfullscreen', '1');
+        iframe.src = 'https://www.youtube.com/embed/WvljI0VIq-E?rel=0'
+        el.appendChild(iframe)
+        return el;
+    }
+}
+
+class HTMLIFrameElement extends HTMLElement{
+    constructor(){
+        super("iFrame", 'iframe', 'native', ['marginborderpadding', 'source', 'layout']);
+    }
+
+    create(){ 
+        let el = document.createElement(this.tagName);
+        el.width = "320";
+        el.height = "240";
+        return el;
+    }
+}
+
+class HTMLDivElement extends HTMLElement{
+    constructor(name, tagName, type){
+        super(name || "Div", tagName || "div", type || 'native', HTMLElementData.propsAssignmentFacade.containers);
+    }
+}
+
+class HTMLSpanElement extends HTMLElement{
+    constructor(){
+        super("Span", "span", 'native', HTMLElementData.propsAssignmentFacade.containers);
+    }
+}
+
+class HTMLSectionElement extends HTMLElement{
+    constructor(){
+        super("Section", "section", 'native', HTMLElementData.propsAssignmentFacade.containers);
+    }
+}
+
+class HTMLGridElement extends HTMLElement{
+    constructor(){
+        super('Grille', 'grid', 'bootstrap', HTMLElementData.propsAssignmentFacade.containers);
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('container') || el.classList.contains('container-fluid'));
+    }
+    
+    create(){
+        let el = document.createElement("div");
+        el.classList.add("container");
+        
+        let row = document.createElement("div");
+        row.classList.add("row");
+        el.appendChild(row);
+
+        let col = document.createElement("div");
+        col.classList.add("col");
+        row.appendChild(col);
+
+        col = document.createElement("div");
+        col.classList.add("col");
+        row.appendChild(col);
+
+        col = document.createElement("div");
+        col.classList.add("col");
+        row.appendChild(col);
+
+        return el;
+    }
+}
+
+class HTMLRowElement extends HTMLElement{
+    constructor(){
+        super('Ligne', 'row', 'bootstrap', HTMLElementData.propsAssignmentFacade.containers);
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        console.log(el, el.classList.contains('row'))
+        return (el.classList.contains('row') || el.classList.contains('row-fluid'));
+    }
+
+    create(){
+        let el = document.createElement("div");
+        el.classList.add("row");
+        return el;
+    }
+}
+
+class HTMLColElement extends HTMLElement{
+    constructor(){
+        super('Colonne', 'col', 'bootstrap', HTMLElementData.propsAssignmentFacade.containers);
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('col') || el.classList.contains('col-12'));
+    }
+
+    create(){
+        let el = document.createElement("div");
+        el.classList.add("col");
+        return el;
+    }
+
+    prepareDroppingZones(el){        
+        if(el.children.length > 0){
+            el.insertBefore(this.createElementDZ("À l'intérieur au début"), el.firstChild);    
+            el.appendChild(this.createElementDZ("À l'intérieur à la fin"));
+        } 
+        else{
+            el.appendChild(this.createElementDZ("À l'intérieur"));
+        }
+    }
+}
+
+class HTMLUListElement extends HTMLElement{
+    constructor(){
+        super("Liste", "ul", 'native', HTMLElementData.propsAssignmentFacade.containers);
+    }
+
+    create(){
+        let el = document.createElement(this.tagName);
+        el.innerHTML = "<li>Liste</li>";
+        return el;
+    }
+}
+
+class HTMLOListElement extends HTMLElement{
+    constructor(){
+        super("Liste", "ol", 'native', HTMLElementData.propsAssignmentFacade.containers);
+    }
+
+    create(){
+        let el = document.createElement(this.tagName);
+        el.innerHTML = "<li>Liste</li>";
+        return el;
+    }
+}
+
+class HTMLTableElement extends HTMLElement{
+    constructor(){
+        super('Table', 'table', 'bootstrap', ['table', ...HTMLElementData.propsAssignmentFacade.containers]);
+    }
+
+    create(){
+        let el = document.createElement('table');
+        el.classList.add('table')
+        let tbody = document.createElement('tbody')
+        el.appendChild(tbody)
+       
+        for (let i = 0; i < 5; i++){
+            let row = document.createElement('tr');
+            tbody.appendChild(row);
+            for (let j = 0; j < 5; j++){
+                let tag = 'td';
+                if (i == 0) tag = 'th'
+                let cell = document.createElement(tag)
+                row.appendChild(cell)
+            }
+        }
+
+        return el;
+    }
+}
+
+class HTMLTableDataCellElement extends HTMLElement{
+    constructor(){
+        super("Cellule de table", "td", 'native', ['tablecell', ...HTMLElementData.propsAssignmentFacade.containers]);
+    }
+
+    create(){
+        let el = document.createElement(this.tagName);
+        el.innerHTML = "Cell";
+        return el;
+    }
+}
+
+class HTMLTableHeaderCellElement extends HTMLElement{
+    constructor(){
+        super("Titre de la table", "th", 'native', ['tablecell', ...HTMLElementData.propsAssignmentFacade.containers]);
+        this.visible = false;
+    }
+
+    create(){
+        let el = document.createElement(this.tagName);
+        el.innerHTML = "Cell";
+        return el;
+    }
+}
+
+class HTMLTableRowElement extends HTMLElement{
+    constructor(){
+        super("Ligne de table", "tr", 'native', HTMLElementData.propsAssignmentFacade.containers);
+        this.visible = false;
+    }
+
+    create(){
+        let el = document.createElement(this.tagName);
+        return el;
+    }
+}
+
+class HTMLLIElement extends HTMLElement{
+    constructor(){
+        super("Élément de liste", "li", 'native', ['bs-general', 'bs-spacingborder', 'htmlattributes', 'font', 'layout', 'background']);
+    }
+
+    create(){
+        let el = document.createElement(this.tagName);
+        el.innerText = "Item";
+        return el;
+    }
+}
+
+class HTMLAlertElement extends HTMLDivElement{
+    constructor(){
+        super("Alerte", "div", 'bootstrap');
+        this.cssProp.prefix = "alert";
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('alert'));
+    }
+
+    create(){
+        let el = document.createElement(this.tagName);
+        el.classList.add("alert");
+        el.classList.add("alert-primary");
+        el.setAttribute("role", "alert");
+        return el;
+    }
+}
+
+class HTMLCardElement extends HTMLDivElement{
+    constructor(){
+        super("Card", "div", 'bootstrap');
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('card'));
+    }
+
+    create(){
+        let card = document.createElement("div");
+        card.classList.add("card");
+        
+        let el = document.createElement("div");
+        el.classList.add("card-header");
+        card.appendChild(el);
+
+        el = document.createElement("div");
+        el.classList.add("card-body");
+        card.appendChild(el);
+
+        el = document.createElement("div");
+        el.classList.add("card-footer");
+        card.appendChild(el);
+
+        return card;
+    }
+}
+
+class HTMLCardBodyElement extends HTMLDivElement{
+    constructor(){
+        super("Body", "div", 'bootstrap');
+        this.visible = false;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('card-body'));
+    }
+
+    create(){
+        let el = document.createElement("div");
+        el.classList.add("card-body");
+        return el;
+    }
+}
+
+class HTMLCardHeaderElement extends HTMLDivElement{
+    constructor(){
+        super("Header", "div", 'bootstrap');
+        this.visible = false;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('card-header'));
+    }
+
+    create(){
+        let el = document.createElement("div");
+        el.classList.add("card-header");
+        return el;
+    }
+}
+
+class HTMLCardFooterElement extends HTMLDivElement{
+    constructor(){
+        super("Footer", "div", 'bootstrap');
+        this.visible = false;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('card-footer'));
+    }
+
+    create(){
+        let el = document.createElement("div");
+        el.classList.add("card-footer");
+        return el;
+    }
+}
+
+class HTMLFlipCardElement extends HTMLDivElement{
+    constructor(){
+        super("Carte pivotante", "div", 'bootstrap');
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('flipcard2'));
+    }
+
+    create(){
+        let card = document.createElement("div");
+        card.classList.add("card");
+        card.classList.add("flipcard2");
+        card.classList.add("manual-flip-click");
+        let cardinner = document.createElement("div");
+        cardinner.classList.add("flipcard-inner");
+        card.appendChild(cardinner);
+        
+        for (let v of ['front', 'back']){
+            let face = document.createElement("div");
+            face.classList.add(v);
+            cardinner.appendChild(face);
+            
+            let head = document.createElement("div");
+            head.classList.add("card-header");
+            head.classList.add("bg-primary");
+            head.classList.add("text-center");
+            face.appendChild(head);
+
+            let head2 = document.createElement("div");
+            head.appendChild(head2);
+            
+            let el = document.createElement("img");
+            el.classList.add("w-25");
+            el.classList.add("rounded-circle");
+            el.classList.add("shadow");
+            el.setAttribute("src", `${Assets.ImageEmptyHD}`);
+            head2.appendChild(el);
+            
+            el = document.createElement("h3");
+            el.style.color = '#fff';
+            el.innerHTML = 'Title '+v;
+            head2.appendChild(el);
+            
+            el = document.createElement("p");
+            el.style.color = '#c6c6c6';
+            el.innerHTML = 'Lorem';
+            head2.appendChild(el);
+
+            el = document.createElement("div");
+            el.classList.add("card-body");
+            face.appendChild(el);
+
+            el = document.createElement("div");
+            el.classList.add("card-footer");
+            face.appendChild(el);
+        }
+
+        return card;
+    }
+
+    onSelect(el){
+        let card = el.parentElement.parentElement;
+        if(el.classList.contains("back")){
+            card.classList.add('hover');
+        }else{
+            card.classList.remove('hover');
+        }
+    }
+}
+
+class HTMLFlipCardFrontElement extends HTMLDivElement{
+    constructor(){
+        super("Devant", "div", 'bootstrap');
+        this.visible = false;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('front'));
+    }
+}
+
+class HTMLFlipCardBackElement extends HTMLDivElement{
+    constructor(){
+        super("Arrière", "div", 'bootstrap');
+        this.visible = false;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('back'));
+    }
+}
+
+class HTMLMediaBSElement extends HTMLDivElement{
+    constructor(){
+        super("Media", "div", 'bootstrap');
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('media'));
+    }
+
+    create(){
+        let media = document.createElement("div");
+        media.classList.add("media");
+        
+        let el = document.createElement("img");
+        el.classList.add("mr-3");
+        el.setAttribute("src", `${Assets.ImageEmpty}`);
+        media.appendChild(el);
+
+        let body = document.createElement("div");
+        body.classList.add("media-body");
+        media.appendChild(body);
+
+        el = document.createElement("h5");
+        el.classList.add("mt-0");
+        el.innerHTML = 'Media heading';
+        body.appendChild(el);
+
+        body.innerHTML += "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.";
+
+        return media;
+    }
+}
+
+class HTMLMediaBSBodyElement extends HTMLDivElement{
+    constructor(){
+        super("Media Body", "div", 'bootstrap');
+        this.visible = false;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('media-body'));
+    }
+}
+
+class HTMLCarouselElement extends HTMLDivElement{
+    constructor(){
+        super("Carousel", "div", 'bootstrap');
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('carousel') || el.classList.contains('carousel-inner') || el.classList.contains('carousel-item'));
+    }
+
+    create(){
+        let slider = document.createElement("div");
+        slider.classList.add("carousel");
+        slider.classList.add("slide");
+        slider.setAttribute("data-ride", "carousel");
+
+        slider.innerHTML = 
+            `<div id="carouselInd" class="carousel slide" data-ride="carousel" data-tag-id="3">
+        <ol class="carousel-indicators" data-tag-id="4">
+            <li data-target="#carouselInd" data-slide-to="0" data-tag-id="5">
+            </li>
+            <li data-target="#carouselInd" data-slide-to="1" data-tag-id="6">
+            </li>
+            <li data-target="#carouselInd" data-slide-to="2" data-tag-id="7">
+            </li>
+        </ol>
+        <div class="carousel-inner" data-tag-id="8">
+            <div class="carousel-item active" data-tag-id="9">
+            <img class="d-block w-100" src="https://picsum.photos/1500/480" alt="First slide" data-tag-id="10">
+            <div class="carousel-caption d-none d-md-block" data-tag-id="11">
+                <h3 class="h5" data-tag-id="12">
+                Titre 1
+                </h3>
+                <p data-tag-id="13">
+                Paragraphe 1
+                </p>
+            </div>
+            </div>
+            <div class="carousel-item" data-tag-id="14">
+            <img class="d-block w-100" src="https://picsum.photos/1500/480" alt="Second slide" data-tag-id="15">
+            <div class="carousel-caption d-none d-md-block" data-tag-id="16">
+                <h3 class="h5" data-tag-id="17">
+                Titre 2
+                </h3>
+                <p data-tag-id="18">
+                Paragraphe 2
+                </p>
+            </div>
+            </div>
+            <div class="carousel-item" data-tag-id="19">
+            <img class="d-block w-100" src="https://picsum.photos/1500/480" alt="Third slide" data-tag-id="20">
+            <div class="carousel-caption d-none d-md-block" data-tag-id="21">
+                <h3 class="h5" data-tag-id="22">
+                Titre 3
+                </h3>
+                <p data-tag-id="23">
+                Paragraphe 3
+                </p>
+            </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselInd" role="button" data-slide="prev" data-tag-id="24">
+            <i class="fa-3x fa fa-arrow-circle-left" data-tag-id="25"></i>
+            <span class="sr-only" data-tag-id="26">
+                Précédent
+                </span>
+        </a>
+        <a class="carousel-control-next" href="#carouselInd" role="button" data-slide="next" data-tag-id="27">
+            <i class="fa-3x fa fa-arrow-circle-right" data-tag-id="28"></i>
+            <span class="sr-only" data-tag-id="29">
+                Suivant
+                </span>
+        </a>
+        </div>`;
+
+        return slider;
+    }
+
+    onSelect(el){
+        if(el.classList.contains("carousel-item")){
+            let slider = el.parentElement;
+            let slides = slider.querySelectorAll('.carousel-item');
+            for(let slide of slides){
+                slide.classList.remove('active');
+            }
+            el.classList.add('active');
+        }
+    }
+}
+
+class HTMLCarouselNavElement extends HTMLDivElement{
+    constructor(){
+        super("Carousel Nav", "div", 'bootstrap');
+        this.visible = false;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('carousel-control-prev') || el.classList.contains('carousel-control-next'));
+    }
+}
+
+class HTMLTabElement extends HTMLDivElement{
+    constructor(){
+        super("Onglet", "div", 'bootstrap', [...HTMLElementData.propsAssignmentFacade.containers, 'tab']);
+        this.cssProp.prefix = 'tab';
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('tabs') || el.classList.contains('carousel-control-next'));
+    }
+
+    create(){
+        let slider = document.createElement("div");
+        slider.classList.add("tabs");
+
+        slider.innerHTML = 
+            `
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1">
+                    Onglet 1
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2">
+                    Onglet 2
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-controls="tab3">
+                    Onglet 3
+                </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active mt-3" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                    Contenu de l'onglet 1
+                </div>
+                <div class="tab-pane fade mt-3" id="tab2" role="tabpanel" aria-labelledby="tab2">
+                    Contenu de l'onglet 2
+                </div>
+                <div class="tab-pane fade mt-3" id="tab3" role="tabpanel" aria-labelledby="tab3">
+                    Contenu de l'onglet 3
+                </div>
+            </div>`;
+
+        return slider;
+    }
+
+    onSelect(el){
+        if(el.classList.contains("tab-pane")){
+            let slider = el.parentElement.parentElement;
+            let slides = slider.querySelectorAll('.tab-pane');
+            for(let slide of slides){
+                slide.classList.remove('active', 'show');
+            }
+            el.classList.add('active', 'show');
+        }
+    }
+}
+
+class HTMLTabContentElement extends HTMLDivElement{
+    constructor(){
+        super("Contenu onglet", "div", 'bootstrap');
+        this.cssProp.prefix = 'tab';
+        this.visible = false;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('tab-content'));
+    }
+}
+
+class HTMLTabPaneElement extends HTMLDivElement{
+    constructor(){
+        super("Contenu onglet", "div", 'bootstrap');
+        this.cssProp.prefix = 'tab';
+        this.visible = false;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('tab-pane'));
+    }
+}
+
+class HTMLHRElement extends HTMLElement{
+    constructor(){
+        super("Séparateur", "hr", 'native', HTMLElementData.propsAssignmentFacade.containers);
+    }
+}
+
+class HTMLImageElement extends HTMLElement{
+    constructor(){
+        super("Image", "img", 'bootstrap', ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout']);
+    }
+
+    create(){
+        let el = document.createElement("img");
+        el.setAttribute('src', `${Assets.ImageEmpty}`);
+        el.classList.add("img-fluid");
+        return el;
+    }
+}
+
+class HTMLImageWithCaptionElement extends HTMLElement{
+    constructor(){
+        super("Image avec légende", "figure", 'bootstrap', ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout']);
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('img-popup'));
+    }
+
+    create(){
+        let div = document.createElement("figure");
+        div.classList.add('figure-caption');
+        div.classList.add('text-center');
+        
+        let el = document.createElement("img");
+        el.setAttribute('src', `${Assets.ImageEmpty}`);
+        el.classList.add("img-fluid");
+        el.classList.add("img-popup");
+        div.appendChild(el);
+
+        el = document.createElement("figcaption");
+        el.innerHTML = "Source : Nom de l'auteur, <span class='font-italic'>titre de la photo ou de l'oeuvre</span> (année), nom de l'institution qui possède l'œuvre.";
+        div.appendChild(el);
+
+        return div;
+    }
+}
+
+class HTMLClickableImageElement extends HTMLElement{
+    constructor(){
+        super("Image cliquable", "div", 'bootstrap', ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout']);
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('imgclick'));
+    }
+
+    create(){
+        let div = document.createElement("div");
+        div.classList.add('imgclick');
+        
+        let el = document.createElement("img");
+        el.setAttribute('src', `${Assets.ImageEmpty}`);
+        el.classList.add("img-fluid");
+        div.appendChild(el);
+
+        let div2 = document.createElement("div");
+        div2.classList.add('imgclickcontent');
+        el = document.createElement("a");
+        el.classList.add('border');
+        el.classList.add('border-white');
+        el.classList.add('rounded');
+        el.classList.add('p-2');
+        el.href = '#';
+        el.innerHTML = 'Commencer';
+        div2.appendChild(el);
+        div.appendChild(div2);
+
+        return div;
+    }
+}
+
+class HTMLIconElement extends HTMLElement{
+    constructor(){
+        super("Icône", "i", 'native', ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'icon', 'font']);
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('fa') || (el.classList[0] && el.classList[0].includes('icon-')));
+    }
+
+    create(){
+        let el = document.createElement(this.tagName);
+        el.classList.add('fa', 'fa-anchor'); //Default icon
+        return el;
+    }
+}
+
 export class HTMLElementData{
 
     static propertyList = [
@@ -760,8 +1729,9 @@ export class HTMLElementData{
                     input: { 
                         type: 'colorselector',
                         getFlags: function(el) {
-                            let bs = HTMLElementData.mapBootstrapComponents(el);
-                            return {fetchFromTheme: true, prefix: bs.prefix+'-'}
+                            let elClass = HTMLElementData.getElementClass(null, el);
+                            let prefix = (elClass ? `${elClass.cssProp.prefix}` : 'bg');
+                            return {fetchFromTheme: true, prefix: `${prefix}-`};
                         },
                         options:[
                             {text:"", value: "primary"},
@@ -776,36 +1746,38 @@ export class HTMLElementData{
                         
                         ],
                         onChange: function(el, value, data){
-                            let bs = HTMLElementData.mapBootstrapComponents(el);
+                            let elClass = HTMLElementData.getElementClass(null, el);
+                            let prefix = (elClass ? `${elClass.cssProp.prefix}` : 'bg');
                             let middlefix = '';
 
                             for(let item of data.input.options){
-                                if (el.classList.contains(`${bs.prefix}-${item.value}`)){
-                                    el.classList.remove(`${bs.prefix}-${item.value}`);
+                                if (el.classList.contains(`${prefix}-${item.value}`)){
+                                    el.classList.remove(`${prefix}-${item.value}`);
                                 }
-                                if (el.classList.contains(`${bs.prefix}-outline-${item.value}`)){
-                                    el.classList.remove(`${bs.prefix}-outline-${item.value}`);
+                                if (el.classList.contains(`${prefix}-outline-${item.value}`)){
+                                    el.classList.remove(`${prefix}-outline-${item.value}`);
                                     middlefix = '-outline';
                                 }
                             }
 
                             if(value.length > 0){
-                                el.classList.add(`${bs.prefix}${middlefix}-${value}`);
+                                el.classList.add(`${prefix}${middlefix}-${value}`);
                             }
                         }
                     },
                     getValue: function(el, data){
                         let result = "";
-                        let bs = HTMLElementData.mapBootstrapComponents(el);
+                        let elClass = HTMLElementData.getElementClass(null, el);
+                        let prefix = (elClass ? `${elClass.cssProp.prefix}` : 'bg');
 
                         let classList = [...el.classList]
 
                         for(let item of data.input.options){
-                            if(classList.includes(`${bs.prefix}-${item.value}`)){
+                            if(classList.includes(`${prefix}-${item.value}`)){
                                 result = item.value;
                                 break;
                             }
-                            if(classList.includes(`${bs.prefix}-outline-${item.value}`)){
+                            if(classList.includes(`${prefix}-outline-${item.value}`)){
                                 result = item.value.replace('outline-', '');
                                 break;
                             }
@@ -1274,509 +2246,72 @@ export class HTMLElementData{
     }
 
     static elementList = [
-        {name: 'Texte', children: [
-            {
-                name: "H1", type: 'native', tagName: 'h1', properties: HTMLElementData.propsAssignmentFacade.text,
-                init: function (el) {
-                    el.innerText = el.tagName.toLowerCase();
-                },
-            },
-            {
-                name: "H2", type: 'native', tagName: 'h2', properties: HTMLElementData.propsAssignmentFacade.text,
-                init: function (el) {
-                    el.innerText = el.tagName.toLowerCase();
-                },
-            },
-            {
-                name: "H3", type: 'native', tagName: 'h3',  properties: HTMLElementData.propsAssignmentFacade.text,
-                init: function (el) {
-                    el.innerText = el.tagName.toLowerCase();
-                },
-            },
-            {
-                name: "H4", type: 'native', tagName: 'h4', properties:  HTMLElementData.propsAssignmentFacade.text,
-                init: function (el) {
-                    el.innerText = el.tagName.toLowerCase();
-                },
-            },
-            {
-                name: "H5", type: 'native', tagName: 'h5', properties:  HTMLElementData.propsAssignmentFacade.text,
-                init: function (el) {
-                    el.innerText = el.tagName.toLowerCase();
-                },
-            },
-            {
-                name: "H6", type: 'native', tagName: 'h6', properties:  HTMLElementData.propsAssignmentFacade.text,
-                init: function (el) {
-                    el.innerText = el.tagName.toLowerCase();
-                },
-            },
-            {name: "Paragraphe", type: 'native', tagName: 'p', properties:  HTMLElementData.propsAssignmentFacade.text,
-                init:function(el){
-                    el.innerText = "Paragraphe";
-                }
-            }
-        ]},
-        {name: 'Contrôle', children: [
-            {name: "Bouton", type: 'bootstrap', tagName: 'button', properties: HTMLElementData.propsAssignmentFacade.buttons,
-                create: function(){
-                    let el = document.createElement("button");
-                    el.classList.add('btn');
-                    el.classList.add('btn-primary');
-                    el.innerHTML = "Bouton";
-                    return el;
-                },
-            },
-            {name: "Bouton collapse", type: 'bootstrap', tagName: 'buttoncollapse', properties: [...HTMLElementData.propsAssignmentFacade.controls, 'collapse'],
-                create: function(){
-                    let el = document.createElement("button");
-                    el.classList.add('btn');
-                    el.classList.add('btn-primary', 'btn-collapse');
-                    el.setAttribute('data-bs-toggle', 'collapse');
-                    el.innerHTML = "Bouton collapse";
-                    return el;
-                },
-            },
-            {name: "Lien", type: 'native', tagName: 'a', properties: [...HTMLElementData.propsAssignmentFacade.buttons, 'link'],
-                init:function(el){
-                    el.innerText = "Lien";
-                    el.setAttribute('href', '#');
-                    el.setAttribute('target', '_self');
-                },
-            },
-            {name: "Audio", type: 'native', tagName: 'audio', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'source', 'layout'],
-                init:function(el){
-                     el.setAttribute('controls', '');
-                }, 
-            },
-            {name: "Vidéo", type: 'bootstrap', tagName: 'video', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'videosource', 'layout'],
-                create: function(){
-                    let el = document.createElement("div");
-                    el.classList.add('embed-responsive');
-                    el.classList.add('embed-responsive-16by9');
-                    el.classList.add('video-container');
-                    
-                    let iframe = document.createElement("iframe");
-                    iframe.classList.add('embed-responsive-item');
-                    iframe.classList.add('video');
-                    iframe.setAttribute('frameborder', '0');
-                    iframe.setAttribute('allowfullscreen', '1');
-                    iframe.src = 'https://www.youtube.com/embed/WvljI0VIq-E?rel=0'
-                    el.appendChild(iframe)
-                    return el;
-                },
-            },
-            {name: "Bouton vidéo", type: 'bootstrap', tagName: 'videobtn', properties: [...HTMLElementData.propsAssignmentFacade.buttons, 'videobtn'],
-                create: function(){
-                    let el = document.createElement("button");
-                    el.innerHTML = 'Bouton vidéo';
-                    el.classList.add('btn');
-                    el.classList.add('btn-primary');
-                    el.classList.add('videobtn');
-                    el.setAttribute('data-videourl', 'https://www.youtube.com/embed/WvljI0VIq-E?rel=0');
-                    return el;
-                },
-            },
-            {name: "iFrame", type: 'native', tagName: 'iframe', properties: ['marginborderpadding', 'source', 'layout'],
-                init:function(el){
-                    el.width = "320";
-                    el.height = "240";
-                }
-            }
-        ]},
-        {name: 'Containeurs', children: [
-            {name: "Div", type: 'native', tagName: 'div', properties: HTMLElementData.propsAssignmentFacade.containers,
-                init:function(el){
-                }, 
-            },  
-            {name: "Span", type: 'native', tagName: 'span', properties: HTMLElementData.propsAssignmentFacade.containers,
-                init:function(el){}, 
-            },  
-            {name: "Section", type: 'native', tagName: 'section', properties: HTMLElementData.propsAssignmentFacade.containers,
-                init:function(el){}, 
-            },         
-            {name: "Grille", type: 'bootstrap', tagName: 'grid', properties: HTMLElementData.propsAssignmentFacade.containers,
-                create: function(){
-                    let el = document.createElement("div");
-                    el.classList.add("container");
-                    
-                    let row = document.createElement("div");
-                    row.classList.add("row");
-                    el.appendChild(row);
-
-                    let col = document.createElement("div");
-                    col.classList.add("col");
-                    row.appendChild(col);
-
-                    col = document.createElement("div");
-                    col.classList.add("col");
-                    row.appendChild(col);
-
-                    col = document.createElement("div");
-                    col.classList.add("col");
-                    row.appendChild(col);
-
-                    return el;
-                }
-            },
-            {name: "Ligne", type: 'bootstrap', tagName: 'row', properties:  HTMLElementData.propsAssignmentFacade.containers,
-                create: function(){
-                    let el = document.createElement("div");
-                    el.classList.add("row");
-                    return el;
-                }
-            },
-            {name: "Colonne", type: 'bootstrap', tagName: 'col', properties:  HTMLElementData.propsAssignmentFacade.containers,
-                create: function(){
-                    let el = document.createElement("div");
-                    el.classList.add("col");
-                    return el;
-                }
-            },
-            {name: "Liste", type: 'native', tagName: 'ul', properties:  HTMLElementData.propsAssignmentFacade.containers,
-                init:function(el){
-                    el.innerHTML = "<li>Liste</li>";
-                }
-            },
-            {name: "Liste ordonnée", type: 'native', tagName: 'ol', properties:  HTMLElementData.propsAssignmentFacade.containers,
-                init:function(el){
-                    el.innerHTML = "<li>Liste</li>";
-                }
-            },
-            {name: "Table", type: 'bootstrap', tagName: 'table', properties:  ['table', ...HTMLElementData.propsAssignmentFacade.containers],
-                create:function(){
-                    let el = document.createElement('table');
-                    el.classList.add('table')
-                    let tbody = document.createElement('tbody')
-                    el.appendChild(tbody)
-                   
-                    for (let i = 0; i < 5; i++){
-                        let row = document.createElement('tr');
-                        tbody.appendChild(row);
-                        for (let j = 0; j < 5; j++){
-                            let tag = 'td';
-                            if (i == 0) tag = 'th'
-                            let cell = document.createElement(tag)
-                            row.appendChild(cell)
-                        }
-                    }
-
-                    return el;
-                }
-            },
-            {name: "Cellule de table", type: 'native', tagName: 'td', properties:  ['tablecell', ...HTMLElementData.propsAssignmentFacade.containers],
-                init:function(el){
-                    el.innerHTML = "Cell";
-                }
-            },
-            {name: "Élément de liste", type: 'native', tagName: 'li', properties: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'font', 'layout', 'background'],
-                init:function(el){
-                    el.innerText = "Item";
-                }
-            },
-            {name: "Alerte", type: 'bootstrap', tagName: 'alert', properties:  HTMLElementData.propsAssignmentFacade.containers,
-                create: function(){
-                    let el = document.createElement("div");
-                    el.classList.add("alert");
-                    el.classList.add("alert-primary");
-                    el.setAttribute("role", "alert");
-                    return el;
-                }
-            },
-            {name: "Card", type: 'bootstrap', tagName: 'card', properties:  HTMLElementData.propsAssignmentFacade.containers,
-                create: function(){
-                    let card = document.createElement("div");
-                    card.classList.add("card");
-                    
-                    let el = document.createElement("div");
-                    el.classList.add("card-header");
-                    card.appendChild(el);
-
-                    el = document.createElement("div");
-                    el.classList.add("card-body");
-                    card.appendChild(el);
-
-                    el = document.createElement("div");
-                    el.classList.add("card-footer");
-                    card.appendChild(el);
-
-                    return card;
-                }
-            },
-            {name: "Carte pivotante", type: 'bootstrap', tagName: 'flipcard', properties:  HTMLElementData.propsAssignmentFacade.containers,
-                create: function(){
-                    let card = document.createElement("div");
-                    card.classList.add("card");
-                    card.classList.add("flipcard2");
-                    card.classList.add("manual-flip-click");
-                    let cardinner = document.createElement("div");
-                    cardinner.classList.add("flipcard-inner");
-                    card.appendChild(cardinner);
-                    
-                    for (let v of ['front', 'back']){
-                        let face = document.createElement("div");
-                        face.classList.add(v);
-                        cardinner.appendChild(face);
-                        
-                        let head = document.createElement("div");
-                        head.classList.add("card-header");
-                        head.classList.add("bg-primary");
-                        head.classList.add("text-center");
-                        face.appendChild(head);
-
-                        let head2 = document.createElement("div");
-                        head.appendChild(head2);
-                        
-                        let el = document.createElement("img");
-                        el.classList.add("w-25");
-                        el.classList.add("rounded-circle");
-                        el.classList.add("shadow");
-                        el.setAttribute("src", `${Assets.ImageEmptyHD}`);
-                        head2.appendChild(el);
-                        
-                        el = document.createElement("h3");
-                        el.style.color = '#fff';
-                        el.innerHTML = 'Title '+v;
-                        head2.appendChild(el);
-                        
-                        el = document.createElement("p");
-                        el.style.color = '#c6c6c6';
-                        el.innerHTML = 'Lorem';
-                        head2.appendChild(el);
-
-                        el = document.createElement("div");
-                        el.classList.add("card-body");
-                        face.appendChild(el);
-
-                        el = document.createElement("div");
-                        el.classList.add("card-footer");
-                        face.appendChild(el);
-                    }
-
-                    return card;
-                },
-                onSelect: function(el){
-                    let card = el.parentElement.parentElement;
-                    if(el.classList.contains("back")){
-                        card.classList.add('hover');
-                    }else{
-                        card.classList.remove('hover');
-                    }
-                }
-            },
-            {name: "Media", type: 'bootstrap', tagName: 'media', properties:  HTMLElementData.propsAssignmentFacade.containers,
-                create: function(){
-                    let media = document.createElement("div");
-                    media.classList.add("media");
-                    
-                    let el = document.createElement("img");
-                    el.classList.add("mr-3");
-                    el.setAttribute("src", `${Assets.ImageEmpty}`);
-                    media.appendChild(el);
-
-                    let body = document.createElement("div");
-                    body.classList.add("media-body");
-                    media.appendChild(body);
-
-                    el = document.createElement("h5");
-                    el.classList.add("mt-0");
-                    el.innerHTML = 'Media heading';
-                    body.appendChild(el);
-
-                    body.innerHTML += "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.";
-
-                    return media;
-                }
-            },
-            {name: "Carousel", type: 'bootstrap', tagName: 'slider', properties:  HTMLElementData.propsAssignmentFacade.containers,
-                create: function(){
-                    let slider = document.createElement("div");
-                    slider.classList.add("carousel");
-                    slider.classList.add("slide");
-                    slider.setAttribute("data-ride", "carousel");
-
-                    slider.innerHTML = 
-                        `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-tag-id="3">
-                    <ol class="carousel-indicators" data-tag-id="4">
-                      <li data-target="#carouselExampleIndicators" data-slide-to="0" data-tag-id="5">
-                      </li>
-                      <li data-target="#carouselExampleIndicators" data-slide-to="1" data-tag-id="6">
-                      </li>
-                      <li data-target="#carouselExampleIndicators" data-slide-to="2" data-tag-id="7">
-                      </li>
-                    </ol>
-                    <div class="carousel-inner" data-tag-id="8">
-                      <div class="carousel-item active" data-tag-id="9">
-                        <img class="d-block w-100" src="https://picsum.photos/1500/480" alt="First slide" data-tag-id="10">
-                        <div class="carousel-caption d-none d-md-block" data-tag-id="11">
-                          <h3 class="h5" data-tag-id="12">
-                            Titre 1
-                          </h3>
-                          <p data-tag-id="13">
-                            Paragraphe 1
-                          </p>
-                        </div>
-                      </div>
-                      <div class="carousel-item" data-tag-id="14">
-                        <img class="d-block w-100" src="https://picsum.photos/1500/480" alt="Second slide" data-tag-id="15">
-                        <div class="carousel-caption d-none d-md-block" data-tag-id="16">
-                          <h3 class="h5" data-tag-id="17">
-                            Titre 2
-                          </h3>
-                          <p data-tag-id="18">
-                            Paragraphe 2
-                          </p>
-                        </div>
-                      </div>
-                      <div class="carousel-item" data-tag-id="19">
-                        <img class="d-block w-100" src="https://picsum.photos/1500/480" alt="Third slide" data-tag-id="20">
-                        <div class="carousel-caption d-none d-md-block" data-tag-id="21">
-                          <h3 class="h5" data-tag-id="22">
-                            Titre 3
-                          </h3>
-                          <p data-tag-id="23">
-                            Paragraphe 3
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev" data-tag-id="24">
-                      <i class="fa-3x fa fa-arrow-circle-left" data-tag-id="25"></i>
-                      <span class="sr-only" data-tag-id="26">
-                            Précédent
-                          </span>
-                    </a>
-                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next" data-tag-id="27">
-                      <i class="fa-3x fa fa-arrow-circle-right" data-tag-id="28"></i>
-                      <span class="sr-only" data-tag-id="29">
-                            Suivant
-                          </span>
-                    </a>
-                  </div>`;
-
-                    return slider;
-                },
-                onSelect: function(el){
-                    if(el.classList.contains("carousel-item")){
-                        let slider = el.parentElement;
-                        let slides = slider.querySelectorAll('.carousel-item');
-                        for(let slide of slides){
-                            slide.classList.remove('active');
-                        }
-                        el.classList.add('active');
-                    }
-                }
-            },
-            {name: "Onglet", type: 'bootstrap', tagName: 'tab', properties: [...HTMLElementData.propsAssignmentFacade.containers, 'tab'],
-                create: function(){
-                    let slider = document.createElement("div");
-                    slider.classList.add("tabs");
-
-                    slider.innerHTML = 
-                        `
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1">
-                                Onglet 1
-                            </a>
-                            </li>
-                            <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2">
-                                Onglet 2
-                            </a>
-                            </li>
-                            <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab3" role="tab" aria-controls="tab3">
-                                Onglet 3
-                            </a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane fade show active mt-3" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                Contenu de l'onglet 1
-                            </div>
-                            <div class="tab-pane fade mt-3" id="tab2" role="tabpanel" aria-labelledby="tab2">
-                                Contenu de l'onglet 2
-                            </div>
-                            <div class="tab-pane fade mt-3" id="tab3" role="tabpanel" aria-labelledby="tab3">
-                                Contenu de l'onglet 3
-                            </div>
-                        </div>`;
-
-                    return slider;
-                },
-                onSelect: function(el){
-                    if(el.classList.contains("tab-pane")){
-                        let slider = el.parentElement.parentElement;
-                        let slides = slider.querySelectorAll('.tab-pane');
-                        for(let slide of slides){
-                            slide.classList.remove('active', 'show');
-                        }
-                        el.classList.add('active', 'show');
-                    }
-                }
-            },
-            {name: "Séparateur", type: 'native', tagName: 'hr', properties: HTMLElementData.propsAssignmentFacade.containers}
-        ]},
-        {name: 'Images', children: [
-            {name: "Image", type: 'bootstrap', tagName: 'img', properties: ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout'],
-                create:function(){
-                    let el = document.createElement("img");
-                    el.setAttribute('src', `${Assets.ImageEmpty}`);
-                    el.classList.add("img-fluid");
-                    return el;
-                },
-            },
-            {name: "Image avec légende", type: 'bootstrap', tagName: 'imgpopup', properties: ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout'],
-                create:function(){
-                    let div = document.createElement("figure");
-                    div.classList.add('figure-caption');
-                    div.classList.add('text-center');
-                    
-                    let el = document.createElement("img");
-                    el.setAttribute('src', `${Assets.ImageEmpty}`);
-                    el.classList.add("img-fluid");
-                    el.classList.add("img-popup");
-                    div.appendChild(el);
-
-                    el = document.createElement("figcaption");
-                    el.innerHTML = "Source : Nom de l'auteur, <span class='font-italic'>titre de la photo ou de l'oeuvre</span> (année), nom de l'institution qui possède l'œuvre.";
-                    div.appendChild(el);
-
-                    return div;
-                },
-            },
-            {name: "Image cliquable", type: 'bootstrap', tagName: 'imgclick', properties: ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout'],
-                create:function(){
-                    let div = document.createElement("div");
-                    div.classList.add('imgclick');
-                    
-                    let el = document.createElement("img");
-                    el.setAttribute('src', `${Assets.ImageEmpty}`);
-                    el.classList.add("img-fluid");
-                    div.appendChild(el);
-
-                    let div2 = document.createElement("div");
-                    div2.classList.add('imgclickcontent');
-                    el = document.createElement("a");
-                    el.classList.add('border');
-                    el.classList.add('border-white');
-                    el.classList.add('rounded');
-                    el.classList.add('p-2');
-                    el.href = '#';
-                    el.innerHTML = 'Commencer';
-                    div2.appendChild(el);
-                    div.appendChild(div2);
-
-                    return div;
-                },
-            },
-            {name: "Icône", type: 'native', tagName: 'i', properties: ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'icon', 'font'],
-                init:function(el){
-                    el.classList.add('fa', 'fa-anchor');//Default icon
-                },
-            }
-        ]},
+        {
+            name: 'Texte', 
+            children: [
+                new HTMLHeadingElement("H1", 'h1'),
+                new HTMLHeadingElement("H2", 'h2'),
+                new HTMLHeadingElement("H3", 'h3'),
+                new HTMLHeadingElement("H4", 'h4'),
+                new HTMLHeadingElement("H5", 'h5'),
+                new HTMLHeadingElement("H6", 'h6'),
+                new HTMLParagraphElement(),
+            ]
+        },
+        {
+            name: 'Contrôles', 
+            children: [
+                new HTMLButtonElement("Bouton", 'button', 'bootstrap', HTMLElementData.propsAssignmentFacade.buttons),
+                new HTMLButtonCollapseElement(),
+                new HTMLLinkElement(),
+                new HTMLAudioElement(),
+                new HTMLVideoElement("Vidéo", null, 'bootstrap'),
+                new HTMLButtonVideoElement(),
+                new HTMLIFrameElement()
+            ]
+        },
+        {
+            name: 'Containeurs', 
+            children: [
+                new HTMLDivElement(),
+                new HTMLSpanElement(),
+                new HTMLSectionElement(),
+                new HTMLGridElement(),
+                new HTMLRowElement(),
+                new HTMLColElement(),
+                new HTMLUListElement(),
+                new HTMLOListElement(),
+                new HTMLTableElement(),
+                new HTMLTableDataCellElement(),
+                new HTMLTableHeaderCellElement(),
+                new HTMLTableRowElement(),
+                new HTMLLIElement(),
+                new HTMLAlertElement(),
+                new HTMLCardElement(),
+                new HTMLCardBodyElement(),
+                new HTMLCardHeaderElement(),
+                new HTMLCardFooterElement(),
+                new HTMLFlipCardElement(),
+                new HTMLFlipCardFrontElement(),
+                new HTMLFlipCardBackElement(),
+                new HTMLMediaBSElement(),
+                new HTMLMediaBSBodyElement(),
+                new HTMLCarouselElement(),
+                new HTMLTabElement(),
+                new HTMLTabContentElement(),
+                new HTMLTabPaneElement(),
+                new HTMLHRElement()
+            ]
+        },
+        {
+            name: 'Images', 
+            children: [
+                new HTMLImageElement(),
+                new HTMLImageWithCaptionElement(),
+                new HTMLClickableImageElement(),
+                new HTMLIconElement()
+            ]
+        },
     ];
 
     static elementListSort = function(){
@@ -1791,25 +2326,29 @@ export class HTMLElementData{
         }
     }
 
-    static getElementData(data, el){
+    static getElementClass(data, el){
         data = data || null;
         el = el || null;
 
-        let tagName = (data !== null ?  data.tagName : el.tagName.toLowerCase());
+        let tmpList = [];
 
-        // bootstrap components
-        if(el !== null){
-            let bootstrapData = HTMLElementData.mapBootstrapComponents(el);
-            if (bootstrapData && bootstrapData.tagName){
-                tagName = bootstrapData.tagName;
-            }
+        for(let item of HTMLElementData.elementList){
+            for(let item2 of item.children){
+                tmpList.push(item2);
+            }            
         }
 
-        for(let section of HTMLElementData.elementList){
-            for(let item of section.children){
-                if(item.tagName === tagName){
-                    return item;
-                }
+        // give priority to bootstrap components
+        tmpList.sort((a,b) =>{
+            return a.type.toString().localeCompare(b.type.toString());
+        })
+
+        for(let item of tmpList){
+            if(item.equal(el)){
+                return item;
+            }
+            else if (data !== null && data.tagName === item.tagName){
+                return item;
             }
         }
 
@@ -1819,15 +2358,8 @@ export class HTMLElementData{
     static createElement(componentData){
         let el = null;
 
-        if(componentData.type === 'native'){
-            el = document.createElement(componentData.tagName);
-            let component = HTMLElementData.getElementData(componentData);
-            if (component.init){
-                component.init(el);
-            }
-        }
-        else if(componentData.type === 'bootstrap'){
-            let component = HTMLElementData.getElementData(componentData);
+        if(componentData.type === 'native' || componentData.type === 'bootstrap'){
+            let component = HTMLElementData.getElementClass(componentData);
             el = component.create();
         }
         else if((componentData.type === 'c') || (componentData.type === 'l')){
@@ -1845,183 +2377,6 @@ export class HTMLElementData{
         }
 
         return el;
-    }
-
-    static mapBootstrapComponents(el){
-        let result = {text: el.tagName, prefix: el.tagName.toLowerCase()};
-        result.text = result.text.charAt(0).toUpperCase() + result.text.toLowerCase().slice(1);
-
-        if(el.classList.contains('container') || el.classList.contains('container-fluid')){
-            result.text = 'Container';
-            result.tagName = 'grid';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('row') || el.classList.contains('row-fluid')){
-            result.text = 'Ligne';
-            result.tagName = 'grid';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('col') || el.classList.contains('col-12')){
-            result.text = 'Col';
-            result.tagName = 'grid';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('card')){
-            result.text = 'Card';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('flipcard2')){
-            result.text = 'Carte pivotante';
-            result.tagName = 'flipcard';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('video')){
-            result.text = 'Vidéo';
-            result.tagName = 'video';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('video-container')){
-            result.text = 'Container de vidéo';
-            result.tagName = 'video';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('embed-responsive')){
-            result.text = 'Embed';
-            result.tagName = 'div';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('videobtn')){
-            result.text = 'Bouton vidéo';
-            result.tagName = 'videobtn';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('front')){
-            result.text = 'Devant';
-            result.tagName = 'flipcard';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('back')){
-            result.text = 'Arrière';
-            result.tagName = 'flipcard';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('card-header')){
-            result.text = 'Header';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('card-body')){
-            result.text = 'Body';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('card-footer')){
-            result.text = 'Footer';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('alert')){
-            result.text = 'Alerte';
-            result.prefix = 'alert';
-        }
-        else if(el.classList.contains('fa') || (el.classList[0] && el.classList[0].includes('icon-'))){
-            result.text = 'Icône';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('btn-collapse')){
-            result.text = 'Bouton collapse';
-            result.tagName = 'buttoncollapse';
-            result.prefix = 'btn';
-        }
-        else if(el.classList.contains('btn') && el.tagName.toLowerCase() !== "a"){
-            result.text = 'Bouton';
-            result.tagName = 'button';
-            result.prefix = 'btn';
-        }
-        else if(el.classList.contains('tabs')){
-            result.text = 'Onglets';
-            result.tagName = 'tab';
-            result.prefix = 'tab';
-        }
-        else if(el.classList.contains('tab-content')){
-            result.text = 'Contenu Tabs';
-            result.tagName = 'tab';
-            result.prefix = 'tab';
-        }
-        else if(el.classList.contains('tab-pane')){
-            result.text = 'Contenu onglet #'+el.id;
-            result.tagName = 'tab';
-            result.prefix = 'tab';
-        }
-        else if(el.classList.contains('nav')){
-            result.text = 'Nav';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('nav-item')){
-            result.text = 'NavItem';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('nav-link')){
-            result.text = 'Onglet #'+el.getAttribute('aria-controls');
-            result.prefix = 'btn';
-        }
-        else if(el.className.search('border-') >=0){
-            result.text = 'Bordure';
-            result.prefix = 'border';
-        }
-        else if(el.classList.contains('img-popup')){
-            result.text = 'Image modal';
-            result.tagName = 'imgpopup'
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('imgclick')){
-            result.text = 'Image cliquable';
-            result.tagName = 'div'
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('media')){
-            result.text = 'Media';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('media-body')){
-            result.text = 'Media Body';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('carousel') || el.classList.contains('carousel-inner') || el.classList.contains('carousel-item')){
-            result.text = 'Carousel';
-            result.tagName = 'slider';
-            result.prefix = 'bg';
-        }
-        else if(el.classList.contains('carousel-control-prev') || el.classList.contains('carousel-control-next')){
-            result.text = 'Carousel Navigation';
-            result.prefix = 'bg';
-        }
-        else if(el.tagName == 'TH'){
-            result.text = 'Table Heading';
-            result.prefix = 'bg';
-            result.tagName = 'td';
-        }
-        else if(el.tagName == 'TD'){
-            result.text = 'Table Cell';
-            result.prefix = 'bg';
-            result.tagName = 'td';
-        }
-        else if(el.tagName == 'TR'){
-            result.text = 'Table Row';
-            result.prefix = 'bg';
-            result.tagName = 'tr';
-        }
-        else if(el.tagName == 'A'){
-            result.text = 'Lien';
-            result.prefix = 'btn';
-            result.tagName = 'a';
-        }
-        /*else if(el.className.search('text-') >=0 ){
-            result.text = 'Text';
-            result.prefix = 'text';
-        }*/
-        else{
-            result.prefix = 'bg';
-        }
-
-        return result;
     }
 }
 

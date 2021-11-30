@@ -56,8 +56,6 @@ export class CanvasElement{
         this.dom.onmouseout = this.onMouseOut;
 
         this.clickCounter = 0;
-        this.droppingZoneAfter = document.createElement("div");
-        this.droppingZoneAfter.classList.add("dropping-zone");
 
         this.state = {initDragging: false, onDragging: false };
 
@@ -180,8 +178,7 @@ export class CanvasElement{
             });
         }
 
-        
-        // wait 1 second to add the dropping zone
+        // wait 0.5 second to add the dropping zone
         window.setTimeout(() => {
             // if the user moved the mouse then we do not add the dropping zone
             if(!that.state.initDragging){ return; }
@@ -190,20 +187,13 @@ export class CanvasElement{
             
             cleanUp();           
 
-            if(that.dom.children.length > 0){
-                that.dom.insertBefore(that.createDroppingZone("À l'intérieur au début"), that.dom.firstChild);    
-                that.dom.appendChild(that.createDroppingZone("À l'intérieur à la fin"));
-            } 
-            else{
-                that.dom.appendChild(that.createDroppingZone("À l'intérieur"));
-            }
-
-            if(that.dom.tagName.toLowerCase() !== "body"){
-                that.dom.parentNode.insertBefore(that.createDroppingZone('Avant'), that.dom);
-                that.dom.parentNode.insertBefore(that.createDroppingZone('Après'), that.dom.nextSibling);
+            let elClass = HTMLElementData.getElementClass(null, that.dom);
+            
+            if(elClass){
+                elClass.prepareDroppingZones(that.dom);
             }
             
-        }, 500);
+        }, 1000);
     }
 
     onDragLeave(event){
@@ -216,13 +206,6 @@ export class CanvasElement{
 
         this.state.initDragging = false;        
         this.state.onDragging = false;
-    }
-
-    createDroppingZone(desc){
-        let el = document.createElement("div");
-        el.classList.add("dropping-zone");
-        el.innerText = desc || "";
-        return el;
     }
 
     onMouseOver(event){

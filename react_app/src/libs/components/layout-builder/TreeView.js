@@ -103,9 +103,9 @@ export class TreeView extends Component{
         if(classList.length > 0){
             text = `${text} (${classList.join(", ")})`;
         }*/
-        let bs = HTMLElementData.mapBootstrapComponents(node);
+        let elClass = HTMLElementData.getElementClass(null, node);
 
-        return bs.text;
+        return (elClass ? elClass.name : node.tagName.toLowerCase());
     }
 
     onCollapse(event, id){

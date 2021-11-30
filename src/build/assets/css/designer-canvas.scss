@@ -69,9 +69,8 @@ html{
         *[data-selected="1"]{border: $border-onhover-element; border-style: solid!important;}
         *[draggable="true"]:not([contenteditable]){cursor: grab;}
         
-        .dropping-zone{border: 2px dashed rgb(0, 153, 255); height: 50px; width: 250px;  transform: scale(0.97); display: inline-flex; margin-left: .5rem; 
-            margin-right: .5rem; margin-top: .5rem; font-size:initial; color: initial; font-weight: initial; 
-            animation: append-dropping-zone .3s linear;}
+        .dropping-zone{border: 2px dashed rgb(0, 153, 255); min-width: 150px;  transform: scale(0.97); display: inline-flex; padding: .5rem;
+            font-size: 12px; color: initial; font-weight: initial; animation: append-dropping-zone .5s linear; justify-content: center;}
         .dropping-zone-hover{background-color:  rgba(0, 153, 255, .5)!important;}
         //.dropping-zone-hover::before{content: "Drop here..."}
         //.dropping-zone:empty::after{content: 'Déposer ici';}  
