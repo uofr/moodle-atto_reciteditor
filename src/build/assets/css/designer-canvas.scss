@@ -69,7 +69,7 @@ html{
         *[data-selected="1"]{border: $border-onhover-element; border-style: solid!important;}
         *[draggable="true"]:not([contenteditable]){cursor: grab;}
         
-        .dropping-zone{border: 2px dashed rgb(0, 153, 255); height: 50px; width: 100%;  transform: scale(0.97); display: inline-flex; margin-left: .5rem; 
+        .dropping-zone{border: 2px dashed rgb(0, 153, 255); height: 50px; width: 250px;  transform: scale(0.97); display: inline-flex; margin-left: .5rem; 
             margin-right: .5rem; margin-top: .5rem; font-size:initial; color: initial; font-weight: initial; 
             animation: append-dropping-zone .3s linear;}
         .dropping-zone-hover{background-color:  rgba(0, 153, 255, .5)!important;}
@@ -92,7 +92,7 @@ html{
 
     .tagName{display: inline-flex; background-color: #ffd75e!important; padding: 3px; margin: 3px; font-size: 10px; font-weight: 500; align-items: center;}
     
-    *[data-dragging="1"]{
+    /**[data-dragging="1"]{
         &::before{content: "Début";  @extend .tagName;}
         &::after{content: "Fin";  @extend .tagName;}
         section::before{content: "Début de la section";  @extend .tagName;}
@@ -126,5 +126,5 @@ html{
         tr::before{content: "Début de la ligne de la table"; @extend .tagName;}
         tr::after{content: "Fin de la ligne de la table"; @extend .tagName;}
         td::after,th::after{content: "Case de la table"; @extend .tagName;}
-    } 
+    } */
 }

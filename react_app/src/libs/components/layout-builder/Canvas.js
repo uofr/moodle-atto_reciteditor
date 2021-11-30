@@ -59,6 +59,8 @@ export class CanvasElement{
         this.droppingZoneAfter = document.createElement("div");
         this.droppingZoneAfter.classList.add("dropping-zone");
 
+        this.state = {initDragging: false, onDragging: false };
+
         for(let child of this.dom.childNodes){
             CanvasElement.create(child, this.onSelectCallback, this.onDropCallback, this.onEditNodeText);
         }
@@ -133,6 +135,8 @@ export class CanvasElement{
             }
         }
         
+        this.state.initDragging = false;
+        this.state.onDragging = false;
         //let el = React.createElement(component.element, {});
         //ReactDOM.render(el, this.dom);
 
@@ -143,61 +147,76 @@ export class CanvasElement{
     
     onDragOver(event){
         event.preventDefault(); // Necessary to allows us to drop.
+
         if(!event.target.classList.contains('dropping-zone-hover') && event.target.classList.contains('dropping-zone')){
             event.target.classList.add('dropping-zone-hover');
         }
+        
         return false;
     }
 
     onDragEnter(event){
         // do not cascate the event towards the parents
-        //event.preventDefault();
-        //event.stopPropagation();
+        event.preventDefault();
+        event.stopPropagation();
 
-        if((this.dom.firstElementChild !== null) && (this.dom.firstElementChild.classList.contains("dropping-zone"))){
-            return;
-        }
+        if(this.state.onDragging){ return; }       
 
-        // it flags the hovering event when dragging (because when dragging mouseover is not dispatched)
-        this.dom.setAttribute("data-hovering", "1");
+        this.state.initDragging = true;
 
         let that = this;
+
+        let cleanUp = function(){
+            let body = that.dom;
+
+            while(body.parentNode){
+                body = body.parentNode;
+            }
+
+            let items = body.querySelectorAll(".dropping-zone");
+
+            items.forEach(function(item) {
+                item.remove();    
+            });
+        }
+
+        
         // wait 1 second to add the dropping zone
         window.setTimeout(() => {
             // if the user moved the mouse then we do not add the dropping zone
-            if(!that.dom.hasAttribute("data-hovering")){ return; }
+            if(!that.state.initDragging){ return; }
+
+            that.state.onDragging = true;
+            
+            cleanUp();           
 
             if(that.dom.children.length > 0){
-                that.dom.setAttribute("data-dragging", "1");
                 that.dom.insertBefore(that.createDroppingZone("À l'intérieur au début"), that.dom.firstChild);    
+                that.dom.appendChild(that.createDroppingZone("À l'intérieur à la fin"));
             } 
+            else{
+                that.dom.appendChild(that.createDroppingZone("À l'intérieur"));
+            }
 
-            that.dom.appendChild(that.createDroppingZone("À l'intérieur à la fin"));
-
-            that.dom.parentNode.insertBefore(that.createDroppingZone('Avant'), that.dom);
-            that.dom.parentNode.insertBefore(that.createDroppingZone('Après'), that.dom.nextSibling);
-        }, 1000);
+            if(that.dom.tagName.toLowerCase() !== "body"){
+                that.dom.parentNode.insertBefore(that.createDroppingZone('Avant'), that.dom);
+                that.dom.parentNode.insertBefore(that.createDroppingZone('Après'), that.dom.nextSibling);
+            }
+            
+        }, 500);
     }
 
     onDragLeave(event){
-        //console.log('leave')
-        //this.dom.classList.remove('dropping-zone');
         event.preventDefault();
+        event.stopPropagation();
 
         if(event.target.classList.contains('dropping-zone-hover')){
             event.target.classList.remove('dropping-zone-hover');
         }
 
-        this.dom.removeAttribute("data-hovering");
+        this.state.initDragging = false;        
+        this.state.onDragging = false;
     }
-
-    /*onDragStart(event){
-        event.stopPropagation();
-
-        //let data = HTMLElementData.getElementData(null, this.dom);
-        //event.dataTransfer.setData("componentData", JSON.stringify(data));
-        CanvasElement.draggingItem = this.dom;
-    }*/
 
     createDroppingZone(desc){
         let el = document.createElement("div");

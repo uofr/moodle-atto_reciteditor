@@ -438,7 +438,7 @@ class CanvasState{
         }
 
         // remove the class dropping-zone of all elements
-        let items = htmlDoc.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable], [data-dragging], [data-selected], [draggable]");
+        let items = htmlDoc.querySelectorAll(".dropping-zone, .dropping-zone-hover, [contenteditable], [data-hovering], [data-selected], [draggable]");
 
         items.forEach(function(item) {
             //item.classList.remove('dropping-zone');
@@ -449,7 +449,7 @@ class CanvasState{
                 item.classList.remove('dropping-zone-hover');
             }
             
-            item.removeAttribute("data-dragging");
+            item.removeAttribute("data-hovering");
             item.removeAttribute("contenteditable");
             item.removeAttribute("data-selected");
             item.removeAttribute("draggable");
