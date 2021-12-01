@@ -251,7 +251,7 @@ export class VisualComponentList extends Component{
         this.state = {tab: '2'};
     }
 
-    render(){
+    render(){       
         let main =
             <div className='component-list'>
                 <Nav variant="tabs" activeKey={this.state.tab} onSelect={this.onSelectTab}>
@@ -266,7 +266,13 @@ export class VisualComponentList extends Component{
                     </Nav.Item>
                 </Nav>
                 
-                {this.state.tab === "0" && <TokenList dataProvider={HTMLElementData.elementList} onDragEnd={this.props.onDragEnd}/>}
+                {this.state.tab === "0" &&
+                    <>
+                        {HTMLElementData.elementListSortByName()}
+                        <TokenList dataProvider={HTMLElementData.elementList} onDragEnd={this.props.onDragEnd}/>
+                    </>
+
+                }
 
                 {this.state.tab === "1" && 
                                 <TemplateList dataProvider={Templates.componentList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} type='c' />}

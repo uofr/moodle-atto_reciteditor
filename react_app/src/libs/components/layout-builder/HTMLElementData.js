@@ -188,7 +188,7 @@ class HTMLVideoElement extends HTMLMediaElement{
     equal(el){
         if(el === null){ return false; }
 
-        return (el.classList.contains('video'));
+        return (el.classList.contains('video') && el.classList.contains('video-container'));
     }
 
     create(){
@@ -282,7 +282,6 @@ class HTMLRowElement extends HTMLElement{
     equal(el){
         if(el === null){ return false; }
 
-        console.log(el, el.classList.contains('row'))
         return (el.classList.contains('row') || el.classList.contains('row-fluid'));
     }
 
@@ -867,6 +866,40 @@ class HTMLTabPaneElement extends HTMLDivElement{
         if(el === null){ return false; }
 
         return (el.classList.contains('tab-pane'));
+    }
+}
+
+class HTMLNavElement extends HTMLElement{
+    constructor(){
+        super("Nav", "nav", 'native');
+        this.visible = false;
+    }
+}
+
+class HTMLNavItemElement extends HTMLElement{
+    constructor(){
+        super("NavItem", "li", 'native');
+        this.visible = false;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('nav-item'));
+    }
+}
+
+class HTMLNavLinkElement extends HTMLElement{
+    constructor(){
+        super("NavLink", "a", 'native');
+        this.cssProp.prefix = 'btn';
+        this.visible = false;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('nav-link'));
     }
 }
 
@@ -2267,7 +2300,10 @@ export class HTMLElementData{
                 new HTMLAudioElement(),
                 new HTMLVideoElement("Vidéo", null, 'bootstrap'),
                 new HTMLButtonVideoElement(),
-                new HTMLIFrameElement()
+                new HTMLIFrameElement(),
+                new HTMLNavElement(),
+                new HTMLNavItemElement(),
+                new HTMLNavLinkElement()
             ]
         },
         {
@@ -2297,6 +2333,7 @@ export class HTMLElementData{
                 new HTMLMediaBSElement(),
                 new HTMLMediaBSBodyElement(),
                 new HTMLCarouselElement(),
+                new HTMLCarouselNavElement(),
                 new HTMLTabElement(),
                 new HTMLTabContentElement(),
                 new HTMLTabPaneElement(),
@@ -2314,11 +2351,11 @@ export class HTMLElementData{
         },
     ];
 
-    static elementListSort = function(){
+    static elementListSortByName = function(){
         HTMLElementData.elementList.sort((a,b) =>{
             return a.name.toString().localeCompare(b.name.toString());
         })
-
+ 
         for(let item of HTMLElementData.elementList){
             item.children.sort((a,b) =>{
                 return a.name.toString().localeCompare(b.name.toString());
@@ -2326,29 +2363,29 @@ export class HTMLElementData{
         }
     }
 
+    static elementListSortbyType = function(){
+        for(let item of HTMLElementData.elementList){
+            item.children.sort((a,b) =>{
+                return a.type.toString().localeCompare(b.type.toString());
+            })
+        }
+    }
+
     static getElementClass(data, el){
         data = data || null;
         el = el || null;
+        
+        // it give priority to bootstrap
+        HTMLElementData.elementListSortbyType();
 
-        let tmpList = [];
-
-        for(let item of HTMLElementData.elementList){
-            for(let item2 of item.children){
-                tmpList.push(item2);
-            }            
-        }
-
-        // give priority to bootstrap components
-        tmpList.sort((a,b) =>{
-            return a.type.toString().localeCompare(b.type.toString());
-        })
-
-        for(let item of tmpList){
-            if(item.equal(el)){
-                return item;
-            }
-            else if (data !== null && data.tagName === item.tagName){
-                return item;
+        for(let section of HTMLElementData.elementList){
+            for(let item of section.children){
+                if(item.equal(el)){
+                    return item;
+                }
+                else if (data !== null && data.tagName === item.tagName){
+                    return item;
+                }
             }
         }
 
@@ -2379,6 +2416,3 @@ export class HTMLElementData{
         return el;
     }
 }
-
-HTMLElementData.elementListSort();
-
