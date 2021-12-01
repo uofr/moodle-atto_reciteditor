@@ -302,6 +302,8 @@ export class NodeTextEditing extends Component{
         if(this.props.device === null){ return null;}
         if(this.props.selectedElement.getAttribute('contenteditable') !== 'true'){ return null; }
         
+        this.props.selectedElement.removeAttribute('draggable');
+        
         let style = {position: 'absolute', display: 'block', top: 0, left: 0};
 
         let posCanvas = this.props.posCanvas;
