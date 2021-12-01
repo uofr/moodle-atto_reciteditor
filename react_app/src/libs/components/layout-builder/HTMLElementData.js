@@ -334,7 +334,7 @@ class HTMLUListElement extends HTMLElement{
 
 class HTMLOListElement extends HTMLElement{
     constructor(){
-        super("Liste", "ol", 'native', HTMLElementData.propsAssignmentFacade.containers);
+        super("Liste Num.", "ol", 'native', HTMLElementData.propsAssignmentFacade.containers);
     }
 
     create(){
@@ -2383,7 +2383,7 @@ export class HTMLElementData{
                 if(item.equal(el)){
                     return item;
                 }
-                else if (data !== null && data.tagName === item.tagName){
+                else if (data !== null && data.name === item.name){
                     return item;
                 }
             }

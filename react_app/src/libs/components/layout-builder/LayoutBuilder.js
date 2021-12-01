@@ -264,7 +264,8 @@ class MainView extends Component{
                             <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/>Arborescence
                         </Card.Header>
                         <Card.Body data-collapsed={(this.state.collapsed.treeView ? 1 : 0)}  style={{height: panelHeight}}>
-                            <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} view={this.props.view}/>
+                            <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} view={this.props.view}
+                                    onDeleteElement={this.onDeleteElement} onMoveNodeUp={this.onMoveNodeUp} onMoveNodeDown={this.onMoveNodeDown} />
                         </Card.Body>
                     </Card>
                 </div>
@@ -290,18 +291,18 @@ class MainView extends Component{
         this.setState({selectedElement: result.el, collapsed: result.collapsed});
     }
 
-    onDeleteElement(){
-        this.canvasState[this.state.canvasState].onDeleteElement(this.state.selectedElement);
+    onDeleteElement(el){
+        this.canvasState[this.state.canvasState].onDeleteElement(el || this.state.selectedElement);
         this.setState({selectedElement: null});
     }
 
-    onMoveNodeUp(){
-        this.canvasState[this.state.canvasState].onMoveNodeUp(this.state.selectedElement);
+    onMoveNodeUp(el){
+        this.canvasState[this.state.canvasState].onMoveNodeUp(el || this.state.selectedElement);
         this.forceUpdate();
     }
 
-    onMoveNodeDown(){
-        this.canvasState[this.state.canvasState].onMoveNodeDown(this.state.selectedElement);
+    onMoveNodeDown(el){
+        this.canvasState[this.state.canvasState].onMoveNodeDown(el || this.state.selectedElement);
         this.forceUpdate();
     }
 
@@ -593,31 +594,50 @@ class DesignerState extends CanvasState{
         this.htmlCleaning(this.window.document);
     }
 
-    onDeleteElement(selectedElement){
+    onDeleteElement(el){
+        if(el.isSameNode(this.window.document.body)){ return; }
+
         this.onContentChange();
-        selectedElement.remove();
+        el.remove();
     }
     
-    onMoveNodeUp(selectedElement){
-        this.onContentChange();
-        let parent = selectedElement.parentElement;
-        let previousSibling = selectedElement.previousSibling;
-        parent.insertBefore(selectedElement, previousSibling);
-    }
+    onMoveNodeUp(el){
+        if(el.isSameNode(this.window.document.body)){ return; }
 
-    onMoveNodeDown(selectedElement){
-        this.onContentChange();
-        let parent = selectedElement.parentElement;
-        let nextSibling = selectedElement.nextSibling;
-        if(nextSibling){
-            parent.insertBefore(nextSibling, selectedElement);
+        let parent = el.parentElement;
+
+        if(el.isSameNode(parent.firstElementChild)){
+            if(!parent.isSameNode(this.window.document.body)){
+                parent.parentElement.insertBefore(el, parent);
+            }
         }
         else{
-            parent.insertBefore(selectedElement, parent.firstChild);
+            parent.insertBefore(el, el.previousElementSibling);
         }
+        
+        this.onContentChange();
+    }
+
+    onMoveNodeDown(el){
+        if(el.isSameNode(this.window.document.body)){ return; }
+
+        let parent = el.parentElement;
+
+        if(el.isSameNode(parent.lastElementChild)){
+            if(!parent.isSameNode(this.window.document.body)){
+                parent.parentElement.insertBefore(el, parent.nextElementSibling);
+            }
+        }
+        else{
+            parent.insertBefore(el.nextElementSibling, el);
+        }
+
+        this.onContentChange();
     }
 
     onCloneNode(selectedElement){
+        if(selectedElement.isSameNode(this.window.document.body)){ return; }
+
         this.onContentChange();
         let parent = selectedElement.parentElement;
         let el = selectedElement.cloneNode(true)

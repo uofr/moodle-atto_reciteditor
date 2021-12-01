@@ -55,9 +55,7 @@ export class CanvasElement{
         this.dom.onmouseover = this.onMouseOver;
         this.dom.onmouseout = this.onMouseOut;
 
-        this.clickCounter = 0;
-
-        this.state = {initDragging: false, onDragging: false };
+        this.state = {initDragging: false, onDragging: false, clickCounter: 0 };
 
         for(let child of this.dom.childNodes){
             CanvasElement.create(child, this.onSelectCallback, this.onDropCallback, this.onEditNodeText);
@@ -71,20 +69,20 @@ export class CanvasElement{
     onClickHandler(event){        
         event.preventDefault(); // Cancel the default action (in case of href)
         event.stopPropagation();
-        this.clickCounter++;
+        this.state.clickCounter++;
         let that = this;
 
         if(event.detail === 1){
             setTimeout(() => {
-                if(that.clickCounter === 1){
+                if(that.state.clickCounter === 1){
                     that.onClick();
                 }
-                that.clickCounter = 0;
+                that.state.clickCounter = 0;
             }, 250);
         }
         else if (event.detail === 2) {
             this.onDblClick();
-            this.clickCounter = 0;
+            this.state.clickCounter = 0;
         }
     }
 
@@ -264,10 +262,10 @@ export class FloatingMenu extends Component{
                         <Button onDragStart={this.props.onDragElement} draggable="true" style={{cursor: 'grab'}}><FontAwesomeIcon  icon={faArrowsAlt} title="Glisser"/></Button>
                         <Button onClick={this.props.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
                         <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faPuzzlePiece} title="Créer un composant"/></Button>
-                        <Button onClick={this.props.onMoveNodeUp}  ><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
-                        <Button onClick={this.props.onMoveNodeDown}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>
+                        <Button onClick={() => this.props.onMoveNodeUp(null)}  ><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
+                        <Button onClick={() => this.props.onMoveNodeDown(null)}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>
                         <Button onClick={this.props.onCloneNode}><FontAwesomeIcon icon={faClone} title="Dupliquer"/></Button>
-                        <Button onClick={this.props.onDeleteElement}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                        <Button onClick={() => this.props.onDeleteElement(null)}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                     </ButtonGroup>
                 </ButtonToolbar>
                 {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate}/>}
