@@ -42,12 +42,15 @@ export class SourceCodeEditor extends Component{
             let line = (this.state.data.substr(0, pos).match(/\n/g) || []).length;
             
             let el = this.codeMirror.current.editor.querySelector('.cm-content');
-            if (el.childNodes[line]){
+            let child = el.childNodes[line];
+            if (child){
                 setTimeout(() => {
                     let range = document.createRange()
                     let sel = window.getSelection()
                     
-                    range.selectNodeContents(el.childNodes[line])
+                    range.selectNodeContents(child)
+                    child.scrollIntoView()
+                    window.scrollTo(0, 0)
                     range.collapse(false)
                     
                     sel.removeAllRanges()
