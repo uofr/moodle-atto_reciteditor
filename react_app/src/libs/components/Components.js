@@ -32,7 +32,7 @@ export class Assets{
     static ImageEmptyHD = Assets.ImageEmpty; //require('./assets/images/empty-hd.jpg');
 
     static CanvasCSS = './assets/css/canvas.css';
-    static CanvasDesignerCSS = './assets/css/designer-canvas.css';
+    static CanvasDesignerCSS = './assets/css/designer-canvas.css?v=5';
    // static ContentCSS = './assets/css/content.css'; it is already in Moodle theme
     //static ContentScript = './assets/js/script.js'; 
 
