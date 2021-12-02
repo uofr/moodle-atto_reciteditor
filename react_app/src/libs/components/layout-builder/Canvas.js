@@ -143,7 +143,6 @@ export class CanvasElement{
     
     onDragOver(event){
         event.preventDefault(); // Necessary to allows us to drop.
-
         if(!event.target.classList.contains('dropping-zone-hover') && event.target.classList.contains('dropping-zone')){
             event.target.classList.add('dropping-zone-hover');
         }
