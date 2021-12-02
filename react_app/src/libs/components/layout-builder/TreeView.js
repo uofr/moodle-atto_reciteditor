@@ -52,15 +52,16 @@ export class TreeView extends Component{
 
         let result = null;
            
-        let selected = (this.props.selectedElement === node.dom ? 'disabled btn-warning' : '');
+        let selected = (this.props.selectedElement !== null &&  this.props.selectedElement.isSameNode(node.dom));
+        let extraClasses = (selected ? 'disabled btn-warning' : '');
         
         let btn =  
-            <ButtonToolbar className="d-inline-flex" aria-label="Item actions">
+            <ButtonToolbar aria-label="Item actions" style={{flexWrap: "nowrap"}}>
                 <ButtonGroup>
-                    <Button variant="link" className={`p-1 ${selected}`} onClick={() => this.props.onSelect(node.dom)} >{` ${node.text}`}</Button>
+                    <Button variant="link" className={`p-1 ${extraClasses}`} onClick={() => this.props.onSelect(node.dom)} >{` ${node.text}`}</Button>
                 </ButtonGroup>
                 {!node.dom.isSameNode(this.props.data) &&
-                    <ButtonGroup size="sm" className="btn-group-actions">
+                    <ButtonGroup size="sm" className="btn-group-actions" style={(selected ? {display: 'flex'} : {})}>
                         <Button onClick={() => this.props.onMoveNodeUp(node.dom)}  ><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
                         <Button onClick={() => this.props.onMoveNodeDown(node.dom)}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>
                         <Button onClick={() => this.props.onDeleteElement(node.dom)}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
@@ -73,7 +74,7 @@ export class TreeView extends Component{
         if(node.children.length > 0){
             result = 
                 <li key={key}>
-                    <span >
+                    <span className="d-flex align-items-center" >
                         <FontAwesomeIcon className="mr-1" icon={icon} onClick={(event) => this.onCollapse(event, id)}/>
                         {btn}
                     </span>
@@ -88,7 +89,13 @@ export class TreeView extends Component{
                 </li>
         }
         else{
-            result = <li key={key}><span>{btn}</span></li>;
+            result = 
+                <li key={key}>
+                    <span className="d-flex align-items-center">
+                        <i style={{marginRight: "12px"}}></i>
+                        {btn}
+                    </span>
+                </li>;
         }
             
         return result;
@@ -121,7 +128,7 @@ export class TreeView extends Component{
         }*/
         let elClass = HTMLElementData.getElementClass(null, node);
 
-        return (elClass ? elClass.name : node.tagName.toLowerCase());
+        return (elClass ? elClass.getDesc() : node.tagName.toLowerCase());
     }
 
     onCollapse(event, id){

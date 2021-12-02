@@ -4,6 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LayoutSpacingEditor, Assets} from '../Components';
 import Utils, {UtilsHTML} from '../../utils/Utils';
 
+/**
+ * Abstract class
+ */
 class HTMLElement{
     constructor(name, tagName, type, properties){
         this.name = name || "";
@@ -12,6 +15,10 @@ class HTMLElement{
         this.properties = properties || [];
         this.cssProp = {prefix: "bg"};
         this.visible = true;
+    }
+
+    getDesc(){
+        return this.name;
     }
 
     create(){ 
@@ -41,9 +48,24 @@ class HTMLElement{
             el.appendChild(this.createElementDZ("À l'intérieur"));
         }
 
-        if(el.tagName.toLowerCase() !== "body"){
-            el.parentNode.insertBefore(this.createElementDZ('Avant'), el);
-            el.parentNode.insertBefore(this.createElementDZ('Après'), el.nextSibling);
+        el.parentNode.insertBefore(this.createElementDZ('Avant'), el);
+        el.parentNode.insertBefore(this.createElementDZ('Après'), el.nextSibling);
+    }
+}
+
+class HTMLBodyElement extends HTMLElement{
+    constructor(){
+        super('Body', 'body', 'native');
+        this.visible = false;
+    }
+
+    prepareDroppingZones(el){ 
+        if(el.children.length > 0){
+            el.insertBefore(this.createElementDZ("À l'intérieur au début"), el.firstChild);    
+            el.appendChild(this.createElementDZ("À l'intérieur à la fin"));
+        } 
+        else{
+            el.appendChild(this.createElementDZ("À l'intérieur"));
         }
     }
 }
@@ -53,7 +75,7 @@ class HTMLHeadingElement extends HTMLElement{
         super(name, tagName, 'native', HTMLElementData.propsAssignmentFacade.text);
     }
 
-    create(){ 
+    create(){  
         let el = document.createElement(this.tagName);
         el.innerText = el.tagName.toLowerCase();
         return el;
@@ -473,7 +495,7 @@ class HTMLCardElement extends HTMLDivElement{
 
 class HTMLCardBodyElement extends HTMLDivElement{
     constructor(){
-        super("Body", "div", 'bootstrap');
+        super("Card Body", "div", 'bootstrap');
         this.visible = false;
     }
 
@@ -492,7 +514,7 @@ class HTMLCardBodyElement extends HTMLDivElement{
 
 class HTMLCardHeaderElement extends HTMLDivElement{
     constructor(){
-        super("Header", "div", 'bootstrap');
+        super("Card Header", "div", 'bootstrap');
         this.visible = false;
     }
 
@@ -511,7 +533,7 @@ class HTMLCardHeaderElement extends HTMLDivElement{
 
 class HTMLCardFooterElement extends HTMLDivElement{
     constructor(){
-        super("Footer", "div", 'bootstrap');
+        super("Card Footer", "div", 'bootstrap');
         this.visible = false;
     }
 
@@ -590,15 +612,6 @@ class HTMLFlipCardElement extends HTMLDivElement{
 
         return card;
     }
-
-    onSelect(el){
-        let card = el.parentElement.parentElement;
-        if(el.classList.contains("back")){
-            card.classList.add('hover');
-        }else{
-            card.classList.remove('hover');
-        }
-    }
 }
 
 class HTMLFlipCardFrontElement extends HTMLDivElement{
@@ -612,6 +625,11 @@ class HTMLFlipCardFrontElement extends HTMLDivElement{
 
         return (el.classList.contains('front'));
     }
+
+    onSelect(el){
+        let flipcard = el.parentElement.parentElement;
+        flipcard.classList.remove('hover');
+    }
 }
 
 class HTMLFlipCardBackElement extends HTMLDivElement{
@@ -624,6 +642,11 @@ class HTMLFlipCardBackElement extends HTMLDivElement{
         if(el === null){ return false; }
 
         return (el.classList.contains('back'));
+    }
+
+    onSelect(el){
+        let flipcard = el.parentElement.parentElement;
+        flipcard.classList.add('hover');
     }
 }
 
@@ -871,14 +894,20 @@ class HTMLTabPaneElement extends HTMLDivElement{
 
 class HTMLNavElement extends HTMLElement{
     constructor(){
-        super("Nav", "nav", 'native');
+        super("Nav", "nav", 'bootstrap');
         this.visible = false;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('nav'));
     }
 }
 
 class HTMLNavItemElement extends HTMLElement{
     constructor(){
-        super("NavItem", "li", 'native');
+        super("NavItem", "li", 'bootstrap');
         this.visible = false;
     }
 
@@ -891,7 +920,7 @@ class HTMLNavItemElement extends HTMLElement{
 
 class HTMLNavLinkElement extends HTMLElement{
     constructor(){
-        super("NavLink", "a", 'native');
+        super("NavLink", "a", 'bootstrap');
         this.cssProp.prefix = 'btn';
         this.visible = false;
     }
@@ -2309,6 +2338,7 @@ export class HTMLElementData{
         {
             name: 'Containeurs', 
             children: [
+                new HTMLBodyElement(),
                 new HTMLDivElement(),
                 new HTMLSpanElement(),
                 new HTMLSectionElement(),
