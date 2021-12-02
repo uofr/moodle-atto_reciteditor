@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {  Button  } from 'react-bootstrap';
-import {faAngleRight, faAngleDown} from '@fortawesome/free-solid-svg-icons';
+import { ButtonToolbar, Button, ButtonGroup  } from 'react-bootstrap';
+import {faAngleRight, faAngleDown, faArrowUp, faArrowDown, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import {UtilsHTML} from '../../utils/Utils';
@@ -10,6 +10,9 @@ export class TreeView extends Component{
         data: null,
         onSelect: null,
         selectedElement: null,
+        onDeleteElement: null,
+        onMoveNodeUp: null,
+        onMoveNodeDown: null,
         view: 'designer'
     };
     
@@ -50,8 +53,21 @@ export class TreeView extends Component{
         let result = null;
            
         let selected = (this.props.selectedElement === node.dom ? 'disabled btn-warning' : '');
+        
+        let btn =  
+            <ButtonToolbar className="d-inline-flex" aria-label="Item actions">
+                <ButtonGroup>
+                    <Button variant="link" className={`p-1 ${selected}`} onClick={() => this.props.onSelect(node.dom)} >{` ${node.text}`}</Button>
+                </ButtonGroup>
+                {!node.dom.isSameNode(this.props.data) &&
+                    <ButtonGroup size="sm" className="btn-group-actions">
+                        <Button onClick={() => this.props.onMoveNodeUp(node.dom)}  ><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
+                        <Button onClick={() => this.props.onMoveNodeDown(node.dom)}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>
+                        <Button onClick={() => this.props.onDeleteElement(node.dom)}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                    </ButtonGroup>
+                }
+            </ButtonToolbar>;
 
-        let btn = <Button variant="link" className={`p-1 ${selected}`} onClick={() => this.props.onSelect(node.dom)} >{` ${node.text}`}</Button>;
         let icon = (this.state.notCollapsed[id] ? faAngleDown : faAngleRight);
 
         if(node.children.length > 0){

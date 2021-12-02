@@ -97,7 +97,12 @@ html{
                     list-style: none; padding-left: 0;
                     ul{
                         list-style: none; padding-left: 1rem; 
-                        button{text-align: left;}
+                        .btn-toolbar{
+                            .btn-group-actions{display: none; margin-left: 1rem;}
+                        }
+                        .btn-toolbar:hover{
+                            .btn-group-actions{display: flex;}
+                        }
                     }
                 }   
             }
@@ -109,7 +114,10 @@ html{
                 color: #bd9797;
             }
             .ͼo .cm-activeLine {
-                background-color: #5e5e435e;
+                background-color: #f4ed7b4d;
+                .cm-matchingBracket{
+                    background-color: #ffc1071a;
+                }
             }
         }
     }
