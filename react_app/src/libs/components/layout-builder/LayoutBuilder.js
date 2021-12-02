@@ -475,6 +475,7 @@ class DesignerState extends CanvasState{
         this.iFrame = null;
         this.window = null;
         this.historyManager = historyManager;
+        this.onKey = this.onKey.bind(this);
     }
 
     onLoadFrame(){
@@ -510,6 +511,8 @@ class DesignerState extends CanvasState{
 
         // React JS
         //body.appendChild(doc.firstChild);        
+
+        body.onkeyup = this.onKey;
     }
 
     render(show, selectedElement){
@@ -595,6 +598,7 @@ class DesignerState extends CanvasState{
     }
 
     onDeleteElement(el){
+        if(!el){ return; } // Element does not exist
         if(el.isSameNode(this.window.document.body)){ return; }
 
         this.onContentChange();
@@ -711,6 +715,16 @@ class DesignerState extends CanvasState{
 
         selectedElement.setAttribute('contenteditable', 'true');
         setCaretToEnd(selectedElement);
+    }
+
+    onKey(e) {
+        if (e.keyCode === 46 || e.keyCode === 13) {//del
+          this.mainView.onDeleteElement(null);
+        }
+
+        if (e.ctrlKey && e.keyCode == 90){//ctrl z
+            this.historyManager.onUndo(this.mainView.setData, this.mainView.getData());
+        }
     }
 }
 
