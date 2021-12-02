@@ -41,10 +41,10 @@ export class SourceCodeEditor extends Component{
             let pos = this.state.data.search(`data-tag-id="${this.props.queryStr}"`);
             let line = (this.state.data.substr(0, pos).match(/\n/g) || []).length;
             
-            let el = this.codeMirror.current.editor.querySelector('.cm-content');
-            let child = el.childNodes[line];
-            if (child){
-                setTimeout(() => {
+            setTimeout(() => {
+                let el = document.querySelector('.cm-content');
+                let child = el.childNodes[line];
+                if (child){
                     let range = document.createRange()
                     let sel = window.getSelection()
                     
@@ -55,10 +55,10 @@ export class SourceCodeEditor extends Component{
                     
                     sel.removeAllRanges()
                     sel.addRange(range)
-                    this.codeMirror.current.editor.focus()
-                }, 500);
+                    this.codeMirror.current.editor.focus();
+                }
+            }, 500);
 
-            }
             //this.codeMirror.current.view.dispatch({selection: {anchor: line}});
         }
     }
