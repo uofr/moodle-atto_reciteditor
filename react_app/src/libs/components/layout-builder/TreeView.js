@@ -128,7 +128,7 @@ export class TreeView extends Component{
         }*/
         let elClass = HTMLElementData.getElementClass(null, node);
 
-        return (elClass ? elClass.getDesc() : node.tagName.toLowerCase());
+        return (elClass ? elClass.getDesc(node) : node.tagName.toLowerCase());
     }
 
     onCollapse(event, id){

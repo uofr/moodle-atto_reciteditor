@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button, Modal  } from 'react-bootstrap';
 import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCloud, faTimes, faCloudUploadAlt, faCloudDownloadAlt, faCog} from '@fortawesome/free-solid-svg-icons';
-import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, MinValueMax, ComboBox, TableActions, ImageSrc, BtnUpload,  IconSelector,Assets, ColorSelector } from '../Components';
+import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, TableActions, ImageSrc, BtnUpload,  IconSelector,Assets, ColorSelector } from '../Components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import { Templates } from './Templates';
@@ -147,6 +147,10 @@ class FormProperties extends Component{
                 break;
             case 'text':
                 result = <InputText name={data.name} value={value} size="sm"
+                                onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'textarea':
+                result = <InputTextArea name={data.name} value={value} size="sm"
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
             case 'minvaluemax':

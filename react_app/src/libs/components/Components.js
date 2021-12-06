@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export * from './ToggleButtons';
 export * from './InputNumber';
 export * from './InputText';
+export * from './InputTextArea';
 export * from './ComboBox';
 export * from './InputColor';
 export * from './ImageSrc';

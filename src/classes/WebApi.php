@@ -109,6 +109,7 @@ class WebApi{
             }
 
             foreach($data->fileContent as $item){
+                if (!isset($item->htmlStr)) $item->htmlStr = $item->htmlstr; //JSON sometimes voids capit keys
                 $this->db->insert_record('atto_reciteditor_templates', array('name' => $item->name, 'type' => $item->type, 'userid' => $USER->id, 'htmlstr' => $item->htmlStr, 'img' => $item->img));
             }
 

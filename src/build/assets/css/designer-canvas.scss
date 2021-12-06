@@ -25,7 +25,8 @@ html{
         height: 100%; 
 
         //div:not(.container):not(.row):not(.col):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.carousel):not(.carousel-inner)::before{content: "Div"}
-        div:empty:not(.col):not(.col-12):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before{content: "Div"}
+        div:empty:not(.col):not(.embedelement):not(.col-12):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before{content: "Div"}
+        .embedelement:empty::before{content: "Embed"}
         div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.dropping-zone):not(.carousel-item){ border: $border-invisible-element; }    
         section{border: $border-invisible-element;}
         table{border: $border-invisible-element; border-width: 3px;}
@@ -81,7 +82,7 @@ html{
             .imgclickcontent {            position: absolute;            top: 50%;            left: 50%;            transform: translate(-50%, -50%);            text-align: center;        }
         }
 
-        iframe{@extend .extra-landmark;}
+        iframe{@extend .extra-landmark; border: 2px dashed #000;}
         iframe.video {            pointer-events: none;            content: 'video';        }
         
         audio {@extend .extra-landmark;}

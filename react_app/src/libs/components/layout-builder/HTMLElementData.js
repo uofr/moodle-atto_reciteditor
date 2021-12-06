@@ -17,7 +17,7 @@ class HTMLElement{
         this.visible = true;
     }
 
-    getDesc(){
+    getDesc(el){
         return this.name;
     }
 
@@ -75,7 +75,7 @@ class HTMLHeadingElement extends HTMLElement{
         super(name, tagName, 'native', HTMLElementData.propsAssignmentFacade.text);
     }
 
-    create(){  
+    create(){ 
         let el = document.createElement(this.tagName);
         el.innerText = el.tagName.toLowerCase();
         return el;
@@ -230,22 +230,27 @@ class HTMLVideoElement extends HTMLMediaElement{
     }
 }
 
-class HTMLIFrameElement extends HTMLElement{
-    constructor(){
-        super("iFrame", 'iframe', 'native', ['marginborderpadding', 'source', 'layout']);
-    }
-
-    create(){ 
-        let el = document.createElement(this.tagName);
-        el.width = "320";
-        el.height = "240";
-        return el;
+class HTMLDivElement extends HTMLElement{
+    constructor(name, tagName, type, properties){
+        super(name || "Div", tagName || "div", type || 'native', properties || HTMLElementData.propsAssignmentFacade.containers);
     }
 }
 
-class HTMLDivElement extends HTMLElement{
-    constructor(name, tagName, type){
-        super(name || "Div", tagName || "div", type || 'native', HTMLElementData.propsAssignmentFacade.containers);
+class HTMLEmbedElement extends HTMLElement{
+    constructor(){
+        super("Embed", 'div', 'bootstrap', ['marginborderpadding', 'layout', 'embed']);
+    }
+
+    create(){ 
+        let el = document.createElement('div');
+        el.classList.add('embedelement');
+        return el;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('embedelement'));
     }
 }
 
@@ -616,7 +621,7 @@ class HTMLFlipCardElement extends HTMLDivElement{
 
 class HTMLFlipCardFrontElement extends HTMLDivElement{
     constructor(){
-        super("Devant", "div", 'bootstrap');
+        super("Avant", "div", 'bootstrap');
         this.visible = false;
     }
 
@@ -1365,6 +1370,25 @@ export class HTMLElementData{
                         let iframe = el;
                         if (el.tagName == 'DIV') iframe = el.querySelector('iframe');
                         return iframe.src;
+                    }
+                }
+            ]
+        },
+        {
+            name: 'embed', description: 'Proprieté',  type: 'htmlattr',
+            children: [
+                {
+                    name: 'src',
+                    text: 'Code HTML',
+                    input: {
+                        type: 'textarea',
+                        defaultValue: '',
+                        onChange: function(el, value, data){
+                            el.innerHTML = value;
+                        }
+                    },
+                    getValue: function(el){
+                        return el.innerHTML;
                     }
                 }
             ]
@@ -2329,7 +2353,7 @@ export class HTMLElementData{
                 new HTMLAudioElement(),
                 new HTMLVideoElement("Vidéo", null, 'bootstrap'),
                 new HTMLButtonVideoElement(),
-                new HTMLIFrameElement(),
+                new HTMLEmbedElement(),
                 new HTMLNavElement(),
                 new HTMLNavItemElement(),
                 new HTMLNavLinkElement()
@@ -2394,28 +2418,38 @@ export class HTMLElementData{
     }
 
     static elementListSortbyType = function(){
-        for(let item of HTMLElementData.elementList){
-            item.children.sort((a,b) =>{
-                return a.type.toString().localeCompare(b.type.toString());
-            })
+        if (HTMLElementData.elementListSortedbyType){
+            return HTMLElementData.elementListSortedbyType;
         }
+
+        let list = [];
+        for(let cat of HTMLElementData.elementList){
+            for (let item of cat.children){
+                list.push(item);
+            }
+        }
+        
+        list.sort((a,b) =>{
+            return a.type.toString().localeCompare(b.type.toString());
+        })
+
+        HTMLElementData.elementListSortedbyType = list;
+        return list;
     }
 
     static getElementClass(data, el){
         data = data || null;
         el = el || null;
         
-        // it give priority to bootstrap
-        HTMLElementData.elementListSortbyType();
+        // it gives priority to bootstrap
+        let list = HTMLElementData.elementListSortbyType();
 
-        for(let section of HTMLElementData.elementList){
-            for(let item of section.children){
-                if(item.equal(el)){
-                    return item;
-                }
-                else if (data !== null && data.name === item.name){
-                    return item;
-                }
+        for(let item of list){
+            if(item.equal(el)){
+                return item;
+            }
+            else if (data !== null && data.name === item.name){
+                return item;
             }
         }
 
