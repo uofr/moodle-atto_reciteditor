@@ -238,7 +238,7 @@ class HTMLDivElement extends HTMLElement{
 
 class HTMLEmbedElement extends HTMLElement{
     constructor(){
-        super("Embed", 'div', 'bootstrap', ['marginborderpadding', 'layout', 'embed']);
+        super("Embed", 'div', 'bootstrap', ['bs-general', 'bs-spacingborder','marginborderpadding', 'layout', 'embed']);
     }
 
     create(){ 
