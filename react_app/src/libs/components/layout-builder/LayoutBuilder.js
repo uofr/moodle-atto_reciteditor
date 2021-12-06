@@ -720,7 +720,9 @@ class DesignerState extends CanvasState{
     }
 
     onKey(e) {
-        if (e.keyCode === 46 || e.keyCode === 13) {//del
+        let iframe = window.document.getElementById("designer-canvas");
+        if (!iframe || iframe.parentElement.style.display == 'none') return;
+        if (e.keyCode === 46) {//del
             if (!this.editingElement || this.editingElement.getAttribute('contenteditable') != 'true') {
                 this.mainView.onDeleteElement(null);
             }
