@@ -83,7 +83,8 @@ html{
         }
 
         iframe{@extend .extra-landmark; border: 2px dashed #000;}
-        iframe.video {            pointer-events: none;            content: 'video';        }
+        iframe.video {pointer-events: none;content: 'video';}
+        .embedelement iframe {pointer-events: none;}
         
         audio {@extend .extra-landmark;}
 

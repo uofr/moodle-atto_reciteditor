@@ -190,6 +190,8 @@ html {
     html body iframe.video {
       pointer-events: none;
       content: 'video'; }
+    html body .embedelement iframe {
+      pointer-events: none; }
     html body .embed-responsive {
       border: 2px dashed rgba(0, 0, 0, 0.5); }
   html .tagName {
