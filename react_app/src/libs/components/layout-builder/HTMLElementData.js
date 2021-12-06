@@ -856,22 +856,11 @@ class HTMLTabElement extends HTMLDivElement{
 
         return slider;
     }
-
-    onSelect(el){
-        if(el.classList.contains("tab-pane")){
-            let slider = el.parentElement.parentElement;
-            let slides = slider.querySelectorAll('.tab-pane');
-            for(let slide of slides){
-                slide.classList.remove('active', 'show');
-            }
-            el.classList.add('active', 'show');
-        }
-    }
 }
 
 class HTMLTabContentElement extends HTMLDivElement{
     constructor(){
-        super("Contenu onglet", "div", 'bootstrap');
+        super("Corps de l'onglet", "div", 'bootstrap');
         this.cssProp.prefix = 'tab';
         this.visible = false;
     }
@@ -894,6 +883,13 @@ class HTMLTabPaneElement extends HTMLDivElement{
         if(el === null){ return false; }
 
         return (el.classList.contains('tab-pane'));
+    }
+
+    getDesc(el){
+        let tab = el.parentElement.parentElement;
+        let target = tab.querySelector('[aria-controls="'+el.id+'"]');
+        if (!target) return this.name;
+        return 'Contenu de '+target.innerText;
     }
 }
 
@@ -934,6 +930,26 @@ class HTMLNavLinkElement extends HTMLElement{
         if(el === null){ return false; }
 
         return (el.classList.contains('nav-link'));
+    }
+
+    onSelect(el){
+        if(el.parentElement.parentElement.parentElement.classList.contains("tabs")){
+            let tab = el.parentElement.parentElement.parentElement;
+            let target = el.getAttribute('aria-controls');
+            target = tab.querySelector('#'+target);
+            if (!target) return;
+            let items = tab.querySelectorAll('.tab-pane');
+            for(let it of items){
+                it.classList.remove('active', 'show');
+            }
+            items = tab.querySelectorAll('.nav-link');
+            for(let it of items){
+                it.classList.remove('active', 'show');
+            }
+            
+            el.classList.add('active', 'show');
+            target.classList.add('active', 'show');
+        }
     }
 }
 
