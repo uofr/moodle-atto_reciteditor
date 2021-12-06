@@ -513,6 +513,7 @@ class DesignerState extends CanvasState{
         //body.appendChild(doc.firstChild);        
 
         body.onkeyup = this.onKey;
+        document.body.onkeyup = this.onKey;
     }
 
     render(show, selectedElement){
@@ -566,7 +567,6 @@ class DesignerState extends CanvasState{
                     result.el.setAttribute('draggable', 'true');
     
                     let elClass = HTMLElementData.getElementClass(null, result.el);
-                    console.log(elClass)
                     if (elClass && elClass.onSelect){
                         elClass.onSelect(result.el);
                     }
@@ -716,11 +716,14 @@ class DesignerState extends CanvasState{
 
         selectedElement.setAttribute('contenteditable', 'true');
         setCaretToEnd(selectedElement);
+        this.editingElement = selectedElement;
     }
 
     onKey(e) {
         if (e.keyCode === 46 || e.keyCode === 13) {//del
-          this.mainView.onDeleteElement(null);
+            if (!this.editingElement || this.editingElement.getAttribute('contenteditable') != 'true') {
+                this.mainView.onDeleteElement(null);
+            }
         }
 
         if (e.ctrlKey && e.keyCode == 90){//ctrl z
