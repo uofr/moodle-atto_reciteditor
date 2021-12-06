@@ -39,7 +39,7 @@ export class SourceCodeEditor extends Component{
     setCursor(prevProps){
         if((prevProps.queryStr !== this.props.queryStr) && (this.props.queryStr.length > 0) && this.codeMirror){
             let pos = this.state.data.search(`data-tag-id="${this.props.queryStr}"`);
-            let line = (this.state.data.substr(0, pos).match(/\n/g) || []).length;
+            let line = (this.state.data.substr(0, pos).match(/[\n\r]/g) || []).length;
             
             setTimeout(() => {
                 let el = document.querySelector('.cm-content');
