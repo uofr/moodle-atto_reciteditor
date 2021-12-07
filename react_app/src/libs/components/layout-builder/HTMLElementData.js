@@ -908,7 +908,7 @@ class HTMLNavElement extends HTMLElement{
 
 class HTMLNavItemElement extends HTMLElement{
     constructor(){
-        super("NavItem", "li", 'bootstrap');
+        super("NavItem", "li", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.visible = false;
     }
 
