@@ -1040,7 +1040,7 @@ class HTMLClickableImageElement extends HTMLElement{
 
 class HTMLIconElement extends HTMLElement{
     constructor(){
-        super("Icône", "i", 'native', ['bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes', 'icon', 'font']);
+        super("Icône", "i", 'native', ['icon', 'font', 'bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes']);
     }
 
     equal(el){
