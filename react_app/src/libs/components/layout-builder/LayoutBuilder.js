@@ -166,6 +166,7 @@ class MainView extends Component{
         this.onDragEnd = this.onDragEnd.bind(this);
         this.getData = this.getData.bind(this);
         this.setData = this.setData.bind(this);
+        this.onKey = this.onKey.bind(this);
 
         this.canvasState = {
             designer: new DesignerState(this, this.props.historyManager),
@@ -184,6 +185,7 @@ class MainView extends Component{
         this.canvasState[this.props.view].setData(this.props.content);
         this.props.historyManager.addHistoryItem(this.props.content);
         this.loadTemplates();
+        document.body.onkeyup = this.onKey;
     }
 
     loadTemplates(){
@@ -301,6 +303,10 @@ class MainView extends Component{
         this.forceUpdate();
     }
 
+    onKey(e){
+        this.canvasState[this.state.canvasState].onKey(e, this.state.selectedElement);
+    }
+
     onMoveNodeDown(el){
         this.canvasState[this.state.canvasState].onMoveNodeDown(el || this.state.selectedElement);
         this.forceUpdate();
@@ -406,6 +412,7 @@ class CanvasState{
         this.onEditNodeText = this.onEditNodeText.bind(this);
         this.onLoadFrame = this.onLoadFrame.bind(this);
         this.htmlCleaning = this.htmlCleaning.bind(this);
+        this.onKey = this.onKey.bind(this);
 
         this.onLoadFrame();
     }
@@ -422,6 +429,7 @@ class CanvasState{
     onCloneNode(selectedElement){console.log("Abstract method...");}
     onInsertNode(elems){console.log("Abstract method...");}
     onEditNodeText(selectedElement){console.log("Abstract method...");}
+    onKey(e, editingElement){}
 
     onCollapse(collapsed){ 
         return collapsed;
@@ -512,8 +520,7 @@ class DesignerState extends CanvasState{
         // React JS
         //body.appendChild(doc.firstChild);        
 
-        body.onkeyup = this.onKey;
-        document.body.onkeyup = this.onKey;
+        body.onkeyup = this.mainView.onKey;
     }
 
     render(show, selectedElement){
@@ -716,14 +723,12 @@ class DesignerState extends CanvasState{
 
         selectedElement.setAttribute('contenteditable', 'true');
         setCaretToEnd(selectedElement);
-        this.editingElement = selectedElement;
     }
 
-    onKey(e) {
-        let iframe = window.document.getElementById("designer-canvas");
-        if (!iframe || iframe.parentElement.style.display == 'none') return;
+    onKey(e, editingElement) {
         if (e.keyCode === 46) {//del
-            if (!this.editingElement || this.editingElement.getAttribute('contenteditable') != 'true') {
+            console.log(editingElement)
+            if (!editingElement || editingElement.getAttribute('contenteditable') != 'true') {
                 this.mainView.onDeleteElement(null);
             }
         }
