@@ -705,7 +705,7 @@ class HTMLMediaBSBodyElement extends HTMLDivElement{
 
 class HTMLCarouselElement extends HTMLDivElement{
     constructor(){
-        super("Carousel", "div", 'bootstrap');
+        super("Carousel", "div", 'bootstrap', ['bs-general', 'htmlattributes']);
     }
 
     equal(el){
@@ -796,7 +796,7 @@ class HTMLCarouselElement extends HTMLDivElement{
 
 class HTMLCarouselNavElement extends HTMLDivElement{
     constructor(){
-        super("Carousel Nav", "div", 'bootstrap');
+        super("Carousel Nav", "div", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.visible = false;
     }
 
@@ -860,7 +860,7 @@ class HTMLTabElement extends HTMLDivElement{
 
 class HTMLTabContentElement extends HTMLDivElement{
     constructor(){
-        super("Corps de l'onglet", "div", 'bootstrap');
+        super("Corps de l'onglet", "div", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.cssProp.prefix = 'tab';
         this.visible = false;
     }
@@ -874,7 +874,7 @@ class HTMLTabContentElement extends HTMLDivElement{
 
 class HTMLTabPaneElement extends HTMLDivElement{
     constructor(){
-        super("Contenu onglet", "div", 'bootstrap');
+        super("Contenu onglet", "div", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.cssProp.prefix = 'tab';
         this.visible = false;
     }
@@ -895,7 +895,7 @@ class HTMLTabPaneElement extends HTMLDivElement{
 
 class HTMLNavElement extends HTMLElement{
     constructor(){
-        super("Nav", "nav", 'bootstrap');
+        super("Nav", "nav", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.visible = false;
     }
 
