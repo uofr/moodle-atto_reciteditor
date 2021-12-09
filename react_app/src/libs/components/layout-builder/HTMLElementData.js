@@ -210,7 +210,7 @@ class HTMLVideoElement extends HTMLMediaElement{
     equal(el){
         if(el === null){ return false; }
 
-        return (el.classList.contains('video') && el.classList.contains('video-container'));
+        return (el.classList.contains('video') || el.classList.contains('video-container'));
     }
 
     create(){
