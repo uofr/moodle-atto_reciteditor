@@ -444,7 +444,7 @@ class TemplateList extends Component{
                         </Modal.Body>
                     </Modal>
                 }
-                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} description="Assurez vous que le gabarit ne contient pas d'images provenant d'un autre cours ou d'une autre activité."/>}
+                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} description="Assurez vous que les images contenues dans vos gabarits ne seront pas utilisées à l'intérieur d'une autre activité ou d'un autre cours. Les images doivent être substituées après l'action glisser-déposer sinon les liens vers les images seront brisés."/>}
             </div>;
 
         return main;
