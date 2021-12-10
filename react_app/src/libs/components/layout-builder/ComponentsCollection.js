@@ -444,7 +444,7 @@ class TemplateList extends Component{
                         </Modal.Body>
                     </Modal>
                 }
-                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate}/>}
+                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} description="Assurez vous que le gabarit ne contient pas d'images provenant d'un autre cours ou d'une autre activité."/>}
             </div>;
 
         return main;
@@ -644,7 +644,8 @@ class TokenTemplate extends Token{
 export class TemplateForm extends Component{
     static defaultProps = {
         onClose: null,
-        onSave: null
+        onSave: null,
+        description: ''
     };    
 
     constructor(props){
@@ -659,9 +660,10 @@ export class TemplateForm extends Component{
         let main = 
             <Modal show={true} onHide={this.props.onClose} backdrop="static" keyboard={false} >
                 <Modal.Header closeButton>
-                    <Modal.Title>Créer un nouveau composant</Modal.Title>
+                    <Modal.Title>Créer un nouveau gabarit</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <p>{this.props.description}</p>
                     <Form onSubmit={e => { e.preventDefault(); }}>                       
                         <Form.Row>
                             <Form.Group as={Col}>
