@@ -267,7 +267,7 @@ export class FloatingMenu extends Component{
                         <Button onClick={() => this.props.onDeleteElement(null)}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
                     </ButtonGroup>
                 </ButtonToolbar>
-                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate}/>}
+                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} title="Ajouter un composant" description="Assurez vous que les images contenues dans vos gabarits ne seront pas utilisées à l'intérieur d'une autre activité ou d'un autre cours. Les images doivent être substituées après l'action glisser-déposer sinon les liens vers les images seront brisés."/>}
             </div>
             //disabled={this.props.selectedElement.previousSibling === null}
         return main;

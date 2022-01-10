@@ -444,7 +444,7 @@ class TemplateList extends Component{
                         </Modal.Body>
                     </Modal>
                 }
-                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} description="Assurez vous que les images contenues dans vos gabarits ne seront pas utilisées à l'intérieur d'une autre activité ou d'un autre cours. Les images doivent être substituées après l'action glisser-déposer sinon les liens vers les images seront brisés."/>}
+                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} title="Créer un nouveau gabarit" description="Assurez vous que les images contenues dans vos gabarits ne seront pas utilisées à l'intérieur d'une autre activité ou d'un autre cours. Les images doivent être substituées après l'action glisser-déposer sinon les liens vers les images seront brisés."/>}
             </div>;
 
         return main;
@@ -645,7 +645,8 @@ export class TemplateForm extends Component{
     static defaultProps = {
         onClose: null,
         onSave: null,
-        description: ''
+        description: '',
+        title: ''
     };    
 
     constructor(props){
@@ -660,7 +661,7 @@ export class TemplateForm extends Component{
         let main = 
             <Modal show={true} onHide={this.props.onClose} backdrop="static" keyboard={false} >
                 <Modal.Header closeButton>
-                    <Modal.Title>Créer un nouveau gabarit</Modal.Title>
+                    <Modal.Title>{this.props.title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p>{this.props.description}</p>
