@@ -25,5 +25,5 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->version   = 2021092400;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2018050800;        // Requires this Moodle version.
 $plugin->component = 'atto_reciteditor';  // Full name of the plugin (used for diagnostics).
-$plugin->release = 'R14-V1.2'; 
+$plugin->release = 'R14-V1.3'; 
 $plugin->maturity = MATURITY_BETA; // MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC or MATURITY_STABLE

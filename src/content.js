@@ -2,6 +2,10 @@ M = M || {};
 M.recit = M.recit || {};
 M.recit.reciteditor = M.recit.reciteditor || {};
 
+M.recit.reciteditor.settings = {
+    currentthemesubrev: 1
+}
+
 M.recit.reciteditor.Popup = class {
     constructor(content) {        
         let modal = document.createElement('div');
@@ -42,6 +46,10 @@ M.recit.reciteditor.Popup = class {
       update(){
         $(this.popup).modal('handleUpdate');
       }
+}
+
+M.recit.reciteditor.init_settings = function(_, settings){
+    M.recit.reciteditor.settings.currentthemesubrev = settings.currentthemesubrev;
 }
 
 document.body.addEventListener('click',function(e){
