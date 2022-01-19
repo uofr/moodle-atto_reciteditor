@@ -154,6 +154,7 @@ class MainView extends Component{
 
         this.onSelectElement = this.onSelectElement.bind(this);
         this.onDeleteElement = this.onDeleteElement.bind(this);
+        this.onReplaceNonBreakingSpace = this.onReplaceNonBreakingSpace.bind(this);
         this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
@@ -296,6 +297,11 @@ class MainView extends Component{
     onDeleteElement(el){
         this.canvasState[this.state.canvasState].onDeleteElement(el || this.state.selectedElement);
         this.setState({selectedElement: null});
+    }
+
+    onReplaceNonBreakingSpace(el){
+        this.canvasState[this.state.canvasState].onReplaceNonBreakingSpace(el || this.state.selectedElement);
+        this.forceUpdate();
     }
 
     onMoveNodeUp(el){
@@ -532,11 +538,11 @@ class DesignerState extends CanvasState{
                 <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement} onDragElement={this.mainView.onDragStart}  onEdit={this.mainView.onEditNodeText}
                             onDeleteElement={this.mainView.onDeleteElement} onMoveNodeUp={this.mainView.onMoveNodeUp} onMoveNodeDown={this.mainView.onMoveNodeDown} 
                              onCloneNode={this.mainView.onCloneNode} onSaveTemplate={this.mainView.onSaveTemplate} device={this.mainView.props.device} />
-                <NodeTextEditing posCanvas={posCanvas} window={this.window} selectedElement={selectedElement} device={this.mainView.props.device}/>
+                <NodeTextEditing posCanvas={posCanvas} window={this.window} selectedElement={selectedElement} onReplaceNonBreakingSpace={this.mainView.onReplaceNonBreakingSpace} device={this.mainView.props.device}/>
             </Canvas>;
 
         return main; 
-    }   
+    }
 
     onSelectElement(el, selectedElement, collapsed){
         let result = {el: el, collapsed: collapsed};
@@ -611,6 +617,16 @@ class DesignerState extends CanvasState{
 
         this.onContentChange();
         el.remove();
+    }
+
+    onReplaceNonBreakingSpace(el){
+        if(!el){ return; } // Element does not exist
+        if(el.isSameNode(this.window.document.body)){ return; }
+
+        let regex = new RegExp(/(\u00AB|\u2014)(?:\s+)?|(?:\s+)?([\?!:;\u00BB])/g);
+        el.innerHTML = el.innerHTML.replace(regex, "$1&nbsp;$2");
+        this.onContentChange();
+
     }
     
     onMoveNodeUp(el){

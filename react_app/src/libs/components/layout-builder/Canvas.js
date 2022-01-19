@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ButtonToolbar, ButtonGroup, Button } from 'react-bootstrap';
-import {faArrowsAlt, faEdit, faBold, faArrowUp,faArrowDown, faTrashAlt, faClone, faSave, faTimes, faItalic, faUnderline, faStrikethrough, faPuzzlePiece} from '@fortawesome/free-solid-svg-icons';
+import {faArrowsAlt, faEdit, faBold, faArrowUp,faArrowDown, faTrashAlt, faClone, faSave, faTimes, faItalic, faUnderline, faStrikethrough, faPuzzlePiece, faSpaceShuttle, faFont, faParagraph} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import {BtnSetCssProp} from '../ButtonsBar';
@@ -256,7 +256,7 @@ export class FloatingMenu extends Component{
 
         let main =  
             <div className='floating-menu' style={style}>
-                <ButtonToolbar aria-label="Toolbar with Button groups">
+                <ButtonToolbar aria-label="Élément outils">
                     <ButtonGroup size="sm">
                         <Button onDragStart={this.props.onDragElement} draggable="true" style={{cursor: 'grab'}}><FontAwesomeIcon  icon={faArrowsAlt} title="Glisser"/></Button>
                         <Button onClick={this.props.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
@@ -287,6 +287,7 @@ export class NodeTextEditing extends Component{
     static defaultProps = {
         posCanvas: null,
         selectedElement: null,
+        onReplaceNonBreakingSpace: null,
         window: null,
         device: null
     };      
@@ -313,12 +314,13 @@ export class NodeTextEditing extends Component{
 
         let main =  
                 <div style={style}>
-                   <ButtonToolbar >
+                   <ButtonToolbar>
                         <ButtonGroup size="sm">
-                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="font-weight" defaultValue="normal" value="bold"  icon={faBold}  title="Gras"/>
-                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="font-style" defaultValue="normal" value="italic"  icon={faItalic}  title="Italique"/>
-                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="text-decoration" defaultValue="normal" value="underline"  icon={faUnderline}  title="Souligné"/>
-                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="text-decoration" defaultValue="normal" value="line-through"  icon={faStrikethrough}  title="Barré"/>
+                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="font-weight" defaultValue="normal" value="bold"  icon={faBold} title="Gras"/>
+                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="font-style" defaultValue="normal" value="italic"  icon={faItalic} title="Italique"/>
+                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="text-decoration" defaultValue="normal" value="underline"  icon={faUnderline} title="Souligné"/>
+                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="text-decoration" defaultValue="normal" value="line-through"  icon={faStrikethrough} title="Barré"/>
+                            <Button title="Remplacer par espace insécable" onClick={() => this.props.onReplaceNonBreakingSpace()}><FontAwesomeIcon icon={faParagraph}/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                 </div>;
