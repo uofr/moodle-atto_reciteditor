@@ -25,9 +25,15 @@
 defined('MOODLE_INTERNAL') || die();
 
 function atto_reciteditor_before_standard_top_of_body_html() {
-    global $PAGE;
+    global $PAGE, $CFG;
 
     $PAGE->requires->js('/lib/editor/atto/plugins/reciteditor/content.js');
+   
+    $settings = array(
+        'currentthemesubrev' => theme_get_sub_revision_for_theme($CFG->theme),
+    );
+
+    $PAGE->requires->js_init_call('M.recit.reciteditor.init_settings', array($settings));
 }
 /**
  * Initialise the js strings required for this module.

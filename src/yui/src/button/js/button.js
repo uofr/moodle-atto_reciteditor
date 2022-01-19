@@ -60,9 +60,10 @@ Y.namespace('M.atto_reciteditor').Button = Y.Base.create('button', Y.M.editor_at
             if(cssRulesBuffer.length > 0){ return cssRulesBuffer;}
 
             cssRulesBuffer = [];
+            var themeUrl = popup.attoInterface.getThemeUrl();
             for(var sheet of styleSheets){
                 // the only css rules we are looking for is the current theme or some custom css from theme-recit
-                if((sheet.href !== `${M.cfg.wwwroot}/theme/styles.php/${M.cfg.theme}/${M.cfg.themerev}_1/all`) && (sheet.title !== 'theme-recit-custom-css')){
+                if((sheet.href !== themeUrl) && (sheet.title !== 'theme-recit-custom-css')){
                     continue;
                 }
 
@@ -75,7 +76,7 @@ Y.namespace('M.atto_reciteditor').Button = Y.Base.create('button', Y.M.editor_at
         }
 
         popup.attoInterface.getThemeUrl = function(){
-            return `${M.cfg.wwwroot}/theme/styles.php/${M.cfg.theme}/${M.cfg.themerev}_1/all`;
+            return `${M.cfg.wwwroot}/theme/styles.php/${M.cfg.theme}/${M.cfg.themerev}_${M.recit.reciteditor.settings.currentthemesubrev}/all`;
         }
 
         popup.attoInterface.getFileTransferData = function(){
