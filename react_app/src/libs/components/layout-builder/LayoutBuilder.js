@@ -624,6 +624,8 @@ class DesignerState extends CanvasState{
         if(el.isSameNode(this.window.document.body)){ return; }
 
         let regex = new RegExp(/(\u00AB|\u2014)(?:\s+)?|(?:\s+)?([\?!:;\u00BB])/g);
+        el.innerHTML = el.innerHTML.replace("&nbsp; ", "");//Revert old nbsp
+        el.innerHTML = el.innerHTML.replace("&nbsp;", "");//Revert old nbsp
         el.innerHTML = el.innerHTML.replace(regex, "$1&nbsp;$2");
         this.onContentChange();
 
