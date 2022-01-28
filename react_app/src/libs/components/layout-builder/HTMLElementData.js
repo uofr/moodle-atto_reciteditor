@@ -1489,49 +1489,55 @@ export class HTMLElementData{
                     name: 'addtab',
                     text: 'Actions',
                     input: {
-                        type: 'button',
-                        text: <span><FontAwesomeIcon icon={faPlus} title="Ajouter une onglet"/>{" Onglet"}</span>,
-                        onChange: function(el, value, data){
-                            let tab = el;
-                            if (el.classList.contains('nav-link')) tab = el.parentElement.parentElement;
-                            if (el.classList.contains('tab-pane')) tab = el.parentElement.parentElement.querySelector('.nav');
-                            if (el.classList.contains('tabs')) tab = el.querySelector('.nav');
-                            
-                            let items = tab.parentElement.querySelectorAll('.tab-pane');
-                            for(let it of items){
-                                it.classList.remove('active', 'show');
+                        type: 'buttongroup',
+                        options: [
+                            {
+                                text: <span><FontAwesomeIcon icon={faPlus} title="Ajouter une onglet"/>{" Onglet"}</span>,
+                                onClick: function(el, value, data){
+                                    let tab = el;
+                                    if (el.classList.contains('nav-link')) tab = el.parentElement.parentElement;
+                                    if (el.classList.contains('tab-pane')) tab = el.parentElement.parentElement.querySelector('.nav');
+                                    if (el.classList.contains('tabs')) tab = el.querySelector('.nav');
+                                    
+                                    let items = tab.parentElement.querySelectorAll('.tab-pane');
+                                    for(let it of items){
+                                        it.classList.remove('active', 'show');
+                                    }
+                                    items = tab.parentElement.querySelectorAll('.nav-link');
+                                    for(let it of items){
+                                        it.classList.remove('active', 'show');
+                                    }
+                                    
+                                    let nav = document.createElement('li');
+                                    nav.classList.add('nav-item');
+                                    tab.appendChild(nav);
+                                    
+                                    let link = document.createElement('a');
+                                    link.classList.add('nav-link', 'active', 'show');
+
+                                    let tabid = tab.querySelectorAll('.nav-link').length + 1;
+                                    link.innerText = `Onglet ${tabid}`;
+                                    tabid = `tab${tabid}`;
+
+                                    link.setAttribute('data-toggle', 'tab');
+                                    link.setAttribute('role', 'tab');
+                                    link.setAttribute('href', '#'+tabid);
+                                    link.setAttribute('aria-controls', tabid);
+                                    nav.appendChild(link)
+
+                                    let content = tab.parentElement.querySelector('.tab-content');
+                                    let div = document.createElement('div');
+                                    div.classList.add('tab-pane', 'fade', 'mt-3', 'active', 'show');
+                                    div.setAttribute('role', 'tabpanel');
+                                    div.setAttribute('id', tabid);
+                                    div.setAttribute('aria-labelledby', tabid);
+                                    div.innerHTML = "<p>Contenu "+tabid+"</p>";
+                                    content.appendChild(div);
+                    
+                                    return {action: 'insert', nodes: [nav,content]};
+                                }
                             }
-                            items = tab.parentElement.querySelectorAll('.nav-link');
-                            for(let it of items){
-                                it.classList.remove('active', 'show');
-                            }
-                            
-                            let nav = document.createElement('li');
-                            nav.classList.add('nav-item');
-                            tab.appendChild(nav);
-                            
-                            let link = document.createElement('a');
-                            link.classList.add('nav-link', 'active', 'show');
-
-                            let tabid = tab.querySelectorAll('.nav-link').length + 1;
-                            link.innerText = `Onglet ${tabid}`;
-                            tabid = `tab${tabid}`;
-
-                            link.setAttribute('data-toggle', 'tab');
-                            link.setAttribute('role', 'tab');
-                            link.setAttribute('href', '#'+tabid);
-                            link.setAttribute('aria-controls', tabid);
-                            nav.appendChild(link)
-
-                            let content = tab.parentElement.querySelector('.tab-content');
-                            let div = document.createElement('div');
-                            div.classList.add('tab-pane', 'fade', 'mt-3', 'active', 'show');
-                            div.setAttribute('role', 'tabpanel');
-                            div.setAttribute('id', tabid);
-                            div.setAttribute('aria-labelledby', tabid);
-                            div.innerHTML = "<p>Contenu "+tabid+"</p>";
-                            content.appendChild(div);
-                        }
+                        ]
                     },
                     getValue: function(el, data){
                         return el;
