@@ -858,6 +858,72 @@ class HTMLTabElement extends HTMLDivElement{
     }
 }
 
+class HTMLAccordionElement extends HTMLDivElement{
+    constructor(){
+        super("Accordéon", "div", 'bootstrap', ['accordion', ...HTMLElementData.propsAssignmentFacade.containers]);
+        this.cssProp.prefix = 'accordion';
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('accordion'));
+    }
+
+    create(){
+        let slider = document.createElement("div");
+        slider.classList.add("accordion");
+
+        slider.innerHTML = 
+            `
+            <div class="card">
+              <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                  <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Item #1
+                  </button>
+                </h2>
+              </div>
+          
+              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                  Item #1
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="headingTwo">
+                <h2 class="mb-0">
+                  <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Item #2
+                  </button>
+                </h2>
+              </div>
+              <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                  Item #2
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                  <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Item #3
+                  </button>
+                </h2>
+              </div>
+              <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                  Item #3
+                </div>
+              </div>
+            </div>`;
+
+        return slider;
+    }
+}
+
 class HTMLTabContentElement extends HTMLDivElement{
     constructor(){
         super("Corps de l'onglet", "div", 'bootstrap', ['bs-general', 'htmlattributes']);
@@ -1535,6 +1601,55 @@ export class HTMLElementData{
                                     content.appendChild(div);
                     
                                     return {action: 'insert', nodes: [nav,content]};
+                                }
+                            }
+                        ]
+                    },
+                    getValue: function(el, data){
+                        return el;
+                    }
+                },
+            ]
+        },
+        {
+            name: 'accordion', description: 'Paramètres d\'accordéon',  type: 'bootstrap',
+            children: [
+                {
+                    name: 'addaccordion',
+                    text: 'Actions',
+                    input: {
+                        type: 'buttongroup',
+                        options: [
+                            {
+                                text: <span><FontAwesomeIcon icon={faPlus} title="Ajouter un item"/>{" accordéon"}</span>,
+                                onClick: function(el, value, data){
+                                    let tab = el;
+                                    
+                                    let items = tab.parentElement.querySelectorAll('.collapse');
+                                    for(let it of items){
+                                        it.classList.remove('active', 'show');
+                                    }
+                                    let id = items.length + 1;
+                                    
+                                    let nav = document.createElement('div');
+                                    nav.classList.add('card');
+                                    tab.appendChild(nav);
+                                    nav.innerHTML = `
+                                    <div class="card-header" id="heading${id}">
+                                      <h2 class="mb-0">
+                                        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapse${id}">
+                                          Item #${id}
+                                        </button>
+                                      </h2>
+                                    </div>
+                                    <div id="collapseThree" class="collapse" aria-labelledby="heading${id}" data-parent="#${el.id}">
+                                      <div class="card-body">
+                                        Item #${id}
+                                      </div>
+                                    </div>`;
+                                    
+                    
+                                    return {action: 'insert', nodes: [nav]};
                                 }
                             }
                         ]
@@ -2419,6 +2534,7 @@ export class HTMLElementData{
                 new HTMLMediaBSBodyElement(),
                 new HTMLCarouselElement(),
                 new HTMLCarouselNavElement(),
+                new HTMLAccordionElement(),
                 new HTMLTabElement(),
                 new HTMLTabContentElement(),
                 new HTMLTabPaneElement(),
