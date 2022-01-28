@@ -7,8 +7,8 @@ export class IFrame extends Component {
     this.state = {
       mountNode: null
     }
-    this.setContentRef = (contentRef) => {
-      this.setState({mountNode: contentRef?.contentWindow?.document?.body})
+    this.setContentRef = (e) => {
+      this.setState({mountNode: e.target.contentDocument.body})
     }
   }
 
@@ -17,8 +17,9 @@ export class IFrame extends Component {
     const { mountNode } = this.state
     return (
       <iframe
+        srcDoc={`<!DOCTYPE html>`}
         {...props}
-        ref={this.setContentRef}
+        onLoad={this.setContentRef}
       >
         {mountNode && createPortal(children, mountNode)}
       </iframe>
