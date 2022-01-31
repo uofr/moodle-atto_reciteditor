@@ -843,6 +843,7 @@ class PreviewState extends CanvasState{
     onInit(iframe){
         this.iFrame =  iframe.contentWindow || iframe.contentDocument;
         let head = this.iFrame.document.head;
+        let doc = this.iFrame.document;
 
         let el = document.createElement("style");
 		el.setAttribute("title", "theme-moodle");
@@ -856,6 +857,16 @@ class PreviewState extends CanvasState{
 
         this.iFrame.addEventListener("click", function(e) {//Prevent links from working on preview
             if (e.target.tagName == 'A' || e.target.tagName == 'BUTTON'){
+                if (e.target.getAttribute('data-toggle') == 'collapse'){//Accordion
+                    let el = doc.querySelector(e.target.getAttribute('data-target'));
+                    if (el){
+                        if (el.classList.contains('show')){
+                            el.classList.remove('show');
+                        }else{
+                            el.classList.add('show');
+                        }
+                    }
+                }
                 e.preventDefault();
             }
         });

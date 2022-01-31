@@ -873,7 +873,7 @@ class HTMLAccordionElement extends HTMLDivElement{
     create(){
         let slider = document.createElement("div");
         slider.classList.add("accordion");
-        slider.id = "slider-"+ Math.floor(Math.random() * 1000);
+        slider.id = "accordion-"+ Math.floor(Math.random() * 1000);
 
         slider.innerHTML = 
             `
