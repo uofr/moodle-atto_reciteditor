@@ -873,6 +873,7 @@ class HTMLAccordionElement extends HTMLDivElement{
     create(){
         let slider = document.createElement("div");
         slider.classList.add("accordion");
+        slider.id = "slider-"+ Math.floor(Math.random() * 1000);
 
         slider.innerHTML = 
             `
@@ -885,7 +886,7 @@ class HTMLAccordionElement extends HTMLDivElement{
                 </h2>
               </div>
           
-              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#${slider.id}">
                 <div class="card-body">
                   Item #1
                 </div>
@@ -899,7 +900,7 @@ class HTMLAccordionElement extends HTMLDivElement{
                   </button>
                 </h2>
               </div>
-              <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+              <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#${slider.id}">
                 <div class="card-body">
                   Item #2
                 </div>
@@ -913,7 +914,7 @@ class HTMLAccordionElement extends HTMLDivElement{
                   </button>
                 </h2>
               </div>
-              <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+              <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#${slider.id}">
                 <div class="card-body">
                   Item #3
                 </div>
@@ -1637,12 +1638,12 @@ export class HTMLElementData{
                                     nav.innerHTML = `
                                     <div class="card-header" id="heading${id}">
                                       <h2 class="mb-0">
-                                        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapse${id}">
+                                        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapse${id}" aria-expanded="false" aria-controls="collapse${id}">
                                           Item #${id}
                                         </button>
                                       </h2>
                                     </div>
-                                    <div id="collapseThree" class="collapse" aria-labelledby="heading${id}" data-parent="#${el.id}">
+                                    <div id="collapse${id}" class="collapse" aria-labelledby="heading${id}" data-parent="#${el.id}">
                                       <div class="card-body">
                                         Item #${id}
                                       </div>
