@@ -38,6 +38,8 @@ export class Assets{
     //static ContentScript = './assets/js/script.js'; 
 
     static Bootstrap = './assets/bootstrap/css/bootstrap.min.css';
+    static BootstrapJS = './assets/bootstrap/js/bootstrap.bundle.min.js';
+    static JqueryJS = './assets/bootstrap/js/jquery.min.js';
 
     static ComponentUrl = './assets/components.json';
 

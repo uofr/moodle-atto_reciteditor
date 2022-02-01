@@ -855,19 +855,21 @@ class PreviewState extends CanvasState{
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
+        el = document.createElement("script");
+		el.setAttribute("src", `${Assets.BootstrapJS}`);
+		el.setAttribute("type", "text/javascript");
+		head.appendChild(el);
+
+        el = document.createElement("script");
+		el.setAttribute("src", `${Assets.JqueryJS}`);
+		el.setAttribute("type", "text/javascript");
+		head.appendChild(el);
+
         this.iFrame.addEventListener("click", function(e) {//Prevent links from working on preview
             if (e.target.tagName == 'A' || e.target.tagName == 'BUTTON'){
-                if (e.target.getAttribute('data-toggle') == 'collapse'){//Accordion
-                    let el = doc.querySelector(e.target.getAttribute('data-target'));
-                    if (el){
-                        if (el.classList.contains('show')){
-                            el.classList.remove('show');
-                        }else{
-                            el.classList.add('show');
-                        }
-                    }
+                if((e.target.host.toString().length > 0) && (e.target.host !== window.location.host)){
+                    e.preventDefault();
                 }
-                e.preventDefault();
             }
         });
     }

@@ -925,6 +925,24 @@ class HTMLAccordionElement extends HTMLDivElement{
     }
 }
 
+class HTMLAccordionNavElement extends HTMLElement{
+    constructor(){
+        super("Accordéon élément", "button", 'bootstrap', ['accordion', ...HTMLElementData.propsAssignmentFacade.containers]);
+        this.visible = false;
+    }
+
+    equal(el){
+        if(el === null){ return false; }
+        if(!el.parentElement || 
+            !el.parentElement.parentElement || 
+            !el.parentElement.parentElement.parentElement || 
+            !el.parentElement.parentElement.parentElement.parentElement){ return false; }
+
+
+        return (el.parentElement.parentElement.parentElement.parentElement.classList.contains('accordion'));
+    }
+}
+
 class HTMLTabContentElement extends HTMLDivElement{
     constructor(){
         super("Corps de l'onglet", "div", 'bootstrap', ['bs-general', 'htmlattributes']);
@@ -1625,6 +1643,7 @@ export class HTMLElementData{
                                 text: <span><FontAwesomeIcon icon={faPlus} title="Ajouter un item"/>{" accordéon"}</span>,
                                 onClick: function(el, value, data){
                                     let tab = el;
+                                    if (el.classList.contains('btn')) tab = el.parentElement.parentElement.parentElement.parentElement;
                                     
                                     let items = tab.parentElement.querySelectorAll('.collapse');
                                     for(let it of items){
@@ -2518,28 +2537,34 @@ export class HTMLElementData{
                 new HTMLColElement(),
                 new HTMLUListElement(),
                 new HTMLOListElement(),
-                new HTMLTableElement(),
-                new HTMLTableDataCellElement(),
-                new HTMLTableHeaderCellElement(),
-                new HTMLTableRowElement(),
                 new HTMLLIElement(),
                 new HTMLAlertElement(),
                 new HTMLCardElement(),
                 new HTMLCardBodyElement(),
                 new HTMLCardHeaderElement(),
                 new HTMLCardFooterElement(),
-                new HTMLFlipCardElement(),
-                new HTMLFlipCardFrontElement(),
-                new HTMLFlipCardBackElement(),
                 new HTMLMediaBSElement(),
                 new HTMLMediaBSBodyElement(),
+                new HTMLHRElement()
+            ]
+        },
+        {
+            name: 'Composant', 
+            children: [
                 new HTMLCarouselElement(),
                 new HTMLCarouselNavElement(),
                 new HTMLAccordionElement(),
                 new HTMLTabElement(),
-                new HTMLTabContentElement(),
+                new HTMLAccordionNavElement(),
+                new HTMLFlipCardElement(),
+                new HTMLFlipCardFrontElement(),
+                new HTMLFlipCardBackElement(),
                 new HTMLTabPaneElement(),
-                new HTMLHRElement()
+                new HTMLTabContentElement(),
+                new HTMLTableElement(),
+                new HTMLTableDataCellElement(),
+                new HTMLTableHeaderCellElement(),
+                new HTMLTableRowElement(),
             ]
         },
         {
@@ -2572,17 +2597,28 @@ export class HTMLElementData{
 
         let list = [];
         for(let cat of HTMLElementData.elementList){
-            for (let item of cat.children){
-                list.push(item);
+            if (cat.name == 'Composant'){
+                for (let item of cat.children){
+                    list.push(item);
+                }
+            }
+        }
+
+        let list2 = [];
+        for(let cat of HTMLElementData.elementList){
+            if (cat.name != 'Composant'){
+                for (let item of cat.children){
+                    list2.push(item);
+                }
             }
         }
         
-        list.sort((a,b) =>{
+        list2.sort((a,b) =>{
             return a.type.toString().localeCompare(b.type.toString());
         })
 
-        HTMLElementData.elementListSortedbyType = list;
-        return list;
+        HTMLElementData.elementListSortedbyType = [...list, ...list2];
+        return HTMLElementData.elementListSortedbyType;
     }
 
     static getElementClass(data, el){
