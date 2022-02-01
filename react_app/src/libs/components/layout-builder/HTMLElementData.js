@@ -15,6 +15,7 @@ class HTMLElement{
         this.properties = properties || [];
         this.cssProp = {prefix: "bg"};
         this.visible = true;
+        this.collapsePanel = null;
     }
 
     getDesc(el){
@@ -285,6 +286,7 @@ class HTMLGridElement extends HTMLElement{
         row.classList.add("row");
         el.appendChild(row);
 
+        
         let col = document.createElement("div");
         col.classList.add("col");
         row.appendChild(col);
@@ -558,6 +560,7 @@ class HTMLCardFooterElement extends HTMLDivElement{
 class HTMLFlipCardElement extends HTMLDivElement{
     constructor(){
         super("Carte pivotante", "div", 'bootstrap');
+        this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
     equal(el){
@@ -622,6 +625,7 @@ class HTMLFlipCardElement extends HTMLDivElement{
 class HTMLFlipCardFrontElement extends HTMLDivElement{
     constructor(){
         super("Avant", "div", 'bootstrap');
+        this.collapsePanel = {components: true, properties: false, treeView: false};
         this.visible = false;
     }
 
@@ -641,6 +645,7 @@ class HTMLFlipCardBackElement extends HTMLDivElement{
     constructor(){
         super("Arrière", "div", 'bootstrap');
         this.visible = false;
+        this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
     equal(el){
@@ -706,6 +711,7 @@ class HTMLMediaBSBodyElement extends HTMLDivElement{
 class HTMLCarouselElement extends HTMLDivElement{
     constructor(){
         super("Carousel", "div", 'bootstrap', ['bs-general', 'htmlattributes']);
+        this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
     equal(el){
@@ -798,6 +804,7 @@ class HTMLCarouselNavElement extends HTMLDivElement{
     constructor(){
         super("Carousel Nav", "div", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.visible = false;
+        this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
     equal(el){
@@ -811,6 +818,7 @@ class HTMLTabElement extends HTMLDivElement{
     constructor(){
         super("Onglet", "div", 'bootstrap', ['tab', ...HTMLElementData.propsAssignmentFacade.containers]);
         this.cssProp.prefix = 'tab';
+        this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
     equal(el){
@@ -862,6 +870,7 @@ class HTMLAccordionElement extends HTMLDivElement{
     constructor(){
         super("Accordéon", "div", 'bootstrap', ['accordion', ...HTMLElementData.propsAssignmentFacade.containers]);
         this.cssProp.prefix = 'accordion';
+        this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
     equal(el){
@@ -929,6 +938,7 @@ class HTMLAccordionNavElement extends HTMLElement{
     constructor(){
         super("Accordéon élément", "button", 'bootstrap', ['accordion', ...HTMLElementData.propsAssignmentFacade.containers]);
         this.visible = false;
+        this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
     equal(el){
@@ -948,6 +958,7 @@ class HTMLTabContentElement extends HTMLDivElement{
         super("Corps de l'onglet", "div", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.cssProp.prefix = 'tab';
         this.visible = false;
+        this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
     equal(el){
@@ -962,6 +973,7 @@ class HTMLTabPaneElement extends HTMLDivElement{
         super("Contenu onglet", "div", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.cssProp.prefix = 'tab';
         this.visible = false;
+        this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
     equal(el){
@@ -982,6 +994,7 @@ class HTMLNavElement extends HTMLElement{
     constructor(){
         super("Nav", "nav", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.visible = false;
+        this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
     equal(el){
@@ -995,6 +1008,7 @@ class HTMLNavItemElement extends HTMLElement{
     constructor(){
         super("NavItem", "li", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.visible = false;
+        this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
     equal(el){
@@ -1009,6 +1023,7 @@ class HTMLNavLinkElement extends HTMLElement{
         super("NavLink", "a", 'bootstrap', [...HTMLElementData.propsAssignmentFacade.buttons, 'link']);
         this.cssProp.prefix = 'btn';
         this.visible = false;
+        this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
     equal(el){
@@ -1525,7 +1540,7 @@ export class HTMLElementData{
                         if (el.classList.contains('tab-pane')) tab = el.parentElement.parentElement.querySelector('.nav');
                         if (el.classList.contains('tabs')) tab = el.querySelector('.nav');
 
-                        if (tab.classList.contains('nav-pills')) return 'nav-pills';
+                        if (tab && tab.classList.contains('nav-pills')) return 'nav-pills';
                         return '';
                     }
                 },

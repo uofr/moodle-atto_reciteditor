@@ -570,6 +570,9 @@ class DesignerState extends CanvasState{
         else{
             this.htmlCleaning(this.window.document);
 
+            result.collapsed.components = true;
+            result.collapsed.properties = false;
+
             if(result.el !== null){
                 if(result.el.getAttribute('data-selected') === '1'){
                     result.el.removeAttribute('data-selected');
@@ -583,11 +586,15 @@ class DesignerState extends CanvasState{
                     if (elClass && elClass.onSelect){
                         elClass.onSelect(result.el);
                     }
+                    if (elClass && elClass.collapsePanel){
+                        result.collapsed.components = elClass.collapsePanel.components;
+                        result.collapsed.properties = elClass.collapsePanel.properties;
+                        result.collapsed.treeView = elClass.collapsePanel.treeView;
+                        console.log(result.collapsed)
+                    }
                 }
             }
     
-            result.collapsed.components = true;
-            result.collapsed.properties = false;
         }
 
         return result;
@@ -856,12 +863,12 @@ class PreviewState extends CanvasState{
 		head.appendChild(el);
 
         el = document.createElement("script");
-		el.setAttribute("src", `${Assets.BootstrapJS}`);
+		el.setAttribute("src", `${Assets.JqueryJS}`);
 		el.setAttribute("type", "text/javascript");
 		head.appendChild(el);
 
         el = document.createElement("script");
-		el.setAttribute("src", `${Assets.JqueryJS}`);
+		el.setAttribute("src", `${Assets.BootstrapJS}`);
 		el.setAttribute("type", "text/javascript");
 		head.appendChild(el);
 
