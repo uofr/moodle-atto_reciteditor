@@ -375,7 +375,7 @@ class HTMLOListElement extends HTMLElement{
 
 class HTMLTableElement extends HTMLElement{
     constructor(){
-        super('Table', 'table', 'bootstrap', ['table', ...HTMLElementData.propsAssignmentFacade.containers]);
+        super('Table', 'table', 'nativecomponent', ['table', ...HTMLElementData.propsAssignmentFacade.containers]);
     }
 
     create(){
@@ -402,6 +402,7 @@ class HTMLTableElement extends HTMLElement{
 class HTMLTableDataCellElement extends HTMLElement{
     constructor(){
         super("Cellule de table", "td", 'native', ['tablecell', ...HTMLElementData.propsAssignmentFacade.containers]);
+        this.visible = false;
     }
 
     create(){
@@ -559,7 +560,7 @@ class HTMLCardFooterElement extends HTMLDivElement{
 
 class HTMLFlipCardElement extends HTMLDivElement{
     constructor(){
-        super("Carte pivotante", "div", 'bootstrap');
+        super("Carte pivotante", "div", 'nativecomponent');
         this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
@@ -624,7 +625,7 @@ class HTMLFlipCardElement extends HTMLDivElement{
 
 class HTMLFlipCardFrontElement extends HTMLDivElement{
     constructor(){
-        super("Avant", "div", 'bootstrap');
+        super("Avant", "div", 'nativecomponent');
         this.collapsePanel = {components: true, properties: false, treeView: false};
         this.visible = false;
     }
@@ -643,7 +644,7 @@ class HTMLFlipCardFrontElement extends HTMLDivElement{
 
 class HTMLFlipCardBackElement extends HTMLDivElement{
     constructor(){
-        super("Arrière", "div", 'bootstrap');
+        super("Arrière", "div", 'nativecomponent');
         this.visible = false;
         this.collapsePanel = {components: true, properties: false, treeView: false};
     }
@@ -710,7 +711,7 @@ class HTMLMediaBSBodyElement extends HTMLDivElement{
 
 class HTMLCarouselElement extends HTMLDivElement{
     constructor(){
-        super("Carousel", "div", 'bootstrap', ['bs-general', 'htmlattributes']);
+        super("Carousel", "div", 'nativecomponent', ['bs-general', 'htmlattributes']);
         this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
@@ -802,7 +803,7 @@ class HTMLCarouselElement extends HTMLDivElement{
 
 class HTMLCarouselNavElement extends HTMLDivElement{
     constructor(){
-        super("Carousel Nav", "div", 'bootstrap', ['bs-general', 'htmlattributes']);
+        super("Carousel Nav", "div", 'nativecomponent', ['bs-general', 'htmlattributes']);
         this.visible = false;
         this.collapsePanel = {components: true, properties: false, treeView: false};
     }
@@ -816,7 +817,7 @@ class HTMLCarouselNavElement extends HTMLDivElement{
 
 class HTMLTabElement extends HTMLDivElement{
     constructor(){
-        super("Onglet", "div", 'bootstrap', ['tab', ...HTMLElementData.propsAssignmentFacade.containers]);
+        super("Onglet", "div", 'nativecomponent', ['tab', ...HTMLElementData.propsAssignmentFacade.containers]);
         this.cssProp.prefix = 'tab';
         this.collapsePanel = {components: true, properties: false, treeView: false};
     }
@@ -868,7 +869,7 @@ class HTMLTabElement extends HTMLDivElement{
 
 class HTMLAccordionElement extends HTMLDivElement{
     constructor(){
-        super("Accordéon", "div", 'bootstrap', ['accordion', ...HTMLElementData.propsAssignmentFacade.containers]);
+        super("Accordéon", "div", 'nativecomponent', ['accordion', ...HTMLElementData.propsAssignmentFacade.containers]);
         this.cssProp.prefix = 'accordion';
         this.collapsePanel = {components: true, properties: false, treeView: false};
     }
@@ -2564,7 +2565,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'Composant', 
+            name: 'Composants natifs', 
             children: [
                 new HTMLCarouselElement(),
                 new HTMLCarouselNavElement(),
@@ -2658,7 +2659,7 @@ export class HTMLElementData{
     static createElement(componentData){
         let el = null;
 
-        if(componentData.type === 'native' || componentData.type === 'bootstrap'){
+        if(componentData.type === 'native' || componentData.type === 'bootstrap' || componentData.type == 'nativecomponent'){
             let component = HTMLElementData.getElementClass(componentData);
             el = component.create();
         }
