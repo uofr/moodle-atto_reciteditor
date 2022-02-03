@@ -1,6 +1,6 @@
 {
   "name": "recit_rich_editor",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "RÉCIT Rich Editor",
   "main": "index.js",
   "scripts": {

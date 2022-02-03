@@ -58,7 +58,7 @@ export class TreeView extends Component{
         let btn =  
             <ButtonToolbar aria-label="Item actions" style={{flexWrap: "nowrap"}}>
                 <ButtonGroup>
-                    <Button variant="link" className={`p-1 ${extraClasses}`} onClick={() => this.props.onSelect(node.dom)} >{` ${node.text}`}</Button>
+                    <Button variant="link" className={`p-1 ${extraClasses}`} style={{whiteSpace: "nowrap"}} onClick={() => this.props.onSelect(node.dom)} >{` ${node.text}`}</Button>
                 </ButtonGroup>
                 {!node.dom.isSameNode(this.props.data) &&
                     <ButtonGroup size="sm" className="btn-group-actions" style={(selected ? {display: 'flex'} : {})}>
