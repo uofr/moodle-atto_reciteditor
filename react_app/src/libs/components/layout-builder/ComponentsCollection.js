@@ -5,6 +5,7 @@ import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, Inpu
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import { Templates } from './Templates';
+import { i18n } from '../../utils/i18n';
 
 export class ComponentProperties extends Component{
     static defaultProps = {
@@ -45,13 +46,13 @@ export class ComponentProperties extends Component{
             <div>
                 <Nav variant="tabs" activeKey={this.state.tab} onSelect={this.onSelectTab}>
                     <Nav.Item>
-                        <Nav.Link eventKey="0">Bootstrap</Nav.Link>
+                        <Nav.Link eventKey="0">{i18n.get_string('bootstrap')}</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="1">Proprietés HTML</Nav.Link>
+                        <Nav.Link eventKey="1">{i18n.get_string('htmlproprieties')}</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="2">Style</Nav.Link>
+                        <Nav.Link eventKey="2">{i18n.get_string('style')}</Nav.Link>
                     </Nav.Item>
                 </Nav>
                 {this.state.tab === "0" && <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={bootstrapProps} />}
@@ -260,13 +261,13 @@ export class VisualComponentList extends Component{
             <div className='component-list'>
                 <Nav variant="tabs" activeKey={this.state.tab} onSelect={this.onSelectTab}>
                     <Nav.Item>
-                        <Nav.Link eventKey="2">Gabarits</Nav.Link>
+                        <Nav.Link eventKey="2">{i18n.get_string('templates')}</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="1">Composants</Nav.Link>
+                        <Nav.Link eventKey="1">{i18n.get_string('components')}</Nav.Link>
                     </Nav.Item>                   
                     <Nav.Item>
-                        <Nav.Link eventKey="0">HTML</Nav.Link>
+                        <Nav.Link eventKey="0">{i18n.get_string('html')}</Nav.Link>
                     </Nav.Item>
                 </Nav>
                 
@@ -402,13 +403,13 @@ class TemplateList extends Component{
                 <div>
                     <ButtonToolbar style={{justifyContent: 'flex-end'}}>
                         <ButtonGroup >
-                                {this.props.type === 'l' && <Button onClick={() => this.showModal(true)}><FontAwesomeIcon  icon={faSave} title="Enregistrer un gabarit"/></Button>}
-                                <BtnUpload id="import-collection"  accept=".json" onChange={this.onImport} title="Importer la collection"/>
-                                {this.props.type === 'l' && <Button onClick={() => this.showVitrine(true)}><FontAwesomeIcon  icon={faCloud} title="Voir la vitrine de gabarits"/> Vitrine</Button>}
-                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faCog} title="Options"/></Button>
+                                {this.props.type === 'l' && <Button onClick={() => this.showModal(true)}><FontAwesomeIcon  icon={faSave} title={i18n.get_string('savetemplate')}/></Button>}
+                                <BtnUpload id="import-collection"  accept=".json" onChange={this.onImport} title={i18n.get_string('import')}/>
+                                {this.props.type === 'l' && <Button onClick={() => this.showVitrine(true)}><FontAwesomeIcon  icon={faCloud} title={i18n.get_string('showroom')}/> {i18n.get_string('showroom')}</Button>}
+                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faCog} title={i18n.get_string('options')}/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
-                    {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider.myComponents)}><FontAwesomeIcon  icon={faCloudDownloadAlt}/>{" Exporter la collection"}</Button>}
+                    {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider.myComponents)}><FontAwesomeIcon  icon={faCloudDownloadAlt}/>{i18n.get_string('export')}</Button>}
                 </div>
                 {this.props.type === 'l' && 
                     <ul className='mt-2 d-flex flex-wrap justify-content-center'>
@@ -419,7 +420,7 @@ class TemplateList extends Component{
                 }
                 {this.props.type === 'c' && <>
                     <span onClick={() => this.onCollapse('my')}>
-                        <FontAwesomeIcon className="mr-1" icon={faAngleDown}/> Mes composants
+                        <FontAwesomeIcon className="mr-1" icon={faAngleDown}/> {i18n.get_string('mycomponents')}
                     </span>
                     <ul className='mt-2 d-flex flex-wrap'>
                     {!this.state.collapse['my'] && this.props.dataProvider.myComponents.map((item, index) => {
@@ -427,7 +428,7 @@ class TemplateList extends Component{
                     })}
                     </ul>
                     <span onClick={() => this.onCollapse('base')}>
-                        <FontAwesomeIcon className="mr-1" icon={faAngleDown}/> Composants de base
+                        <FontAwesomeIcon className="mr-1" icon={faAngleDown}/> {i18n.get_string('basecomponents')}
                     </span>
                     <ul className='mt-2 d-flex flex-wrap'>
                     {!this.state.collapse['base'] && this.props.dataProvider.components.map((item, index) => {
@@ -437,14 +438,14 @@ class TemplateList extends Component{
                 {this.state.showVitrine && 
                     <Modal show={true} onHide={() => this.showVitrine(false)} backdrop="static" keyboard={false} className='templatevitrine'>
                         <Modal.Header closeButton>
-                            <Modal.Title>Vitrine</Modal.Title>
+                            <Modal.Title>{i18n.get_string('showroom')}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <iframe src={Assets.UrlVitrine}/>
                         </Modal.Body>
                     </Modal>
                 }
-                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} title="Créer un nouveau gabarit" description="Assurez vous que les images contenues dans vos gabarits ne seront pas utilisées à l'intérieur d'une autre activité ou d'un autre cours. Les images doivent être substituées après l'action glisser-déposer sinon les liens vers les images seront brisés."/>}
+                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} title={i18n.get_string('createtemplate')} description={i18n.get_string('addcomponentdesc')}/>}
             </div>;
 
         return main;
@@ -580,8 +581,8 @@ class Token extends Component
                 {this.props.showMenu && 
                     <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                         <ButtonGroup size="sm">
-                            <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faCloudDownloadAlt} title="Exporter"/></Button>
-                            <Button onClick={this.props.onDelete}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                            <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faCloudDownloadAlt} title={i18n.get_string('export')}/></Button>
+                            <Button onClick={this.props.onDelete}><FontAwesomeIcon  icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                 }
@@ -626,8 +627,8 @@ class TokenTemplate extends Token{
                     {this.props.showMenu &&
                         <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                             <ButtonGroup size="sm">
-                                <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faCloudDownloadAlt} title="Exporter"/></Button>
-                                <Button onClick={this.props.onDelete}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                                <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faCloudDownloadAlt} title={i18n.get_string('export')}/></Button>
+                                <Button onClick={this.props.onDelete}><FontAwesomeIcon  icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
                             </ButtonGroup>
                         </ButtonToolbar>
                     }
@@ -676,8 +677,8 @@ export class TemplateForm extends Component{
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={this.props.onClose}><FontAwesomeIcon  icon={faTimes} title="Annuler"/>{" "}Annuler</Button>
-                    <Button variant="success" onClick={() => this.props.onSave(this.state.data)}><FontAwesomeIcon  icon={faSave} title="Enregistrer"/>{" "}Enregistrer</Button>
+                    <Button variant="secondary" onClick={this.props.onClose}><FontAwesomeIcon  icon={faTimes} title={i18n.get_string('cancel')}/>{i18n.get_string('cancel')}</Button>
+                    <Button variant="success" onClick={() => this.props.onSave(this.state.data)}><FontAwesomeIcon  icon={faSave} title={i18n.get_string('save')}/>{i18n.get_string('save')}</Button>
                 </Modal.Footer>
             </Modal>
 /*<Form.Row>

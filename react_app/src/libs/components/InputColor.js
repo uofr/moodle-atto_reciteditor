@@ -3,6 +3,7 @@ import { Form, Button } from 'react-bootstrap';
 import { faRemoveFormat } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Utils from '../utils/Utils';
+import { i18n } from '../utils/i18n';
 
 export class InputColor extends Component {
     static defaultProps = {
@@ -30,7 +31,7 @@ export class InputColor extends Component {
             <div style={{display: "inline-flex"}}>
                 <Form.Control size={this.props.size} name={this.props.name} type="color" value={value} 
                                 onChange={this.onChange} onBlur={this.onBlur} disabled={this.props.disabled} style={{width: "80px"}}/>
-                <Button className="ml-1" size='sm' variant={'primary'} onClick={this.onReset} title={"Supprimer le format"}><FontAwesomeIcon icon={faRemoveFormat}/></Button>
+                <Button className="ml-1" size='sm' variant={'primary'} onClick={this.onReset} title={i18n.get_string('deleteformat')}><FontAwesomeIcon icon={faRemoveFormat}/></Button>
             </div>
         return (main);
     }   

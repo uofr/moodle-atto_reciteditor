@@ -399,6 +399,11 @@ export class UtilsMoodle
         console.log(`Loading theme Bootstrap on ${this.constructor.name}`);
         return Assets.Bootstrap;
     }
+
+    static get_string(str, resource){
+        let moodle = M || window.parent.M;
+        return moodle.util.get_string(str, resource);
+    }
 }
 
 export class MoodleUploadFile{

@@ -12,6 +12,7 @@ import { Templates } from './Templates';
 import { HistoryManager } from './HistoryManager';
 import Utils, {UtilsHTML, UtilsMoodle} from '../../utils/Utils';
 import html2canvas from 'html2canvas';
+import { i18n } from '../../utils/i18n';
 
 export class LayoutBuilder extends Component
 {
@@ -42,26 +43,26 @@ export class LayoutBuilder extends Component
                 <Navbar bg="dark" variant="dark" onSelect={this.onNavbarSelect} expand="sm">
                     <Navbar.Brand>
                         <img alt="RÉCIT" src={`.${Assets.RecitLogo}`} width="30" height="30" className="d-inline-block align-top" />{' '}
-                        Éditeur RÉCIT
+                        {i18n.get_string('pluginname')}
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav>
-                            {this.props.options.wordProcessor && <Nav.Link eventKey="wordbuilder"><FontAwesomeIcon icon={faFileWord} title="Word Builder"/></Nav.Link>}
+                            {this.props.options.wordProcessor && <Nav.Link eventKey="wordbuilder"><FontAwesomeIcon icon={faFileWord} title={i18n.get_string('texteditor')}/></Nav.Link>}
                         </Nav>
                         
                         <Nav className="mr-auto"></Nav>
 
                         <Nav className="mr-auto" activeKey={this.state.view}>
-                            <Nav.Link eventKey="designer" ><FontAwesomeIcon icon={faTh} title="Canevas"/></Nav.Link>
-                            <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title="Preview"/></Nav.Link>
-                            <Nav.Link eventKey="sourceCode"><FontAwesomeIcon icon={faCode} title="Code source"/></Nav.Link>
+                            <Nav.Link eventKey="designer" ><FontAwesomeIcon icon={faTh} title={i18n.get_string('canvas')}/></Nav.Link>
+                            <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title={i18n.get_string('preview')}/></Nav.Link>
+                            <Nav.Link eventKey="sourceCode"><FontAwesomeIcon icon={faCode} title={i18n.get_string('sourcecode')}/></Nav.Link>
                         </Nav>
 
                         {this.state.view == 'designer' && <>
                             <Nav>
-                                <Nav.Link eventKey="undo"><FontAwesomeIcon icon={faUndo} title="Undo"/></Nav.Link>
-                                <Nav.Link eventKey="redo"><FontAwesomeIcon icon={faRedo} title="Redo"/></Nav.Link>
+                                <Nav.Link eventKey="undo"><FontAwesomeIcon icon={faUndo} title={i18n.get_string('undo')}/></Nav.Link>
+                                <Nav.Link eventKey="redo"><FontAwesomeIcon icon={faRedo} title={i18n.get_string('redo')}/></Nav.Link>
                             </Nav>
                             <Nav className="separator"></Nav>
                             </>
@@ -75,7 +76,7 @@ export class LayoutBuilder extends Component
                             <Nav.Link eventKey="xl"><FontAwesomeIcon icon={faDesktop} title="XL"/></Nav.Link>    
                         </Nav>
                         <Nav className="separator"></Nav>
-                        <Button variant="success" size="sm"  onClick={this.onSaveAndClose}><FontAwesomeIcon icon={faSave} title="Enregistrer"/>{" Enregistrer"}</Button>
+                        <Button variant="success" size="sm"  onClick={this.onSaveAndClose}><FontAwesomeIcon icon={faSave} title={i18n.get_string('save')}/>{i18n.get_string('save')}</Button>
                     </Navbar.Collapse>
                 </Navbar>
                 <MainView ref={this.mainViewRef} content={this.props.content} device={this.getDeviceDimension()} view={this.state.view} historyManager={this.historyManager}/>
@@ -246,7 +247,7 @@ class MainView extends Component{
                     <Card>
                         <Card.Header onClick={() => this.setCollapse('components')}>
                             <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.components ? faAngleRight : faAngleDown)}/>
-                            Composants
+                            {i18n.get_string('components')}
                         </Card.Header>
                         <Card.Body data-collapsed={(this.state.collapsed.components ? 1 : 0)} style={{height: panelHeight}}>
                             <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate}/>
@@ -255,7 +256,7 @@ class MainView extends Component{
 
                     <Card>
                         <Card.Header onClick={() => this.setCollapse('properties')}>
-                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/>Proprietés
+                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/>{i18n.get_string('proprieties')}
                         </Card.Header>
                         <Card.Body className="properties"  data-collapsed={(this.state.collapsed.properties ? 1 : 0)}  style={{height: panelHeight}}>
                             <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement}/>
@@ -264,7 +265,7 @@ class MainView extends Component{
 
                     <Card>
                         <Card.Header onClick={() => this.setCollapse('treeView')}>
-                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/>Arborescence
+                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/>{i18n.get_string('tree')}
                         </Card.Header>
                         <Card.Body data-collapsed={(this.state.collapsed.treeView ? 1 : 0)}  style={{height: panelHeight}}>
                             <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} view={this.props.view}

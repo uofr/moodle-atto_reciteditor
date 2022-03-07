@@ -3,6 +3,7 @@ import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustif
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LayoutSpacingEditor, Assets} from '../Components';
 import Utils, {UtilsHTML} from '../../utils/Utils';
+import { i18n } from '../../utils/i18n';
 
 /**
  * Abstract class
@@ -42,15 +43,15 @@ class HTMLElement{
 
     prepareDroppingZones(el){ 
         if(el.children.length > 0){
-            el.insertBefore(this.createElementDZ("À l'intérieur au début"), el.firstChild);    
-            el.appendChild(this.createElementDZ("À l'intérieur à la fin"));
+            el.insertBefore(this.createElementDZ(i18n.get_string('insidebegining')), el.firstChild);    
+            el.appendChild(this.createElementDZ(i18n.get_string('insideend')));
         } 
         else{
-            el.appendChild(this.createElementDZ("À l'intérieur"));
+            el.appendChild(this.createElementDZ(i18n.get_string('inside')));
         }
 
-        el.parentNode.insertBefore(this.createElementDZ('Avant'), el);
-        el.parentNode.insertBefore(this.createElementDZ('Après'), el.nextSibling);
+        el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')), el);
+        el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')), el.nextSibling);
     }
 }
 
@@ -62,11 +63,11 @@ class HTMLBodyElement extends HTMLElement{
 
     prepareDroppingZones(el){ 
         if(el.children.length > 0){
-            el.insertBefore(this.createElementDZ("À l'intérieur au début"), el.firstChild);    
-            el.appendChild(this.createElementDZ("À l'intérieur à la fin"));
+            el.insertBefore(this.createElementDZ(i18n.get_string('insidebegining')), el.firstChild);    
+            el.appendChild(this.createElementDZ(i18n.get_string('insideend')));
         } 
         else{
-            el.appendChild(this.createElementDZ("À l'intérieur"));
+            el.appendChild(this.createElementDZ(i18n.get_string('inside')));
         }
     }
 }
@@ -83,37 +84,37 @@ class HTMLHeadingElement extends HTMLElement{
     }
 
     prepareDroppingZones(el){        
-        el.parentNode.insertBefore(this.createElementDZ('Avant'), el);
-        el.parentNode.insertBefore(this.createElementDZ('Après'), el.nextSibling);
+        el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')), el);
+        el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')), el.nextSibling);
     }
 }
 
 class HTMLParagraphElement extends HTMLElement{
     constructor(){
-        super("Paragraphe", 'p', 'native', HTMLElementData.propsAssignmentFacade.text);
+        super(i18n.get_string('paragraph'), 'p', 'native', HTMLElementData.propsAssignmentFacade.text);
     }
 
     create(){ 
         let el = document.createElement(this.tagName);
-        el.innerText = "Paragraphe";
+        el.innerText = i18n.get_string('paragraph');
         return el;
     }
 
     prepareDroppingZones(el){        
-        el.parentNode.insertBefore(this.createElementDZ('Avant'), el);
-        el.parentNode.insertBefore(this.createElementDZ('Après'), el.nextSibling);
+        el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')), el);
+        el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')), el.nextSibling);
     }
 }
 
 class HTMLLinkElement extends HTMLElement{
     constructor(){
-        super("Lien", "a", 'native', [...HTMLElementData.propsAssignmentFacade.buttons, 'link']);
+        super(i18n.get_string('link'), "a", 'native', [...HTMLElementData.propsAssignmentFacade.buttons, 'link']);
         this.cssProp.prefix = 'btn';
     }
 
     create(){ 
         let el = document.createElement(this.tagName);
-        el.innerText = "Lien";
+        el.innerText = i18n.get_string('link');
         el.setAttribute('href', '#');
         el.setAttribute('target', '_self');
         return el;
@@ -136,14 +137,14 @@ class HTMLButtonElement extends HTMLElement{
         let el = document.createElement("button");
         el.classList.add('btn');
         el.classList.add('btn-primary');
-        el.innerHTML = "Bouton";
+        el.innerHTML = i18n.get_string('button');
         return el;
     }
 }
 
 class HTMLButtonCollapseElement extends HTMLElement{
     constructor(){
-        super("Bouton collapse", 'buttoncollapse', 'bootstrap', [...HTMLElementData.propsAssignmentFacade.controls, 'collapse']);
+        super(i18n.get_string('collapsebutton'), 'buttoncollapse', 'bootstrap', [...HTMLElementData.propsAssignmentFacade.controls, 'collapse']);
         this.cssProp.prefix = 'btn';
     }
 
@@ -158,14 +159,14 @@ class HTMLButtonCollapseElement extends HTMLElement{
         el.classList.add('btn');
         el.classList.add('btn-primary', 'btn-collapse');
         el.setAttribute('data-bs-toggle', 'collapse');
-        el.innerHTML = "Bouton collapse";
+        el.innerHTML = i18n.get_string('collapsebutton');
         return el;
     }
 }
 
 class HTMLButtonVideoElement extends HTMLElement{
     constructor(){
-        super("Bouton vidéo", 'videobtn', 'bootstrap', [...HTMLElementData.propsAssignmentFacade.buttons, 'videobtn']);
+        super(i18n.get_string('videobutton'), 'videobtn', 'bootstrap', [...HTMLElementData.propsAssignmentFacade.buttons, 'videobtn']);
     }
 
     equal(el){
@@ -176,7 +177,7 @@ class HTMLButtonVideoElement extends HTMLElement{
 
     create(){ 
         let el = document.createElement("button");
-        el.innerHTML = 'Bouton vidéo';
+        el.innerHTML = i18n.get_string('videobutton');
         el.classList.add('btn');
         el.classList.add('btn-primary');
         el.classList.add('videobtn');
@@ -193,7 +194,7 @@ class HTMLMediaElement extends HTMLElement{
 
 class HTMLAudioElement extends HTMLMediaElement{
     constructor(){
-        super("Audio", 'audio', 'native', ['bs-general', 'bs-spacingborder', 'htmlattributes', 'source', 'layout']);
+        super(i18n.get_string('audio'), 'audio', 'native', ['bs-general', 'bs-spacingborder', 'htmlattributes', 'source', 'layout']);
     }
 
     create(){ 
@@ -239,7 +240,7 @@ class HTMLDivElement extends HTMLElement{
 
 class HTMLEmbedElement extends HTMLElement{
     constructor(){
-        super("Embed", 'div', 'bootstrap', ['bs-general', 'bs-spacingborder','marginborderpadding', 'layout', 'embed']);
+        super(i18n.get_string('embed'), 'div', 'bootstrap', ['bs-general', 'bs-spacingborder','marginborderpadding', 'layout', 'embed']);
     }
 
     create(){ 
@@ -269,7 +270,7 @@ class HTMLSectionElement extends HTMLElement{
 
 class HTMLGridElement extends HTMLElement{
     constructor(){
-        super('Grille', 'grid', 'bootstrap', HTMLElementData.propsAssignmentFacade.containers);
+        super(i18n.get_string('grid'), 'grid', 'bootstrap', HTMLElementData.propsAssignmentFacade.containers);
     }
 
     equal(el){
@@ -305,7 +306,7 @@ class HTMLGridElement extends HTMLElement{
 
 class HTMLRowElement extends HTMLElement{
     constructor(){
-        super('Ligne', 'row', 'bootstrap', HTMLElementData.propsAssignmentFacade.containers);
+        super(i18n.get_string('row'), 'row', 'bootstrap', HTMLElementData.propsAssignmentFacade.containers);
     }
 
     equal(el){
@@ -323,7 +324,7 @@ class HTMLRowElement extends HTMLElement{
 
 class HTMLColElement extends HTMLElement{
     constructor(){
-        super('Colonne', 'col', 'bootstrap', HTMLElementData.propsAssignmentFacade.containers);
+        super(i18n.get_string('column'), 'col', 'bootstrap', HTMLElementData.propsAssignmentFacade.containers);
     }
 
     equal(el){
@@ -340,42 +341,42 @@ class HTMLColElement extends HTMLElement{
 
     prepareDroppingZones(el){        
         if(el.children.length > 0){
-            el.insertBefore(this.createElementDZ("À l'intérieur au début"), el.firstChild);    
-            el.appendChild(this.createElementDZ("À l'intérieur à la fin"));
+            el.insertBefore(this.createElementDZ(i18n.get_string('insidebegining')), el.firstChild);    
+            el.appendChild(this.createElementDZ(i18n.get_string('insideend')));
         } 
         else{
-            el.appendChild(this.createElementDZ("À l'intérieur"));
+            el.appendChild(this.createElementDZ(i18n.get_string('inside')));
         }
     }
 }
 
 class HTMLUListElement extends HTMLElement{
     constructor(){
-        super("Liste", "ul", 'native', HTMLElementData.propsAssignmentFacade.containers);
+        super(i18n.get_string('list'), "ul", 'native', HTMLElementData.propsAssignmentFacade.containers);
     }
 
     create(){
         let el = document.createElement(this.tagName);
-        el.innerHTML = "<li>Liste</li>";
+        el.innerHTML = "<li>"+i18n.get_string('list')+"</li>";
         return el;
     }
 }
 
 class HTMLOListElement extends HTMLElement{
     constructor(){
-        super("Liste Num.", "ol", 'native', HTMLElementData.propsAssignmentFacade.containers);
+        super(i18n.get_string('numberedlist'), "ol", 'native', HTMLElementData.propsAssignmentFacade.containers);
     }
 
     create(){
         let el = document.createElement(this.tagName);
-        el.innerHTML = "<li>Liste</li>";
+        el.innerHTML = "<li>"+i18n.get_string('numberedlist')+"</li>";
         return el;
     }
 }
 
 class HTMLTableElement extends HTMLElement{
     constructor(){
-        super('Table', 'table', 'nativecomponent', ['table', ...HTMLElementData.propsAssignmentFacade.containers]);
+        super(i18n.get_string('table'), 'table', 'nativecomponent', ['table', ...HTMLElementData.propsAssignmentFacade.containers]);
     }
 
     create(){
@@ -401,13 +402,13 @@ class HTMLTableElement extends HTMLElement{
 
 class HTMLTableDataCellElement extends HTMLElement{
     constructor(){
-        super("Cellule de table", "td", 'native', ['tablecell', ...HTMLElementData.propsAssignmentFacade.containers]);
+        super(i18n.get_string('tablecell'), "td", 'native', ['tablecell', ...HTMLElementData.propsAssignmentFacade.containers]);
         this.visible = false;
     }
 
     create(){
         let el = document.createElement(this.tagName);
-        el.innerHTML = "Cell";
+        el.innerHTML = i18n.get_string('tablecell');
         return el;
     }
 }
@@ -420,14 +421,14 @@ class HTMLTableHeaderCellElement extends HTMLElement{
 
     create(){
         let el = document.createElement(this.tagName);
-        el.innerHTML = "Cell";
+        el.innerHTML = i18n.get_string('tablecell');
         return el;
     }
 }
 
 class HTMLTableRowElement extends HTMLElement{
     constructor(){
-        super("Ligne de table", "tr", 'native', HTMLElementData.propsAssignmentFacade.containers);
+        super(i18n.get_string('tablerow'), "tr", 'native', HTMLElementData.propsAssignmentFacade.containers);
         this.visible = false;
     }
 
@@ -439,19 +440,19 @@ class HTMLTableRowElement extends HTMLElement{
 
 class HTMLLIElement extends HTMLElement{
     constructor(){
-        super("Élément de liste", "li", 'native', ['bs-general', 'bs-spacingborder', 'htmlattributes', 'font', 'layout', 'background']);
+        super(i18n.get_string('listitem'), "li", 'native', ['bs-general', 'bs-spacingborder', 'htmlattributes', 'font', 'layout', 'background']);
     }
 
     create(){
         let el = document.createElement(this.tagName);
-        el.innerText = "Item";
+        el.innerText = i18n.get_string('listitem');
         return el;
     }
 }
 
 class HTMLAlertElement extends HTMLDivElement{
     constructor(){
-        super("Alerte", "div", 'bootstrap');
+        super(i18n.get_string('alert'), "div", 'bootstrap');
         this.cssProp.prefix = "alert";
     }
 
@@ -472,7 +473,7 @@ class HTMLAlertElement extends HTMLDivElement{
 
 class HTMLCardElement extends HTMLDivElement{
     constructor(){
-        super("Card", "div", 'bootstrap');
+        super(i18n.get_string('card'), "div", 'bootstrap');
     }
 
     equal(el){
@@ -503,7 +504,7 @@ class HTMLCardElement extends HTMLDivElement{
 
 class HTMLCardBodyElement extends HTMLDivElement{
     constructor(){
-        super("Card Body", "div", 'bootstrap');
+        super(i18n.get_string('cardbody'), "div", 'bootstrap');
         this.visible = false;
     }
 
@@ -522,7 +523,7 @@ class HTMLCardBodyElement extends HTMLDivElement{
 
 class HTMLCardHeaderElement extends HTMLDivElement{
     constructor(){
-        super("Card Header", "div", 'bootstrap');
+        super(i18n.get_string('cardheader'), "div", 'bootstrap');
         this.visible = false;
     }
 
@@ -541,7 +542,7 @@ class HTMLCardHeaderElement extends HTMLDivElement{
 
 class HTMLCardFooterElement extends HTMLDivElement{
     constructor(){
-        super("Card Footer", "div", 'bootstrap');
+        super(i18n.get_string('cardfooter'), "div", 'bootstrap');
         this.visible = false;
     }
 
@@ -560,7 +561,7 @@ class HTMLCardFooterElement extends HTMLDivElement{
 
 class HTMLFlipCardElement extends HTMLDivElement{
     constructor(){
-        super("Carte pivotante", "div", 'nativecomponent');
+        super(i18n.get_string('flipcard'), "div", 'nativecomponent');
         this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
@@ -625,7 +626,7 @@ class HTMLFlipCardElement extends HTMLDivElement{
 
 class HTMLFlipCardFrontElement extends HTMLDivElement{
     constructor(){
-        super("Avant", "div", 'nativecomponent');
+        super(i18n.get_string('front'), "div", 'nativecomponent');
         this.collapsePanel = {components: true, properties: false, treeView: false};
         this.visible = false;
     }
@@ -644,7 +645,7 @@ class HTMLFlipCardFrontElement extends HTMLDivElement{
 
 class HTMLFlipCardBackElement extends HTMLDivElement{
     constructor(){
-        super("Arrière", "div", 'nativecomponent');
+        super(i18n.get_string('rear'), "div", 'nativecomponent');
         this.visible = false;
         this.collapsePanel = {components: true, properties: false, treeView: false};
     }
@@ -663,7 +664,7 @@ class HTMLFlipCardBackElement extends HTMLDivElement{
 
 class HTMLMediaBSElement extends HTMLDivElement{
     constructor(){
-        super("Media", "div", 'bootstrap');
+        super(i18n.get_string('media'), "div", 'bootstrap');
     }
 
     equal(el){
@@ -698,7 +699,7 @@ class HTMLMediaBSElement extends HTMLDivElement{
 
 class HTMLMediaBSBodyElement extends HTMLDivElement{
     constructor(){
-        super("Media Body", "div", 'bootstrap');
+        super(i18n.get_string('mediabody'), "div", 'bootstrap');
         this.visible = false;
     }
 
@@ -711,7 +712,7 @@ class HTMLMediaBSBodyElement extends HTMLDivElement{
 
 class HTMLCarouselElement extends HTMLDivElement{
     constructor(){
-        super("Carousel", "div", 'nativecomponent', ['bs-general', 'htmlattributes']);
+        super(i18n.get_string('carousel'), "div", 'nativecomponent', ['bs-general', 'htmlattributes']);
         this.collapsePanel = {components: true, properties: false, treeView: false};
     }
 
@@ -803,7 +804,7 @@ class HTMLCarouselElement extends HTMLDivElement{
 
 class HTMLCarouselNavElement extends HTMLDivElement{
     constructor(){
-        super("Carousel Nav", "div", 'nativecomponent', ['bs-general', 'htmlattributes']);
+        super(i18n.get_string('carouselnav'), "div", 'nativecomponent', ['bs-general', 'htmlattributes']);
         this.visible = false;
         this.collapsePanel = {components: true, properties: false, treeView: false};
     }
@@ -817,7 +818,7 @@ class HTMLCarouselNavElement extends HTMLDivElement{
 
 class HTMLTabElement extends HTMLDivElement{
     constructor(){
-        super("Onglet", "div", 'nativecomponent', ['tab', ...HTMLElementData.propsAssignmentFacade.containers]);
+        super(i18n.get_string('tab'), "div", 'nativecomponent', ['tab', ...HTMLElementData.propsAssignmentFacade.containers]);
         this.cssProp.prefix = 'tab';
         this.collapsePanel = {components: true, properties: false, treeView: false};
     }
@@ -869,7 +870,7 @@ class HTMLTabElement extends HTMLDivElement{
 
 class HTMLAccordionElement extends HTMLDivElement{
     constructor(){
-        super("Accordéon", "div", 'nativecomponent', ['accordion', ...HTMLElementData.propsAssignmentFacade.containers]);
+        super(i18n.get_string('accordion'), "div", 'nativecomponent', ['accordion', ...HTMLElementData.propsAssignmentFacade.containers]);
         this.cssProp.prefix = 'accordion';
         this.collapsePanel = {components: true, properties: false, treeView: false};
     }
@@ -937,7 +938,7 @@ class HTMLAccordionElement extends HTMLDivElement{
 
 class HTMLAccordionNavElement extends HTMLElement{
     constructor(){
-        super("Accordéon élément", "button", 'bootstrap', ['accordion', ...HTMLElementData.propsAssignmentFacade.containers]);
+        super(i18n.get_string('accordionitem'), "button", 'bootstrap', ['accordion', ...HTMLElementData.propsAssignmentFacade.containers]);
         this.visible = false;
         this.collapsePanel = {components: true, properties: false, treeView: false};
     }
@@ -956,7 +957,7 @@ class HTMLAccordionNavElement extends HTMLElement{
 
 class HTMLTabContentElement extends HTMLDivElement{
     constructor(){
-        super("Corps de l'onglet", "div", 'bootstrap', ['bs-general', 'htmlattributes']);
+        super(i18n.get_string('tabcontent'), "div", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.cssProp.prefix = 'tab';
         this.visible = false;
         this.collapsePanel = {components: true, properties: false, treeView: false};
@@ -971,7 +972,7 @@ class HTMLTabContentElement extends HTMLDivElement{
 
 class HTMLTabPaneElement extends HTMLDivElement{
     constructor(){
-        super("Contenu onglet", "div", 'bootstrap', ['bs-general', 'htmlattributes']);
+        super(i18n.get_string('tabcontent'), "div", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.cssProp.prefix = 'tab';
         this.visible = false;
         this.collapsePanel = {components: true, properties: false, treeView: false};
@@ -987,7 +988,7 @@ class HTMLTabPaneElement extends HTMLDivElement{
         let tab = el.parentElement.parentElement;
         let target = tab.querySelector('[aria-controls="'+el.id+'"]');
         if (!target) return this.name;
-        return 'Contenu de '+target.innerText;
+        return i18n.get_string('tabcontent')+' '+target.innerText;
     }
 }
 
@@ -1056,13 +1057,13 @@ class HTMLNavLinkElement extends HTMLElement{
 
 class HTMLHRElement extends HTMLElement{
     constructor(){
-        super("Séparateur", "hr", 'native', HTMLElementData.propsAssignmentFacade.containers);
+        super(i18n.get_string('split'), "hr", 'native', HTMLElementData.propsAssignmentFacade.containers);
     }
 }
 
 class HTMLImageElement extends HTMLElement{
     constructor(){
-        super("Image", "img", 'bootstrap', ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout']);
+        super(i18n.get_string('image'), "img", 'bootstrap', ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout']);
     }
 
     create(){
@@ -1075,7 +1076,7 @@ class HTMLImageElement extends HTMLElement{
 
 class HTMLImageWithCaptionElement extends HTMLElement{
     constructor(){
-        super("Image avec légende", "figure", 'bootstrap', ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout']);
+        super(i18n.get_string('imagewithcaption'), "figure", 'bootstrap', ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout']);
     }
 
     equal(el){
@@ -1105,7 +1106,7 @@ class HTMLImageWithCaptionElement extends HTMLElement{
 
 class HTMLClickableImageElement extends HTMLElement{
     constructor(){
-        super("Image cliquable", "div", 'bootstrap', ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout']);
+        super(i18n.get_string('clickableimage'), "div", 'bootstrap', ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'source', 'layout']);
     }
 
     equal(el){
@@ -1131,7 +1132,7 @@ class HTMLClickableImageElement extends HTMLElement{
         el.classList.add('rounded');
         el.classList.add('p-2');
         el.href = '#';
-        el.innerHTML = 'Commencer';
+        el.innerHTML = i18n.get_string('getstarted');
         div2.appendChild(el);
         div.appendChild(div2);
 
@@ -1141,7 +1142,7 @@ class HTMLClickableImageElement extends HTMLElement{
 
 class HTMLIconElement extends HTMLElement{
     constructor(){
-        super("Icône", "i", 'native', ['icon', 'font', 'bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes']);
+        super(i18n.get_string('icon'), "i", 'native', ['icon', 'font', 'bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes']);
     }
 
     equal(el){
@@ -1161,11 +1162,11 @@ export class HTMLElementData{
 
     static propertyList = [
         {
-            name: 'layout', description: 'Layout', type: 'styleattr',
+            name: 'layout', description: i18n.get_string('layout'), type: 'styleattr',
             children: [
                 {
                     name: 'Width', 
-                    text: 'Largeur',
+                    text: i18n.get_string('width'),
                     input: { 
                         type: 'minvaluemax', 
                         defaultValue: '',
@@ -1181,7 +1182,7 @@ export class HTMLElementData{
                 },
                 {
                     name: 'Height', 
-                    text: 'Hauteur',
+                    text: i18n.get_string('height'),
                     input: { 
                         type: 'minvaluemax', 
                         defaultValue: '',
@@ -1198,19 +1199,19 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'font', description: 'Police de caractère', type: 'styleattr',
+            name: 'font', description: i18n.get_string('font'), type: 'styleattr',
             children: [
                 {
                     name: 'alignment', 
-                    text: 'Alignment',
+                    text: i18n.get_string('align'),
                     input: { 
                         type: 'radio', 
                         options:[
-                            {text: <FontAwesomeIcon icon={faRemoveFormat} title="Défaut"/>, value:'default'},
-                            {text: <FontAwesomeIcon icon={faAlignLeft} title="Left"/>, value:'text-left' },
-                            {text: <FontAwesomeIcon icon={faAlignCenter} title="Center"/>, value:'text-center' },
-                            {text: <FontAwesomeIcon icon={faAlignRight} title="Right"/>, value:'text-right' },
-                            {text: <FontAwesomeIcon icon={faAlignJustify} title="Justify"/>, value:'text-justify' }
+                            {text: <FontAwesomeIcon icon={faRemoveFormat} title={i18n.get_string('default')}/>, value:'default'},
+                            {text: <FontAwesomeIcon icon={faAlignLeft} title={i18n.get_string('alignleft')}/>, value:'text-left' },
+                            {text: <FontAwesomeIcon icon={faAlignCenter} title={i18n.get_string('aligncenter')}/>, value:'text-center' },
+                            {text: <FontAwesomeIcon icon={faAlignRight} title={i18n.get_string('alignright')}/>, value:'text-right' },
+                            {text: <FontAwesomeIcon icon={faAlignJustify} title={i18n.get_string('justify')}/>, value:'text-justify' }
                         ],
                         defaultValue: ['default'],
                         onChange: function(el, value, data){
@@ -1239,7 +1240,7 @@ export class HTMLElementData{
                 },
                 {
                     name: 'fontsize', 
-                    text: 'Taille',
+                    text: i18n.get_string('fontsize'),
                     input: { 
                         type: 'text', 
                         defaultValue: '',
@@ -1253,7 +1254,7 @@ export class HTMLElementData{
                 },
                 {
                     name: 'fontfamily', 
-                    text: 'Police',
+                    text: i18n.get_string('font'),
                     input: { 
                         type: 'combobox',
                         options: [
@@ -1275,7 +1276,7 @@ export class HTMLElementData{
                 },
                 {
                     name: 'color', 
-                    text: 'Couleur',
+                    text: i18n.get_string('color'),
                     input: { 
                         type: 'color', 
                         defaultValue: '',
@@ -2444,15 +2445,15 @@ export class HTMLElementData{
             ],
         },
         {
-            name: 'tablecell', description: 'Table',  type: 'bootstrap',
+            name: 'tablecell', description: i18n.get_string('table'),  type: 'bootstrap',
             children: [{
                 name: 'tableaction',
-                text: "Actions",
+                text: i18n.get_string('actions'),
                 input: { 
                     type: 'buttongroup',
                     options: [ 
                         {
-                            text: <span><FontAwesomeIcon icon={faMinus}/>{" Colonne"}</span>, 
+                            text: <span><FontAwesomeIcon icon={faMinus}/>{i18n.get_string('line')}</span>, 
                             onClick: function(el){
                                 let table = el.parentElement.parentElement;
                                 for (let row of table.rows){
@@ -2471,7 +2472,7 @@ export class HTMLElementData{
                             }
                         },
                         {
-                            text: <span><FontAwesomeIcon icon={faPlus}/>{" Colonne"}</span>, 
+                            text: <span><FontAwesomeIcon icon={faPlus}/>{i18n.get_string('column')}</span>, 
                             onClick: function(el){
                                 let table = el.parentElement.parentElement;
                                 let result = UtilsHTML.tableAddCol(table);
@@ -2479,7 +2480,7 @@ export class HTMLElementData{
                             }
                         },
                         {
-                            text: <span><FontAwesomeIcon icon={faPlus}/>{" Ligne"}</span>, 
+                            text: <span><FontAwesomeIcon icon={faPlus}/>{i18n.get_string('line')}</span>, 
                             onClick: function(el){
                                 let result = {action: '', nodes: null};
                                 let table = UtilsHTML.getTableFromCell(el);
@@ -2515,7 +2516,7 @@ export class HTMLElementData{
 
     static elementList = [
         {
-            name: 'Texte', 
+            name: i18n.get_string('text'),
             children: [
                 new HTMLHeadingElement("H1", 'h1'),
                 new HTMLHeadingElement("H2", 'h2'),
@@ -2527,13 +2528,13 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'Contrôles', 
+            name: i18n.get_string('control'), 
             children: [
-                new HTMLButtonElement("Bouton", 'button', 'bootstrap', HTMLElementData.propsAssignmentFacade.buttons),
+                new HTMLButtonElement(i18n.get_string('button'), 'button', 'bootstrap', HTMLElementData.propsAssignmentFacade.buttons),
                 new HTMLButtonCollapseElement(),
                 new HTMLLinkElement(),
                 new HTMLAudioElement(),
-                new HTMLVideoElement("Vidéo", null, 'bootstrap'),
+                new HTMLVideoElement(i18n.get_string('video'), null, 'bootstrap'),
                 new HTMLButtonVideoElement(),
                 new HTMLEmbedElement(),
                 new HTMLNavElement(),
@@ -2542,7 +2543,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'Containeurs', 
+            name: i18n.get_string('container'), 
             children: [
                 new HTMLBodyElement(),
                 new HTMLDivElement(),
@@ -2565,7 +2566,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'Composants natifs', 
+            name: i18n.get_string('nativecomponent'), 
             children: [
                 new HTMLCarouselElement(),
                 new HTMLCarouselNavElement(),
@@ -2584,7 +2585,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'Images', 
+            name: i18n.get_string('image'), 
             children: [
                 new HTMLImageElement(),
                 new HTMLImageWithCaptionElement(),
@@ -2613,7 +2614,7 @@ export class HTMLElementData{
 
         let list = [];
         for(let cat of HTMLElementData.elementList){
-            if (cat.name == 'Composant'){
+            if (cat.name == i18n.get_string('component')){
                 for (let item of cat.children){
                     list.push(item);
                 }
@@ -2622,7 +2623,7 @@ export class HTMLElementData{
 
         let list2 = [];
         for(let cat of HTMLElementData.elementList){
-            if (cat.name != 'Composant'){
+            if (cat.name != i18n.get_string('component')){
                 for (let item of cat.children){
                     list2.push(item);
                 }
@@ -2666,7 +2667,7 @@ export class HTMLElementData{
         else if((componentData.type === 'c') || (componentData.type === 'l')){
             let html = componentData.htmlStr || componentData.htmlstr; //Save file sometimes void caps
             if (!html){
-                alert('Erreur: invalid component');
+                alert(i18n.get_string('invalidcomponent'));
                 console.log(componentData);
                 return;
             }

@@ -6,6 +6,7 @@ import {HTMLElementData} from './HTMLElementData';
 import {BtnSetCssProp} from '../ButtonsBar';
 import {TemplateForm} from './ComponentsCollection';
 import { UtilsHTML } from '../../utils/Utils';
+import { i18n } from '../../utils/i18n';
 
 export class Canvas extends Component
 {
@@ -127,7 +128,7 @@ export class CanvasElement{
                 event.currentTarget.appendChild(el);
             }
             else{
-                console.log(`Fail to drop: `, event.target);
+                console.log(i18n.get_string('failedtodrop'), event.target);
             }
         }
         
@@ -142,7 +143,7 @@ export class CanvasElement{
     } 
     
     onDragOver(event){
-        event.preventDefault(); // Necessary to allows us to drop.
+        event.preventDefault(); // Necessary to allow us to drop.
         if(!event.target.classList.contains('dropping-zone-hover') && event.target.classList.contains('dropping-zone')){
             event.target.classList.add('dropping-zone-hover');
         }
@@ -258,16 +259,16 @@ export class FloatingMenu extends Component{
             <div className='floating-menu' style={style}>
                 <ButtonToolbar aria-label="Élément outils">
                     <ButtonGroup size="sm">
-                        <Button onDragStart={this.props.onDragElement} draggable="true" style={{cursor: 'grab'}}><FontAwesomeIcon  icon={faArrowsAlt} title="Glisser"/></Button>
-                        <Button onClick={this.props.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
-                        <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faPuzzlePiece} title="Créer un composant"/></Button>
-                        <Button onClick={() => this.props.onMoveNodeUp(null)}  ><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
-                        <Button onClick={() => this.props.onMoveNodeDown(null)}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>
-                        <Button onClick={this.props.onCloneNode}><FontAwesomeIcon icon={faClone} title="Dupliquer"/></Button>
-                        <Button onClick={() => this.props.onDeleteElement(null)}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                        <Button onDragStart={this.props.onDragElement} draggable="true" style={{cursor: 'grab'}}><FontAwesomeIcon  icon={faArrowsAlt} title={i18n.get_string('drag')}/></Button>
+                        <Button onClick={this.props.onEdit}><FontAwesomeIcon  icon={faEdit} title={i18n.get_string('edit')}/></Button>
+                        <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faPuzzlePiece} title={i18n.get_string('createcomponent')}/></Button>
+                        <Button onClick={() => this.props.onMoveNodeUp(null)}  ><FontAwesomeIcon icon={faArrowUp} title={i18n.get_string('moveelementup')}/></Button>
+                        <Button onClick={() => this.props.onMoveNodeDown(null)}><FontAwesomeIcon icon={faArrowDown} title={i18n.get_string('moveelementdown')}/></Button>
+                        <Button onClick={this.props.onCloneNode}><FontAwesomeIcon icon={faClone} title={i18n.get_string('clone')}/></Button>
+                        <Button onClick={() => this.props.onDeleteElement(null)}><FontAwesomeIcon  icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
                     </ButtonGroup>
                 </ButtonToolbar>
-                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} title="Ajouter un composant" description="Assurez vous que les images contenues dans vos gabarits ne seront pas utilisées à l'intérieur d'une autre activité ou d'un autre cours. Les images doivent être substituées après l'action glisser-déposer sinon les liens vers les images seront brisés."/>}
+                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} title={i18n.get_string('addcomponent')} description={i18n.get_string('addcomponentdesc')}/>}
             </div>
             //disabled={this.props.selectedElement.previousSibling === null}
         return main;

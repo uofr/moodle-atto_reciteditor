@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { FormControl, Container, Row, Col } from 'react-bootstrap';
+import { i18n } from '../utils/i18n';
 //import { isNumber } from 'util';
 
 export class MinValueMax extends Component {
@@ -39,13 +40,13 @@ export class MinValueMax extends Component {
     render() {       
         let main = <Container>
         <Row>
-          <Col>Min<br/><FormControl autoFocus={this.props.autoFocus} className={"InputMinValueMax"} name="min" type="text" 
+          <Col>{i18n.get_string('min')}<br/><FormControl autoFocus={this.props.autoFocus} className={"InputMinValueMax"} name="min" type="text" 
                     value={this.state.values['min']} placeholder={this.props.placeholder} onChange={this.onChange} onBlur={this.onFocusOut} onKeyDown={this.onKeyDown}
                     disabled={this.props.disabled} size={this.props.size}/></Col>
-          <Col>Value<br/><FormControl autoFocus={this.props.autoFocus} className={"InputMinValueMax"} name="value" type="text" 
+          <Col>{i18n.get_string('value')}<br/><FormControl autoFocus={this.props.autoFocus} className={"InputMinValueMax"} name="value" type="text" 
                     value={this.state.values['value']} placeholder={this.props.placeholder} onChange={this.onChange} onBlur={this.onFocusOut} onKeyDown={this.onKeyDown}
                     disabled={this.props.disabled} size={this.props.size}/></Col>
-          <Col>Max<br/><FormControl autoFocus={this.props.autoFocus} className={"InputMinValueMax"} name="max" type="text" 
+          <Col>{i18n.get_string('max')}<br/><FormControl autoFocus={this.props.autoFocus} className={"InputMinValueMax"} name="max" type="text" 
                     value={this.state.values['max']} placeholder={this.props.placeholder} onChange={this.onChange} onBlur={this.onFocusOut} onKeyDown={this.onKeyDown}
                     disabled={this.props.disabled} size={this.props.size}/></Col>
         </Row>

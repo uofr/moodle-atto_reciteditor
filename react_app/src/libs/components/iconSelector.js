@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Utils, {UtilsMoodle } from '../utils/Utils';
 import {Assets} from '../components/Components';
 import {IFrame} from './iframe';
+import { i18n } from '../utils/i18n';
 
 export class IconSelector extends Component {
     static defaultProps = {
@@ -59,7 +60,7 @@ export class IconSelector extends Component {
         
         let modal = <Modal key="2" dialogClassName='iconselectormodal' show={this.state.modal} onHide={this.handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Selectionner icône</Modal.Title>
+          <Modal.Title>{i18n.get_string('selecticon')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <FormControl className={"InputText mb-3"} type="text" value={this.state.search} onChange={this.onSearch} placeholder={"Recherche"} />

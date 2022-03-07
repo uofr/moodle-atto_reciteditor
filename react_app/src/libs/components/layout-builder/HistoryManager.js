@@ -26,9 +26,7 @@ export class HistoryManager {
                 this.history.redo.unshift();
             }
             
-            callback(content)
-        }else{
-            console.log('Undo history is empty');
+            callback(content);
         }
     }
 

@@ -117,5 +117,7 @@ Y.namespace('M.atto_reciteditor').Button = Y.Base.create('button', Y.M.editor_at
             that.editor.setHTML(htmlStr);
             popup.close();
         };
+
+        popup.M = M;
     },
 });

@@ -42,7 +42,7 @@ export class Templates{
     }
 
     static onDelete(item){
-        if(window.confirm("Êtes-vous sur de vouloir supprimer l'item ?")){ 
+        if(window.confirm(i18n.get_string('deleteconfirmmsg'))){ 
             return Templates.webApi.deleteTemplate(item.id);
         }
 
@@ -63,7 +63,7 @@ export class Templates{
                         resolve(fileContent);
                     }
                     catch(err){
-                        alert("Error on importing data. See console for more information.");
+                        alert(i18n.get_string('errorseeconsole'));
                         console.log(err);
                         reject();
                     }

@@ -15,9 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * This atto plugin allows to build Bootstrap content without knowing HTML
  *
- * @copyright 2019 RÉCIT FAD
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    atto_reciteditor
+ * @copyright  2019 RECIT
+ * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
  
 defined('MOODLE_INTERNAL') || die();
