@@ -257,7 +257,7 @@ export class FloatingMenu extends Component{
 
         let main =  
             <div className='floating-menu' style={style}>
-                <ButtonToolbar aria-label="Élément outils">
+                <ButtonToolbar>
                     <ButtonGroup size="sm">
                         <Button onDragStart={this.props.onDragElement} draggable="true" style={{cursor: 'grab'}}><FontAwesomeIcon  icon={faArrowsAlt} title={i18n.get_string('drag')}/></Button>
                         <Button onClick={this.props.onEdit}><FontAwesomeIcon  icon={faEdit} title={i18n.get_string('edit')}/></Button>
