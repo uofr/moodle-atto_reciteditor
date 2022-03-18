@@ -27,6 +27,7 @@ import {faAngleRight, faAngleDown, faArrowUp, faArrowDown, faTrashAlt} from '@fo
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import {UtilsHTML} from '../../utils/Utils';
+import { i18n } from '../../utils/i18n';
 
 export class TreeView extends Component{
     static defaultProps = {

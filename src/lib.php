@@ -31,6 +31,7 @@ function atto_reciteditor_before_standard_top_of_body_html() {
    
     $settings = array(
         'currentthemesubrev' => theme_get_sub_revision_for_theme($CFG->theme),
+        'showcase_url' => get_config('atto_reciteditor', 'enableshowcase') == 1 ? get_config('atto_reciteditor', 'showcase_url') : '',
     );
 
     $PAGE->requires->js_init_call('M.recit.reciteditor.init_settings', array($settings));

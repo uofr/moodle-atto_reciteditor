@@ -3,7 +3,19 @@ $string['pluginname'] = 'RÉCIT Editor';
 $string['privacymetadata'] = 'The atto_reciteditor plugin does not store any personal data.';
 $string['htmleditor'] = 'RÉCIT Editor';
 $string['fetch_components'] = 'Fetch Components';
+// General settings tab.
+$string['configtitle'] = 'RÉCIT Editor Settings';
+$string['enableshowcase'] = 'Enable Showcase';
+$string['enableshowcasedesc'] = 'Enables a showcase page where you can put premade templates. Requires a PHP server';
+$string['showcase_url'] = 'Showcase URL';
+$string['showcase_urldesc'] = 'Showcase index where your showcase server runs';
+$string['enablecomponenttask'] = 'Enable Component fetch task';
+$string['enablecomponenttaskdesc'] = 'Enables a task where you can put premade components and it will fetch them weekly. Requires a PHP server';
+$string['component_url'] = 'Component Fetch URL';
+$string['component_urldesc'] = 'Component fetch php URL';
+$string['generalsettings'] = 'General';
 
+//React
 $string['inputurl'] = 'Input URL';
 $string['createlink'] = 'Create link';
 $string['texttoshow'] = 'Text to show';

@@ -72,7 +72,7 @@ M.recit.reciteditor.Popup = class {
 }
 
 M.recit.reciteditor.init_settings = function(_, settings){
-    M.recit.reciteditor.settings.currentthemesubrev = settings.currentthemesubrev;
+    M.recit.reciteditor.settings = settings;
 }
 
 document.body.addEventListener('click',function(e){

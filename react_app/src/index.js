@@ -42,9 +42,7 @@ import {Options} from './Options';
 if(process.env.NODE_ENV === "development"){    
     // Bootstrap is loaded only in dev mode because Moodle already has Bootstrap files
     //React.lazy(() => import('bootstrap/dist/css/bootstrap.min.css'));
-    console.log(`Dev: ${Options.appName()} - v:${Options.appVersion()}`); 
-    let attoInterface = UtilsMoodle.getAttoInterface();
-    ReactDOM.render(<RecitRichEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent} />, document.getElementById('root')); 
+    console.log(`Dev: ${Options.appName()} - v:${Options.appVersion()}`);
 }
 else{
     /*window.RecitRichEditorCreateInstance = function(placeholder, onChange){
@@ -53,7 +51,9 @@ else{
         ReactDOM.render(<RecitRichEditor name={name} content={placeholder.innerHTML} onChange={onChange}/>, placeholder);
     }*/
     console.log(`Prod: ${Options.appName()} - v:${Options.appVersion()}`); 
-    let attoInterface = UtilsMoodle.getAttoInterface();
-    ReactDOM.render(<RecitRichEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent} />, document.getElementById('root')); 
 }
 
+
+let attoInterface = UtilsMoodle.getAttoInterface();
+let node = document.getElementById('root');
+ReactDOM.render(<RecitRichEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent} />, node);

@@ -66,5 +66,4 @@ export class Assets{
 
     static ComponentUrl = './assets/components.json';
 
-    static UrlVitrine = 'https://recitfad.ca/moodledocs/vitrine_editeur_v2/index.php';
 }

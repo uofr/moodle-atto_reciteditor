@@ -408,7 +408,11 @@ class TemplateList extends Component{
         this.showModal = this.showModal.bind(this);
         this.onSaveTemplate = this.onSaveTemplate.bind(this);
 
-        this.state = {showModal: false, showMenu: false, showImport: false, showVitrine: false, collapse: {} };
+        let url = false;
+        if (M.recit && M.recit.reciteditor && M.recit.reciteditor.settings.showcase_url && M.recit.reciteditor.settings.showcase_url.length > 0){
+            url = M.recit.reciteditor.settings.showcase_url;
+        }
+        this.state = {showModal: false, showMenu: false, showImport: false, showVitrine: false, UrlVitrine: url, collapse: {}};
     }    
 
     componentDidMount(){
@@ -426,13 +430,13 @@ class TemplateList extends Component{
                 <div>
                     <ButtonToolbar style={{justifyContent: 'flex-end'}}>
                         <ButtonGroup >
-                                {this.props.type === 'l' && <Button onClick={() => this.showModal(true)}><FontAwesomeIcon  icon={faSave} title={i18n.get_string('savetemplate')}/></Button>}
+                                {this.props.type === 'l' && <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faSave} title={i18n.get_string('savetemplate')}/></Button>}
                                 <BtnUpload id="import-collection"  accept=".json" onChange={this.onImport} title={i18n.get_string('import')}/>
-                                {this.props.type === 'disabled' && <Button onClick={() => this.showVitrine(true)}><FontAwesomeIcon  icon={faCloud} title={i18n.get_string('showroom')}/> {i18n.get_string('showroom')}</Button>}
-                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon  icon={faCog} title={i18n.get_string('options')}/></Button>
+                                {this.props.type === 'l' && this.state.UrlVitrine && <Button onClick={() => this.showVitrine(true)}><FontAwesomeIcon icon={faCloud} title={i18n.get_string('showroom')}/> {i18n.get_string('showroom')}</Button>}
+                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon icon={faCog} title={i18n.get_string('options')}/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
-                    {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider.myComponents)}><FontAwesomeIcon  icon={faCloudDownloadAlt}/>{i18n.get_string('export')}</Button>}
+                    {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider.myComponents)}><FontAwesomeIcon icon={faCloudDownloadAlt}/>{i18n.get_string('export')}</Button>}
                 </div>
                 {this.props.type === 'l' && 
                     <ul className='mt-2 d-flex flex-wrap justify-content-center'>
@@ -464,7 +468,7 @@ class TemplateList extends Component{
                             <Modal.Title>{i18n.get_string('showroom')}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <iframe src={Assets.UrlVitrine}/>
+                            <iframe src={this.state.UrlVitrine}/>
                         </Modal.Body>
                     </Modal>
                 }
