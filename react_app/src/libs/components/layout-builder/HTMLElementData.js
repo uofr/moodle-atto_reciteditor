@@ -335,7 +335,7 @@ class HTMLRowElement extends HTMLElement{
     equal(el){
         if(el === null){ return false; }
 
-        return (el.classList.contains('row') || el.classList.contains('row-fluid'));
+        return (el.classList.contains('row') || el.classList.contains('attoreciteditor_row-fluid'));
     }
 
     create(){
@@ -591,13 +591,13 @@ class HTMLFlipCardElement extends HTMLDivElement{
     equal(el){
         if(el === null){ return false; }
 
-        return (el.classList.contains('flipcard2'));
+        return (el.classList.contains('attoreciteditor_flipcard2'));
     }
 
     create(){
         let card = document.createElement("div");
         card.classList.add("card");
-        card.classList.add("flipcard2");
+        card.classList.add("attoreciteditor_flipcard2");
         card.classList.add("manual-flip-click");
         let cardinner = document.createElement("div");
         cardinner.classList.add("flipcard-inner");
@@ -1105,7 +1105,7 @@ class HTMLImageWithCaptionElement extends HTMLElement{
     equal(el){
         if(el === null){ return false; }
 
-        return (el.classList.contains('img-popup'));
+        return (el.classList.contains('attoreciteditor_img-popup'));
     }
 
     create(){
@@ -1116,7 +1116,7 @@ class HTMLImageWithCaptionElement extends HTMLElement{
         let el = document.createElement("img");
         el.setAttribute('src', `${Assets.ImageEmpty}`);
         el.classList.add("img-fluid");
-        el.classList.add("img-popup");
+        el.classList.add("attoreciteditor_img-popup");
         div.appendChild(el);
 
         el = document.createElement("figcaption");

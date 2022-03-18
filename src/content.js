@@ -32,7 +32,7 @@ M.recit.reciteditor.settings = {
 M.recit.reciteditor.Popup = class {
     constructor(content) {        
         let modal = document.createElement('div');
-        modal.classList.add('modal', 'fade', 'r_popup');
+        modal.classList.add('modal', 'fade', 'attoreciteditor_popup');
         let inner2 = document.createElement('div');
         inner2.classList.add('modal-dialog');
         modal.appendChild(inner2);
@@ -84,7 +84,7 @@ document.body.addEventListener('click',function(e){
             new M.recit.reciteditor.Popup(iframe);
         }
         e.preventDefault();
-    }else if(e.target && e.target.classList.contains('img-popup')){
+    }else if(e.target && e.target.classList.contains('attoreciteditor_img-popup')){
         let url = e.target.src;
         if (url){
             let img = document.createElement('img');
@@ -92,10 +92,10 @@ document.body.addEventListener('click',function(e){
             new M.recit.reciteditor.Popup(img);
         }
         e.preventDefault();
-    }else if(e.target && e.target.matches('.flipcard2 *')){ //Check if user clicked on a flipcard or its children
+    }else if(e.target && e.target.matches('.attoreciteditor_flipcard2 *')){ //Check if user clicked on a flipcard or its children
         let el = e.target;
         while (el = el.parentElement){
-            if (el.classList.contains('flipcard2')){
+            if (el.classList.contains('attoreciteditor_flipcard2')){
                 break;
             }
         }
