@@ -15,12 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Atto install script. Adds recit_editor icons to Atto toolbar.
+ * Atto HTML editor
  *
- * @package    atto
- * @subpackage recit_editor
- * @copyright  RECITFAD
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    atto_reciteditor
+ * @copyright  2019 RECIT
+ * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();

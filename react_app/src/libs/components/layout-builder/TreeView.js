@@ -1,3 +1,26 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Atto HTML editor
+ *
+ * @package    atto_reciteditor
+ * @copyright  2019 RECIT
+ * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
+ */
+
 import React, { Component } from 'react';
 import { ButtonToolbar, Button, ButtonGroup  } from 'react-bootstrap';
 import {faAngleRight, faAngleDown, faArrowUp, faArrowDown, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
@@ -119,13 +142,6 @@ export class TreeView extends Component{
     }
 
     getNodeDesc(node){
-        //let text = node.tagName.charAt(0).toUpperCase() + node.tagName.toLowerCase().slice(1);
-
-        /*let classList = [...node.classList]; // spread syntax 
-
-        if(classList.length > 0){
-            text = `${text} (${classList.join(", ")})`;
-        }*/
         let elClass = HTMLElementData.getElementClass(null, node);
 
         return (elClass ? elClass.getDesc(node) : node.tagName.toLowerCase());
