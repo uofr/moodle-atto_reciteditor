@@ -28,6 +28,7 @@ export class ToggleButtons extends Component {
     static defaultProps = {
         name: "",
         defaultValue: [],
+        value: "",
         onChange: null,
         type: "checkbox", // checkbox | radio
         options: [], // {value: "", text:"", glyph: ""}
@@ -45,7 +46,7 @@ export class ToggleButtons extends Component {
     render() {       
         let main = 
             <ButtonToolbar style={this.props.style} data-read-only={(this.props.disabled ? 1 : 0)}>                        
-                <ToggleButtonGroup size={this.props.bsSize} type={this.props.type} name={this.props.name} defaultValue={this.props.defaultValue} onChange={this.onChange}>                                
+                <ToggleButtonGroup size={this.props.bsSize} type={this.props.type} name={this.props.name} value={this.props.value} defaultValue={this.props.defaultValue} onChange={this.onChange}>                                
                     {this.props.options.map((item, index) => {   
                         let element = 
                             <BsToggleButton key={index} variant={"primary"} value={item.value} disabled={this.props.disabled}>
