@@ -867,10 +867,10 @@ class PreviewState extends CanvasState{
 		el.setAttribute("type", "text/javascript");
 		head.appendChild(el);
 
-        el = document.createElement("script");
-		el.setAttribute("src", `${Assets.BootstrapJS}`);
-		el.setAttribute("type", "text/javascript");
-		head.appendChild(el);
+        let bsJs = document.createElement("script");
+		bsJs.setAttribute("src", `${Assets.BootstrapJS}`);
+		bsJs.setAttribute("type", "text/javascript");
+        head.insertBefore(bsJs, el);
 
         this.iFrame.addEventListener("click", function(e) {//Prevent links from working on preview
             if (e.target.tagName == 'A' || e.target.tagName == 'BUTTON'){

@@ -1147,7 +1147,20 @@ class HTMLIconElement extends HTMLElement{
     equal(el){
         if(el === null){ return false; }
 
-        return (el.classList.contains('fa') || (el.classList[0] && el.classList[0].includes('icon-')));
+        for(let item of el.classList){
+            if(item === "fa"){
+                return true;
+            }
+
+            let tmp = item.split('-');
+            if(tmp[0]){
+                if(tmp[0] === 'icon' || tmp[0] === 'recitfad'){
+                    return true;
+                }
+            } 
+        }
+
+        return false;
     }
 
     create(){
