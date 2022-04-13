@@ -2626,7 +2626,7 @@ export class HTMLElementData{
 
         let list = [];
         for(let cat of HTMLElementData.elementList){
-            if (cat.name == 'Composant'){
+            if (cat.name == 'Composants natifs'){
                 for (let item of cat.children){
                     list.push(item);
                 }
@@ -2635,7 +2635,7 @@ export class HTMLElementData{
 
         let list2 = [];
         for(let cat of HTMLElementData.elementList){
-            if (cat.name != 'Composant'){
+            if (cat.name != 'Composants natifs'){
                 for (let item of cat.children){
                     list2.push(item);
                 }
