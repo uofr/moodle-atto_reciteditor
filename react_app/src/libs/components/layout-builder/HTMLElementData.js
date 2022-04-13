@@ -2589,7 +2589,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: i18n.get_string('nativecomponent'), 
+            name: i18n.get_string('nativecomponents'), 
             children: [
                 new HTMLCarouselElement(),
                 new HTMLCarouselNavElement(),
@@ -2637,7 +2637,7 @@ export class HTMLElementData{
 
         let list = [];
         for(let cat of HTMLElementData.elementList){
-            if (cat.name == i18n.get_string('component')){
+            if (cat.name == i18n.get_string('nativecomponents')){
                 for (let item of cat.children){
                     list.push(item);
                 }
@@ -2646,7 +2646,7 @@ export class HTMLElementData{
 
         let list2 = [];
         for(let cat of HTMLElementData.elementList){
-            if (cat.name != i18n.get_string('component')){
+            if (cat.name != i18n.get_string('nativecomponents')){
                 for (let item of cat.children){
                     list2.push(item);
                 }
