@@ -353,7 +353,13 @@ class HTMLColElement extends HTMLElement{
     equal(el){
         if(el === null){ return false; }
 
-        return (el.classList.contains('col') || el.classList.contains('col-12'));
+        let containsCol = false;
+        for (let i = 0; i <= 12; i++){
+            if (el.classList.contains('col-'+i)){
+                containsCol = true;
+            }
+        }
+        return (el.classList.contains('col') || containsCol);
     }
 
     create(){
