@@ -53,7 +53,7 @@ Y.namespace('M.atto_reciteditor').Button = Y.Base.create('button', Y.M.editor_at
         var that = this;
        
         var url = M.cfg.wwwroot;
-        url += "/lib/editor/atto/plugins/reciteditor/build/index.php";
+        url += "/lib/editor/atto/plugins/reciteditor/view.php";
         
         var popup = window.open(url,'Éditeur RÉCIT','scrollbars=1');
 
