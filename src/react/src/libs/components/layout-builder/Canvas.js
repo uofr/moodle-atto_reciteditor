@@ -339,11 +339,11 @@ export class NodeTextEditing extends Component{
                 <div style={style}>
                    <ButtonToolbar>
                         <ButtonGroup size="sm">
-                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="font-weight" defaultValue="normal" value="bold"  icon={faBold} title="Gras"/>
-                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="font-style" defaultValue="normal" value="italic"  icon={faItalic} title="Italique"/>
-                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="text-decoration" defaultValue="normal" value="underline"  icon={faUnderline} title="Souligné"/>
-                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="text-decoration" defaultValue="normal" value="line-through"  icon={faStrikethrough} title="Barré"/>
-                            <Button title="Remplacer par espace insécable" onClick={() => this.props.onReplaceNonBreakingSpace()}><FontAwesomeIcon icon={faParagraph}/></Button>
+                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="font-weight" defaultValue="normal" value="bold"  icon={faBold} title={i18n.get_string('bold')}/>
+                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="font-style" defaultValue="normal" value="italic"  icon={faItalic} title={i18n.get_string('italic')}/>
+                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="text-decoration" defaultValue="normal" value="underline"  icon={faUnderline} title={i18n.get_string('underline')}/>
+                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="text-decoration" defaultValue="normal" value="line-through"  icon={faStrikethrough} title={i18n.get_string('strikethrough')}/>
+                            <Button title={i18n.get_string('nonbreakingspace')} onClick={() => this.props.onReplaceNonBreakingSpace()}><FontAwesomeIcon icon={faParagraph}/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                 </div>;
