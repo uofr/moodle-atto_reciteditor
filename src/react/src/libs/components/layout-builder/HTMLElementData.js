@@ -406,6 +406,7 @@ class HTMLOListElement extends HTMLElement{
 class HTMLTableElement extends HTMLElement{
     constructor(){
         super(i18n.get_string('table'), 'table', 'nativecomponent', ['table', ...HTMLElementData.propsAssignmentFacade.containers]);
+        this.cssProp.prefix = 'table';
     }
 
     create(){
@@ -414,10 +415,10 @@ class HTMLTableElement extends HTMLElement{
         let tbody = document.createElement('tbody')
         el.appendChild(tbody)
        
-        for (let i = 0; i < 5; i++){
+        for (let i = 0; i < 2; i++){
             let row = document.createElement('tr');
             tbody.appendChild(row);
-            for (let j = 0; j < 5; j++){
+            for (let j = 0; j < 2; j++){
                 let tag = 'td';
                 if (i == 0) tag = 'th'
                 let cell = document.createElement(tag)
