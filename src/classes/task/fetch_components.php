@@ -19,17 +19,18 @@ class fetch_components extends \core\task\scheduled_task {
      * Execute the task.
      */
     public function execute() {
-        
-        $componentUrl = 'https://recitfad.ca/moodledocs/vitrine_editeur_v2/components.php';
+        if (get_config('atto_reciteditor', 'enablecomponenttask') == 1){
+            $componentUrl = get_config('atto_reciteditor', 'component_url');
 
-        try {
-            $content = file_get_contents($componentUrl);
-            $json = json_decode($content);
-            if ($json){
-                file_put_contents(dirname(__FILE__) . '/../../build/assets/components.json', $content);
+            try {
+                $content = file_get_contents($componentUrl);
+                $json = json_decode($content);
+                if ($json){
+                    file_put_contents(dirname(__FILE__) . '/../../build/assets/components.json', $content);
+                }
+            }catch(Exception $e){
+
             }
-        }catch(Exception $e){
-
         }
     }
 }

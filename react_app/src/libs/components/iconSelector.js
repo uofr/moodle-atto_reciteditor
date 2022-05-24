@@ -1,3 +1,26 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Atto HTML editor
+ *
+ * @package    atto_reciteditor
+ * @copyright  2019 RECIT
+ * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
+ */
+
 import React, { Component } from 'react';
 import { Button, Modal, FormControl } from 'react-bootstrap';
 import { faIcons} from '@fortawesome/free-solid-svg-icons';
@@ -5,6 +28,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Utils, {UtilsMoodle } from '../utils/Utils';
 import {Assets} from '../components/Components';
 import {IFrame} from './iframe';
+import { i18n } from '../utils/i18n';
 
 export class IconSelector extends Component {
     static defaultProps = {
@@ -59,7 +83,7 @@ export class IconSelector extends Component {
         
         let modal = <Modal key="2" dialogClassName='iconselectormodal' show={this.state.modal} onHide={this.handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Selectionner icône</Modal.Title>
+          <Modal.Title>{i18n.get_string('selecticon')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <FormControl className={"InputText mb-3"} type="text" value={this.state.search} onChange={this.onSearch} placeholder={"Recherche"} />

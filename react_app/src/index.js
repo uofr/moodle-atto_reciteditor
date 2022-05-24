@@ -1,3 +1,26 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Atto HTML editor
+ *
+ * @package    atto_reciteditor
+ * @copyright  2019 RECIT
+ * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {RecitRichEditor} from './libs/components/Components';
@@ -19,9 +42,7 @@ import {Options} from './Options';
 if(process.env.NODE_ENV === "development"){    
     // Bootstrap is loaded only in dev mode because Moodle already has Bootstrap files
     //React.lazy(() => import('bootstrap/dist/css/bootstrap.min.css'));
-    console.log(`Dev: ${Options.appName()} - v:${Options.appVersion()}`); 
-    let attoInterface = UtilsMoodle.getAttoInterface();
-    ReactDOM.render(<RecitRichEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent} />, document.getElementById('root')); 
+    console.log(`Dev: ${Options.appName()} - v:${Options.appVersion()}`);
 }
 else{
     /*window.RecitRichEditorCreateInstance = function(placeholder, onChange){
@@ -30,7 +51,9 @@ else{
         ReactDOM.render(<RecitRichEditor name={name} content={placeholder.innerHTML} onChange={onChange}/>, placeholder);
     }*/
     console.log(`Prod: ${Options.appName()} - v:${Options.appVersion()}`); 
-    let attoInterface = UtilsMoodle.getAttoInterface();
-    ReactDOM.render(<RecitRichEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent} />, document.getElementById('root')); 
 }
 
+
+let attoInterface = UtilsMoodle.getAttoInterface();
+let node = document.getElementById('root');
+ReactDOM.render(<RecitRichEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent} />, node);

@@ -1,6 +1,28 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Atto HTML editor
+ *
+ * @package    atto_reciteditor
+ * @copyright  2019 RECIT
+ * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
+ */
+
 import React, { Component } from 'react';
-import {faTint} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { i18n } from '../utils/i18n';
 
 
 export class LayoutSpacingEditor extends Component {
@@ -26,20 +48,20 @@ export class LayoutSpacingEditor extends Component {
 
         let main = <div className="layoutspacing_layout-onion">
         <div className="layoutspacing_margin">
-           <label>margin</label>
+           <label>{i18n.get_string('margin')}</label>
            <input type="text" name="marginTop" className="layoutspacing_top" placeholder="-" value={this.props.values.marginTop} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
            <input type="text" name="marginRight" className="layoutspacing_right" placeholder="-" value={this.props.values.marginRight} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
             <input type="text" name="marginBottom" className="layoutspacing_bottom" placeholder="-" value={this.props.values.marginBottom} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
             <input type="text" name="marginLeft" className="layoutspacing_left" placeholder="-" value={this.props.values.marginLeft} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
            <div className="layoutspacing_border" style={{borderColor: this.props.values.borderColor, cursor: 'pointer'}} onClick={this.onBorderClick} ref={this.borderRef}>
-              <label>border</label>
+              <label>{i18n.get_string('border')}</label>
               <input type="color" ref={this.colorRef} name="borderColor" style={{visibility:'hidden'}} value={this.props.values.borderColor} onInput={this.onBlur} onChange={this.onChange}/>
               <input type="text" name="borderTopWidth" className="layoutspacing_top" placeholder="-" value={this.props.values.borderTopWidth} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
               <input type="text" name="borderRightWidth" className="layoutspacing_right" placeholder="-" value={this.props.values.borderRightWidth} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
               <input type="text" name="borderBottomWidth" className="layoutspacing_bottom" placeholder="-" value={this.props.values.borderBottomWidth} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
               <input type="text" name="borderLeftWidth" className="layoutspacing_left" placeholder="-" value={this.props.values.borderLeftWidth} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
               <div className="layoutspacing_padding">
-                 <label>padding</label>
+                 <label>{i18n.get_string('padding')}</label>
                  <input type="text" name="paddingTop" className="layoutspacing_top" placeholder="-" value={this.props.values.paddingTop} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
                  <input type="text" name="paddingRight" className="layoutspacing_right" placeholder="-" value={this.props.values.paddingRight} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>
                  <input type="text" name="paddingBottom" className="layoutspacing_bottom" placeholder="-" value={this.props.values.paddingBottom} onBlur={this.onBlur} onChange={this.onChange} onKeyDown={this.onKeyDown}/>

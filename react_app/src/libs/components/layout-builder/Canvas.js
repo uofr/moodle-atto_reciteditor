@@ -1,11 +1,35 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Atto HTML editor
+ *
+ * @package    atto_reciteditor
+ * @copyright  2019 RECIT
+ * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
+ */
+
 import React, { Component } from 'react';
 import { ButtonToolbar, ButtonGroup, Button } from 'react-bootstrap';
-import {faArrowsAlt, faEdit, faBold, faArrowUp,faArrowDown, faTrashAlt, faClone, faSave, faTimes, faItalic, faUnderline, faStrikethrough, faPuzzlePiece, faSpaceShuttle, faFont, faParagraph} from '@fortawesome/free-solid-svg-icons';
+import {faArrowsAlt, faEdit, faBold, faArrowUp,faArrowDown, faTrashAlt, faClone, faItalic, faUnderline, faStrikethrough, faPuzzlePiece, faParagraph} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import {BtnSetCssProp} from '../ButtonsBar';
 import {TemplateForm} from './ComponentsCollection';
 import { UtilsHTML } from '../../utils/Utils';
+import { i18n } from '../../utils/i18n';
 
 export class Canvas extends Component
 {
@@ -127,7 +151,7 @@ export class CanvasElement{
                 event.currentTarget.appendChild(el);
             }
             else{
-                console.log(`Fail to drop: `, event.target);
+                console.log(i18n.get_string('failedtodrop'), event.target);
             }
         }
         
@@ -142,7 +166,7 @@ export class CanvasElement{
     } 
     
     onDragOver(event){
-        event.preventDefault(); // Necessary to allows us to drop.
+        event.preventDefault(); // Necessary to allow us to drop.
         if(!event.target.classList.contains('dropping-zone-hover') && event.target.classList.contains('dropping-zone')){
             event.target.classList.add('dropping-zone-hover');
         }
@@ -256,20 +280,19 @@ export class FloatingMenu extends Component{
 
         let main =  
             <div className='floating-menu' style={style}>
-                <ButtonToolbar aria-label="Élément outils">
+                <ButtonToolbar>
                     <ButtonGroup size="sm">
-                        <Button onDragStart={this.props.onDragElement} draggable="true" style={{cursor: 'grab'}}><FontAwesomeIcon  icon={faArrowsAlt} title="Glisser"/></Button>
-                        <Button onClick={this.props.onEdit}><FontAwesomeIcon  icon={faEdit} title="Éditer"/></Button>
-                        <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faPuzzlePiece} title="Créer un composant"/></Button>
-                        <Button onClick={() => this.props.onMoveNodeUp(null)}  ><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
-                        <Button onClick={() => this.props.onMoveNodeDown(null)}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>
-                        <Button onClick={this.props.onCloneNode}><FontAwesomeIcon icon={faClone} title="Dupliquer"/></Button>
-                        <Button onClick={() => this.props.onDeleteElement(null)}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                        <Button onDragStart={this.props.onDragElement} draggable="true" style={{cursor: 'grab'}}><FontAwesomeIcon  icon={faArrowsAlt} title={i18n.get_string('drag')}/></Button>
+                        <Button onClick={this.props.onEdit}><FontAwesomeIcon  icon={faEdit} title={i18n.get_string('edit')}/></Button>
+                        <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faPuzzlePiece} title={i18n.get_string('createcomponent')}/></Button>
+                        <Button onClick={() => this.props.onMoveNodeUp(null)}  ><FontAwesomeIcon icon={faArrowUp} title={i18n.get_string('moveelementup')}/></Button>
+                        <Button onClick={() => this.props.onMoveNodeDown(null)}><FontAwesomeIcon icon={faArrowDown} title={i18n.get_string('moveelementdown')}/></Button>
+                        <Button onClick={this.props.onCloneNode}><FontAwesomeIcon icon={faClone} title={i18n.get_string('clone')}/></Button>
+                        <Button onClick={() => this.props.onDeleteElement(null)}><FontAwesomeIcon  icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
                     </ButtonGroup>
                 </ButtonToolbar>
-                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} title="Ajouter un composant" description="Assurez vous que les images contenues dans vos gabarits ne seront pas utilisées à l'intérieur d'une autre activité ou d'un autre cours. Les images doivent être substituées après l'action glisser-déposer sinon les liens vers les images seront brisés."/>}
+                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} title={i18n.get_string('addcomponent')} description={i18n.get_string('addcomponentdesc')}/>}
             </div>
-            //disabled={this.props.selectedElement.previousSibling === null}
         return main;
     }
 

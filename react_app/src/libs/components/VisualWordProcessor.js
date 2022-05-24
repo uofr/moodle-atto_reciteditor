@@ -1,3 +1,26 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Atto HTML editor
+ *
+ * @package    atto_reciteditor
+ * @copyright  2019 RECIT
+ * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
+ */
+
 import React, { Component  } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import MathJax from 'react-mathjax';
@@ -447,55 +470,5 @@ class StatusBar extends Component{
         }
 
         return result.reverse().join(" / ");
-    }
-}
-
-class MyScript extends Component{
-    static defaultProps = {
-        value: "",
-        onExported: null,
-    }
-
-    constructor(props){
-        super(props);
-
-        this.editorRef = React.createRef();;
-    }
-    
-    componentDidMount(){
-        let editor = this.editorRef.current;
-
-        editor.addEventListener('exported', (event) => this.props.onExported(event.detail.exports['text/plain']));
-
-        editor = iink.register(this.editorRef.current, {
-            /*triggers: {
-                exportContent: 'DEMAND'
-            },*/
-            recognitionParams: {
-                type: 'TEXT',
-                //protocol: 'WEBSOCKET',
-                //apiVersion: 'V4',
-                server: {
-                    scheme: 'https',
-                    host: 'webdemoapi.myscript.com',
-                    applicationKey: '1463c06b-251c-47b8-ad0b-ba05b9a3bd01',
-                    hmacKey: '60ca101a-5e6d-4159-abc5-2efcbecce059',
-                },
-            },
-        });
-
-        editor.import_(this.props.value, "text/plain");
-    }
-
-    render(){
-        const editorStyle = {
-            'minWidth': '100px',
-            'minHeight': '100px',
-            'width': '100vw',
-            'height': 'calc(100vh - 190px)',
-            'touchAction': 'none',
-          };
-
-        return <div style={editorStyle} ref={this.editorRef} touch-action="none"></div>;
     }
 }

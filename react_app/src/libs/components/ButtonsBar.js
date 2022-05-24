@@ -1,3 +1,26 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Atto HTML editor
+ *
+ * @package    atto_reciteditor
+ * @copyright  2019 RECIT
+ * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
+ */
+
 import React, { Component } from 'react';
 import { Button, ButtonToolbar, ButtonGroup, Modal, Form, Dropdown, DropdownButton} from 'react-bootstrap';
 import {faFont, faCode, faFileCode, faBold, faItalic, faAlignLeft, faAlignRight, faAlignJustify, faAlignCenter,
@@ -7,6 +30,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ScreenCapture from '../components/ScreenCapture';
 import { UtilsHTML } from '../utils/Utils';
 import { ImageSrc } from './ImageSrc';
+import { i18n } from '../utils/i18n';
 
 export class ButtonsBar extends Component{
     static defaultProps = {
@@ -67,68 +91,68 @@ export class ButtonsBar extends Component{
 
         let main = 
         <div style={{backgroundColor: style.backgroundColor, minHeight: 50, padding: ".5rem"}}>
-            <ButtonToolbar aria-label="Toolbar with Button groups">
+            <ButtonToolbar>
                 <ButtonGroup className="mr-2 mb-2" size="sm" style={{border: style.border, borderRadius: style.borderRadius}}>
-                    {this.props.options.layoutBuilder && <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.props.onShowHtmlEditor}><FontAwesomeIcon icon={faFileCode} title="Retourner à l'éditeur HTML"/></Button>}
-                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.props.onCodeSource}><FontAwesomeIcon icon={faCode} title="Éditeur code source HTML"/></Button>
+                    {this.props.options.layoutBuilder && <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.props.onShowHtmlEditor}><FontAwesomeIcon icon={faFileCode} title={i18n.get_string('returntohtmleditor')}/></Button>}
+                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.props.onCodeSource}><FontAwesomeIcon icon={faCode} title={i18n.get_string('htmleditor')}/></Button>
                 </ButtonGroup>
                 <ButtonGroup className="mr-2 mb-2" size="sm" style={{border: style.border, borderRadius: style.borderRadius}}>
                     <DropdownSetCssProp selection={selection} cssProp="font-size" defaultValue={"16px"} dataProvider={fontSizes}  />
-                    <BtnSetCssProp selection={selection} cssProp="font-weight" defaultValue="normal" value="bold"  icon={faBold}  title="Gras"/>
-                    <BtnSetCssProp selection={selection} cssProp="font-style" defaultValue="normal" value="italic" icon={faItalic}  title="Italique"/>
-                    <BtnSetCssProp selection={selection} cssProp="text-decoration" defaultValue="normal" value="underline" icon={faUnderline}  title="Souligné"/>
-                    <BtnSetCssProp selection={selection} cssProp="text-decoration" defaultValue="normal" value="line-through" icon={faStrikethrough}  title="Barré"/>
-                    <BtnUnsetCssProp selection={selection} cssProp={["fontSize","fontWeight","fontStyle","textDecoration"]} icon={faRemoveFormat} defaultValue=""   title="Enlever la mise en forme de la police"/>
+                    <BtnSetCssProp selection={selection} cssProp="font-weight" defaultValue="normal" value="bold"  icon={faBold}  title={i18n.get_string('bold')}/>
+                    <BtnSetCssProp selection={selection} cssProp="font-style" defaultValue="normal" value="italic" icon={faItalic}  title={i18n.get_string('italic')}/>
+                    <BtnSetCssProp selection={selection} cssProp="text-decoration" defaultValue="normal" value="underline" icon={faUnderline}  title={i18n.get_string('underline')}/>
+                    <BtnSetCssProp selection={selection} cssProp="text-decoration" defaultValue="normal" value="line-through" icon={faStrikethrough}  title={i18n.get_string('strikethrough')}/>
+                    <BtnUnsetCssProp selection={selection} cssProp={["fontSize","fontWeight","fontStyle","textDecoration"]} icon={faRemoveFormat} defaultValue=""   title={i18n.get_string('removeformat')}/>
                 </ButtonGroup>
                 <ButtonGroup className="mr-2 mb-2" size="sm" style={{border: style.border, borderRadius: style.borderRadius}}>
-                    <BtnColorPicker selection={selection} cssProp="backgroundColor" icon={faFillDrip} defaultValue="#FFFFFF"   title="Couleur d'arrière-plan"/>
-                    <BtnUnsetCssProp selection={selection} cssProp={["backgroundColor"]} icon={faRemoveFormat} defaultValue="#FFFFFF"  title="Enlever la couleur d'arrière-plan"/>
-                    <BtnColorPicker selection={selection} cssProp="color" icon={faFont} defaultValue="#000000"  title="Couleur de la police"/>
-                    <BtnUnsetCssProp selection={selection} cssProp={["color"]} icon={faRemoveFormat} defaultValue="#000000"   title="Enlever la couleur de la police"/>
+                    <BtnColorPicker selection={selection} cssProp="backgroundColor" icon={faFillDrip} defaultValue="#FFFFFF"   title={i18n.get_string('bgcolor')}/>
+                    <BtnUnsetCssProp selection={selection} cssProp={["backgroundColor"]} icon={faRemoveFormat} defaultValue="#FFFFFF"  title={i18n.get_string('removebgcolor')}/>
+                    <BtnColorPicker selection={selection} cssProp="color" icon={faFont} defaultValue="#000000"  title={i18n.get_string('fontcolor')}/>
+                    <BtnUnsetCssProp selection={selection} cssProp={["color"]} icon={faRemoveFormat} defaultValue="#000000"   title={i18n.get_string('removefontcolor')}/>
                 </ButtonGroup>
                 <ButtonGroup className="mr-2 mb-2" size="sm" style={{border: style.border, borderRadius: style.borderRadius}} >
-                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={() => this.applyNumerationTypeset("ul")}><FontAwesomeIcon icon={faListUl} title="Liste non numérotée"/></Button>
-                    <Button  variant={ButtonsBar.Layout.btnNormal} onClick={() => this.applyNumerationTypeset("ol")}><FontAwesomeIcon icon={faListOl} title="Liste numérotée"/></Button>
+                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={() => this.applyNumerationTypeset("ul")}><FontAwesomeIcon icon={faListUl} title={i18n.get_string('list')}/></Button>
+                    <Button  variant={ButtonsBar.Layout.btnNormal} onClick={() => this.applyNumerationTypeset("ol")}><FontAwesomeIcon icon={faListOl} title={i18n.get_string('numberedlist')}/></Button>
                 </ButtonGroup>
                 <ButtonGroup className="mr-2 mb-2" size="sm"  style={{border: style.border, borderRadius: style.borderRadius}}>
-                    <BtnAlignment selection={selection} cssProp="left" icon={faAlignLeft}   title="Aligner à gauche"/>
-                    <BtnAlignment selection={selection} cssProp="center" icon={faAlignCenter}  title="Centrer"/>
-                    <BtnAlignment selection={selection} cssProp="right" icon={faAlignRight}  title="Aligner à droite"/>
-                    <BtnAlignment selection={selection} cssProp="justify" icon={faAlignJustify}  title="Justifier"/>
+                    <BtnAlignment selection={selection} cssProp="left" icon={faAlignLeft}   title={i18n.get_string('alignleft')}/>
+                    <BtnAlignment selection={selection} cssProp="center" icon={faAlignCenter}  title={i18n.get_string('aligncenter')}/>
+                    <BtnAlignment selection={selection} cssProp="right" icon={faAlignRight}  title={i18n.get_string('alignright')}/>
+                    <BtnAlignment selection={selection} cssProp="justify" icon={faAlignJustify}  title={i18n.get_string('justify')}/>
                 </ButtonGroup>
                 <ButtonGroup className="mr-2 mb-2" size="sm"  style={{border: style.border, borderRadius: style.borderRadius}}>
-                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={() => this.applyIndentTypeset("outdent")}  title="Désindenter"><FontAwesomeIcon icon={faOutdent}/></Button>
-                    <Button  variant={ButtonsBar.Layout.btnNormal} onClick={() => this.applyIndentTypeset("indent")}  title="Indenter"><FontAwesomeIcon icon={faIndent}/></Button>
+                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={() => this.applyIndentTypeset("outdent")}  title={i18n.get_string('outdent')}><FontAwesomeIcon icon={faOutdent}/></Button>
+                    <Button  variant={ButtonsBar.Layout.btnNormal} onClick={() => this.applyIndentTypeset("indent")}  title={i18n.get_string('indent')}><FontAwesomeIcon icon={faIndent}/></Button>
                 </ButtonGroup>
                 <ButtonGroup className="mr-2 mb-2" size="sm"  style={{border: style.border, borderRadius: style.borderRadius}}>
-                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.onAddLink} title="Lien"><FontAwesomeIcon icon={faLink}/></Button>
-                    <Button  variant={ButtonsBar.Layout.btnNormal} onClick={this.onRemoveLink} title="Supprimer le lien"><FontAwesomeIcon icon={faUnlink}/></Button>
+                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.onAddLink} title={i18n.get_string('link')}><FontAwesomeIcon icon={faLink}/></Button>
+                    <Button  variant={ButtonsBar.Layout.btnNormal} onClick={this.onRemoveLink} title={i18n.get_string('removelink')}><FontAwesomeIcon icon={faUnlink}/></Button>
                 </ButtonGroup>
                 <ButtonGroup className="mr-2 mb-2" size="sm"  style={{border: style.border, borderRadius: style.borderRadius}}>
-                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.props.onUndo} disabled={history.undo.length === 0} title="Annuler"><FontAwesomeIcon icon={faUndo}/></Button>
-                    <Button  variant={ButtonsBar.Layout.btnNormal} onClick={this.props.onRedo}  disabled={history.redo.length === 0} title="Répéter"><FontAwesomeIcon icon={faRedo}/></Button>
+                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.props.onUndo} disabled={history.undo.length === 0} title={i18n.get_string('undo')}><FontAwesomeIcon icon={faUndo}/></Button>
+                    <Button  variant={ButtonsBar.Layout.btnNormal} onClick={this.props.onRedo}  disabled={history.redo.length === 0} title={i18n.get_string('redo')}><FontAwesomeIcon icon={faRedo}/></Button>
                 </ButtonGroup>
                 <ButtonGroup className="mr-2 mb-2" size="sm"  style={{border: style.border, borderRadius: style.borderRadius}}>
-                    <Button variant={(this.props.flags.highlighter ? 'warning' : ButtonsBar.Layout.btnNormal)} onClick={this.props.onHighlighter} title="Outil de surlignage"><FontAwesomeIcon icon={faHighlighter}/></Button>
-                    <Button variant={(this.props.flags.mathFormula ? 'warning' : ButtonsBar.Layout.btnNormal)} onClick={this.props.onMathFormula} title="Math Formula"><i><b>f(x)</b></i></Button>
-                    <Button variant={(this.props.flags.mathFormula ? 'warning' : ButtonsBar.Layout.btnNormal)} id="btn-addimg" onClick={() => this.onAddImageModal(true)} title="Ajouter une image"><FontAwesomeIcon icon={faImage}/></Button>
+                    <Button variant={(this.props.flags.highlighter ? 'warning' : ButtonsBar.Layout.btnNormal)} onClick={this.props.onHighlighter} title={i18n.get_string('highlighttool')}><FontAwesomeIcon icon={faHighlighter}/></Button>
+                    <Button variant={(this.props.flags.mathFormula ? 'warning' : ButtonsBar.Layout.btnNormal)} onClick={this.props.onMathFormula} title={i18n.get_string('math')}><i><b>f(x)</b></i></Button>
+                    <Button variant={(this.props.flags.mathFormula ? 'warning' : ButtonsBar.Layout.btnNormal)} id="btn-addimg" onClick={() => this.onAddImageModal(true)} title={i18n.get_string('addimage')}><FontAwesomeIcon icon={faImage}/></Button>
                     <ScreenCapture onEndCapture={this.props.onScreenCapture}>
                         {({ onStartCapture }) => (
-                            <Button variant={ButtonsBar.Layout.btnNormal}  onClick={onStartCapture} title="Capture d'écran"><FontAwesomeIcon icon={faCamera}/></Button>
+                            <Button variant={ButtonsBar.Layout.btnNormal}  onClick={onStartCapture} title={i18n.get_string('screenshot')}><FontAwesomeIcon icon={faCamera}/></Button>
                         )}
                     </ScreenCapture>
                 </ButtonGroup>
                 <ButtonGroup className="mr-2 mb-2" size="sm"  style={{border: style.border, borderRadius: style.borderRadius}}>
-                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.onRemoveTypeset} title="Supprimer la mise en forme"><FontAwesomeIcon icon={faRemoveFormat}/></Button>
+                    <Button variant={ButtonsBar.Layout.btnNormal} onClick={this.onRemoveTypeset} title={i18n.get_string('removeformat')}><FontAwesomeIcon icon={faRemoveFormat}/></Button>
                 </ButtonGroup>
             </ButtonToolbar> 
             {this.state.modalInputLink && <InputLink selection={this.props.selection} onClose={this.onCloseInputLink}/>}
             {this.state.modalInputImage && <Modal key="2" show={this.state.modalInputImage} onHide={() => this.onAddImageModal(false)}>
                 <Modal.Header closeButton>
-                <Modal.Title>Ajouter une image</Modal.Title>
+                <Modal.Title>{i18n.get_string('addimage')}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <ImageSrc name="Image" value="" placeholder="Image URL" size="sm" onCommit={this.onAddImage} /> 
+                    <ImageSrc name="Image" value="" placeholder={i18n.get_string('imageurl')} size="sm" onCommit={this.onAddImage} /> 
                 </Modal.Body>
             </Modal>}
         </div>;
@@ -682,25 +706,25 @@ class InputLink extends Component{
         let main = 
             <Modal show={true} onHide={this.props.onClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Créer lien</Modal.Title>
+                    <Modal.Title>{i18n.get_string('createlink')}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group controlId="formURL">
-                            <Form.Label>Saisir l'URL</Form.Label>
+                            <Form.Label>{i18n.get_string('inputurl')}</Form.Label>
                             <Form.Control name="url" type="text" value={this.state.url} placeholder="http://" onChange={this.onChange} />
                             <Form.Text className="text-muted">
-                                {`Texte à afficher: ${this.state.text}`}
+                                {`${i18n.get_string('texttoshow')}: ${this.state.text}`}
                             </Form.Text>
                         </Form.Group>
                         <Form.Group controlId="formTarget">
-                            <Form.Check name="target" type="checkbox" checked={this.state.target} label="Ouvrir dans une nouvelle fenêtre" onChange={this.onChange}/>
+                            <Form.Check name="target" type="checkbox" checked={this.state.target} label={i18n.get_string('openinnewwindow')} onChange={this.onChange}/>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
         
                 <Modal.Footer>
-                    <Button variant="primary" onClick={this.onSave} >Créer lien</Button>
+                    <Button variant="primary" onClick={this.onSave}>{i18n.get_string('createlink')}</Button>
                 </Modal.Footer>
         </Modal>;
 

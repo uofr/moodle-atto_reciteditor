@@ -1,3 +1,26 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Atto HTML editor
+ *
+ * @package    atto_reciteditor
+ * @copyright  2019 RECIT
+ * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
+ */
+
 M = M || {};
 M.recit = M.recit || {};
 M.recit.reciteditor = M.recit.reciteditor || {};
@@ -9,7 +32,7 @@ M.recit.reciteditor.settings = {
 M.recit.reciteditor.Popup = class {
     constructor(content) {        
         let modal = document.createElement('div');
-        modal.classList.add('modal', 'fade', 'r_popup');
+        modal.classList.add('modal', 'fade', 'attoreciteditor_popup');
         let inner2 = document.createElement('div');
         inner2.classList.add('modal-dialog');
         modal.appendChild(inner2);
@@ -49,7 +72,7 @@ M.recit.reciteditor.Popup = class {
 }
 
 M.recit.reciteditor.init_settings = function(_, settings){
-    M.recit.reciteditor.settings.currentthemesubrev = settings.currentthemesubrev;
+    M.recit.reciteditor.settings = settings;
 }
 
 document.body.addEventListener('click',function(e){
@@ -61,7 +84,7 @@ document.body.addEventListener('click',function(e){
             new M.recit.reciteditor.Popup(iframe);
         }
         e.preventDefault();
-    }else if(e.target && e.target.classList.contains('img-popup')){
+    }else if(e.target && e.target.classList.contains('attoreciteditor_img-popup')){
         let url = e.target.src;
         if (url){
             let img = document.createElement('img');
@@ -69,10 +92,10 @@ document.body.addEventListener('click',function(e){
             new M.recit.reciteditor.Popup(img);
         }
         e.preventDefault();
-    }else if(e.target && e.target.matches('.flipcard2 *')){ //Check if user clicked on a flipcard or its children
+    }else if(e.target && e.target.matches('.attoreciteditor_flipcard2 *')){ //Check if user clicked on a flipcard or its children
         let el = e.target;
         while (el = el.parentElement){
-            if (el.classList.contains('flipcard2')){
+            if (el.classList.contains('attoreciteditor_flipcard2')){
                 break;
             }
         }

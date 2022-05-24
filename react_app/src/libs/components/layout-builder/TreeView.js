@@ -1,9 +1,33 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Atto HTML editor
+ *
+ * @package    atto_reciteditor
+ * @copyright  2019 RECIT
+ * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
+ */
+
 import React, { Component } from 'react';
 import { ButtonToolbar, Button, ButtonGroup  } from 'react-bootstrap';
 import {faAngleRight, faAngleDown, faArrowUp, faArrowDown, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData} from './HTMLElementData';
 import {UtilsHTML} from '../../utils/Utils';
+import { i18n } from '../../utils/i18n';
 
 export class TreeView extends Component{
     static defaultProps = {
@@ -62,9 +86,9 @@ export class TreeView extends Component{
                 </ButtonGroup>
                 {!node.dom.isSameNode(this.props.data) &&
                     <ButtonGroup size="sm" className="btn-group-actions" style={(selected ? {display: 'flex'} : {})}>
-                        <Button onClick={() => this.props.onMoveNodeUp(node.dom)}  ><FontAwesomeIcon icon={faArrowUp} title="Déplacer l'élément vers le haut"/></Button>
-                        <Button onClick={() => this.props.onMoveNodeDown(node.dom)}><FontAwesomeIcon icon={faArrowDown} title="Déplacer l'élément vers le bas"/></Button>
-                        <Button onClick={() => this.props.onDeleteElement(node.dom)}><FontAwesomeIcon  icon={faTrashAlt} title="Supprimer"/></Button>
+                        <Button onClick={() => this.props.onMoveNodeUp(node.dom)}  ><FontAwesomeIcon icon={faArrowUp} title={i18n.get_string('moveelementup')}/></Button>
+                        <Button onClick={() => this.props.onMoveNodeDown(node.dom)}><FontAwesomeIcon icon={faArrowDown} title={i18n.get_string('moveelementdown')}/></Button>
+                        <Button onClick={() => this.props.onDeleteElement(node.dom)}><FontAwesomeIcon  icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
                     </ButtonGroup>
                 }
             </ButtonToolbar>;
@@ -119,13 +143,6 @@ export class TreeView extends Component{
     }
 
     getNodeDesc(node){
-        //let text = node.tagName.charAt(0).toUpperCase() + node.tagName.toLowerCase().slice(1);
-
-        /*let classList = [...node.classList]; // spread syntax 
-
-        if(classList.length > 0){
-            text = `${text} (${classList.join(", ")})`;
-        }*/
         let elClass = HTMLElementData.getElementClass(null, node);
 
         return (elClass ? elClass.getDesc(node) : node.tagName.toLowerCase());

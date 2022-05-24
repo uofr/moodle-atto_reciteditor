@@ -1,3 +1,26 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Atto HTML editor
+ *
+ * @package    atto_reciteditor
+ * @copyright  2019 RECIT
+ * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
+ */
+
 import React, { Component } from 'react';
 import { ComboBox} from './ComboBox';
 
@@ -14,71 +37,9 @@ export class LayoutSpacing extends Component {
 
         this.onChange = this.onChange.bind(this);
 
-        /*this.state = {
-            paddingTop: [
-                {text:"0", value: "pt-0"},
-                {text:"1", value: "pt-1"},
-                {text:"2", value: "pt-2"},
-                {text:"3", value: "pt-3"},
-                {text:"4", value: "pt-4"},
-                {text:"5", value: "pt-5"},
-            ],
-            paddingBottom: [
-                {text:"0", value: "pb-0"},
-                {text:"1", value: "pb-1"},
-                {text:"2", value: "pb-2"},
-                {text:"3", value: "pb-3"},
-                {text:"4", value: "pb-4"},
-                {text:"5", value: "pb-5"},
-            ],
-            paddingRight: [
-                {text:"0", value: "pr-0"},
-                {text:"1", value: "pr-1"},
-                {text:"2", value: "pr-2"},
-                {text:"3", value: "pr-3"},
-                {text:"4", value: "pr-4"},
-                {text:"5", value: "pr-5"},
-            ],
-            paddingLeft: [
-                {text:"0", value: "pl-0"},
-                {text:"1", value: "pl-1"},
-                {text:"2", value: "pl-2"},
-                {text:"3", value: "pl-3"},
-                {text:"4", value: "pl-4"},
-                {text:"5", value: "pl-5"},
-            ]
-        }*/
     }
     
     render() {
-        /*let main = 
-            <div className="layout-spacing">
-                <div className='margin-spacing '>
-                    <span className="text-muted name">Marge</span>
-                    <ComboBox size='sm' className="item-1"></ComboBox>
-                    <ComboBox size='sm' className="item-2"></ComboBox>
-                    <ComboBox size='sm' className="item-3"></ComboBox>
-                    <ComboBox size='sm' className="item-4"></ComboBox>
-                    <div className="border-options item-5">
-                        <span className="text-muted name">Bordure</span>
-                        <ComboBox size='sm' className="item-1"></ComboBox>
-                        <ComboBox size='sm' className="item-2"></ComboBox>
-                        <ComboBox size='sm' className="item-3"></ComboBox>
-                        <ComboBox size='sm' className="item-4"></ComboBox>
-                        <div className="padding-spacing item-5">
-                            <span className="text-muted name">Padding</span>
-                            <ComboBox name={"paddingTop"} value={this.getValue('paddingTop')} size='sm' className="item-1" options={this.state.paddingTop} onChange={this.onChange}></ComboBox>
-                            <ComboBox name={"paddingRight"} value={this.getValue('paddingRight')} size='sm' className="item-2" options={this.state.paddingRight} onChange={this.onChange}></ComboBox>
-                            <ComboBox name={"paddingBottom"} value={this.getValue('paddingBottom')} size='sm' className="item-3" options={this.state.paddingBottom} onChange={this.onChange}></ComboBox>
-                            <ComboBox name={"paddingLeft"} value={this.getValue('paddingLeft')}  size='sm' className="item-4" options={this.state.paddingLeft} onChange={this.onChange}></ComboBox>
-                            <div className="background item-5">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>*/
-
-//        if(this.props.options.length !== 4){ return null;}
 
 
         let that = this;
