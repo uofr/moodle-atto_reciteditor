@@ -30,6 +30,7 @@ $string['value'] = 'Value';
 $string['max'] = 'Max';
 $string['column'] = 'Column';
 $string['line'] = 'Line';
+$string['recitthemeonly'] = 'Available in RÉCIT theme only';
 $string['returntohtmleditor'] = 'Return to HTML Editor'; 
 $string['bold'] = 'Bold';
 $string['italic'] = 'Italic';

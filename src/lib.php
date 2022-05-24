@@ -48,6 +48,7 @@ function atto_reciteditor_strings_for_js() {
                                           'createlink',
                                           'texttoshow',
                                           'openinnewwindow',
+                                          'recitthemeonly',
                                           'selecticon',
                                           'deleteformat',
                                           'margin',

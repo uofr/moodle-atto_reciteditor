@@ -31,6 +31,7 @@ $string['max'] = 'Max';
 $string['column'] = 'Colonne';
 $string['line'] = 'Ligne';
 $string['returntohtmleditor'] = 'Retourner à l`éditeur HTML'; 
+$string['recitthemeonly'] = 'Disponible seulement sur le thème RÉCIT';
 $string['bold'] = 'Gras';
 $string['italic'] = 'Italique';
 $string['underline'] = 'Sous-ligné';

@@ -51,7 +51,7 @@ export class IconSelector extends Component {
     }
 
     buildIconList(){
-        this.icons = {Fontello: [], FontAwesome: []};
+        this.icons = {FontAwesome: [], Fontello: []};
         let cssRules = UtilsMoodle.getThemeMoodleCssRules();
 
         for (let c of cssRules){
@@ -118,7 +118,11 @@ export class IconSelector extends Component {
        
         let key = 0;
         for (let cat in icons){
-            items.push(<h3 key={key}>{cat}</h3>)
+            let catText = cat;
+            if (cat == 'Fontello'){
+                catText += " ("+i18n.get_string('recitthemeonly')+")";
+            }
+            items.push(<h3 key={key}>{catText}</h3>)
             key++;
             let content = [];
             for (let val of icons[cat]){
