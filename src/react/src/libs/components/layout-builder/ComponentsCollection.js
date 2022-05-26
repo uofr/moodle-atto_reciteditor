@@ -409,7 +409,7 @@ class TemplateList extends Component{
         this.onSaveTemplate = this.onSaveTemplate.bind(this);
 
         let url = false;
-        if (M.recit && M.recit.reciteditor && M.recit.reciteditor.settings.showcase_url && M.recit.reciteditor.settings.showcase_url.length > 0){
+        if (typeof M != 'undefined' && M.recit && M.recit.reciteditor && M.recit.reciteditor.settings.showcase_url && M.recit.reciteditor.settings.showcase_url.length > 0){
             url = M.recit.reciteditor.settings.showcase_url;
         }
         this.state = {showModal: false, showMenu: false, showImport: false, showVitrine: false, UrlVitrine: url, collapse: {}};

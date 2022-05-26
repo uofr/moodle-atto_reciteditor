@@ -23,7 +23,7 @@
 
 import React, { Component } from 'react';
 import { Nav, Card, Navbar, Button } from 'react-bootstrap';
-import {faMobileAlt, faTabletAlt, faTh, faLaptop, faDesktop, faFileWord, faEye, faCode, faAngleRight, faAngleDown, faSave, faRedo, faUndo} from '@fortawesome/free-solid-svg-icons';
+import {faMobileAlt, faTabletAlt, faTh, faLaptop, faDesktop, faFileWord, faEye, faCode, faAngleRight, faAngleDown, faSave, faRedo, faUndo, faStarHalf, faColumns} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {TreeView} from './TreeView';
 import {Canvas, CanvasElement, FloatingMenu, NodeTextEditing} from './Canvas';
@@ -64,7 +64,7 @@ export class LayoutBuilder extends Component
 			<div className="layout-builder">                
                 <Navbar bg="dark" variant="dark" onSelect={this.onNavbarSelect} expand="sm">
                     <Navbar.Brand>
-                        <img alt="RÉCIT" src={`.${Assets.RecitLogo}`} width="30" height="30" className="d-inline-block align-top" />{' '}
+                        <img alt="RÉCIT" src={Assets.RecitLogo} width="30" height="30" className="d-inline-block align-top" />{' '}
                         {i18n.get_string('pluginname')}
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -79,9 +79,10 @@ export class LayoutBuilder extends Component
                             <Nav.Link eventKey="designer" ><FontAwesomeIcon icon={faTh} title={i18n.get_string('canvas')}/></Nav.Link>
                             <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title={i18n.get_string('preview')}/></Nav.Link>
                             <Nav.Link eventKey="sourceCode"><FontAwesomeIcon icon={faCode} title={i18n.get_string('sourcecode')}/></Nav.Link>
+                            <Nav.Link eventKey="sourceCodeDesigner"><FontAwesomeIcon icon={faColumns} title={i18n.get_string('sourcecodedesigner')}/></Nav.Link>
                         </Nav>
 
-                        {this.state.view == 'designer' && <>
+                        {(this.state.view == 'designer' || this.state.view == 'sourceCodeDesigner') && <>
                             <Nav>
                                 <Nav.Link eventKey="undo"><FontAwesomeIcon icon={faUndo} title={i18n.get_string('undo')}/></Nav.Link>
                                 <Nav.Link eventKey="redo"><FontAwesomeIcon icon={faRedo} title={i18n.get_string('redo')}/></Nav.Link>
@@ -112,7 +113,7 @@ export class LayoutBuilder extends Component
             this.props.onChange(this.mainViewRef.current.getData());
             this.props.onSelectBuilder('word');
         }
-        else if(['designer', 'preview', 'sourceCode'].includes(eventKey)){
+        else if(['designer', 'preview', 'sourceCode', 'sourceCodeDesigner'].includes(eventKey)){
             this.setState({view: eventKey});
         }
         else if(eventKey === 'undo'){
@@ -192,10 +193,13 @@ class MainView extends Component{
         this.setData = this.setData.bind(this);
         this.onKey = this.onKey.bind(this);
 
+        let designer = new DesignerState(this, this.props.historyManager);
+        let sourceCode = new SourceCodeState(this)
         this.canvasState = {
-            designer: new DesignerState(this, this.props.historyManager),
+            designer: designer,
             preview: new PreviewState(this),
-            sourceCode: new SourceCodeState(this),
+            sourceCode: sourceCode,
+            sourceCodeDesigner: new SourceCodeDesignerState(this, designer, sourceCode)
         }
 
         this.state = {
@@ -206,7 +210,7 @@ class MainView extends Component{
     }
 
     componentDidMount(){
-        this.canvasState[this.props.view].setData(this.props.content);
+        this.setData(this.props.content);
         this.props.historyManager.addHistoryItem(this.props.content);
         this.loadTemplates();
         document.body.onkeyup = this.onKey;
@@ -231,13 +235,19 @@ class MainView extends Component{
 
     componentDidUpdate(prevProps){
         if(prevProps.view !== this.props.view){
-            let data = this.canvasState[prevProps.view].getData();
-            this.canvasState[this.props.view].setData(data, this.state.selectedElement);
-            this.setState({canvasState: this.props.view},  this.onCollapse);
+            let data = "";
+            if (prevProps.view == 'sourceCodeDesigner'){
+                data = this.canvasState.designer.getData(true);
+            }else{
+                data = this.canvasState[prevProps.view].getData();
+            }
+            this.setData(data, this.state.selectedElement);
+            let view = this.props.view;
+            this.setState({canvasState: view},  this.onCollapse);
         }
 
         if(prevProps.content !== this.props.content){
-            this.canvasState[this.props.view].setData(this.props.content);
+            this.setData(this.props.content);
         }
     }
 
@@ -297,14 +307,19 @@ class MainView extends Component{
                 </div>
                 
                 <div className="center-area">
-                    {this.canvasState.designer.render(this.props.view === 'designer', this.state.selectedElement)}
-                    {this.canvasState.preview.render(this.props.view === 'preview', this.state.selectedElement)} 
-                    {this.canvasState.sourceCode.render(this.props.view === 'sourceCode', this.state.selectedElement)}
+                    <div className='row'>
+                        {this.canvasState.sourceCodeDesigner.render(this.props.view, this.state.selectedElement)}
+                        {this.canvasState.preview.render(this.props.view === 'preview', this.state.selectedElement)} 
+                    </div>
                 </div>
             </div>;
            
 
         return main;
+    }
+
+    onContentChange(data, origin){
+        this.canvasState[this.state.canvasState].onContentChange(data, origin);
     }
 
     onDragEnd(){
@@ -369,6 +384,21 @@ class MainView extends Component{
         }
     }
 
+    onCollapse(){
+        let collapsed = this.canvasState[this.state.canvasState].onCollapse(this.state.collapsed);
+        this.setState({collapsed: collapsed});
+    }
+
+    setCollapse(attr){
+        let data = this.state.collapsed;
+        data[attr] = !data[attr];
+        this.setState({collapsed: data});
+    }
+
+    getCollapse(){
+        return this.state.collapsed;
+    }
+
     onSaveTemplate(name, type){
         let p = null;
 
@@ -414,17 +444,6 @@ class MainView extends Component{
         }
         });
     }
-
-    onCollapse(){       
-        let collapsed = this.canvasState[this.state.canvasState].onCollapse(this.state.collapsed);
-        this.setState({collapsed: collapsed});
-    }
-
-    setCollapse(attr){
-        let data = this.state.collapsed;
-        data[attr] = !data[attr];
-        this.setState({collapsed: data});
-    }
 }
 
 class CanvasState{
@@ -441,6 +460,7 @@ class CanvasState{
         this.onEditNodeText = this.onEditNodeText.bind(this);
         this.onLoadFrame = this.onLoadFrame.bind(this);
         this.htmlCleaning = this.htmlCleaning.bind(this);
+        this.onReplaceNonBreakingSpace = this.onReplaceNonBreakingSpace.bind(this);
         this.onKey = this.onKey.bind(this);
 
         this.onLoadFrame();
@@ -452,15 +472,20 @@ class CanvasState{
     onDragEnd(){ console.log("Abstract method...");}
     getData(htmlCleaning){console.log("Abstract method...");}
     setData(value){console.log("Abstract method...");}
+    onBeforeChange(value, flags){console.log("Abstract method...");}
+    onContentChange(value, flags){console.log("Abstract method...");}
+    onAfterChange(value, flags){console.log("Abstract method...");}
     onDeleteElement(selectedElement){console.log("Abstract method...");}
     onMoveNodeUp(selectedElement){console.log("Abstract method...");}
     onMoveNodeDown(selectedElement){console.log("Abstract method...");}
     onCloneNode(selectedElement){console.log("Abstract method...");}
     onInsertNode(elems){console.log("Abstract method...");}
     onEditNodeText(selectedElement){console.log("Abstract method...");}
+    onReplaceNonBreakingSpace(selectedElement){console.log("Abstract method...");}
     onKey(e, editingElement){}
 
     onCollapse(collapsed){ 
+        if (typeof collapsed == 'undefined') return false
         return collapsed;
     }
 
@@ -494,14 +519,113 @@ class CanvasState{
         });
     }
 
-    getStyle(){
-        let style = {width: this.mainView.props.device.width, height: this.mainView.props.device.height};
+    getStyle(width){
+        let style = {width: width || this.mainView.props.device.width, height: this.mainView.props.device.height};
         if(this.mainView.props.device.height > window.innerHeight){
             style.transform = `scale(${this.mainView.props.device.scale})`;
             style.transformOrigin = "0 0";
         } 
 
         return style;
+    }
+}
+
+class SourceCodeDesignerState extends CanvasState{
+    constructor(mainView, designerState, sourceCodeState){
+        super(mainView)
+        this.designer = designerState;
+        this.sourceCode = sourceCodeState;
+    }
+
+
+    render(view, selectedElement){
+        this.view = view;
+        this.selectedElement = selectedElement;
+
+        let col = "";
+        let sourceCodeWidth = null;
+        if (view == 'sourceCodeDesigner'){
+            col = "col-md-6";
+            sourceCodeWidth = "100%"
+        }
+
+        let main = <>
+            <div className={col}>
+                {this.designer.render((view === 'designer' || view == 'sourceCodeDesigner'), selectedElement)}
+            </div>
+            <div className={col}>
+                {this.sourceCode.render((view === 'sourceCode' || view == 'sourceCodeDesigner'), selectedElement, sourceCodeWidth)}
+            </div>
+           </>
+
+        return main;
+    }
+    
+    onContentChange(val, origin){
+        if (origin == 'designer'){
+            this.sourceCode.setData(val)
+        }else if (origin == 'sourceCode'){
+            this.designer.setData(val)
+        }
+
+    }
+
+    getData(){
+        return this.designer.getData(true);
+    }
+
+    setData(data){
+        this.designer.setData(data);
+        this.sourceCode.setData(data);
+        return true;
+    }
+
+    onDragEnd(){
+        this.designer.onDragEnd();
+    }
+
+    onSelectElement(el, selectedElement, collapsed){
+        this.sourceCode.onSelectElement(el, selectedElement, collapsed);
+        let result = this.designer.onSelectElement(el, selectedElement, collapsed);
+        return result
+    }
+
+    onDeleteElement(el){
+        this.designer.onDeleteElement(el);
+    }
+
+    onReplaceNonBreakingSpace(el){
+        this.designer.onReplaceNonBreakingSpace(el);
+    }
+
+    onMoveNodeUp(el){
+        this.designer.onMoveNodeUp(el);
+    }
+
+    onKey(e, selectedElement){
+        this.sourceCode.onKey(e, selectedElement);
+        this.designer.onKey(e, selectedElement);
+    }
+
+    onMoveNodeDown(el){
+        this.designer.onMoveNodeDown(el);
+    }
+
+    onCloneNode(el){
+        this.designer.onCloneNode(el);
+    }
+
+    onInsertNode(elems){
+        this.designer.onInsertNode(elems);
+    }
+
+    onEditNodeText(el){
+        this.designer.onEditNodeText(el);
+    }
+
+    onCollapse(collapse){
+        let collapsed = this.designer.onCollapse(collapse);
+        return collapsed
     }
 }
 
@@ -552,13 +676,13 @@ class DesignerState extends CanvasState{
         body.onkeyup = this.mainView.onKey;
     }
 
-    render(show, selectedElement){
+    render(show, selectedElement, width){
         let posCanvas = (this.iFrame === null ? null : this.iFrame.getBoundingClientRect());        
  
         let main = 
             <Canvas style={{display: (show ? 'flex' : 'none') }}>
-                <iframe id="designer-canvas" className="canvas" style={this.getStyle()}></iframe>
-                <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement} onDragElement={this.mainView.onDragStart}  onEdit={this.mainView.onEditNodeText}
+                <iframe id="designer-canvas" className="canvas" style={this.getStyle(width)}></iframe>
+                <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement} onDragElement={this.mainView.onDragStart} onEdit={this.mainView.onEditNodeText}
                             onDeleteElement={this.mainView.onDeleteElement} onMoveNodeUp={this.mainView.onMoveNodeUp} onMoveNodeDown={this.mainView.onMoveNodeDown} 
                              onCloneNode={this.mainView.onCloneNode} onSaveTemplate={this.mainView.onSaveTemplate} device={this.mainView.props.device} />
                 <NodeTextEditing posCanvas={posCanvas} window={this.window} selectedElement={selectedElement} onReplaceNonBreakingSpace={this.mainView.onReplaceNonBreakingSpace} device={this.mainView.props.device}/>
@@ -593,6 +717,10 @@ class DesignerState extends CanvasState{
         else{
             this.htmlCleaning(this.window.document);
 
+            if (selectedElement && selectedElement.innerHTML != this.editingElementText){
+                this.onAfterChange()
+            }
+
             result.collapsed.components = true;
             result.collapsed.properties = false;
 
@@ -613,7 +741,6 @@ class DesignerState extends CanvasState{
                         result.collapsed.components = elClass.collapsePanel.components;
                         result.collapsed.properties = elClass.collapsePanel.properties;
                         result.collapsed.treeView = elClass.collapsePanel.treeView;
-                        console.log(result.collapsed)
                     }
                 }
             }
@@ -630,35 +757,41 @@ class DesignerState extends CanvasState{
         return collapsed;
     }
 
-    onContentChange(){
+    onBeforeChange(){
         if (this.historyManager){
             this.historyManager.onContentChange(this.getData());
         }
     }
+
+    onAfterChange(){
+        this.mainView.onContentChange(this.getData(), 'designer')
+    }
     
     onDragEnd(){
-        this.onContentChange();
+        this.onBeforeChange();
         this.htmlCleaning(this.window.document);
+        this.onAfterChange();
     }
 
     onDeleteElement(el){
         if(!el){ return; } // Element does not exist
         if(el.isSameNode(this.window.document.body)){ return; }
 
-        this.onContentChange();
+        this.onBeforeChange();
         el.remove();
+        this.onAfterChange();
     }
 
     onReplaceNonBreakingSpace(el){
         if(!el){ return; } // Element does not exist
         if(el.isSameNode(this.window.document.body)){ return; }
 
+        this.onBeforeChange()
         let regex = new RegExp(/(\u00AB|\u2014)(?:\s+)?|(?:\s+)?([\?!:;\u00BB])/g);
         el.innerHTML = el.innerHTML.replace("&nbsp; ", "");//Revert old nbsp
         el.innerHTML = el.innerHTML.replace("&nbsp;", "");//Revert old nbsp
         el.innerHTML = el.innerHTML.replace(regex, "$1&nbsp;$2");
-        this.onContentChange();
-
+        this.onAfterChange();
     }
     
     onMoveNodeUp(el){
@@ -666,6 +799,7 @@ class DesignerState extends CanvasState{
 
         let parent = el.parentElement;
 
+        this.onBeforeChange()
         if(el.isSameNode(parent.firstElementChild)){
             if(!parent.isSameNode(this.window.document.body)){
                 parent.parentElement.insertBefore(el, parent);
@@ -675,14 +809,14 @@ class DesignerState extends CanvasState{
             parent.insertBefore(el, el.previousElementSibling);
         }
         
-        this.onContentChange();
+        this.onAfterChange();
     }
 
     onMoveNodeDown(el){
         if(el.isSameNode(this.window.document.body)){ return; }
 
         let parent = el.parentElement;
-
+        this.onBeforeChange()
         if(el.isSameNode(parent.lastElementChild)){
             if(!parent.isSameNode(this.window.document.body)){
                 parent.parentElement.insertBefore(el, parent.nextElementSibling);
@@ -692,27 +826,29 @@ class DesignerState extends CanvasState{
             parent.insertBefore(el.nextElementSibling, el);
         }
 
-        this.onContentChange();
+        this.onAfterChange();
     }
 
     onCloneNode(selectedElement){
         if(selectedElement.isSameNode(this.window.document.body)){ return; }
 
-        this.onContentChange();
+        this.onBeforeChange();
         let parent = selectedElement.parentElement;
         let el = selectedElement.cloneNode(true)
         el.removeAttribute("data-selected");
         el.removeAttribute("contenteditable");
         parent.appendChild(el);
         CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onEditNodeText);
+        this.onAfterChange();
     }
 
     onInsertNode(elems){
-        this.onContentChange();
+        this.onBeforeChange();
 
         for(let el of elems){
             CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onEditNodeText);
         }
+        this.onAfterChange();
     }
    
     getData(htmlCleaning){
@@ -770,6 +906,7 @@ class DesignerState extends CanvasState{
         }
 
         selectedElement.setAttribute('contenteditable', 'true');
+        this.editingElementText = selectedElement.innerHTML;
         setCaretToEnd(selectedElement);
     }
 
@@ -791,24 +928,25 @@ class SourceCodeState extends CanvasState{
     constructor(mainView){
         super(mainView);
 
-        this.onChange = this.onChange.bind(this);
+        this.onAfterChange = this.onAfterChange.bind(this);
 
         this.queryStr = "";
         this.data = "";
     }
 
-    render(show, selectedElement){
+    render(show, selectedElement, width){
         let style = {
-            width: Math.min(this.mainView.props.device.width, window.innerWidth - 380 - 10), 
+            width: width || Math.min(this.mainView.props.device.width, window.innerWidth - 380 - 10), 
             height: Math.min(this.mainView.props.device.height, window.innerHeight - 56 - 10), 
             display: (show ? 'block' : 'none'),
             overflowY: 'auto'
         };
-        return <SourceCodeEditor queryStr={this.queryStr} style={style} value={this.data} onChange={this.onChange}/>
+        return <SourceCodeEditor queryStr={this.queryStr} style={style} value={this.data} onChange={this.onAfterChange}/>
     }
 
-    onChange(value){
+    onAfterChange(value){
         this.data = value;
+        this.mainView.onContentChange(value, 'sourceCode')
     }
 
     htmlCleaning(){
@@ -893,8 +1031,8 @@ class PreviewState extends CanvasState{
         let bsJs = document.createElement("script");
 		bsJs.setAttribute("src", `${Assets.BootstrapJS}`);
 		bsJs.setAttribute("type", "text/javascript");
-        head.insertBefore(bsJs, el);
-
+        el.onload = () => head.appendChild(bsJs); //Wait until jQuery is loaded
+        
         this.iFrame.addEventListener("click", function(e) {//Prevent links from working on preview
             if (e.target.tagName == 'A' || e.target.tagName == 'BUTTON'){
                 if((e.target.host.toString().length > 0) && (e.target.host !== window.location.host)){

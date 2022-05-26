@@ -406,7 +406,7 @@ export class UtilsMoodle
         if(attoInterface !== null){
             return attoInterface.getThemeCssRules();
         }
-        return [];
+        return {};
     }
 
     static getThemeMoodleUrl(){
@@ -420,6 +420,7 @@ export class UtilsMoodle
     }
 
     static get_string(str, resource){
+        if (typeof M == 'undefined') return str;
         let moodle = M || window.parent.M;
         return moodle.util.get_string(str, resource);
     }

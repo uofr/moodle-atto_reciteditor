@@ -51,7 +51,7 @@ export default class Components{
 } 
 
 export class Assets{
-    static RecitLogo = require('./assets/images/recit.png');
+    static RecitLogo = './react/build/assets/images/recit.png';
     static ImageEmpty = 'https://recitfad.ca/widgets/assets/images/header4.jpg'; //require('./assets/images/empty.jpg');
     static ImageEmptyHD = Assets.ImageEmpty; //require('./assets/images/empty-hd.jpg');
 

@@ -251,7 +251,7 @@ export class FloatingMenu extends Component{
         onDeleteElement: null,
         onCloneNode: null,
         onSaveTemplate: null,
-        device: null
+        device: null,
     };      
 
     constructor(props){
@@ -327,7 +327,7 @@ export class NodeTextEditing extends Component{
         
         this.props.selectedElement.removeAttribute('draggable');
         
-        let style = {position: 'absolute', display: 'block', top: 0, left: 0};
+        let style = {position: 'fixed', display: 'block', top: 0, left: 0};
 
         let posCanvas = this.props.posCanvas;
         let posEl = UtilsHTML.getBoundingClientRect(this.props.selectedElement, this.props.device.scale);
