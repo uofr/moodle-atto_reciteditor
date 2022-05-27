@@ -4,3 +4,11 @@ The Rich HTML editor makes it possible to create a much more attractive and ergo
 
 # Non-standard post-installation steps
 After installing this plugin, it is necessary to place it in the Atto bar.
+
+# Dependencies
+* Bootstrap 4.6
+* jQuery
+* FontAwesome
+
+# Icons
+The plugin will fetch your CSS and populate an icon selector based on your CSS with rule prefix "fa-" & "icon-"
