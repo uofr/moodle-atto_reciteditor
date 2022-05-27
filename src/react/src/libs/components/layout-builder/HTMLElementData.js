@@ -1321,11 +1321,11 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'background', description: 'Background',  type: 'styleattr',
+            name: 'background', description: i18n.get_string('background'),  type: 'styleattr',
             children: [
                 {
                     name: 'backgroundcolor', 
-                    text: "Couleur de l'arrière plan",
+                    text: i18n.get_string('backgroundcolor'),
                     input: { 
                         type: 'color', 
                         defaultValue: '',
@@ -1339,7 +1339,7 @@ export class HTMLElementData{
                 },
                 {
                     name: 'backgroundimage', 
-                    text: "Image d'arrière-plan",
+                    text: i18n.get_string('backgroundimage'),
                     input: { 
                         type: 'ImageSrc', 
                         defaultValue: '',
@@ -1359,14 +1359,14 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'icon', description: 'Icône',  type: 'bootstrap',
+            name: 'icon', description: i18n.get_string('icon'),  type: 'bootstrap',
             children: [
                 {
                     name: 'icon', 
-                    text: "Icône",
+                    text: i18n.get_string('icon'),
                     input: { 
                         type: 'iconselector',
-                        text: 'Selectionner icône',
+                        text: i18n.get_string('selecticon'),
                         onChange: function(el, value, data){
                            el.setAttribute('class', value);
                         }
@@ -1377,7 +1377,7 @@ export class HTMLElementData{
                 },
                 {
                     name: 'iconsize',
-                    text: "Taille des icônes",
+                    text: i18n.get_string('iconsize'),
                     input: { 
                         type: 'combobox',
                         options:[
@@ -1425,11 +1425,11 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'link', description: 'Link Options',  type: 'htmlattr',
+            name: 'link', description: i18n.get_string('linkoptions'),  type: 'htmlattr',
             children: [
                 {
                     name: 'href', 
-                    text: 'HREF',
+                    text: i18n.get_string('href'),
                     input: { 
                         type: 'text', 
                         onChange: function(el, value, data){
@@ -1442,12 +1442,12 @@ export class HTMLElementData{
                 },
                 {
                     name: 'target', 
-                    text: 'Action du lien',
+                    text: i18n.get_string('linkaction'),
                     input: { 
                         type: 'radio', 
                         options:[
-                            {text: "Même page", value:'_self'},
-                            {text: "Nouvel onglet", value:'_blank' },
+                            {text: i18n.get_string('samepage'), value:'_self'},
+                            {text: i18n.get_string('newtab'), value:'_blank' },
                         ],
                         onChange: function(el, value, data){
                             el.setAttribute('target', value);
@@ -1460,11 +1460,11 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'source', description: 'Source',  type: 'htmlattr',
+            name: 'source', description: i18n.get_string('source'),  type: 'htmlattr',
             children: [
                 {
                     name: 'src', 
-                    text: 'Source',
+                    text: i18n.get_string('source'),
                     input: { 
                         type: 'ImageSrc', 
                         defaultValue: '',
@@ -1479,11 +1479,11 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'videobtn', description: 'Source',  type: 'htmlattr',
+            name: 'videobtn', description: i18n.get_string('source'),  type: 'htmlattr',
             children: [
                 {
                     name: 'src', 
-                    text: 'URL du vidéo',
+                    text: i18n.get_string('videourl'),
                     input: { 
                         type: 'text', 
                         defaultValue: '',
@@ -1499,11 +1499,11 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'videosource', description: 'Source',  type: 'htmlattr',
+            name: 'videosource', description: i18n.get_string('source'),  type: 'htmlattr',
             children: [
                 {
                     name: 'src', 
-                    text: 'URL du vidéo',
+                    text: i18n.get_string('videourl'),
                     input: {
                         type: 'text', 
                         defaultValue: '',
@@ -1523,11 +1523,11 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'embed', description: 'Proprieté',  type: 'htmlattr',
+            name: 'embed', description: i18n.get_string('properties'),  type: 'htmlattr',
             children: [
                 {
                     name: 'src',
-                    text: 'Code HTML',
+                    text: i18n.get_string('htmlcode'),
                     input: {
                         type: 'textarea',
                         defaultValue: '',
@@ -1542,16 +1542,16 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'tab', description: 'Paramètres d\'onglet',  type: 'bootstrap',
+            name: 'tab', description: i18n.get_string('taboptions'),  type: 'bootstrap',
             children: [
                 {
                     name: 'style', 
-                    text: 'Style',
+                    text: i18n.get_string('style'),
                     input: {
                         type: 'radio',
                         options:[
-                            {text: <FontAwesomeIcon icon={faFolder} title="Onglet"/>, value:'nav-tabs'},
-                            {text: <FontAwesomeIcon icon={faEllipsisH} title="Pastille"/>, value:'nav-pills'}
+                            {text: <FontAwesomeIcon icon={faFolder} title={i18n.get_string('tab')}/>, value:'nav-tabs'},
+                            {text: <FontAwesomeIcon icon={faEllipsisH} title={i18n.get_string('pill')}/>, value:'nav-pills'}
                         ],
                         onChange: function(el, value, data){
                             let tab = el;
@@ -1578,15 +1578,15 @@ export class HTMLElementData{
                 },
                 {
                     name: 'justify',
-                    text: 'Justifier',
+                    text: i18n.get_string('justify'),
                     input: {
                         type: 'radio',
-                        options:[                            
-                            {text: <FontAwesomeIcon icon={faAlignLeft} title="Left"/>, value:''},
-                            {text: <FontAwesomeIcon icon={faAlignCenter} title="Center"/>, value:'justify-content-center'},
-                            {text: <FontAwesomeIcon icon={faAlignRight} title="Right"/>, value:'justify-content-end'},
-                            {text: <FontAwesomeIcon icon={faAlignJustify} title="Pleine largeur"/>, value:'nav-fill'},
-                            {text: <FontAwesomeIcon icon={faEllipsisV} title="Horizontal"/>, value:'flex-column'},
+                        options:[
+                            {text: <FontAwesomeIcon icon={faAlignLeft} title={i18n.get_string('left')}/>, value:''},
+                            {text: <FontAwesomeIcon icon={faAlignCenter} title={i18n.get_string('center')}/>, value:'justify-content-center'},
+                            {text: <FontAwesomeIcon icon={faAlignRight} title={i18n.get_string('right')}/>, value:'justify-content-end'},
+                            {text: <FontAwesomeIcon icon={faAlignJustify} title={i18n.get_string('fullwidth')}/>, value:'nav-fill'},
+                            {text: <FontAwesomeIcon icon={faEllipsisV} title={i18n.get_string('horizontal')}/>, value:'flex-column'},
                         ],
                         onChange: function(el, value, data){
                             let tab = el;
@@ -1619,12 +1619,12 @@ export class HTMLElementData{
                 },
                 {
                     name: 'addtab',
-                    text: 'Actions',
+                    text: i18n.get_string('actions'),
                     input: {
                         type: 'buttongroup',
                         options: [
                             {
-                                text: <span><FontAwesomeIcon icon={faPlus} title="Ajouter une onglet"/>{" Onglet"}</span>,
+                                text: <span><FontAwesomeIcon icon={faPlus} title={i18n.get_string('addtab')}/>{i18n.get_string('tab')}</span>,
                                 onClick: function(el, value, data){
                                     let tab = el;
                                     if (el.classList.contains('nav-link')) tab = el.parentElement.parentElement;
@@ -1678,16 +1678,16 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'accordion', description: 'Paramètres d\'accordéon',  type: 'bootstrap',
+            name: 'accordion', description: i18n.get_string('accordionoptions'),  type: 'bootstrap',
             children: [
                 {
                     name: 'addaccordion',
-                    text: 'Actions',
+                    text: i18n.get_string('actions'),
                     input: {
                         type: 'buttongroup',
                         options: [
                             {
-                                text: <span><FontAwesomeIcon icon={faPlus} title="Ajouter un item"/>{" accordéon"}</span>,
+                                text: <span><FontAwesomeIcon icon={faPlus} title={i18n.get_string('add')}/>{i18n.get_string('accordion')}</span>,
                                 onClick: function(el, value, data){
                                     let tab = el;
                                     if (el.classList.contains('btn')) tab = el.parentElement.parentElement.parentElement.parentElement;
@@ -1745,10 +1745,10 @@ export class HTMLElementData{
             },]
         },*/
         {
-            name: 'marginborderpadding', description: 'Marge - Bordure - Padding',  type: 'styleattr',
+            name: 'marginborderpadding', description: i18n.get_string('layoutspacing'),  type: 'styleattr',
             children: [{
                 name: 'layoutspacing',
-                text: "Espacement",
+                text: i18n.get_string('spacing'),
                 input: { 
                     type: 'layoutspacingeditor',
                     getFlags: function(){
@@ -1773,7 +1773,7 @@ export class HTMLElementData{
             },
             {
                 name: 'borderstyle', 
-                text: 'Style de la bordure',
+                text: i18n.get_string('borderstyle'),
                 input: { 
                     type: 'radio',
                     options:[
@@ -1793,10 +1793,10 @@ export class HTMLElementData{
             },]
         },
         {
-            name: 'bs-spacing', description: 'Espacement',  type: 'bootstrap',
+            name: 'bs-spacing', description: i18n.get_string('spacing'),  type: 'bootstrap',
             children: [{
                 name: 'margin',
-                text: "Marge",
+                text: i18n.get_string('margin'),
                 input: { 
                     type: 'layoutspacing',
                     options: [
@@ -1832,7 +1832,7 @@ export class HTMLElementData{
                 },
             },{
                 name: 'padding',
-                text: "Espacement",
+                text: i18n.get_string('padding'),
                 input: { 
                     type: 'layoutspacing',
                     options: [
@@ -1870,10 +1870,10 @@ export class HTMLElementData{
             ]
         },                
         {
-            name: 'bs-border', description: 'Bordure',  type: 'bootstrap',
+            name: 'bs-border', description: i18n.get_string('border'),  type: 'bootstrap',
             children: [{
                 name: 'border',
-                text: "Bordure",
+                text: i18n.get_string('border'),
                 input: { 
                     type: 'layoutspacing',
                     options: [
@@ -1911,7 +1911,7 @@ export class HTMLElementData{
             },
             {
                 name: 'bordercolor',
-                text: "Couleur de bordure",
+                text: i18n.get_string('bordercolor'),
                 input: { 
                     type: 'colorselector',
                     getFlags: function(){
@@ -1956,7 +1956,7 @@ export class HTMLElementData{
             },
             {
                 name: 'borderradius',
-                text: "Angles des coins",
+                text: i18n.get_string('borderradius'),
                 input: { 
                     type: 'combobox',
                     options:[
@@ -1998,11 +1998,11 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'bs-general', description: "De base",  type: 'bootstrap',
+            name: 'bs-general', description: i18n.get_string('basic'),  type: 'bootstrap',
             children: [
                 {
                     name: 'classlist', 
-                    text: "Liste des classes",
+                    text: i18n.get_string('classlist'),
                     input: { 
                         type: 'multipleselect',
                         getFlags: function(){
@@ -2024,7 +2024,7 @@ export class HTMLElementData{
                 },
                 {
                     name: 'background',
-                    text: "Couleur de l'arrière plan",
+                    text: i18n.get_string('backgroundcolor'),
                     input: { 
                         type: 'colorselector',
                         getFlags: function(el) {
@@ -2087,12 +2087,12 @@ export class HTMLElementData{
                 },               
                 {
                     name: 'shadow',
-                    text: "Ombre",
+                    text: i18n.get_string('shadow'),
                     input: { 
                         type: 'radio',
                         options:[
-                            {text: <FontAwesomeIcon icon={faRemoveFormat} title="Remove Format"/>, value:'default'},
-                            {text:"None", value: "shadow-none"},
+                            {text: <FontAwesomeIcon icon={faRemoveFormat} title={i18n.get_string('removeformat')}/>, value:'default'},
+                            {text:i18n.get_string('none'), value: "shadow-none"},
                             {text:"SM", value: "shadow-sm"},
                             {text:"REG", value: "shadow"},
                             {text:"LG", value: "shadow-lg"}
@@ -2126,11 +2126,11 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'bs-text', description: "Texte",  type: 'bootstrap',
+            name: 'bs-text', description: i18n.get_string('text'),  type: 'bootstrap',
             children: [
                 {
                     name: 'color',
-                    text: "Couleur",
+                    text: i18n.get_string('color'),
                     input: { 
                         type: 'colorselector',
                         getFlags: function(){
@@ -2175,15 +2175,15 @@ export class HTMLElementData{
                 },
                 {
                     name: 'alignment', 
-                    text: 'Alignement',
+                    text: i18n.get_string('alignment'),
                     input: { 
                         type: 'radio', 
                         options:[
-                            {text: <FontAwesomeIcon icon={faRemoveFormat} title="Défaut"/>, value:'default'},
-                            {text: <FontAwesomeIcon icon={faAlignLeft} title="Left"/>, value:'text-left' },
-                            {text: <FontAwesomeIcon icon={faAlignCenter} title="Center"/>, value:'text-center' },
-                            {text: <FontAwesomeIcon icon={faAlignRight} title="Right"/>, value:'text-right' },
-                            {text: <FontAwesomeIcon icon={faAlignJustify} title="Justify"/>, value:'text-justify' }
+                            {text: <FontAwesomeIcon icon={faRemoveFormat} title={i18n.get_string('default')}/>, value:'default'},
+                            {text: <FontAwesomeIcon icon={faAlignLeft} title={i18n.get_string('left')}/>, value:'text-left' },
+                            {text: <FontAwesomeIcon icon={faAlignCenter} title={i18n.get_string('center')}/>, value:'text-center' },
+                            {text: <FontAwesomeIcon icon={faAlignRight} title={i18n.get_string('right')}/>, value:'text-right' },
+                            {text: <FontAwesomeIcon icon={faAlignJustify} title={i18n.get_string('justify')}/>, value:'text-justify' }
                         ],
                         defaultValue: ['default'],
                         onChange: function(el, value, data){
@@ -2212,11 +2212,11 @@ export class HTMLElementData{
                 },
                 {
                     name: 'resposivesize', 
-                    text: 'Responsive Size',
+                    text: i18n.get_string('responsivesize'),
                     input: { 
                         type: 'radio', 
                         options:[
-                            {text: <FontAwesomeIcon icon={faRemoveFormat} title="Défaut"/>, value:'default'},
+                            {text: <FontAwesomeIcon icon={faRemoveFormat} title={i18n.get_string('default')}/>, value:'default'},
                             {text: 'SM', value:'sm' },
                             {text: 'MD', value:'md' },
                             {text: 'LG', value:'lg' },
@@ -2265,17 +2265,16 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'bs-button', description: "Bouton",  type: 'bootstrap',
+            name: 'bs-button', description: i18n.get_string('button'),  type: 'bootstrap',
             children: [
                 {
                     name: 'btnblock',
-                    text: "Bouton pleine largeur",
+                    text: i18n.get_string('buttonfullwidth'),
                     input: { 
                         type: 'radio',
                         options:[
-                            {text:"Oui", value: "btn-block"},
-                            {text:"Non", value: ""}
-                        
+                            {text:i18n.get_string('yes'), value: "btn-block"},
+                            {text:i18n.get_string('no'), value: ""}                       
                         ],
                         onChange: function(el, value, data){
                             if(el.classList.contains("btn-block")){
@@ -2299,12 +2298,12 @@ export class HTMLElementData{
                 },
                 {
                     name: 'btnoutline',
-                    text: "Outline",
+                    text: i18n.get_string('outline'),
                     input: { 
                         type: 'radio',
                         options:[
-                            {text:"Oui", value: true},
-                            {text:"Non", value: false}
+                            {text:i18n.get_string('yes'), value: true},
+                            {text:i18n.get_string('no'), value: false}
                         
                         ],
                         onChange: function(el, value, data){
@@ -2338,13 +2337,13 @@ export class HTMLElementData{
                 },
                 {
                     name: 'btnsize',
-                    text: "Taille",
+                    text: i18n.get_string('size'),
                     input: { 
                         type: 'radio',
                         options:[
                             {text:<FontAwesomeIcon icon={faRemoveFormat}/>, value: ""},
-                            {text:"Gros", value: "btn-lg"},
-                            {text:"Petit", value: "btn-sm"},
+                            {text:i18n.get_string('big'), value: "btn-lg"},
+                            {text:i18n.get_string('small'), value: "btn-sm"},
                         ],
                         onChange: function(el, value, data){                       
                             for(let item of data.input.options){
@@ -2376,11 +2375,11 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'htmlattributes', description: 'Attributs HTML',  type: 'htmlattr',
+            name: 'htmlattributes', description: i18n.get_string('htmlattributes'),  type: 'htmlattr',
             children: [
                 {
                     name: 'id', 
-                    text: 'ID',
+                    text: i18n.get_string('id'),
                     input: { 
                         type: 'text', 
                         defaultValue: '',
@@ -2395,10 +2394,10 @@ export class HTMLElementData{
             ]
         },
         {
-            name: 'table', description: 'Table',  type: 'bootstrap',
+            name: 'table', description: i18n.get_string('table'),  type: 'bootstrap',
             children: [{
                 name: 'tableaction',
-                text: "Actions",
+                text: i18n.get_string('actions'),
                 input: { 
                     type: 'buttongroup',
                     options: [ 
@@ -2432,12 +2431,12 @@ export class HTMLElementData{
             },
             {
                 name: 'tableborder',
-                text: "Bordure",
+                text: i18n.get_string('border'),
                 input: { 
                     type: 'radio',
                     options: [
-                        {text: "Non", value:0},
-                        {text: "Oui", value:1},
+                        {text: i18n.get_string('no'), value:0},
+                        {text: i18n.get_string('yes'), value:1},
                     ],
                     onChange: function(el, value, data){
                         if(value == 1){
@@ -2453,12 +2452,12 @@ export class HTMLElementData{
             },
             {
                 name: 'tablestriped',
-                text: "Barré",
+                text: i18n.get_string('striped'),
                 input: { 
                     type: 'radio',
                     options: [
-                        {text: "Non", value:0},
-                        {text: "Oui", value:1},
+                        {text: i18n.get_string('no'), value:0},
+                        {text: i18n.get_string('yes'), value:1},
                     ],
                     onChange: function(el, value, data){
                         if(value == 1){

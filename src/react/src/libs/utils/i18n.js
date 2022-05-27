@@ -25,6 +25,10 @@ import { UtilsMoodle } from "./Utils";
 
 export class i18n {
     static get_string(str){
-        return UtilsMoodle.get_string(str, 'atto_reciteditor');
+        //if (!document.lang) document.lang = ""
+        let res = UtilsMoodle.get_string(str, 'atto_reciteditor');
+        //if (res.startsWith('[[')) document.lang += "'"+str+"',"+'\n'
+        //if (res.startsWith('[[')) document.lang += "$string['"+str+"'] = '';"+'\n'
+        return res;
     }
 }
