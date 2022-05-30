@@ -403,7 +403,7 @@ class TemplateList extends Component{
         this.showMenu = this.showMenu.bind(this);
         this.showImport = this.showImport.bind(this);
         this.onDelete = this.onDelete.bind(this);
-        this.showVitrine = this.showVitrine.bind(this);
+        this.showShowcase = this.showShowcase.bind(this);
         this.receiveMessageFromIframe = this.receiveMessageFromIframe.bind(this);
         this.showModal = this.showModal.bind(this);
         this.onSaveTemplate = this.onSaveTemplate.bind(this);
@@ -412,7 +412,7 @@ class TemplateList extends Component{
         if (typeof M != 'undefined' && M.recit && M.recit.reciteditor && M.recit.reciteditor.settings.showcase_url && M.recit.reciteditor.settings.showcase_url.length > 0){
             url = M.recit.reciteditor.settings.showcase_url;
         }
-        this.state = {showModal: false, showMenu: false, showImport: false, showVitrine: false, UrlVitrine: url, collapse: {}};
+        this.state = {showModal: false, showMenu: false, showImport: false, showShowcase: false, UrlShowcase: url, collapse: {}};
     }    
 
     componentDidMount(){
@@ -432,7 +432,7 @@ class TemplateList extends Component{
                         <ButtonGroup >
                                 {this.props.type === 'l' && <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faSave} title={i18n.get_string('savetemplate')}/></Button>}
                                 <BtnUpload id="import-collection"  accept=".json" onChange={this.onImport} title={i18n.get_string('import')}/>
-                                {this.props.type === 'l' && this.state.UrlVitrine && <Button onClick={() => this.showVitrine(true)}><FontAwesomeIcon icon={faCloud} title={i18n.get_string('showroom')}/> {i18n.get_string('showroom')}</Button>}
+                                {this.props.type === 'l' && this.state.UrlShowcase && <Button onClick={() => this.showShowcase(true)}><FontAwesomeIcon icon={faCloud} title={i18n.get_string('showroom')}/> {i18n.get_string('showroom')}</Button>}
                                 <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon icon={faCog} title={i18n.get_string('options')}/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
@@ -462,13 +462,13 @@ class TemplateList extends Component{
                         return (this.getToken(item, index, false));
                     })}
                 </ul></>}
-                {this.state.showVitrine && 
-                    <Modal show={true} onHide={() => this.showVitrine(false)} backdrop="static" keyboard={false} className='templatevitrine'>
+                {this.state.showShowcase && 
+                    <Modal show={true} onHide={() => this.showShowcase(false)} backdrop="static" keyboard={false} className='templateShowcase'>
                         <Modal.Header closeButton>
                             <Modal.Title>{i18n.get_string('showroom')}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <iframe src={this.state.UrlVitrine}/>
+                            <iframe src={this.state.UrlShowcase}/>
                         </Modal.Body>
                     </Modal>
                 }
@@ -555,8 +555,8 @@ class TemplateList extends Component{
         });
     }
 
-    showVitrine(show){
-        this.setState({showVitrine: show});
+    showShowcase(show){
+        this.setState({showShowcase: show});
     }
 
     getToken(item, index, editable){
@@ -575,7 +575,7 @@ class TemplateList extends Component{
             case 'import':
                 let data = [{name: event.data.value.name, htmlStr: event.data.value.htmlStr || event.data.value.htmlString || event.data.value.htmlstr, img: event.data.value.img || event.data.value.image, type: 'l'}];
                 this.onImport(null, data);
-                this.showVitrine(false);
+                this.showShowcase(false);
                 break;
         }
     }

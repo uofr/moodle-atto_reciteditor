@@ -21,6 +21,7 @@
  * @copyright  2019 RECIT
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */ 
+defined('MOODLE_INTERNAL') || die();
 
 $functions = array(
 

@@ -56,13 +56,13 @@ class atto_reciteditor_external extends external_api {
         $rst = $DB->get_records('atto_reciteditor_templates', array('userid' => $USER->id), 'name');
 
         $result = array();
-        foreach($rst as $obj){
+        foreach ($rst as $obj){
             $result[] = $obj;
         }
         
         return $result;
     }
-    //
+    
     public static function save_template_parameters() {
         return new external_function_parameters(array(
             'type' => new external_value(PARAM_RAW, 'tpl type'),
@@ -90,7 +90,7 @@ class atto_reciteditor_external extends external_api {
         $DB->insert_record('atto_reciteditor_templates', array('name' => $name, 'type' => $type, 'userid' => $USER->id, 'htmlstr' => $htmlstr, 'img' => $img));
         return array('success' => true);
     }
-    //
+    
     public static function import_templates_parameters() {
         return new external_function_parameters(array(
             'fileContent' => new external_value(PARAM_RAW, 'tpl'),
@@ -124,7 +124,7 @@ class atto_reciteditor_external extends external_api {
         }
         return array('success' => true);
     }
-    //
+    
     public static function delete_template_parameters() {
         return new external_function_parameters(array(
             'id' => new external_value(PARAM_INT, 'tpl id'),
