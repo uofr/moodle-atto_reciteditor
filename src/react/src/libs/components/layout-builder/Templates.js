@@ -21,6 +21,7 @@
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
 
+import { i18n } from '../../utils/i18n';
 import { Assets } from '../Components';
 import {WebApi} from '../WebApi';
 
@@ -32,14 +33,17 @@ export class Templates{
 
     static onLoad(){
         let p = Templates.webApi.getTemplateList();
-
         let p2 = p.then((webApiResult) => {
-            if(webApiResult && webApiResult.success){
-                Templates.componentList.myComponents = webApiResult.data.c;
-                Templates.layoutList = webApiResult.data.l;
+            if(webApiResult && !webApiResult.error){
+                let data = {c: [], l: []};
+                for (let d of webApiResult[0].data){
+                    data[d.type].push(d)
+                }
+                Templates.componentList.myComponents = data.c;
+                Templates.layoutList = data.l;
             }
             else{
-                alert(`Error: ${webApiResult.msg}`);
+                alert(`Error: ${JSON.stringify(webApiResult)}`);
             }
             return webApiResult;
         },
@@ -58,7 +62,7 @@ export class Templates{
     static onSave(name, type, htmlStr, img){
         let data = {};
         data.name = name;
-        data.htmlStr = htmlStr;
+        data.htmlstr = htmlStr;
         data.type = type;
         data.img = img || '';
         return Templates.webApi.saveTemplate(data);

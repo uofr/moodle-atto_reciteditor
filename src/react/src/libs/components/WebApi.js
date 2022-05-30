@@ -35,7 +35,7 @@ export class WebApi{
         
         let settings = atto.getSettings();
         if(settings){
-            return `${settings.wwwroot}/lib/editor/atto/plugins/reciteditor/classes/WebApi.php`;
+            return M.cfg.wwwroot + "/lib/ajax/service.php?sesskey=" + M.cfg.sesskey;
         }
         else{
             return "Unknown gateway."
@@ -86,31 +86,24 @@ export class WebApi{
         return result;       
     }
 
+    queryMoodle(methodName, args, onSuccess){
+        let data = {index:0, args:args, methodname: methodName};
+        return this.post(this.gateway + "&info=" + methodName, [data], onSuccess);
+    }
+
     saveTemplate(data){
-        let options = {};
-        options.data = data;
-        options.service = "saveTemplate";
-        return this.post(this.gateway, options);
+        return this.queryMoodle('atto_reciteditor_save_template', data);
     }
 
     getTemplateList(type){
-        let options = {};
-        options.data = {type: type || ''};
-        options.service = "getTemplateList";
-        return this.post(this.gateway, options);
+        return this.queryMoodle('atto_reciteditor_get_template_list', {type:type});
     }
 
     deleteTemplate(id){
-        let options = {};
-        options.data = {id: id};
-        options.service = "deleteTemplate";
-        return this.post(this.gateway, options);
+        return this.queryMoodle('atto_reciteditor_delete_template', {id:id});
     }
 
     importTemplates(fileContent){
-        let options = {};
-        options.data = {fileContent: fileContent};
-        options.service = "importTemplates";
-        return this.post(this.gateway, options);
+        return this.queryMoodle('atto_reciteditor_import_templates', {fileContent:fileContent});
     }
 }

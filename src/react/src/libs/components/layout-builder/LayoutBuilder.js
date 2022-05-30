@@ -221,7 +221,7 @@ class MainView extends Component{
         let that = this;
         
         p.then((webApiResult) => {
-            if(webApiResult.success){
+            if(!webApiResult.error){
                 that.forceUpdate();
             }
             else{
@@ -436,7 +436,7 @@ class MainView extends Component{
         let that = this;
 
         p.then((webApiResult) => {
-            if(webApiResult.success){
+            if(!webApiResult.error){
                 that.loadTemplates();                
             }
             else{

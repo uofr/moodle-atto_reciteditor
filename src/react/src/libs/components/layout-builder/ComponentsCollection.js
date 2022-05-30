@@ -321,11 +321,11 @@ export class VisualComponentList extends Component{
         let that = this;
         
         p.then((webApiResult) => {
-            if(webApiResult.success){
+            if(!webApiResult.error){
                 that.forceUpdate();
             }
             else{
-                alert(`Error: ${webApiResult.msg}`);
+                alert(`Error: ${webApiResult}`);
             }
         },
         (err, response) => {
@@ -507,12 +507,12 @@ class TemplateList extends Component{
         let promise = Templates.onImport(fileCtrl, data);
         
         promise.then((webApiResult) => {
-            if(webApiResult.success){
+            if(!webApiResult.error){
                 that.showImport(false);
                 that.props.onChange();
             }
             else{
-                alert(`Error: ${webApiResult.msg}`);
+                alert(`Error: ${webApiResult}`);
             }
         },
         (err, response) => {
@@ -543,11 +543,11 @@ class TemplateList extends Component{
         let that = this;
 
         promise.then((webApiResult) => {
-            if(webApiResult.success){
+            if(!webApiResult[0].error){
                 that.props.onChange();
             }
             else{
-                alert(`Error: ${webApiResult.msg}`);
+                alert(`Error: ${webApiResult}`);
             }
         },
         (err, response) => {
