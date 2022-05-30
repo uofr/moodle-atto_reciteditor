@@ -1,3 +1,8 @@
+<?php 
+
+require('../../../../../config.php');
+require_login();
+?>
 <!DOCTYPE html>
 <html>
     <head>
