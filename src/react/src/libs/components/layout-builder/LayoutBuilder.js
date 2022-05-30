@@ -99,7 +99,7 @@ export class LayoutBuilder extends Component
                             <Nav.Link eventKey="xl"><FontAwesomeIcon icon={faDesktop} title="XL"/></Nav.Link>    
                         </Nav>
                         <Nav className="separator"></Nav>
-                        <Button variant="success" size="sm"  onClick={this.onSaveAndClose}><FontAwesomeIcon icon={faSave} title={i18n.get_string('save')}/>{i18n.get_string('save')}</Button>
+                        <Button variant="success" size="sm"  onClick={this.onSaveAndClose}><FontAwesomeIcon icon={faSave} title={i18n.get_string('save')}/> {i18n.get_string('save')}</Button>
                     </Navbar.Collapse>
                 </Navbar>
                 <MainView ref={this.mainViewRef} content={this.props.content} device={this.getDeviceDimension()} view={this.state.view} historyManager={this.historyManager}/>
@@ -288,7 +288,7 @@ class MainView extends Component{
 
                     <Card>
                         <Card.Header onClick={() => this.setCollapse('properties')}>
-                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/>{i18n.get_string('proprieties')}
+                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/> {i18n.get_string('proprieties')}
                         </Card.Header>
                         <Card.Body className="properties"  data-collapsed={(this.state.collapsed.properties ? 1 : 0)}  style={{height: panelHeight}}>
                             <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement}/>
@@ -297,7 +297,7 @@ class MainView extends Component{
 
                     <Card>
                         <Card.Header onClick={() => this.setCollapse('treeView')}>
-                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/>{i18n.get_string('tree')}
+                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/> {i18n.get_string('tree')}
                         </Card.Header>
                         <Card.Body data-collapsed={(this.state.collapsed.treeView ? 1 : 0)}  style={{height: panelHeight}}>
                             <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} view={this.props.view}

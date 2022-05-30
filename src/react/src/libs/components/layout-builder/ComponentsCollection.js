@@ -120,7 +120,7 @@ class FormProperties extends Component{
 
                 let form = 
                 <Form key={index} onSubmit={this.onSubmit} className="mb-4">
-                    <h6  onClick={(event) => this.onCollapse(event, item.name)}><FontAwesomeIcon className="mr-1" icon={icon}/>{item.description}</h6>
+                    <h6  onClick={(event) => this.onCollapse(event, item.name)}><FontAwesomeIcon className="mr-1" icon={icon}/> {item.description}</h6>
                     {!collapsed && item.children.map((item2, index2) => {
                         let formItem = null;
                         let flags = {};
@@ -359,7 +359,7 @@ class TokenList extends Component{
                     let branch = 
                         <ul key={index} className='mt-2'>
                             <li key={index} className='token-section' onClick={(event) => this.onCollapse(event, item.name)}>
-                                <FontAwesomeIcon className="mr-1" icon={icon} />
+                                <FontAwesomeIcon className="mr-1" icon={icon} /> 
                                 {item.name}
                             </li>
                             {!collapsed && item.children.map((item2, index2) => {
@@ -654,8 +654,8 @@ class TokenTemplate extends Token{
                     {this.props.showMenu &&
                         <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                             <ButtonGroup size="sm">
-                                <Button onClick={this.props.onExport}><FontAwesomeIcon  icon={faCloudDownloadAlt} title={i18n.get_string('export')}/></Button>
-                                <Button onClick={this.props.onDelete}><FontAwesomeIcon  icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
+                                <Button onClick={this.props.onExport}><FontAwesomeIcon icon={faCloudDownloadAlt} title={i18n.get_string('export')}/></Button>
+                                <Button onClick={this.props.onDelete}><FontAwesomeIcon icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
                             </ButtonGroup>
                         </ButtonToolbar>
                     }
@@ -704,8 +704,8 @@ export class TemplateForm extends Component{
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={this.props.onClose}><FontAwesomeIcon  icon={faTimes} title={i18n.get_string('cancel')}/>{i18n.get_string('cancel')}</Button>
-                    <Button variant="success" onClick={() => this.props.onSave(this.state.data)}><FontAwesomeIcon  icon={faSave} title={i18n.get_string('save')}/>{i18n.get_string('save')}</Button>
+                    <Button variant="secondary" onClick={this.props.onClose}><FontAwesomeIcon icon={faTimes} title={i18n.get_string('cancel')}/> {i18n.get_string('cancel')}</Button>
+                    <Button variant="success" onClick={() => this.props.onSave(this.state.data)}><FontAwesomeIcon icon={faSave} title={i18n.get_string('save')}/> {i18n.get_string('save')}</Button>
                 </Modal.Footer>
             </Modal>
 /*<Form.Row>
