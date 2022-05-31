@@ -14,6 +14,8 @@ $string['enablecomponenttaskdesc'] = 'Enables a task where you can put premade c
 $string['component_url'] = 'Component Fetch URL';
 $string['component_urldesc'] = 'Component fetch php URL';
 $string['generalsettings'] = 'General';
+$string['iconclass'] = 'Icons to be loaded';
+$string['iconclassdesc'] = 'CSS classes written above will load icons in icon selector';
 $string['stylesheet_to_add'] = 'Title of style sheets to be loaded by the editor';
 $string['stylesheet_to_adddesc'] = 'Specify the title of style sheets to be loaded. Multiple titles can be added by using a comma';
 

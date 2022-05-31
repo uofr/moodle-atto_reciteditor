@@ -23,7 +23,7 @@
 
 import React, { Component } from 'react';
 import { Button, Modal, FormControl } from 'react-bootstrap';
-import { faIcons} from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleRight, faIcons} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Utils, {UtilsMoodle } from '../utils/Utils';
 import {Assets} from '../components/Components';
@@ -46,30 +46,41 @@ export class IconSelector extends Component {
         this.onSearch = this.onSearch.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
-        this.state = {modal:false, search: ''}; 
+        this.state = {modal:false, search: '', collapsed: {}}; 
 
         this.cssRules = UtilsMoodle.getThemeMoodleCssRules(true);
         this.icons = {};
+
+        this.config = {};
+        if (typeof M != 'undefined' && M.recit && M.recit.reciteditor && M.recit.reciteditor.settings.iconclass){
+            let config = M.recit.reciteditor.settings.iconclass;
+            config = config.split(',');
+            for (let c of config){
+                let data = c.split('=');
+                this.config[data[0]] = data[1];
+            }
+        }
+
         this.buildIconList();
     }
 
     buildIconList(){
-        this.icons = {FontAwesome: [], Fontello: []};
+        this.icons = {};
+        for (let name in this.config){
+            this.icons[name] = [];
+        }
 
         for (let c of this.cssRules.rules){
             if (c.cssText.includes('content:') && c.selectorText && !c.selectorText.includes(',')){
-                if (c.selectorText.startsWith('.fa-')){//FontAwesome
-                    let css = c.selectorText.replace('::before', '')
-                    css = css.replace(':before', '').substr(1);
-                    this.icons.FontAwesome.push({name: css.replace('fa-', ''), css: 'fa '+css});
-                }
-                if (c.selectorText.startsWith('.icon-')){//Fontello
-                    let css = c.selectorText.replace('::before', '').substr(1);
-                    this.icons.Fontello.push({name: css.replace('icon-', ''), css: css});
-                }
-                if (c.selectorText.startsWith('.recitfad-')){// recitfad old custom
-                    let css = c.selectorText.replace('::before', '').substr(1);
-                    this.icons.Fontello.push({name: css.replace('recitfad-', ''), css: css});
+                for (let name in this.config){
+                    let csscl = this.config[name].replace('.', '');
+                    if (c.selectorText.startsWith('.'+csscl)){
+                        let css = c.selectorText.replace('::before', '')
+                        css = css.replace(':before', '').substr(1);
+                        let cssclass = css;
+                        if (csscl == 'fa-') cssclass = 'fa '+css;
+                        this.icons[name].push({name: css.replace(csscl, ''), css: cssclass});
+                    }
                 }
             }
         }
@@ -120,24 +131,32 @@ export class IconSelector extends Component {
        
         let key = 0;
         for (let cat in icons){
-            let catText = cat;
-            if (cat == 'Fontello'){
-                catText += " ("+i18n.get_string('recitthemeonly')+")";
-            }
-            items.push(<h3 key={key}>{catText}</h3>)
-            key++;
-            let content = [];
-            for (let val of icons[cat]){
-                content.push(<div key={key} style={{ width: '70px', height: '62px', textAlign: 'center', cursor: 'pointer', fontSize: '10px', margin: '20px', marginBottom: '30px'}} onClick={() => this.onChange(val.css)}>
-                    <i className={val.css} style={{fontSize:'40px'}}></i>
-                    <br/>{val.name}
-                </div>);
+            if (icons[cat].length > 0){
+                let catText = cat;
+                items.push(<a href='#' onClick={(e) => this.onCollapse(e, cat)} key={key} className='h3'>{this.state.collapsed[cat] ? <i class="fa fa-angle-right"></i> : <i class="fa fa-angle-down"></i>} <span>{catText}</span></a>)
+                key++;
+                let content = [];
+                if (!this.state.collapsed[cat]){
+                    for (let val of icons[cat]){
+                        content.push(<div key={key} style={{ width: '70px', height: '62px', textAlign: 'center', cursor: 'pointer', fontSize: '10px', margin: '20px', marginBottom: '30px'}} onClick={() => this.onChange(val.css)}>
+                            <i className={val.css} style={{fontSize:'40px'}}></i>
+                            <br/>{val.name}
+                        </div>);
+                        key++;
+                    }
+                }
+                items.push(<div key={key} className={"d-flex flex-wrap mb-3"}>{content}</div>);
                 key++;
             }
-            items.push(<div key={key} className={"d-flex flex-wrap mb-3"}>{content}</div>);
-            key++;
         }
         return items;
+    }
+
+    onCollapse(e, cat){
+        e.preventDefault()
+        let collapse = this.state.collapsed;
+        collapse[cat] = !collapse[cat];
+        this.setState({collapsed: collapse})
     }
     
     onChange(val){ 

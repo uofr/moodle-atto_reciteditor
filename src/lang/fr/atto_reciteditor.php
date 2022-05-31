@@ -14,6 +14,8 @@ $string['enablecomponenttaskdesc'] = 'Enables a task where you can put premade c
 $string['component_url'] = 'Component Fetch URL';
 $string['component_urldesc'] = 'Component fetch php URL';
 $string['generalsettings'] = 'General';
+$string['iconclass'] = 'Icônes à charger dans l\'éditeur';
+$string['iconclassdesc'] = 'Les classes nommées ci-dessus rendent disponibles les catégories d\'icônes pour les utilisateurs.';
 $string['stylesheet_to_add'] = 'Titre du CSS à charger dans l\'éditeur';
 $string['stylesheet_to_adddesc'] = 'Pleusieurs titres peuvent être ajouter en les séparant par une virgule';
 

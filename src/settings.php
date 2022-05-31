@@ -65,5 +65,12 @@ if ($ADMIN->fulltree) {
     $default = '';
     $setting = new admin_setting_configtext($name, $title, $description, $default);
     $settings->add($setting);
+   
+    $name = 'atto_reciteditor/iconclass';
+    $title = get_string('iconclass', 'atto_reciteditor');
+    $description = get_string('iconclassdesc', 'atto_reciteditor');
+    $default = 'Fontawesome 4.7=.fa-,Fontawesome 5=.fas-';
+    $setting = new admin_setting_configtext_iconclass($name, $title, $description, $default);
+    $settings->add($setting);
 
 }
