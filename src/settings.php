@@ -42,7 +42,7 @@ if ($ADMIN->fulltree) {
     $name = 'atto_reciteditor/showcase_url';
     $title = get_string('showcase_url', 'atto_reciteditor');
     $description = get_string('showcase_urldesc', 'atto_reciteditor');
-    $default = 'https://recitfad.ca/moodledocs/vitrine_editeur_v2/index.php';
+    $default = 'https://sn-recit-formation-a-distance.github.io/html-bootstrap-editor-showcase/index.html';
     $setting = new admin_setting_configtext($name, $title, $description, $default);
     $settings->add($setting);
 
@@ -55,7 +55,7 @@ if ($ADMIN->fulltree) {
     $name = 'atto_reciteditor/component_url';
     $title = get_string('component_url', 'atto_reciteditor');
     $description = get_string('component_urldesc', 'atto_reciteditor');
-    $default = 'https://recitfad.ca/moodledocs/vitrine_editeur_v2/components.php';
+    $default = 'https://sn-recit-formation-a-distance.github.io/html-bootstrap-editor-showcase/components.json';
     $setting = new admin_setting_configtext($name, $title, $description, $default);
     $settings->add($setting);
    

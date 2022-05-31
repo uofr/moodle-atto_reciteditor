@@ -463,7 +463,7 @@ class TemplateList extends Component{
                     })}
                 </ul></>}
                 {this.state.showShowcase && 
-                    <Modal show={true} onHide={() => this.showShowcase(false)} backdrop="static" keyboard={false} className='templateShowcase'>
+                    <Modal show={true} onHide={() => this.showShowcase(false)} backdrop="static" keyboard={false} className='templatevitrine'>
                         <Modal.Header closeButton>
                             <Modal.Title>{i18n.get_string('showroom')}</Modal.Title>
                         </Modal.Header>
