@@ -31,6 +31,7 @@ export class IFrame extends Component {
       mountNode: null
     }
     this.setContentRef = (e) => {
+      if (!e.target.contentDocument) return;
       this.setState({mountNode: e.target.contentDocument.body})
     }
   }

@@ -400,11 +400,11 @@ export class UtilsMoodle
         }
     }
 
-    static getThemeMoodleCssRules(){
+    static getThemeMoodleCssRules(returnAllRules){
         let attoInterface = UtilsMoodle.getAttoInterface();
 
         if(attoInterface !== null){
-            return attoInterface.getThemeCssRules();
+            return attoInterface.getThemeCssRules(returnAllRules);
         }
         return {};
     }

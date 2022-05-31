@@ -75,22 +75,29 @@ Y.namespace('M.atto_reciteditor').Button = Y.Base.create('button', Y.M.editor_at
             return result;
         }
 
-        var cssRulesBuffer = [];
-        popup.attoInterface.getThemeCssRules = function(){
+        popup.attoInterface.getThemeCssRules = function(returnAllRules){
             var styleSheets = window.document.styleSheets;
 
-            if(cssRulesBuffer.length > 0){ return cssRulesBuffer;}
 
-            cssRulesBuffer = [];
-            var themeUrl = popup.attoInterface.getThemeUrl();
+            var cssRulesBuffer = {rules: [], url: []};
+            var titles = M.recit.reciteditor.settings.stylesheet_to_add
+            if (titles){
+                titles = titles.split(',')
+            }else{
+                titles = []
+            }
             for(var sheet of styleSheets){
-                // the only css rules we are looking for is the current theme or some custom css from theme-recit
-                if((sheet.href !== themeUrl) && (sheet.title !== 'theme-recit-custom-css')){
-                    continue;
-                }
+                // the only css rules we are looking for is the current theme or some custom css from theme
+                if((sheet.href && sheet.href.includes(`/theme/styles.php/${M.cfg.theme}`)) || (titles.includes(sheet.title))){
 
-                for(var rule of sheet.rules){
-                    cssRulesBuffer.push(rule);
+                    if (sheet.href == null || returnAllRules){
+                        for(var rule of sheet.rules){
+                            cssRulesBuffer.rules.push(rule);
+                        }
+                    }
+                    if (sheet.href){
+                        cssRulesBuffer.url.push(sheet.href);
+                    }
                 }
             }
 

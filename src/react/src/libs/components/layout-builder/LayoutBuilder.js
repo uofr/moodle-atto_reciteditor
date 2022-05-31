@@ -655,17 +655,32 @@ class DesignerState extends CanvasState{
         this.iFrame = iframe;
         this.window = this.iFrame.contentWindow || this.iFrame.contentDocument;
         let head = this.window.document.head;
+        let doc = this.window.document;
         let body = this.window.document.body;
+        let style = UtilsMoodle.getThemeMoodleCssRules();
+        let el = null;
+        
+        if (style.url.length > 0){
+            for (let url of style.url){            
+                el = doc.createElement("link");
+                el.setAttribute("href", url);
+                el.setAttribute("rel", "stylesheet");
+                head.appendChild(el);
+            }
+        }
 
-        let el = document.createElement("style");
-		el.setAttribute("title", "theme-moodle");
-        el.innerHTML = UtilsHTML.cssRules2Str(UtilsMoodle.getThemeMoodleCssRules());
-		head.appendChild(el);
+        if (style.rules.length > 0){
+            el = doc.createElement("style");
+            el.setAttribute("title", "theme-moodle");
+            el.innerHTML = UtilsHTML.cssRules2Str(style.rules);
+            head.appendChild(el);
+        }
 
-        el = document.createElement("link");
+        el = doc.createElement("link");
 		el.setAttribute("href", `${Assets.CanvasDesignerCSS}`);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
+
 
         // pure JS
         CanvasElement.create(body, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onEditNodeText);
@@ -1012,23 +1027,35 @@ class PreviewState extends CanvasState{
         this.iFrame =  iframe.contentWindow || iframe.contentDocument;
         let head = this.iFrame.document.head;
         let doc = this.iFrame.document;
+        let style = UtilsMoodle.getThemeMoodleCssRules();
+        let el = null
 
-        let el = document.createElement("style");
-		el.setAttribute("title", "theme-moodle");
-        el.innerHTML = UtilsHTML.cssRules2Str(UtilsMoodle.getThemeMoodleCssRules());
-		head.appendChild(el);
+        if (style.rules.length > 0){
+            el = doc.createElement("style");
+            el.innerHTML = UtilsHTML.cssRules2Str(style.rules);
+            head.appendChild(el);
+        }
 
-        el = document.createElement("link");
+        if (style.url.length > 0){
+            for (let url of style.url){            
+                el = doc.createElement("link");
+                el.setAttribute("href", url);
+                el.setAttribute("rel", "stylesheet");
+                head.appendChild(el);
+            }
+        }
+
+        el = doc.createElement("link");
 		el.setAttribute("href", `${Assets.CanvasCSS}`);
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
-        el = document.createElement("script");
+        el = doc.createElement("script");
 		el.setAttribute("src", `${Assets.JqueryJS}`);
 		el.setAttribute("type", "text/javascript");
 		head.appendChild(el);
 
-        let bsJs = document.createElement("script");
+        let bsJs = doc.createElement("script");
 		bsJs.setAttribute("src", `${Assets.BootstrapJS}`);
 		bsJs.setAttribute("type", "text/javascript");
         el.onload = () => head.appendChild(bsJs); //Wait until jQuery is loaded

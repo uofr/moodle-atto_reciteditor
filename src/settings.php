@@ -58,5 +58,12 @@ if ($ADMIN->fulltree) {
     $default = 'https://recitfad.ca/moodledocs/vitrine_editeur_v2/components.php';
     $setting = new admin_setting_configtext($name, $title, $description, $default);
     $settings->add($setting);
+   
+    $name = 'atto_reciteditor/stylesheet_to_add';
+    $title = get_string('stylesheet_to_add', 'atto_reciteditor');
+    $description = get_string('stylesheet_to_adddesc', 'atto_reciteditor');
+    $default = '';
+    $setting = new admin_setting_configtext($name, $title, $description, $default);
+    $settings->add($setting);
 
 }

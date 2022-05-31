@@ -47,15 +47,17 @@ export class IconSelector extends Component {
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.state = {modal:false, search: ''}; 
+
+        this.cssRules = UtilsMoodle.getThemeMoodleCssRules(true);
+        this.icons = {};
         this.buildIconList();
     }
 
     buildIconList(){
         this.icons = {FontAwesome: [], Fontello: []};
-        let cssRules = UtilsMoodle.getThemeMoodleCssRules();
 
-        for (let c of cssRules){
-            if (c.cssText.includes('content:') && c.selectorText){
+        for (let c of this.cssRules.rules){
+            if (c.cssText.includes('content:') && c.selectorText && !c.selectorText.includes(',')){
                 if (c.selectorText.startsWith('.fa-')){//FontAwesome
                     let css = c.selectorText.replace('::before', '')
                     css = css.replace(':before', '').substr(1);
@@ -89,7 +91,7 @@ export class IconSelector extends Component {
             <FormControl className={"InputText mb-3"} type="text" value={this.state.search} onChange={this.onSearch} placeholder={"Recherche"} />
             <IFrame style={{width: '100%', height: '70vh', border: '0'}}>
                 <div style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
-                    <link rel="stylesheet" href={UtilsMoodle.getThemeMoodleUrl()}/>
+                    {this.cssRules.url && <link rel="stylesheet" href={this.cssRules.url[0]}/>}
                     <div style={{backgroundColor: '#fff'}}>
                         {items}
                     </div>

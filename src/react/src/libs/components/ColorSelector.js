@@ -43,9 +43,9 @@ export class ColorSelector extends Component {
         this.options = this.props.options;
 
         if (this.props.flags && this.props.flags.fetchFromTheme){
-            let cssRules = UtilsMoodle.getThemeMoodleCssRules();
+            let cssRules = UtilsMoodle.getThemeMoodleCssRules(true);
 
-            for (let c of cssRules){
+            for (let c of cssRules.rules){
                 for (let i in this.options){
                     let css = '.' + this.props.flags.prefix+this.options[i].value;
                     if (c.selectorText === css){
