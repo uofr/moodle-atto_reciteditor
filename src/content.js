@@ -76,7 +76,7 @@ M.recit.reciteditor.init_settings = function(_, settings){
 }
 
 document.body.addEventListener('click',function(e){
-    if(e.target && e.target.classList.contains('videobtn')){
+    if(e.target && e.target.classList.contains('attoreciteditor_videobtn')){
         let url = e.target.getAttribute('data-videourl');
         if (url){
             let iframe = document.createElement('iframe');

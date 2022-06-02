@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /* width */
 ::-webkit-scrollbar {
   width: 4px;
@@ -28,42 +27,7 @@
     opacity: 1; } }
 html {
   margin: 0;
-  padding: 0;
-  /**[data-dragging="1"]{
-      &::before{content: "Début";  @extend .tagName;}
-      &::after{content: "Fin";  @extend .tagName;}
-      section::before{content: "Début de la section";  @extend .tagName;}
-      section::after{content: "Fin de la section";  @extend .tagName;}
-      p::before{content: "Début du paragraphe";  @extend .tagName;}
-      p::after{content: "Fin du paragraphe";  @extend .tagName;}
-      h1::before,h2::before,h3::before,h4::before,h5::before,h6::before{content: "Début du titre";  @extend .tagName;}
-      h1::after,h2::after,h3::after,h4::after,h5::after,h6::after{content: "Fin du titre";  @extend .tagName;}
-      .btn::before, button::before{content: "Début du bouton";  @extend .tagName;}
-      .btn::after, button::after{content: "Fin du bouton";  @extend .tagName;}
-      .container::before, .container-fluid::before{content: "Début du container";  @extend .tagName;}
-      .container::after, .container-fluid::after{content: "Fin du container";  @extend .tagName;}
-      .row::before{content: "Début du row";  @extend .tagName;}
-      .row::after{content: "Fin du row";  @extend .tagName;}
-      .col::before, .col-12::before{content: "Début du col";  @extend .tagName;}
-      .col::after, .col-12::after{content: "Fin du col";  @extend .tagName;}
-      .alert::before{content: "Début du alerte"; @extend .tagName;}
-      .alert::after{content: "Fin du alerte"; @extend .tagName;}
-      .card::before{content: "Début du card"; @extend .tagName;}
-      .card::after{content: "Fin du card"; @extend .tagName;}
-      .card-header::before{content: "Début du card-header"; @extend .tagName;}
-      .card-header::after{content: "Fin du card-header"; @extend .tagName;}
-      .card-body::before{content: "Début du card-body"; @extend .tagName;}
-      .card-body::after{content: "Fin du card-body"; @extend .tagName;}
-      .card-footer::before{content: "Début du card-footer"; @extend .tagName;}
-      .card-footer::after{content: "Fin du card-footer"; @extend .tagName;}
-      .carousel-inner::before{content: "Première diapositive"; @extend .tagName;}
-      .carousel-inner::after{content: "Dernière diapositive"; @extend .tagName;}
-      table::before,tbody::before{content: "Début de la table"; @extend .tagName;}
-      table::after,tbody::before{content: "Fin de la table"; @extend .tagName;}
-      tr::before{content: "Début de la ligne de la table"; @extend .tagName;}
-      tr::after{content: "Fin de la ligne de la table"; @extend .tagName;}
-      td::after,th::after{content: "Case de la table"; @extend .tagName;}
-  } */ }
+  padding: 0; }
   html body {
     margin: 0;
     padding: 15px;
@@ -93,7 +57,7 @@ html {
       border: 2px dashed #c9c5c5;
       min-height: 30px; }
     html body .alert:empty::after {
-      content: "Alerte"; }
+      content: "Alert"; }
     html body .card-header:empty::before {
       content: "Header"; }
     html body .card-body:empty::before {
@@ -130,23 +94,23 @@ html {
       content: '4th slide'; }
     html body .carousel-item:nth-of-type(5):after {
       content: '5th slide'; }
-    html body .flipcard2 .back {
+    html body .attoreciteditor_flipcard2 .back {
       display: none; }
-    html body .flipcard2.hover .front {
+    html body .attoreciteditor_flipcard2.hover .front {
       display: none; }
-    html body .flipcard2.hover .back {
+    html body .attoreciteditor_flipcard2.hover .back {
       display: block; }
-    html body .flipcard2 .back {
+    html body .attoreciteditor_flipcard2 .back {
       position: unset;
       transform: none; }
-    html body .flipcard2 .front::before {
+    html body .attoreciteditor_flipcard2 .front::before {
       content: 'Front';
       color: #fff;
       background-color: #007bff;
       padding: 7px;
       border-radius: 24px;
       font-size: 11px; }
-    html body .flipcard2 .back::before {
+    html body .attoreciteditor_flipcard2 .back::before {
       content: 'Back';
       color: #fff;
       background-color: #007bff;
@@ -173,13 +137,13 @@ html {
       justify-content: center; }
     html body .dropping-zone-hover {
       background-color: rgba(0, 153, 255, 0.5) !important; }
-    html body .imgclick a:empty::before {
-      content: "Lien de l'image cliquable"; }
-    html body .imgclick {
+    html body .attoreciteditor_imgclick a:empty::before {
+      content: "Link image clickable"; }
+    html body .attoreciteditor_imgclick {
       text-align: center;
       position: relative;
       width: fit-content; }
-    html body .imgclick .imgclickcontent {
+    html body .attoreciteditor_imgclick .imgclickcontent {
       position: absolute;
       top: 50%;
       left: 50%;

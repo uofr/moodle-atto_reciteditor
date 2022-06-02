@@ -193,7 +193,7 @@ class HTMLButtonVideoElement extends HTMLElement{
     equal(el){
         if(el === null){ return false; }
 
-        return (el.classList.contains('videobtn'));
+        return (el.classList.contains('attoreciteditor_videobtn'));
     }
 
     create(){ 
@@ -201,7 +201,7 @@ class HTMLButtonVideoElement extends HTMLElement{
         el.innerHTML = i18n.get_string('videobutton');
         el.classList.add('btn');
         el.classList.add('btn-primary');
-        el.classList.add('videobtn');
+        el.classList.add('attoreciteditor_videobtn');
         el.setAttribute('data-videourl', 'https://www.youtube.com/embed/WvljI0VIq-E?rel=0');
         return el;
     }
@@ -1140,12 +1140,12 @@ class HTMLClickableImageElement extends HTMLElement{
     equal(el){
         if(el === null){ return false; }
 
-        return (el.classList.contains('imgclick'));
+        return (el.classList.contains('attoreciteditor_imgclick'));
     }
 
     create(){
         let div = document.createElement("div");
-        div.classList.add('imgclick');
+        div.classList.add('attoreciteditor_imgclick');
         
         let el = document.createElement("img");
         el.setAttribute('src', `${Assets.ImageEmpty}`);
