@@ -1,10 +1,10 @@
 <?php
-$string['pluginname'] = 'RÉCIT Editor';
+$string['pluginname'] = 'HTML Bootstrap Editor';
 $string['privacymetadata'] = 'The atto_reciteditor plugin does not store any personal data.';
-$string['htmleditor'] = 'RÉCIT Editor';
+$string['htmleditor'] = 'HTML Bootstrap Editor';
 $string['fetch_components'] = 'Fetch Components';
 // General settings tab.
-$string['configtitle'] = 'RÉCIT Editor Settings';
+$string['configtitle'] = 'HTML Bootstrap Editor Settings';
 $string['enableshowcase'] = 'Enable Showcase';
 $string['enableshowcasedesc'] = 'Enables a showcase page where you can put premade templates. Requires a PHP server';
 $string['showcase_url'] = 'Showcase URL';
