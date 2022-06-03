@@ -23,7 +23,7 @@
 
 export class Assets{
     static RecitLogo = './react/build/assets/images/recit.png';
-    static ImageEmpty = 'https://github.com/SN-RECIT-formation-a-distance/mp-atto-reciteditor/raw/master/src/react/build/assets/images/header4.jpg'; //require('./assets/images/empty.jpg');
+    static ImageEmpty = 'https://raw.githubusercontent.com/SN-RECIT-formation-a-distance/moodle-atto_reciteditor/master/src/react/build/assets/images/header4.jpg';
     static ImageEmptyHD = Assets.ImageEmpty; //require('./assets/images/empty-hd.jpg');
 
     static CanvasCSS = './react/build/assets/css/canvas.css';
