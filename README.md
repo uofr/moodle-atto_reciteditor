@@ -10,7 +10,5 @@ The HTML Bootstrap editor allows you to create a much more attractive and respon
 # Non-standard post-installation steps
 After installing this plugin, it is necessary to place it in the Atto bar.
 
-## Icons
-The plugin will fetch your CSS and populate an icon selector based on your CSS with rule prefix "fa-" & "icon-"
-
 ## Showcase
+https://github.com/SN-RECIT-formation-a-distance/html-bootstrap-editor-showcase
