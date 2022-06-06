@@ -26,7 +26,7 @@ class fetch_components extends \core\task\scheduled_task {
                 $content = file_get_contents($componentUrl);
                 $json = json_decode($content);
                 if ($json){
-                    file_put_contents(dirname(__FILE__) . '/../../build/assets/components.json', $content);
+                    file_put_contents(dirname(__FILE__) . '/../../react/build/assets/components.json', $content);
                 }
             }catch(Exception $e){
 
