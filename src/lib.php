@@ -58,6 +58,7 @@ function atto_reciteditor_strings_for_js() {
                                           'border',
                                           'padding',
                                           'min',
+                                          'layouts',
                                           'value',
                                           'max',
                                           'column',

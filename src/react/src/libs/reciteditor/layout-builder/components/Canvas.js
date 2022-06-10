@@ -287,7 +287,7 @@ export class FloatingMenu extends Component{
                         <Button onClick={() => this.props.onDeleteElement(null)}><FontAwesomeIcon  icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
                     </ButtonGroup>
                 </ButtonToolbar>
-                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} title={i18n.get_string('addcomponent')} description={i18n.get_string('addcomponentdesc')}/>}
+                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} title={i18n.get_string('createcomponent')} description={i18n.get_string('addcomponentdesc')}/>}
             </div>
         return main;
     }

@@ -284,10 +284,10 @@ export class VisualComponentList extends Component{
                         <Nav.Link eventKey="2">{i18n.get_string('templates')}</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link eventKey="1">{i18n.get_string('components')}</Nav.Link>
+                        <Nav.Link eventKey="1">{i18n.get_string('layouts')}</Nav.Link>
                     </Nav.Item>                   
                     <Nav.Item>
-                        <Nav.Link eventKey="0">{i18n.get_string('html')}</Nav.Link>
+                        <Nav.Link eventKey="0">{i18n.get_string('components')}</Nav.Link>
                     </Nav.Item>
                 </Nav>
                 
@@ -433,7 +433,7 @@ class TemplateList extends Component{
                                 <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon icon={faCog} title={i18n.get_string('options')}/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
-                    {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider.myComponents)}><FontAwesomeIcon icon={faCloudDownloadAlt}/>{i18n.get_string('export')}</Button>}
+                    {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider.myComponents)}><FontAwesomeIcon icon={faCloudDownloadAlt}/> {i18n.get_string('export')}</Button>}
                 </div>
                 {this.props.type === 'l' && 
                     <ul className='mt-2 d-flex flex-wrap justify-content-center'>
@@ -444,7 +444,7 @@ class TemplateList extends Component{
                 }
                 {this.props.type === 'c' && <>
                     <span onClick={() => this.onCollapse('my')}>
-                        <FontAwesomeIcon className="mr-1" icon={faAngleDown}/> {i18n.get_string('mycomponents')}
+                        <FontAwesomeIcon className="mr-1" icon={!this.state.collapse['my'] ? faAngleDown : faAngleRight}/> {i18n.get_string('mycomponents')}
                     </span>
                     <ul className='mt-2 d-flex flex-wrap'>
                     {!this.state.collapse['my'] && this.props.dataProvider.myComponents.map((item, index) => {
@@ -452,7 +452,7 @@ class TemplateList extends Component{
                     })}
                     </ul>
                     <span onClick={() => this.onCollapse('base')}>
-                        <FontAwesomeIcon className="mr-1" icon={faAngleDown}/> {i18n.get_string('basecomponents')}
+                        <FontAwesomeIcon className="mr-1" icon={!this.state.collapse['base'] ? faAngleDown : faAngleRight}/> {i18n.get_string('basecomponents')}
                     </span>
                     <ul className='mt-2 d-flex flex-wrap'>
                     {!this.state.collapse['base'] && this.props.dataProvider.components.map((item, index) => {
@@ -693,7 +693,7 @@ export class TemplateForm extends Component{
                     <Form onSubmit={e => { e.preventDefault(); }}>                       
                         <Form.Row>
                             <Form.Group as={Col}>
-                                <Form.Label>{"Nom"}</Form.Label>
+                                <Form.Label>{i18n.get_string('name')}</Form.Label>
                                 <Form.Control type="text" required value={this.state.data.name} name="name" onChange={this.onDataChange}/>
                             </Form.Group>
                         </Form.Row>
