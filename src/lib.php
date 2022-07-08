@@ -23,7 +23,6 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-require_once $CFG->libdir . '/adminlib.php';
 
 function atto_reciteditor_before_standard_top_of_body_html() {
     global $PAGE, $CFG;
@@ -229,16 +228,4 @@ function atto_reciteditor_strings_for_js() {
                                             'sourcecodedesigner',
                                         ),
                                     'atto_reciteditor');
-}
-
-class admin_setting_configtext_iconclass extends admin_setting_configtext {
-    public function validate($data) {
-        if (strlen($data) == 0) return true;
-        $data = explode(',', $data);
-        foreach($data as $d){
-            $c = explode('=', $d);
-            if (!isset($c[1])) return false;
-        }
-        return true;
-    }
 }
