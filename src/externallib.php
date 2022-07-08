@@ -146,7 +146,7 @@ class atto_reciteditor_external extends external_api {
                         self::delete_template_parameters(),
                         array('id' => $id));
 
-        $DB->delete_records('atto_reciteditor_templates', array('id' => $id));
+        $DB->delete_records('atto_reciteditor_templates', array('id' => $id, 'userid' => $USER->id));//Pass userid so user can only delete their own templates
         return array('success' => true);
     }
 
