@@ -1,6 +1,13 @@
 <?php
 $string['pluginname'] = 'Éditeur HTML Bootstrap';
-$string['privacymetadata'] = 'Le plugin atto_reciteditor ne stocke aucune donnée personnelle.';
+$string['privacymetadata'] = 'Le plugin atto_reciteditor stocke des gabarits HTML relié à l\'utilisateur';
+$string['privacy:metadata:atto_reciteditor_templates'] = 'Stocke les gabarits';
+$string['privacy:metadata:atto_reciteditor_templates:name'] = 'Nom du gabarit';
+$string['privacy:metadata:atto_reciteditor_templates:type'] = 'Type du gabarit';
+$string['privacy:metadata:atto_reciteditor_templates:userid'] = 'Propriétaire du gabarit';
+$string['privacy:metadata:atto_reciteditor_templates:htmlstr'] = 'HTML du gabarit';
+$string['privacy:metadata:atto_reciteditor_templates:img'] = 'Aperçu du gabarit';
+
 $string['htmleditor'] = 'Éditeur HTML Bootstrap';
 $string['fetch_components'] = 'Recherche de composants';
 // General settings tab.

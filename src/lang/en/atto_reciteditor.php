@@ -1,6 +1,13 @@
 <?php
 $string['pluginname'] = 'HTML Bootstrap Editor';
-$string['privacymetadata'] = 'The atto_reciteditor plugin does not store any personal data.';
+$string['privacymetadata'] = 'The atto_reciteditor plugin stores user templates with userid.';
+$string['privacy:metadata:atto_reciteditor_templates'] = 'Stores templates';
+$string['privacy:metadata:atto_reciteditor_templates:name'] = 'Template name';
+$string['privacy:metadata:atto_reciteditor_templates:type'] = 'Template type';
+$string['privacy:metadata:atto_reciteditor_templates:userid'] = 'The user ID the template belongs to';
+$string['privacy:metadata:atto_reciteditor_templates:htmlstr'] = 'Template HTML';
+$string['privacy:metadata:atto_reciteditor_templates:img'] = 'Image preview of template';
+
 $string['htmleditor'] = 'HTML Bootstrap Editor';
 $string['fetch_components'] = 'Fetch components';
 // General settings tab.
