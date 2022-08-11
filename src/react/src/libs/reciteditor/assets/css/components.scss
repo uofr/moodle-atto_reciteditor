@@ -25,16 +25,53 @@ html{
                     .separator{ width: .5px; background-color: #555; height: 30px; margin-right: 1rem;margin-left: 1rem;}
                 }
                 .main{
-                    padding: 10px; display: grid; grid-column-gap: 5px; grid-row-gap: 5px; background-color: transparent; 
+                    padding: 0px; display: grid; grid-column-gap: 0px; grid-row-gap: 0px; background-color: transparent; 
                     grid-template-columns: min-content auto; grid-template-rows: auto;
             
                     .left-area{ 
-                        width: 380px; transform: scale(0.86); transform-origin: 0 0;
-                        .card{margin-bottom: 1rem;
-                            .card-body[data-collapsed="1"]{display: none; max-height: 0; transition: max-height 0.15s ease-out;}
-                            .card-body[data-collapsed="0"]{overflow: scroll; max-height: 9999px;transition: max-height 0.25s ease-in;}
+                        height: 100vh; display: flex; background-color: #FFF;
+                        
+                        .panel-list{
+                            width: 420px; padding: 1rem; display: grid; grid-auto-rows: minmax(33%, auto); grid-gap: 2rem;
+                            .panel{height: 100%; overflow-y: auto; padding-right: 1rem;}
                         }
-                        .tab-content{    border: 1px solid rgb(222, 226, 230); margin-top: 12px; padding: 1rem;  margin-left: -10px;}
+                        
+
+                        .component-list{
+                            .template {
+                                margin: 13px;
+                                text-align: center;
+                                width: 40%;
+                                img {
+                                    max-width: 90%;
+                                    max-height: 100px;
+                                }
+                                p {
+                                    font-weight: 500; text-overflow: ellipsis; font-size: 13px;
+                                }
+                                .btn-toolbar {
+                                    position: relative;
+                                    bottom: 0;
+                                    margin-left: 0 !important;
+                                }
+                                .tplimg{
+                                    height: 100px;
+                                }
+                            }
+                            
+                            ul{list-style: none; padding-left: 0;
+                                .token-section{ font-weight: 500;}
+                                .token{
+                                    
+                                     margin: 3px; padding: 5px; text-align: center; cursor: grab; display: inline-flex;
+                                     font-weight: 500; border-radius: 6px;
+                                }
+                                .token[data-type='native']{background-color: #6c757d; color: #FFF;}
+                                .token[data-type='bootstrap']{background-color: #007bff; color: #FFF;}
+                                .token[data-type='c']{background-color: #28a745; color: #FFF;}
+                                .token[data-type='nativecomponent']{background-color: #28a745; color: #FFF;}
+                            }
+                        }
                     }
                 
                     .center-area{ 
@@ -45,41 +82,7 @@ html{
                     }
                 }
               
-                .component-list{
-                    .template {
-                        margin: 13px;
-                        text-align: center;
-                        width: 40%;
-                        img {
-                            max-width: 90%;
-                            max-height: 100px;
-                        }
-                        p {
-                            font-weight: 500; text-overflow: ellipsis; font-size: 13px;
-                        }
-                        .btn-toolbar {
-                            position: relative;
-                            bottom: 0;
-                            margin-left: 0 !important;
-                        }
-                        .tplimg{
-                            height: 100px;
-                        }
-                    }
-                    
-                    ul{list-style: none; padding-left: 0;
-                        .token-section{ font-weight: 500;}
-                        .token{
-                            
-                             margin: 3px; padding: 5px; text-align: center; cursor: grab; display: inline-flex;
-                             font-weight: 500; border-radius: 6px;
-                        }
-                        .token[data-type='native']{background-color: #6c757d; color: #FFF;}
-                        .token[data-type='bootstrap']{background-color: #007bff; color: #FFF;}
-                        .token[data-type='c']{background-color: #28a745; color: #FFF;}
-                        .token[data-type='nativecomponent']{background-color: #28a745; color: #FFF;}
-                    }
-                }
+                
             
                 .templatepreview {        
                     position: fixed;

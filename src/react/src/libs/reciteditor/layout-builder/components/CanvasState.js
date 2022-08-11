@@ -62,13 +62,12 @@ class CanvasState{
     onReplaceNonBreakingSpace(selectedElement){}
     onKey(e, editingElement){}
 
-    onCollapse(collapsed){ 
-        if (typeof collapsed == 'undefined') return false
-        return collapsed;
+    onPanelChange(panels){ 
+        return panels;
     }
 
-    onSelectElement(el, selectedElement, collapsed){ 
-        let result = {el: el, collapsed: collapsed };
+    onSelectElement(el, selectedElement, panels){ 
+        let result = {el: el, panels: panels };
         return result;
     }  
 
@@ -164,9 +163,9 @@ export class SourceCodeDesignerState extends CanvasState{
         this.designer.onDragEnd();
     }
 
-    onSelectElement(el, selectedElement, collapsed){
-        this.sourceCode.onSelectElement(el, selectedElement, collapsed);
-        let result = this.designer.onSelectElement(el, selectedElement, collapsed);
+    onSelectElement(el, selectedElement, panels){
+        this.sourceCode.onSelectElement(el, selectedElement, panels);
+        let result = this.designer.onSelectElement(el, selectedElement, panels);
         return result
     }
 
@@ -203,9 +202,8 @@ export class SourceCodeDesignerState extends CanvasState{
         this.designer.onEditNodeText(el);
     }
 
-    onCollapse(collapse){
-        let collapsed = this.designer.onCollapse(collapse);
-        return collapsed
+    onPanelChange(panels){
+        return this.designer.onPanelChange(panels);
     }
 }
 
@@ -286,8 +284,8 @@ export class DesignerState extends CanvasState{
         return main; 
     }
 
-    onSelectElement(el, selectedElement, collapsed){
-        let result = {el: el, collapsed: collapsed};
+    onSelectElement(el, selectedElement, panels){
+        let result = {el: el, panels: panels};
 
         if((result.el !== null) && (result.el.tagName.toLowerCase() === 'body')){ 
             result.el = null;
@@ -297,18 +295,10 @@ export class DesignerState extends CanvasState{
         if(Object.is(result.el, selectedElement)){
             this.htmlCleaning(this.window.document);
             
-            result.collapsed.components = false;
-            result.collapsed.properties = true;
+            result.panels.components = 1; // show templates panel
+            result.panels.properties = 0; // hide properties panel
             result.el = null;
         }
-       /* else if(selectedElement !== null){ 
-            this.htmlCleaning();
-            
-            result.collapsed.components = false;
-            result.collapsed.properties = true;
-            result.el = null;
-            return result; 
-        }*/
         else{
             this.htmlCleaning(this.window.document);
 
@@ -316,8 +306,8 @@ export class DesignerState extends CanvasState{
                 this.onAfterChange()
             }
 
-            result.collapsed.components = true;
-            result.collapsed.properties = false;
+            result.panels.components = 0; // hide templates panel
+            result.panels.properties = 1; // show bootstrap properties panel
 
             if(result.el !== null){
                 if(result.el.getAttribute('data-selected') === '1'){
@@ -333,9 +323,9 @@ export class DesignerState extends CanvasState{
                         elClass.onSelect(result.el);
                     }
                     if (elClass && elClass.collapsePanel){
-                        result.collapsed.components = elClass.collapsePanel.components;
-                        result.collapsed.properties = elClass.collapsePanel.properties;
-                        result.collapsed.treeView = elClass.collapsePanel.treeView;
+                        result.panels.components = elClass.collapsePanel.components;
+                        result.panels.properties = elClass.collapsePanel.properties;
+                        result.panels.treeView = elClass.collapsePanel.treeView;
                     }
                 }
             }
@@ -345,11 +335,12 @@ export class DesignerState extends CanvasState{
         return result;
     }
 
-    onCollapse(collapsed){
-        collapsed.components = false;
-        collapsed.properties = true;
-        collapsed.treeView = false;
-        return collapsed;
+    onPanelChange(panels){
+        panels.components = 1;
+        panels.properties = 0;
+        panels.treeView = 1;
+        
+        return panels;
     }
 
     onBeforeChange(){
@@ -570,17 +561,18 @@ export class SourceCodeState extends CanvasState{
         this.data = UtilsHTML.assignTagId(value);
     }
 
-    onSelectElement(el, selectedElement, collapsed){ 
+    onSelectElement(el, selectedElement, panels){ 
         this.queryStr = el.getAttribute("data-tag-id") || "";
-        let result = {el: el, collapsed: collapsed };
+        let result = {el: el, panels: panels };
         return result;
     }
 
-    onCollapse(collapsed){ 
-        collapsed.components = true;
-        collapsed.properties = true;
-        collapsed.treeView = false;
-        return collapsed;
+    onPanelChange(panels){ 
+        panels.components = 0;
+        panels.properties = 0;
+        panels.treeView = 1;
+        
+        return panels;
     }
 }
 
@@ -657,8 +649,8 @@ export class PreviewState extends CanvasState{
         return main;
     }
 
-    onSelectElement(el, selectedElement, collapsed){
-        let result = {el: null, collapsed: collapsed};
+    onSelectElement(el, selectedElement, panels){
+        let result = {el: null, panels: panels};
         return result;
     }
 
@@ -680,5 +672,13 @@ export class PreviewState extends CanvasState{
     setData(value){
         let body = this.iFrame.document.body;
         body.innerHTML = value;
+    }
+
+    onPanelChange(panels){
+        panels.components = 0;
+        panels.properties = 0;
+        panels.treeView = 0;
+
+        return panels;
     }
 }

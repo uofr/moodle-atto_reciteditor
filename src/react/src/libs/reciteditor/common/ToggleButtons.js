@@ -50,6 +50,7 @@ export class ToggleButtons extends Component {
                     {this.props.options.map((item, index) => {   
                         let element = 
                             <BsToggleButton key={index} variant={"primary"} value={item.value} disabled={this.props.disabled}>
+                                {item.glyph}
                                 {item.text}
                             </BsToggleButton>;
                         return (element);

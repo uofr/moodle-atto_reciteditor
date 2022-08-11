@@ -31,23 +31,30 @@ export class ComponentProperties extends Component{
     static defaultProps = {
         element: null,
         onInsertNode: null,
-        onDeleteElement: null
+        onDeleteElement: null,
+        tab: 'bs'
     };
 
-    constructor(props){
-        super(props);
-
-        this.onSelectTab = this.onSelectTab.bind(this);
-
-        this.state = {tab: '0'};
-    }
-
     render(){
-        if(this.props.element === null){ return null; }
+        let title = "";
+
+        if(this.props.tab === "bs"){
+            title = i18n.get_string('bootstrap');
+        }
+        else if(this.props.tab === "style"){
+            title = i18n.get_string('htmlproprieties');
+        }
+        else if(this.props.tab === "custom"){
+            title = i18n.get_string('style');
+        }
+
+        let header = <div><h5>{title}</h5><hr/></div>;
+        
+        if(this.props.element === null){ return header; }
         
         let elClass = HTMLElementData.getElementClass(null, this.props.element);
 
-        if(elClass === null){ return null;}
+        if(elClass === null){ return header;}
 
         let properties = HTMLElementData.propertyList.filter(item => elClass.properties.includes(item.name));
 
@@ -63,29 +70,18 @@ export class ComponentProperties extends Component{
         let attributes = properties.filter(item => item.type === 'htmlattr');
 
         let main = 
-            <div>
-                <Nav variant="tabs" activeKey={this.state.tab} onSelect={this.onSelectTab}>
-                    <Nav.Item>
-                        <Nav.Link eventKey="0">{i18n.get_string('bootstrap')}</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link eventKey="1">{i18n.get_string('htmlproprieties')}</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link eventKey="2">{i18n.get_string('style')}</Nav.Link>
-                    </Nav.Item>
-                </Nav>
-                {this.state.tab === "0" && <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={bootstrapProps} />}
-                {this.state.tab === "1" && <FormProperties element={this.props.element} properties={attributes} />}
-                {this.state.tab === "2" && <FormProperties element={this.props.element} properties={styleAttr} />}
+            <div className='panel'>
+                {header}
+
+                {this.props.tab === "bs" && 
+                        <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={bootstrapProps} />
+                }
+                {this.props.tab === "style" && <FormProperties element={this.props.element} properties={attributes} />}
+                {this.props.tab === "custom" && <FormProperties element={this.props.element} properties={styleAttr} />}
             </div>
                 
                 
         return main;
-    }
-
-    onSelectTab(k){
-        this.setState({tab: k});
     }
 }
 
@@ -264,53 +260,48 @@ class FormProperties extends Component{
 export class VisualComponentList extends Component{
     static defaultProps = {
         onDragEnd: null,
-        onSaveTemplate: null
+        onSaveTemplate: null,
+        tab: 'tpl'
     };
   
     constructor(props){
         super(props);
 
-        this.onSelectTab = this.onSelectTab.bind(this);
         this.loadTemplates = this.loadTemplates.bind(this);
-
-        this.state = {tab: '2'};
     }
 
     render(){       
         let main =
             <div className='component-list'>
-                <Nav variant="tabs" activeKey={this.state.tab} onSelect={this.onSelectTab}>
-                    <Nav.Item>
-                        <Nav.Link eventKey="2">{i18n.get_string('templates')}</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link eventKey="1">{i18n.get_string('layouts')}</Nav.Link>
-                    </Nav.Item>                   
-                    <Nav.Item>
-                        <Nav.Link eventKey="0">{i18n.get_string('components')}</Nav.Link>
-                    </Nav.Item>
-                </Nav>
-                
-                {this.state.tab === "0" &&
-                    <>
+               
+                {this.props.tab === "comp" &&
+                    <div className='panel'>
+                        <h5>{i18n.get_string('components')}</h5>
+                        <hr/>
                         {HTMLElementData.elementListSortByName()}
                         <TokenList dataProvider={HTMLElementData.elementList} onDragEnd={this.props.onDragEnd}/>
-                    </>
+                    </div>
 
                 }
 
-                {this.state.tab === "1" && 
-                                <TemplateList dataProvider={Templates.componentList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} type='c' />}
+                {this.props.tab === "lay" && 
+                    <div className='panel'>
+                        <h5>{i18n.get_string('layouts')}</h5>
+                        <hr/>
+                        <TemplateList dataProvider={Templates.componentList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} type='c' />
+                    </div>
+                }
 
-                {this.state.tab === "2" &&
-                                <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} onSaveTemplate={this.props.onSaveTemplate} type='l'/>}
+                {this.props.tab === "tpl" &&
+                    <div className='panel'>
+                        <h5>{i18n.get_string('templates')}</h5>
+                        <hr/>
+                        <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} onSaveTemplate={this.props.onSaveTemplate} type='l'/>
+                    </div>
+                }
             </div>;
 
         return main;
-    }
-
-    onSelectTab(k){
-        this.setState({tab: k});
     }
 
     loadTemplates(){

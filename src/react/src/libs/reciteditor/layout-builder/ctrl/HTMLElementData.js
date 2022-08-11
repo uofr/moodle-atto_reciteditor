@@ -37,7 +37,7 @@ class HTMLElement{
         this.properties = properties || [];
         this.cssProp = {prefix: "bg"};
         this.visible = true;
-        this.collapsePanel = null;
+        this.panels = {components: 1, properties: 0, treeView: 1};
     }
 
     getDesc(el){
@@ -590,7 +590,7 @@ class HTMLCardFooterElement extends HTMLDivElement{
 class HTMLFlipCardElement extends HTMLDivElement{
     constructor(){
         super(i18n.get_string('flipcard'), "div", 'nativecomponent');
-        this.collapsePanel = {components: true, properties: false, treeView: false};
+        this.panels = {components: 0, properties: 1, treeView: 1};
     }
 
     equal(el){
@@ -655,7 +655,7 @@ class HTMLFlipCardElement extends HTMLDivElement{
 class HTMLFlipCardFrontElement extends HTMLDivElement{
     constructor(){
         super(i18n.get_string('front'), "div", 'nativecomponent');
-        this.collapsePanel = {components: true, properties: false, treeView: false};
+        this.panels = {components: 0, properties: 1, treeView: 1};
         this.visible = false;
     }
 
@@ -675,7 +675,7 @@ class HTMLFlipCardBackElement extends HTMLDivElement{
     constructor(){
         super(i18n.get_string('rear'), "div", 'nativecomponent');
         this.visible = false;
-        this.collapsePanel = {components: true, properties: false, treeView: false};
+        this.panels = {components: 0, properties: 1, treeView: 1};
     }
 
     equal(el){
@@ -741,7 +741,7 @@ class HTMLMediaBSBodyElement extends HTMLDivElement{
 class HTMLCarouselElement extends HTMLDivElement{
     constructor(){
         super(i18n.get_string('carousel'), "div", 'nativecomponent', ['bs-general', 'htmlattributes']);
-        this.collapsePanel = {components: true, properties: false, treeView: false};
+        this.panels = {components: 0, properties: 1, treeView: 1};
     }
 
     equal(el){
@@ -834,7 +834,7 @@ class HTMLCarouselNavElement extends HTMLDivElement{
     constructor(){
         super(i18n.get_string('carouselnav'), "div", 'nativecomponent', ['bs-general', 'htmlattributes']);
         this.visible = false;
-        this.collapsePanel = {components: true, properties: false, treeView: false};
+        this.panels = {components: 0, properties: 1, treeView: 1};
     }
 
     equal(el){
@@ -848,7 +848,7 @@ class HTMLTabElement extends HTMLDivElement{
     constructor(){
         super(i18n.get_string('tab'), "div", 'nativecomponent', ['tab', ...HTMLElementData.propsAssignmentFacade.containers]);
         this.cssProp.prefix = 'tab';
-        this.collapsePanel = {components: true, properties: false, treeView: false};
+        this.panels = {components: 0, properties: 1, treeView: 1};
     }
 
     equal(el){
@@ -900,7 +900,7 @@ class HTMLAccordionElement extends HTMLDivElement{
     constructor(){
         super(i18n.get_string('accordion'), "div", 'nativecomponent', ['accordion', ...HTMLElementData.propsAssignmentFacade.containers]);
         this.cssProp.prefix = 'accordion';
-        this.collapsePanel = {components: true, properties: false, treeView: false};
+        this.panels = {components: 0, properties: 1, treeView: 1};
     }
 
     equal(el){
@@ -968,7 +968,7 @@ class HTMLAccordionNavElement extends HTMLElement{
     constructor(){
         super(i18n.get_string('accordionitem'), "button", 'bootstrap', ['accordion', ...HTMLElementData.propsAssignmentFacade.containers]);
         this.visible = false;
-        this.collapsePanel = {components: true, properties: false, treeView: false};
+        this.panels = {components: 0, properties: 1, treeView: 1};
     }
 
     equal(el){
@@ -988,7 +988,7 @@ class HTMLTabContentElement extends HTMLDivElement{
         super(i18n.get_string('tabcontent'), "div", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.cssProp.prefix = 'tab';
         this.visible = false;
-        this.collapsePanel = {components: true, properties: false, treeView: false};
+        this.panels = {components: 0, properties: 1, treeView: 1};
     }
 
     equal(el){
@@ -1003,7 +1003,7 @@ class HTMLTabPaneElement extends HTMLDivElement{
         super(i18n.get_string('tabcontent'), "div", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.cssProp.prefix = 'tab';
         this.visible = false;
-        this.collapsePanel = {components: true, properties: false, treeView: false};
+        this.panels = {components: 0, properties: 1, treeView: 1};
     }
 
     equal(el){
@@ -1024,7 +1024,7 @@ class HTMLNavElement extends HTMLElement{
     constructor(){
         super("Nav", "nav", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.visible = false;
-        this.collapsePanel = {components: true, properties: false, treeView: false};
+        this.panels = {components: 0, properties: 1, treeView: 1};
     }
 
     equal(el){
@@ -1038,7 +1038,7 @@ class HTMLNavItemElement extends HTMLElement{
     constructor(){
         super("NavItem", "li", 'bootstrap', ['bs-general', 'htmlattributes']);
         this.visible = false;
-        this.collapsePanel = {components: true, properties: false, treeView: false};
+        this.panels = {components: 0, properties: 1, treeView: 1};
     }
 
     equal(el){
@@ -1053,7 +1053,7 @@ class HTMLNavLinkElement extends HTMLElement{
         super("NavLink", "a", 'bootstrap', [...HTMLElementData.propsAssignmentFacade.buttons, 'link']);
         this.cssProp.prefix = 'btn';
         this.visible = false;
-        this.collapsePanel = {components: true, properties: false, treeView: false};
+        this.panels = {components: 0, properties: 1, treeView: 1};
     }
 
     equal(el){

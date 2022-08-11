@@ -22,10 +22,10 @@
  */
 
 import React, { Component } from 'react';
-import { Nav, Card, Navbar, Button } from 'react-bootstrap';
-import {faMobileAlt, faTabletAlt, faTh, faLaptop, faDesktop, faFileWord, faEye, faCode, faAngleRight, faAngleDown, faSave, faRedo, faUndo, faColumns} from '@fortawesome/free-solid-svg-icons';
+import { Nav, Navbar, Button, ButtonToolbar, ButtonGroup } from 'react-bootstrap';
+import {faMobileAlt, faTabletAlt, faTh, faLaptop, faDesktop, faFileWord, faEye, faCode, faSave, faRedo, faUndo, faColumns, faCloud, faPuzzlePiece,  faFileCode, faSitemap, faObjectGroup} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {TreeView, CanvasElement, ComponentProperties, VisualComponentList, Assets, Templates, HistoryManager, Utils, i18n, DesignerState, PreviewState, SourceCodeDesignerState, SourceCodeState} from '../RecitEditor';
+import {TreeView, CanvasElement, ComponentProperties, VisualComponentList, Assets, Templates, HistoryManager, Utils, i18n, DesignerState, PreviewState, SourceCodeDesignerState, SourceCodeState, JsNx} from '../RecitEditor';
 import html2canvas from 'html2canvas';
 
 export class LayoutBuilder extends Component
@@ -177,13 +177,12 @@ class MainView extends Component{
         this.onInsertNode = this.onInsertNode.bind(this);
         this.onEditNodeText = this.onEditNodeText.bind(this);
         this.onSaveTemplate = this.onSaveTemplate.bind(this);
-        this.onCollapse = this.onCollapse.bind(this);
-        this.setCollapse = this.setCollapse.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
         this.getData = this.getData.bind(this);
         this.setData = this.setData.bind(this);
         this.onKey = this.onKey.bind(this);
+        this.onPanelChange = this.onPanelChange.bind(this);
 
         let designer = new DesignerState(this, this.props.historyManager);
         let sourceCode = new SourceCodeState(this)
@@ -197,7 +196,11 @@ class MainView extends Component{
         this.state = {
             canvasState: 'designer',
             selectedElement: null,
-            collapsed: {components: false, properties: true, treeView: true}
+            panels: {
+                components: 1,
+                properties: 0,
+                treeView: 0
+            }
         };
     }
 
@@ -235,7 +238,7 @@ class MainView extends Component{
             }
             this.setData(data, this.state.selectedElement);
             let view = this.props.view;
-            this.setState({canvasState: view},  this.onCollapse);
+            this.setState({canvasState: view},  this.onPanelChange);
         }
 
         if(prevProps.content !== this.props.content){
@@ -259,47 +262,38 @@ class MainView extends Component{
             this.forceUpdate();
         }
     }
-
+    
     render(){
-        let panelHeight = window.innerHeight - 56 - 10 - 100; // 56px = top navbar; 10px padding; card header = 100px
-        let openPanels = (!this.state.collapsed.components ? 1 : 0) + (!this.state.collapsed.properties ? 1 : 0) + (!this.state.collapsed.treeView ? 1 : 0);
-        panelHeight = `${panelHeight / openPanels}px`;
-
         let main =
             <div className="main">
                 <div className="left-area" >
-                    <Card>
-                        <Card.Header onClick={() => this.setCollapse('components')}>
-                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.components ? faAngleRight : faAngleDown)}/>
-                            {i18n.get_string('components')}
-                        </Card.Header>
-                        <Card.Body data-collapsed={(this.state.collapsed.components ? 1 : 0)} style={{height: panelHeight}}>
-                            <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate}/>
-                        </Card.Body>
-                    </Card>
-
-                    <Card>
-                        <Card.Header onClick={() => this.setCollapse('properties')}>
-                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/> {i18n.get_string('proprieties')}
-                        </Card.Header>
-                        <Card.Body className="properties"  data-collapsed={(this.state.collapsed.properties ? 1 : 0)}  style={{height: panelHeight}}>
-                            <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement}/>
-                        </Card.Body>
-                    </Card>
-
-                    <Card>
-                        <Card.Header onClick={() => this.setCollapse('treeView')}>
-                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/> {i18n.get_string('tree')}
-                        </Card.Header>
-                        <Card.Body data-collapsed={(this.state.collapsed.treeView ? 1 : 0)}  style={{height: panelHeight}}>
-                            <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} view={this.props.view}
-                                    onDeleteElement={this.onDeleteElement} onMoveNodeUp={this.onMoveNodeUp} onMoveNodeDown={this.onMoveNodeDown} />
-                        </Card.Body>
-                    </Card>
+                    <ButtonToolbar style={{height:'100%', backgroundColor: '#6c757d'}}>
+                        <ButtonGroup aria-label="Buttons" style={{flexDirection: 'column' }}>
+                            <LeftPanelButton checked={this.state.panels.components === 1} value='components,1' onClick={this.onPanelChange} title={i18n.get_string('templates')} glyph={faCloud} />
+                            <LeftPanelButton checked={this.state.panels.components === 2} value='components,2' onClick={this.onPanelChange} title={i18n.get_string('layouts')} glyph={faObjectGroup} />
+                            <LeftPanelButton checked={this.state.panels.components === 3} value='components,3' onClick={this.onPanelChange} title={i18n.get_string('components')} glyph={faPuzzlePiece} />
+                            <LeftPanelButton checked={this.state.panels.properties === 1} value='properties,1' onClick={this.onPanelChange} title={i18n.get_string('bootstrap')} text={"BS"} />
+                            <LeftPanelButton checked={this.state.panels.properties === 2} value='properties,2' onClick={this.onPanelChange} title={i18n.get_string('htmlproprieties')} text={"HTML"} />
+                            <LeftPanelButton checked={this.state.panels.properties === 3} value='properties,3' onClick={this.onPanelChange} title={i18n.get_string('style')} glyph={faFileCode} />
+                            <LeftPanelButton checked={this.state.panels.treeView === 1} value='treeView,1' onClick={this.onPanelChange} title={i18n.get_string('tree')} glyph={faSitemap} />
+                        </ButtonGroup>
+                    </ButtonToolbar>
+                    {(this.state.panels.components | this.state.panels.properties | this.state.panels.treeView) >= 1 &&
+                        <div className='panel-list'>
+                            {this.state.panels.components === 1 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='tpl'/>}
+                            {this.state.panels.components === 2 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='lay'/>}
+                            {this.state.panels.components === 3 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='comp'/>}
+                            {this.state.panels.properties === 1 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bs'/>}
+                            {this.state.panels.properties === 2 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='style'/>}
+                            {this.state.panels.properties === 3 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='custom'/>}
+                            {this.state.panels.treeView === 1 &&  <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} 
+                                                                    view={this.props.view} onDeleteElement={this.onDeleteElement} onMoveNodeUp={this.onMoveNodeUp} onMoveNodeDown={this.onMoveNodeDown} />}
+                        </div>
+                    }
                 </div>
                 
                 <div className="center-area">
-                    <div className='row'>
+                    <div className='d-flex'>
                         {this.canvasState.sourceCodeDesigner.render(this.props.view, this.state.selectedElement)}
                         {this.canvasState.preview.render(this.props.view === 'preview', this.state.selectedElement)} 
                     </div>
@@ -308,6 +302,28 @@ class MainView extends Component{
            
 
         return main;
+    }
+
+    onPanelChange(value){
+        value = value || null;
+
+        let panels = this.state.panels;
+        let selectedElement = this.state.selectedElement;
+
+        if(value !== null){
+            let attr = value.split(',')[0];
+            value = parseInt(value.split(',')[1]);
+            panels[attr] = (panels[attr] === value ? 0 : value);
+        }
+        else{
+            panels = this.canvasState[this.state.canvasState].onPanelChange(panels);
+        }
+
+        if(panels.components === panels.properties && panels.properties === panels.treeView && panels.treeView === 0){
+            selectedElement = this.canvasState[this.state.canvasState].onSelectElement(this.state.selectedElement, this.state.selectedElement, JsNx.clone(panels)).el;
+        }
+        
+        this.setState({panels: panels, selectedElement: selectedElement});
     }
 
     onContentChange(data, origin){
@@ -320,8 +336,8 @@ class MainView extends Component{
     }
 
     onSelectElement(el){
-        let result = this.canvasState[this.state.canvasState].onSelectElement(el, this.state.selectedElement, this.state.collapsed);
-        this.setState({selectedElement: result.el, collapsed: result.collapsed});
+        let result = this.canvasState[this.state.canvasState].onSelectElement(el, this.state.selectedElement, this.state.panels);
+        this.setState({selectedElement: result.el, panels: result.panels});
     }
 
     onDeleteElement(el){
@@ -376,21 +392,6 @@ class MainView extends Component{
         }
     }
 
-    onCollapse(){
-        let collapsed = this.canvasState[this.state.canvasState].onCollapse(this.state.collapsed);
-        this.setState({collapsed: collapsed});
-    }
-
-    setCollapse(attr){
-        let data = this.state.collapsed;
-        data[attr] = !data[attr];
-        this.setState({collapsed: data});
-    }
-
-    getCollapse(){
-        return this.state.collapsed;
-    }
-
     onSaveTemplate(name, type){
         let p = null;
 
@@ -435,5 +436,29 @@ class MainView extends Component{
                 alert(`Error: ${webApiResult.msg}`);
         }
         });
+    }
+}
+
+class LeftPanelButton extends Component{
+    static defaultProps = {
+        checked: false,
+        onClick: null,
+        value: "",
+        title: "",
+        text: null,
+        glyph: null,
+    };
+
+    render(){
+        let fontSize = (this.props.text ? '1rem' : '2rem');
+
+        let main =
+            <Button variant={(this.props.checked ? 'success' : 'secondary')} onClick={(e) => this.props.onClick(this.props.value)} style={{fontSize: fontSize, flex: 'none', minHeight: '55px'}} 
+                title={this.props.title}>
+                    {this.props.glyph && <FontAwesomeIcon icon={this.props.glyph}/>}
+                    {this.props.text && this.props.text}
+            </Button>;
+
+        return main;
     }
 }

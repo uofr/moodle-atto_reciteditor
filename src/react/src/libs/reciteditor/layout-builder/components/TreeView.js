@@ -64,7 +64,14 @@ export class TreeView extends Component{
         
         let treeView = this.createTreeViewData(data);
 
-        let main = <ul className='tree-view'>{this.renderTreeView(treeView, 0)}</ul>;
+        let main = 
+            <div className='panel'>
+                <h5>{i18n.get_string('tree')}</h5>
+                <hr/>
+                <ul className='tree-view'>
+                    {this.renderTreeView(treeView, 0)}
+                </ul>
+            </div>;
 
         return main;
     }
