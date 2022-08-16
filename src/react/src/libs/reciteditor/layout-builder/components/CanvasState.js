@@ -22,7 +22,7 @@
  */
 
  import React from 'react';
- import {Canvas, CanvasElement, FloatingMenu, NodeTextEditing, SourceCodeEditor, Assets, HTMLElementData, UtilsHTML, UtilsMoodle} from '../../RecitEditor';
+ import {LayoutBuilder, Canvas, CanvasElement, FloatingMenu, NodeTextEditing, SourceCodeEditor, Assets, HTMLElementData, UtilsHTML, UtilsMoodle} from '../../RecitEditor';
 
 class CanvasState{
     constructor(mainView){
@@ -49,7 +49,7 @@ class CanvasState{
     render(show, selectedElement){}
     onDragEnd(){}
     getData(htmlCleaning){}
-    setData(value){}
+    setData(value, selectedElement){}
     onBeforeChange(value, flags){}
     onContentChange(value, flags){}
     onAfterChange(value, flags){}
@@ -153,9 +153,9 @@ export class SourceCodeDesignerState extends CanvasState{
         return this.designer.getData(true);
     }
 
-    setData(data){
-        this.designer.setData(data);
-        this.sourceCode.setData(data);
+    setData(data, selectedElement){
+        this.designer.setData(data, selectedElement);
+        this.sourceCode.setData(data, selectedElement);
         return true;
     }
 
@@ -215,16 +215,25 @@ export class DesignerState extends CanvasState{
         this.window = null;
         this.historyManager = historyManager;
         this.onKey = this.onKey.bind(this);
+        this.loadCount = 0
     }
 
     onLoadFrame(){
         let iframe = window.document.getElementById("designer-canvas");
+
         if(iframe){
             this.onInit(iframe);
             return;
         }
         else{
             console.log("Loading designer iframe...");
+
+            if(this.loadCount > 20){
+                console.log("Exiting because it was impossible to load the designer canvas.");
+                return;
+            }
+
+            this.loadCount++;
             setTimeout(this.onLoadFrame, 500);
         }
     }
@@ -453,7 +462,7 @@ export class DesignerState extends CanvasState{
         return this.window.document.body;
     }
 
-    setData(value){
+    setData(value, selectedElement){
         let that = this;
 
         let loading = function(){
@@ -522,11 +531,12 @@ export class SourceCodeState extends CanvasState{
 
     render(show, selectedElement, width, height){
         let style = {
-            width: width || Math.min(this.mainView.props.device.width, window.innerWidth - 380 - 10), 
-            height: height || Math.min(this.mainView.props.device.height, window.innerHeight - 56 - 10), 
+            width: width || Math.min(this.mainView.props.device.width, window.innerWidth - LayoutBuilder.properties.leftPanel.width), 
+            height: height || Math.min(this.mainView.props.device.height, window.innerHeight - LayoutBuilder.properties.topNavBar.height), 
             display: (show ? 'block' : 'none'),
             overflowY: 'auto'
         };
+        
         return <SourceCodeEditor queryStr={this.queryStr} style={style} value={this.data} onChange={this.onAfterChange}/>
     }
 
@@ -551,19 +561,23 @@ export class SourceCodeState extends CanvasState{
         return UtilsHTML.removeTagId(result);
     }
 
-    setData(value, el){
-        el = el || null;
+    setData(value, selectedElement){
+        selectedElement = selectedElement || null;
 
-        if(el !== null){
-            this.queryStr = el.getAttribute("data-tag-id") || "";
+        if(selectedElement !== null){
+            this.queryStr = selectedElement.getAttribute("data-tag-id") || "";
         }        
         
         this.data = UtilsHTML.assignTagId(value);
     }
 
     onSelectElement(el, selectedElement, panels){ 
-        this.queryStr = el.getAttribute("data-tag-id") || "";
         let result = {el: el, panels: panels };
+
+        if(el === null){return result;}
+
+        this.queryStr = el.getAttribute("data-tag-id") || "";
+        
         return result;
     }
 
@@ -581,16 +595,25 @@ export class PreviewState extends CanvasState{
         super(mainView);
 
         this.iFrame = null;
+        this.loadCount = 0
     }
 
     onLoadFrame(){
         let iframe = window.document.getElementById("preview-canvas");
+
         if(iframe){
             this.onInit(iframe);
             return;
         }
         else{
             console.log("Loading preview iframe...");
+
+            if(this.loadCount > 20){
+                console.log("Exiting because it was impossible to load the preview canvas.");
+                return;
+            }
+            this.loadCount++;
+
             setTimeout(this.onLoadFrame, 500);
         }
     }
@@ -669,7 +692,7 @@ export class PreviewState extends CanvasState{
         return this.iFrame.document.body.innerHTML;
     }
 
-    setData(value){
+    setData(value, selectedElement){
         let body = this.iFrame.document.body;
         body.innerHTML = value;
     }

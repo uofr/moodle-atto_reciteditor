@@ -39,13 +39,26 @@ export class LayoutBuilder extends Component
         options: {}
     };
 
+    static properties = {
+        topNavBar: {
+            height: 56
+        },
+        leftPanel: {
+            width: 446,
+            panelList: {
+                width: 380
+            }
+        },
+        maxScreenWidth: 1920
+    }
+
     constructor(props){
         super(props);
 
         this.onNavbarSelect = this.onNavbarSelect.bind(this);
         this.onSaveAndClose = this.onSaveAndClose.bind(this);
 
-        this.state = { device: (window.screen.width <= 1920 ? 'lg' : 'xl'), view: 'designer'}; 
+        this.state = { device: (window.screen.width <= LayoutBuilder.properties.maxScreenWidth ? 'lg' : 'xl'), view: 'designer'}; 
 
         this.mainViewRef = React.createRef();
         this.historyManager = new HistoryManager(); 
@@ -130,13 +143,12 @@ export class LayoutBuilder extends Component
         function getScale(device){
             let result = 1;
 
-            if(window.innerWidth - 380 <= device.width){
-                // 380 = left panel width; 10 = padding
-                result = (window.innerWidth - 380 - 10) / device.width;
+            
+            if(window.innerWidth - LayoutBuilder.properties.leftPanel.width <= device.width){
+                result = (window.innerWidth - LayoutBuilder.properties.leftPanel.width) / device.width;
             }
             else if(window.innerHeight <= device.height){
-                // 380 = top navbar; 10 = padding
-                result = (window.innerHeight - 56 -10) / device.height;
+                result = (window.innerHeight - LayoutBuilder.properties.topNavBar.height) / device.height;
             }
 
             return result;
@@ -236,7 +248,7 @@ class MainView extends Component{
             }else{
                 data = this.canvasState[prevProps.view].getData();
             }
-            this.setData(data, this.state.selectedElement);
+            this.setData(data);
             let view = this.props.view;
             this.setState({canvasState: view},  this.onPanelChange);
         }
@@ -251,7 +263,7 @@ class MainView extends Component{
     }
 
     setData(data){
-        return this.canvasState[this.props.view].setData(data);
+        return this.canvasState[this.props.view].setData(data, this.state.selectedElement);
     }
 
     forceRefresh(){
@@ -279,7 +291,7 @@ class MainView extends Component{
                         </ButtonGroup>
                     </ButtonToolbar>
                     {(this.state.panels.components | this.state.panels.properties | this.state.panels.treeView) >= 1 &&
-                        <div className='panel-list'>
+                        <div className='panel-list' style={{width: `${LayoutBuilder.properties.leftPanel.panelList.width}px`}}>
                             {this.state.panels.components === 1 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='tpl'/>}
                             {this.state.panels.components === 2 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='lay'/>}
                             {this.state.panels.components === 3 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='comp'/>}

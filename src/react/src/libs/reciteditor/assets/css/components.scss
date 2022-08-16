@@ -32,7 +32,7 @@ html{
                         height: 100vh; display: flex; background-color: #FFF;
                         
                         .panel-list{
-                            width: 420px; padding: 1rem; display: grid; grid-auto-rows: minmax(33%, auto); grid-gap: 2rem;
+                            padding: 1rem; display: grid; grid-auto-rows: minmax(33%, auto); grid-gap: 2rem;
                             .panel{height: 100%; overflow-y: auto; padding-right: 1rem;}
                         }
                         
