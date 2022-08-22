@@ -25,14 +25,15 @@ import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button, Modal  } from 'react-bootstrap';
 import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCloud, faTimes, faCloudDownloadAlt, faCog} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  IconSelector, ColorSelector, HTMLElementData, Templates, i18n } from '../../RecitEditor';
+import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  IconSelector, ColorSelector, Templates, i18n } from '../../RecitEditor';
+import { HTMLElementData } from './HTMLElementData';
 
 export class ComponentProperties extends Component{
     static defaultProps = {
         element: null,
         onInsertNode: null,
         onDeleteElement: null,
-        tab: 'bs'
+        tab: 'bm'
     };
 
     render(){
@@ -41,47 +42,66 @@ export class ComponentProperties extends Component{
         if(this.props.tab === "bs"){
             title = i18n.get_string('bootstrap');
         }
-        else if(this.props.tab === "style"){
+        else if(this.props.tab === "html"){
             title = i18n.get_string('htmlproprieties');
         }
-        else if(this.props.tab === "custom"){
-            title = i18n.get_string('style');
+        else if(this.props.tab === "bm"){
+            title = i18n.get_string('bookmark');
         }
 
         let header = <div><h5>{title}</h5><hr/></div>;
         
-        if(this.props.element === null){ return header; }
+        if(this.props.element === null){ 
+            return header; 
+        }
         
-        let elClass = HTMLElementData.getElementClass(null, this.props.element);
-
-        if(elClass === null){ return header;}
-
-        let properties = HTMLElementData.propertyList.filter(item => elClass.properties.includes(item.name));
-
-        
-        if((properties === null) || (properties.length === 0)){ return null; }
-        
-        properties.sort((el1, el2) => { 
-            return elClass.properties.indexOf(el1.name) - elClass.properties.indexOf(el2.name)
-        });
-
-        let bootstrapProps = properties.filter(item => item.type === 'bootstrap');
-        let styleAttr = properties.filter(item => item.type === 'styleattr');
-        let attributes = properties.filter(item => item.type === 'htmlattr');
+        let propertyList = this.getPropertyList();
 
         let main = 
             <div className='panel'>
                 {header}
 
                 {this.props.tab === "bs" && 
-                        <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={bootstrapProps} />
+                        <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bootstrap} />
                 }
-                {this.props.tab === "style" && <FormProperties element={this.props.element} properties={attributes} />}
-                {this.props.tab === "custom" && <FormProperties element={this.props.element} properties={styleAttr} />}
+                {this.props.tab === "html" && <FormProperties element={this.props.element} properties={propertyList.html} />}
+                {this.props.tab === "bm" && <FormProperties element={this.props.element} properties={propertyList.bookmark} />}
             </div>
                 
                 
         return main;
+    }
+
+    getPropertyList(){
+        let result = {
+            bs: [],
+            html: [],
+            bm: []
+        };
+        
+        let elClass = HTMLElementData.getElementClass(null, this.props.element);
+
+        if(elClass === null){ return result;}
+        
+        console.log(elClass);
+        
+        result.bootstrap = HTMLElementData.propertyList.bootstrap.filter(item => elClass.properties.all.includes(item.name));
+        result.html =  HTMLElementData.propertyList.html.filter(item => elClass.properties.all.includes(item.name));
+        result.bookmark =  result.bootstrap.concat(result.html).filter(item => elClass.properties.min.includes(item.name));
+
+        result.bootstrap.sort((el1, el2) => { 
+            return elClass.properties.all.indexOf(el1.name) - elClass.properties.all.indexOf(el2.name)
+        });
+
+        result.html.sort((el1, el2) => { 
+            return elClass.properties.all.indexOf(el1.name) - elClass.properties.all.indexOf(el2.name)
+        });
+
+        result.bookmark.sort((el1, el2) => { 
+            return elClass.properties.min.indexOf(el1.name) - elClass.properties.min.indexOf(el2.name)
+        });
+
+        return result;
     }
 }
 
@@ -116,10 +136,7 @@ class FormProperties extends Component{
                     <h6  onClick={(event) => this.onCollapse(event, item.name)}><FontAwesomeIcon className="mr-1" icon={icon}/> {item.description}</h6>
                     {!collapsed && item.children.map((item2, index2) => {
                         let formItem = null;
-                        let flags = {};
-                        if(item2.input.getFlags){
-                            flags = item2.input.getFlags(this.props.element);
-                        }
+                        let flags = item2.getFlags(this.props.element);
                         
                         if(typeof flags.showLabel == "undefined" || flags.showLabel){
                             formItem = 
@@ -152,10 +169,7 @@ class FormProperties extends Component{
     createFormControl(data){
         let result = null;
         let value = data.getValue(this.props.element, data);
-        let flags = {};
-        if (data.input.getFlags){
-            flags = data.input.getFlags(this.props.element);
-        }
+        let flags = data.getFlags(this.props.element);
         
         switch(data.input.type){
             case 'radio':
@@ -206,7 +220,7 @@ class FormProperties extends Component{
                 result = 
                     <ButtonGroup>
                         {data.input.options.map((item, index) => {
-                            let btn = <Button key={index} onClick={() => this.onClick(item)}>{item.text}</Button>;
+                            let btn = <Button size="sm" key={index} onClick={() => this.onClick(item)}>{item.text}</Button>;
                             return (btn);
                         })}
                     </ButtonGroup>
@@ -216,7 +230,7 @@ class FormProperties extends Component{
                 result = <ImageSrc name={data.name} value={value} size="sm" onChange={(event) => this.onDataChange(event, data)}  />;
                 break;
             case 'button':
-                result = <Button onClick={() => this.onDataChange({target:{value:''}}, data)}>{data.input.text}</Button>
+                result = <Button size="sm" onClick={() => this.onDataChange({target:{value:''}}, data)}>{data.input.text}</Button>
                 break;
         }
   

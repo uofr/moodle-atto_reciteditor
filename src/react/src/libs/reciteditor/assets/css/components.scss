@@ -29,7 +29,7 @@ html{
                     grid-template-columns: min-content auto; grid-template-rows: auto;
             
                     .left-area{ 
-                        height: 100vh; display: flex; background-color: #FFF;
+                        display: flex; background-color: #FFF;
                         
                         .panel-list{
                             padding: 1rem; display: grid; grid-auto-rows: minmax(33%, auto); grid-gap: 2rem;

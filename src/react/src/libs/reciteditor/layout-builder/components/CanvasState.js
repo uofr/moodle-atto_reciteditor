@@ -316,7 +316,7 @@ export class DesignerState extends CanvasState{
             }
 
             result.panels.components = 0; // hide templates panel
-            result.panels.properties = 1; // show bootstrap properties panel
+            result.panels.properties = 3; // show bookmark properties panel
 
             if(result.el !== null){
                 if(result.el.getAttribute('data-selected') === '1'){

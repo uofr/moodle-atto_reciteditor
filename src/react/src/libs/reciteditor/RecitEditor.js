@@ -58,6 +58,8 @@ export * from './layout-builder/ctrl/ComponentsCollection';
 export * from './layout-builder/ctrl/Templates';
 export * from './layout-builder/ctrl/HistoryManager';
 export * from './layout-builder/ctrl/HTMLElementData';
+export * from './layout-builder/ctrl/HTMLElements';
+export * from './layout-builder/ctrl/HTMLProperties';
 export * from './layout-builder/LayoutBuilder';
 
 export class RecitEditor extends Component{
