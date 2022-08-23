@@ -46,7 +46,7 @@ export class ComponentProperties extends Component{
             title = i18n.get_string('htmlproprieties');
         }
         else if(this.props.tab === "bm"){
-            title = i18n.get_string('bookmark');
+            title = i18n.get_string('basic');
         }
 
         let header = <div><h5>{title}</h5><hr/></div>;
@@ -82,8 +82,6 @@ export class ComponentProperties extends Component{
         let elClass = HTMLElementData.getElementClass(null, this.props.element);
 
         if(elClass === null){ return result;}
-        
-        console.log(elClass);
         
         result.bootstrap = HTMLElementData.propertyList.bootstrap.filter(item => elClass.properties.all.includes(item.name));
         result.html =  HTMLElementData.propertyList.html.filter(item => elClass.properties.all.includes(item.name));

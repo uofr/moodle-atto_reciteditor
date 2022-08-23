@@ -153,7 +153,8 @@ export class HTMLElementData{
             {
                 name: 'htmlattributes', description: i18n.get_string('htmlattributes'), 
                 children: [
-                    new HTMLIdProperty()
+                    new HTMLIdProperty(),
+                    new HTMLClassProperty()
                 ]
             },
             {

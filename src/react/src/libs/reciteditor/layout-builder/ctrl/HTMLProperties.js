@@ -244,7 +244,7 @@ export class HTMLFontFamilyProperty extends HTMLProperty{
             {text: 'Serif', value:'serif'},
             {text: 'Monospace', value:'monospace'},
             {text: 'Cursive', value:'cursive'},
-            {text: 'Fantasy', value:'Fantasy'},
+            {text: 'Fantasy', value:'fantasy'},
             ...UtilsHTML.getAvailableFonts(),
         ];
 
@@ -262,7 +262,7 @@ export class HTMLFontFamilyProperty extends HTMLProperty{
 
 export class HTMLColorProperty extends HTMLProperty{
     constructor(){
-        super('color',  i18n.get_string('color'), new ColorPicker());
+        super('color',  i18n.get_string('color'), new ColorPicker('color'));
     }
 
     getValue(el, data){
@@ -1486,11 +1486,11 @@ export class HTMLPropertiesData{
         },
         image:  {
             min:['source'],
-            all:['source', 'bs-general', 'bs-background', 'bs-spacing', 'bs-border', 'htmlattributes', 'layout']
+            all:['source', 'bs-general', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'htmlattributes']
         },
         video: {
             min: ['videosource'],
-            all: ['bs-general', 'bs-spacing', 'bs-border', 'htmlattributes', 'videosource', 'layout']
+            all: ['bs-general', 'bs-spacing', 'bs-border', 'videosource', 'layout', 'htmlattributes']
         },
         icon: {
             min: ['icon'],
@@ -1498,7 +1498,7 @@ export class HTMLPropertiesData{
         },
         link: {
             min: ['link'],
-            all: ['bs-general', 'bs-button', 'bs-spacing', 'bs-border', 'font', 'layout', 'htmlattributes', 'link']
+            all: ['bs-general', 'bs-button', 'bs-spacing', 'bs-border', 'font', 'layout', 'link', 'htmlattributes']
         },
         buttons: {
             min: ['bs-button'], 

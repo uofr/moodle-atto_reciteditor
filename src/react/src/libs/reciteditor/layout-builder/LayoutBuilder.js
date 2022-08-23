@@ -23,7 +23,7 @@
 
 import React, { Component } from 'react';
 import { Nav, Navbar, Button, ButtonToolbar, ButtonGroup } from 'react-bootstrap';
-import {faMobileAlt, faTabletAlt, faTh, faLaptop, faDesktop, faFileWord, faEye, faCode, faSave, faRedo, faUndo, faColumns, faCloud, faPuzzlePiece,  faFileCode, faSitemap, faObjectGroup, faBookmark} from '@fortawesome/free-solid-svg-icons';
+import {faMobileAlt, faTabletAlt, faTh, faLaptop, faDesktop, faFileWord, faEye, faCode, faSave, faRedo, faUndo, faColumns, faCloud, faPuzzlePiece,  faFileCode, faSitemap, faObjectGroup, faCubes} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {TreeView, CanvasElement, ComponentProperties, VisualComponentList, Assets, Templates, HistoryManager, Utils, i18n, DesignerState, PreviewState, SourceCodeDesignerState, SourceCodeState, JsNx} from '../RecitEditor';
 import html2canvas from 'html2canvas';
@@ -284,9 +284,9 @@ class MainView extends Component{
                             <LeftPanelButton checked={this.state.panels.components === 1} value='components,1' onClick={this.onPanelChange} title={i18n.get_string('templates')} glyph={faCloud} />
                             <LeftPanelButton checked={this.state.panels.components === 2} value='components,2' onClick={this.onPanelChange} title={i18n.get_string('layouts')} glyph={faObjectGroup} />
                             <LeftPanelButton checked={this.state.panels.components === 3} value='components,3' onClick={this.onPanelChange} title={i18n.get_string('components')} glyph={faPuzzlePiece} />
-                            <LeftPanelButton checked={this.state.panels.properties === 1} value='properties,1' onClick={this.onPanelChange} title={i18n.get_string('bootstrap')} text={"BS"} />
-                            <LeftPanelButton checked={this.state.panels.properties === 2} value='properties,2' onClick={this.onPanelChange} title={i18n.get_string('htmlproprieties')} text={"HTML"} />
-                            <LeftPanelButton checked={this.state.panels.properties === 3} value='properties,3' onClick={this.onPanelChange} title={i18n.get_string('bookmark')} glyph={faBookmark} />
+                            <LeftPanelButton checked={this.state.panels.properties === 3} value='properties,3' onClick={this.onPanelChange} title={i18n.get_string('basic')} glyph={faCubes} />
+                            <LeftPanelButton checked={this.state.panels.properties === 1} value='properties,1' onClick={this.onPanelChange} title={i18n.get_string('bootstrap')} svg={Assets.faBootstrap} />
+                            <LeftPanelButton checked={this.state.panels.properties === 2} value='properties,2' onClick={this.onPanelChange} title={i18n.get_string('htmlproprieties')} svg={Assets.faHtml} />
                             <LeftPanelButton checked={this.state.panels.treeView === 1} value='treeView,1' onClick={this.onPanelChange} title={i18n.get_string('tree')} glyph={faSitemap} />
                         </ButtonGroup>
                     </ButtonToolbar>
@@ -459,6 +459,7 @@ class LeftPanelButton extends Component{
         title: "",
         text: null,
         glyph: null,
+        svg: null
     };
 
     render(){
@@ -469,6 +470,7 @@ class LeftPanelButton extends Component{
                 title={this.props.title}>
                     {this.props.glyph && <FontAwesomeIcon icon={this.props.glyph}/>}
                     {this.props.text && this.props.text}
+                    {this.props.svg && <i>{this.props.svg}</i>}
             </Button>;
 
         return main;
