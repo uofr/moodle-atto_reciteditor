@@ -207,5 +207,6 @@ $string['htmlattributes'] = 'HTML attributes';
 $string['id'] = 'ID';
 $string['striped'] = 'Striped';
 $string['sourcecodedesigner'] = 'Source code | designer';
+$string['nonbreakingspace'] = 'Non breaking space';
 
 ?>
