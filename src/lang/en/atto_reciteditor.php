@@ -32,6 +32,7 @@ $string['createlink'] = 'Create link';
 $string['texttoshow'] = 'Text to show';
 $string['openinnewwindow'] = 'Open in new window';
 $string['selecticon'] = 'Select icon';
+$string['description'] = 'Description';
 $string['deleteformat'] = 'Delete format';
 $string['margin'] = 'Margin';
 $string['border'] = 'Border';

@@ -326,6 +326,22 @@ export class HTMLSourceProperty extends HTMLProperty{
     }
 }
 
+export class HTMLAltProperty extends HTMLProperty{
+    constructor(){
+        super('alt',  i18n.get_string('description'));
+        this.input = new TextInput(this.onChange.bind(this));
+    }
+
+    getValue(el, data){
+        return el.alt;
+    }
+
+    onChange(el, value, data){
+        console.log(value)
+        el.setAttribute("alt",  value);
+    }
+}
+
 export class HTMLIdProperty extends HTMLProperty{
     constructor(){
         super('id',  i18n.get_string('id'));
@@ -909,11 +925,11 @@ export class BsBorderProperty extends HTMLProperty{
         super('border',  i18n.get_string('border'));
 
         this.options = [
-            {name: "border-top", nbItems: 1}, 
-            {name: "border-right", nbItems: 1}, 
-            {name: "border-bottom",nbItems: 1}, 
-            {name: "border-left", nbItems: 1}, 
-            {name: "border", nbItems: 6}
+            {name: "border-top-width", items: ['0px','1px','2px','5px','10px','20px']}, 
+            {name: "border-right-width", items: ['0px','1px','2px','5px','10px','20px']}, 
+            {name: "border-bottom-width", items: ['0px','1px','2px','5px','10px','20px']}, 
+            {name: "border-left-width", items: ['0px','1px','2px','5px','10px','20px']}, 
+            {name: "border-width", items: ['0px','1px','2px','5px','10px','20px']}
         ];
 
         this.input = new LayoutSpacing(this.options, this.onChange.bind(this));
@@ -924,24 +940,25 @@ export class BsBorderProperty extends HTMLProperty{
 
         for(let i = 0; i <= 5; i++){
             for(let item of data.input.options){
-                let className = `${item.name}-${i}`;
-                if(el.classList.contains(className)){
-                    result.push(className);
+                if(el.style[item.name] == item.items[i]){
+                    result.push({name:item.name, value: el.style[item.name]});
                 }
             }
         }
+        
         return result;
     }
 
-    onChange(el, value, data){                       
+    onChange(el, value, data){
         if(value.oldValue.length > 0){
-            el.classList.remove('border');
-            el.classList.remove(value.oldValue);
+            el.style[value.name] = '';
         }
         
         if(value.newValue.length > 0){
-            el.classList.add('border');
-            el.classList.add(value.newValue);
+            el.style[value.name] = value.newValue;
+            if (!el.style.borderStyle){
+                el.style.borderStyle = 'solid'; //Set solid if not set, otherwise border wont show
+            }
         }
     }
 }
@@ -1485,8 +1502,8 @@ export class HTMLPropertiesData{
             all: ['bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'font', 'layout', 'background',  'htmlattributes']
         },
         image:  {
-            min:['source'],
-            all:['source', 'bs-general', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'htmlattributes']
+            min:['source', 'alt'],
+            all:['source', 'alt', 'bs-general', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'htmlattributes']
         },
         video: {
             min: ['videosource'],

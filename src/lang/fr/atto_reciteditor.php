@@ -40,6 +40,7 @@ $string['min'] = 'Min';
 $string['value'] = 'Valeur';
 $string['max'] = 'Max';
 $string['column'] = 'Colonne';
+$string['description'] = 'Description';
 $string['line'] = 'Ligne';
 $string['returntohtmleditor'] = 'Retourner à l`éditeur HTML'; 
 $string['recitthemeonly'] = 'Disponible seulement sur le thème RÉCIT';

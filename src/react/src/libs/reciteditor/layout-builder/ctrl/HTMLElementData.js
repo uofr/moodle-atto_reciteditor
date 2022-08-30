@@ -24,7 +24,7 @@
  import { i18n } from '../../RecitEditor';
  import {BsBackgroundProperty, BsBackgroundImageProperty, BsShadowProperty, BsIconProperty, BsIconSizeProperty, BsMarginProperty, BsPaddingProperty, HTMLClassProperty,
             HTMLWidthProperty, HTMLHeightProperty, HTMLFontSizeProperty, HTMLFontFamilyProperty, HTMLColorProperty, HTMLBackgroundProperty, HTMLHrefProperty, HTMLTargetProperty, 
-            HTMLSourceProperty, HTMLIdProperty, HTMLVideoButtonProperty, HTMLEmbedProperty, HTMLPropertiesData, BsTabProperty, BsTabJustifyProperty, BsAddTabProperty, HTMLMarginBorderPaddingProperty, BsAddAccordionProperty, BsBorderProperty, BsBorderColorProperty, BsBorderStyleProperty, BsBorderRadiusProperty, BsTextColorProperty, BsTextAlignmentProperty, BsTextSizeProperty, BsBtnBlockProperty, BsBtnOutlineProperty, BsBtnSizeProperty, BsTableActionProperty, BsTableBorderProperty, BsTableStripedProperty, BsTableCellActionProperty} from './HTMLProperties';
+            HTMLSourceProperty, HTMLIdProperty, HTMLVideoButtonProperty, HTMLEmbedProperty, HTMLPropertiesData, BsTabProperty, BsTabJustifyProperty, BsAddTabProperty, HTMLMarginBorderPaddingProperty, BsAddAccordionProperty, BsBorderProperty, BsBorderColorProperty, BsBorderStyleProperty, BsBorderRadiusProperty, BsTextColorProperty, BsTextAlignmentProperty, BsTextSizeProperty, BsBtnBlockProperty, BsBtnOutlineProperty, BsBtnSizeProperty, BsTableActionProperty, BsTableBorderProperty, BsTableStripedProperty, BsTableCellActionProperty, HTMLAltProperty} from './HTMLProperties';
  import {HTMLHeadingElement, HTMLParagraphElement, HTMLButtonElement, HTMLButtonCollapseElement, HTMLLinkElement, HTMLAudioElement, HTMLVideoElement, HTMLButtonVideoElement, HTMLEmbedElement,
             HTMLNavElement, HTMLNavItemElement, HTMLNavLinkElement,
             HTMLBodyElement, HTMLDivElement, HTMLSpanElement, HTMLSectionElement, HTMLGridElement, HTMLRowElement, HTMLColElement, HTMLUListElement, HTMLOListElement, HTMLLIElement,
@@ -149,6 +149,12 @@ export class HTMLElementData{
                 name: 'source', description: i18n.get_string('source'), 
                 children: [
                     new HTMLSourceProperty()
+                ]
+            },
+            {
+                name: 'alt', description: i18n.get_string('description'), 
+                children: [
+                    new HTMLAltProperty()
                 ]
             },
             {

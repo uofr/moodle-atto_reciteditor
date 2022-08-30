@@ -36,7 +36,6 @@ export class LayoutSpacing extends Component {
         super(props);
 
         this.onChange = this.onChange.bind(this);
-
     }
     
     render() {
@@ -48,13 +47,13 @@ export class LayoutSpacing extends Component {
                 {this.props.options.map((option, index) => {
                     let dataProvider = [];
 
-                    for(let i = 0; i < option.nbItems; i++){
-                        dataProvider.push({text: i, value: `${option.name}-${i}`});
+                    for(let i = 0; i < option.items.length; i++){
+                        dataProvider.push({text: i, value: option.items[i]});
                     }
 
-                    let oldValue = that.getValue(dataProvider);
+                    let oldValue = that.getValue(option.name);
                     let result = <ComboBox key={index} name={option.name} value={oldValue} size='sm' className={`item-${index+1}`} options={dataProvider} 
-                                        onChange={(event) => that.onChange(oldValue, event.target.value)}></ComboBox>;
+                                        onChange={(event) => that.onChange(oldValue, event.target.value, event.target.name)}></ComboBox>;
                     return result;
                 })}
             </div>
@@ -62,20 +61,18 @@ export class LayoutSpacing extends Component {
         return (main);
     }   
 
-    getValue(options){
-        for(let className of this.props.value){
-            for(let option of options){
-                if(option.value === className){
-                    return className;
-                }
+    getValue(name){
+        for(let val of this.props.value){
+            if(val.name == name){
+                return val.value
             }
         }
 
         return "";
     }
 
-    onChange(oldValue, newValue){
-        let result = {target:{name: this.props.name, value: {oldValue: oldValue, newValue: newValue}}}
+    onChange(oldValue, newValue, name){
+        let result = {target:{name: this.props.name, value: {oldValue: oldValue, newValue: newValue, name: name}}}
         this.props.onChange(result);
     }
 }
