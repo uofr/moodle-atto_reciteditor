@@ -329,6 +329,7 @@ export class BtnSetCssProp extends Component{
         icon: null,
         cssProp: "",
         defaultValue: "",
+        tagName: "",
         value: "",
         onClick: null,
         title: "",
@@ -363,11 +364,19 @@ export class BtnSetCssProp extends Component{
             return this.props.defaultValue; 
         }
 
-        let currentValue = sel.node.style[this.props.cssProp] || "";
+        if (this.props.tagName.length > 0){
+            let tag = sel.node.tagName;
+            if (this.props.tagName.toUpperCase() == tag){
+                return this.props.value;
+            }
 
-        currentValue = (currentValue.length === 0 ? this.props.defaultValue : currentValue);
+        }else{
+            let currentValue = sel.node.style[this.props.cssProp] || "";
 
-        return currentValue;
+            currentValue = (currentValue.length === 0 ? this.props.defaultValue : currentValue);
+
+            return currentValue;
+        }
     }
 
     getValue(){
@@ -387,18 +396,22 @@ export class BtnSetCssProp extends Component{
         
         let selection = sel.sel;
         if (selection.rangeCount) {
-          let text = selection.toString();
-          let range = selection.getRangeAt(0);
-          let parent = range.startContainer.parentNode;
-          
-          if (range.startOffset > 0 && !parent.style[prop]) {
-            let inner = document.createElement("span");
-            inner.style[prop] = this.getValue();
-            inner.innerHTML = text;
-            parent.innerHTML = parent.innerHTML.replace(text, inner.outerHTML);
-          } else if (parent.style && parent.style[prop]) {
-            parent.outerHTML = parent.innerHTML;
-          }
+            let text = selection.toString();
+            let range = selection.getRangeAt(0);
+            let parent = range.startContainer.parentNode;
+            
+            if (range.startOffset > 0 && !parent.style[prop]) {
+                let inner = document.createElement("span");
+                inner.style[prop] = this.getValue();
+                inner.innerHTML = text;
+                parent.innerHTML = parent.innerHTML.replace(text, inner.outerHTML);
+            }else if (this.props.tagName.length > 0 && this.props.tagName.toUpperCase() != parent.tagName) {
+                let inner = document.createElement(this.props.tagName);
+                inner.innerHTML = text;
+                parent.innerHTML = parent.innerHTML.replace(text, inner.outerHTML);
+            } else if ((parent.style && parent.style[prop]) || this.props.tagName.toUpperCase() == parent.tagName) {
+                parent.outerHTML = parent.innerHTML;
+            }
         }
         
         if(sel.refreshSelection){

@@ -386,6 +386,9 @@ export class DesignerState extends CanvasState{
         el.innerHTML = el.innerHTML.replace("&nbsp; ", "");//Revert old nbsp
         el.innerHTML = el.innerHTML.replace("&nbsp;", "");//Revert old nbsp
         el.innerHTML = el.innerHTML.replace(regex, "$1&nbsp;$2");
+        if (el.firstElementChild){
+            this.onReplaceNonBreakingSpace(el.firstElementChild);//Element has a child i.e a span so we want to replace spaces in span as well
+        }
         this.onAfterChange();
     }
     
