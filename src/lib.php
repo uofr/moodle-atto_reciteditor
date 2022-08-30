@@ -228,6 +228,7 @@ function atto_reciteditor_strings_for_js() {
                                             'yes',
                                             'striped',
                                             'sourcecodedesigner',
+                                            'nonbreakingspace'
                                         ),
                                     'atto_reciteditor');
 }

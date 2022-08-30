@@ -48,7 +48,8 @@ export class HTMLElementData{
                 name: 'icon', description: i18n.get_string('icon'), 
                 children: [
                     new BsIconProperty(),
-                    new BsIconSizeProperty()
+                    new BsIconSizeProperty(),
+                    new BsTextColorProperty
                 ]
             },            
             {
