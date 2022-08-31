@@ -25,7 +25,7 @@ import React, { Component } from 'react';
 import { Nav, Navbar, Button, ButtonToolbar, ButtonGroup } from 'react-bootstrap';
 import {faMobileAlt, faTabletAlt, faTh, faLaptop, faDesktop, faFileWord, faEye, faCode, faSave, faRedo, faUndo, faColumns, faCloud, faPuzzlePiece,  faFileCode, faSitemap, faObjectGroup, faCubes} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {TreeView, CanvasElement, ComponentProperties, VisualComponentList, Assets, Templates, HistoryManager, Utils, i18n, DesignerState, PreviewState, SourceCodeDesignerState, SourceCodeState, JsNx} from '../RecitEditor';
+import {TreeView, CanvasElement, ComponentProperties, VisualComponentList, Assets, Templates, HistoryManager, Utils, i18n, DesignerState, PreviewState, SourceCodeDesignerState, SourceCodeState, JsNx, Storage} from '../RecitEditor';
 import html2canvas from 'html2canvas';
 
 export class LayoutBuilder extends Component
@@ -58,7 +58,12 @@ export class LayoutBuilder extends Component
         this.onNavbarSelect = this.onNavbarSelect.bind(this);
         this.onSaveAndClose = this.onSaveAndClose.bind(this);
 
-        this.state = { device: (window.screen.width <= LayoutBuilder.properties.maxScreenWidth ? 'lg' : 'xl'), view: 'designer'}; 
+        let device = Storage.get('lastDevice');
+        if (!device){
+            device = (window.screen.width <= LayoutBuilder.properties.maxScreenWidth ? 'lg' : 'xl');
+        }
+
+        this.state = { device: device, view: 'designer'}; 
 
         this.mainViewRef = React.createRef();
         this.historyManager = new HistoryManager(); 
@@ -129,6 +134,7 @@ export class LayoutBuilder extends Component
         }
         else{
             this.setState({device: eventKey});
+            Storage.set('lastDevice', eventKey);
         }
     }
 
@@ -284,9 +290,11 @@ class MainView extends Component{
                             <LeftPanelButton checked={this.state.panels.components === 1} value='components,1' onClick={this.onPanelChange} title={i18n.get_string('templates')} glyph={faCloud} />
                             <LeftPanelButton checked={this.state.panels.components === 2} value='components,2' onClick={this.onPanelChange} title={i18n.get_string('layouts')} glyph={faObjectGroup} />
                             <LeftPanelButton checked={this.state.panels.components === 3} value='components,3' onClick={this.onPanelChange} title={i18n.get_string('components')} glyph={faPuzzlePiece} />
+                            <div style={{margin: '4px 0', height: '1px', backgroundColor: '#fff'}}></div>
                             <LeftPanelButton checked={this.state.panels.properties === 3} value='properties,3' onClick={this.onPanelChange} title={i18n.get_string('basic')} glyph={faCubes} />
                             <LeftPanelButton checked={this.state.panels.properties === 1} value='properties,1' onClick={this.onPanelChange} title={i18n.get_string('bootstrap')} svg={Assets.faBootstrap} />
                             <LeftPanelButton checked={this.state.panels.properties === 2} value='properties,2' onClick={this.onPanelChange} title={i18n.get_string('htmlproprieties')} svg={Assets.faHtml} />
+                            <div style={{margin: '4px 0', height: '1px', backgroundColor: '#fff'}}></div>
                             <LeftPanelButton checked={this.state.panels.treeView === 1} value='treeView,1' onClick={this.onPanelChange} title={i18n.get_string('tree')} glyph={faSitemap} />
                         </ButtonGroup>
                     </ButtonToolbar>
@@ -298,7 +306,7 @@ class MainView extends Component{
                             {this.state.panels.properties === 1 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bs'/>}
                             {this.state.panels.properties === 2 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='html'/>}
                             {this.state.panels.properties === 3 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bm'/>}
-                            {this.state.panels.treeView === 1 &&  <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} 
+                            {this.state.panels.treeView === 1 && <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} 
                                                                     view={this.props.view} onDeleteElement={this.onDeleteElement} onMoveNodeUp={this.onMoveNodeUp} onMoveNodeDown={this.onMoveNodeDown} />}
                         </div>
                     }

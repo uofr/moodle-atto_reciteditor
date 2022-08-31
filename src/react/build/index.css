@@ -514,6 +514,10 @@ html body {
   background-color: transparent;
   /* Code Mirror */
 }
+html body #root .layout-builder .svgicon svg {
+  filter: invert(1);
+  height: 30px;
+}
 html body #root .layout-builder .navbar .navbar-nav .nav-link.active {
   color: #28a745;
 }
@@ -547,6 +551,11 @@ html body #root .layout-builder .main .left-area .panel-list .panel {
   height: 100%;
   overflow-y: auto;
   padding-right: 1rem;
+}
+html body #root .layout-builder .main .left-area .panel-list > div {
+  padding: 5px;
+  border: #d7d7d7 solid 1px;
+  border-radius: 5px;
 }
 html body #root .layout-builder .main .left-area .component-list .template {
   margin: 13px;

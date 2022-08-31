@@ -51,6 +51,7 @@ function atto_reciteditor_strings_for_js() {
                                           'texttoshow',
                                           'openinnewwindow',
                                           'description',
+                                          'name',
                                           'recitthemeonly',
                                           'selecticon',
                                           'deleteformat',

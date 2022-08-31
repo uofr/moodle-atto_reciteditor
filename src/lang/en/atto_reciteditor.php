@@ -40,6 +40,7 @@ $string['padding'] = 'Padding';
 $string['min'] = 'Min';
 $string['value'] = 'Value';
 $string['max'] = 'Max';
+$string['name'] = 'Name';
 $string['column'] = 'Column';
 $string['line'] = 'Line';
 $string['recitthemeonly'] = 'Available in RÉCIT theme only';

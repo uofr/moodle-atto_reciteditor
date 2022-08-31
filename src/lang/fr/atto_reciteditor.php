@@ -41,6 +41,7 @@ $string['value'] = 'Valeur';
 $string['max'] = 'Max';
 $string['column'] = 'Colonne';
 $string['description'] = 'Description';
+$string['name'] = 'Name';
 $string['line'] = 'Ligne';
 $string['returntohtmleditor'] = 'Retourner à l`éditeur HTML'; 
 $string['recitthemeonly'] = 'Disponible seulement sur le thème RÉCIT';

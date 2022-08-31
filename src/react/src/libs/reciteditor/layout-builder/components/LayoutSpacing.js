@@ -47,6 +47,8 @@ export class LayoutSpacing extends Component {
                 {this.props.options.map((option, index) => {
                     let dataProvider = [];
 
+                    if (!option.items) return null;
+
                     for(let i = 0; i < option.items.length; i++){
                         dataProvider.push({text: i, value: option.items[i]});
                     }

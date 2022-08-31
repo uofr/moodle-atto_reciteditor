@@ -652,12 +652,13 @@ export class BsMarginProperty extends HTMLProperty{
     constructor(){
         super('margin',  i18n.get_string('margin'));
 
+        let items = [0, 1, 2, 3, 4, 5]
         this.options = [
-            {name: "mt", nbItems: 6}, 
-            {name: "mr", nbItems: 6}, 
-            {name: "mb", nbItems: 6}, 
-            {name: "ml", nbItems: 6}, 
-            {name: "m", nbItems: 6}
+            {name: "mt", items: items}, 
+            {name: "mr", items: items}, 
+            {name: "mb", items: items}, 
+            {name: "ml", items: items}, 
+            {name: "m", items: items}
         ];
 
         this.input = new LayoutSpacing(this.options, this.onChange.bind(this));
@@ -670,7 +671,7 @@ export class BsMarginProperty extends HTMLProperty{
             for(let item of data.input.options){
                 let className = `${item.name}-${i}`;
                 if(el.classList.contains(className)){
-                    result.push(className);
+                    result.push({name: item.name, value: i});
                 }
             }
         }
@@ -679,12 +680,11 @@ export class BsMarginProperty extends HTMLProperty{
 
     onChange(el, value, data){                       
         if(value.oldValue.length > 0){
-            el.classList.remove(value.oldValue);
+            el.classList.remove(value.name + '-' + value.oldValue);
         }
-        
        
         if(value.newValue.length > 0){
-            el.classList.add(value.newValue);
+            el.classList.add(value.name + '-' + value.newValue);
         }
     }
 }

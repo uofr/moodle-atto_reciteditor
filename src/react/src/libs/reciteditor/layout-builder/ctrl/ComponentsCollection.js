@@ -23,9 +23,9 @@
 
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button, Modal  } from 'react-bootstrap';
-import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCloud, faTimes, faCloudDownloadAlt, faCog} from '@fortawesome/free-solid-svg-icons';
+import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCubes, faCloud, faTimes, faCloudDownloadAlt, faCog, faPuzzlePiece, faObjectGroup} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  IconSelector, ColorSelector, Templates, i18n } from '../../RecitEditor';
+import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, Assets, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  IconSelector, ColorSelector, Templates, i18n } from '../../RecitEditor';
 import { HTMLElementData } from './HTMLElementData';
 
 export class ComponentProperties extends Component{
@@ -37,16 +37,16 @@ export class ComponentProperties extends Component{
     };
 
     render(){
-        let title = "";
+        let title = <></>;
 
         if(this.props.tab === "bs"){
-            title = i18n.get_string('bootstrap');
+            title = <><i className='svgicon'>{Assets.faBootstrap}</i> {i18n.get_string('bootstrap')}</>;
         }
         else if(this.props.tab === "html"){
-            title = i18n.get_string('htmlproprieties');
+            title = <><i className='svgicon'>{Assets.faHtml}</i> {i18n.get_string('htmlproprieties')}</>;
         }
         else if(this.props.tab === "bm"){
-            title = i18n.get_string('basic');
+            title = <><FontAwesomeIcon icon={faCubes}/> {i18n.get_string('basic')}</>;
         }
 
         let header = <div><h5>{title}</h5><hr/></div>;
@@ -288,7 +288,7 @@ export class VisualComponentList extends Component{
                
                 {this.props.tab === "comp" &&
                     <div className='panel'>
-                        <h5>{i18n.get_string('components')}</h5>
+                        <h5><FontAwesomeIcon icon={faPuzzlePiece}/> {i18n.get_string('components')}</h5>
                         <hr/>
                         {HTMLElementData.elementListSortByName()}
                         <TokenList dataProvider={HTMLElementData.elementList} onDragEnd={this.props.onDragEnd}/>
@@ -298,7 +298,7 @@ export class VisualComponentList extends Component{
 
                 {this.props.tab === "lay" && 
                     <div className='panel'>
-                        <h5>{i18n.get_string('layouts')}</h5>
+                        <h5><FontAwesomeIcon icon={faObjectGroup}/> {i18n.get_string('layouts')}</h5>
                         <hr/>
                         <TemplateList dataProvider={Templates.componentList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} type='c' />
                     </div>
@@ -306,7 +306,7 @@ export class VisualComponentList extends Component{
 
                 {this.props.tab === "tpl" &&
                     <div className='panel'>
-                        <h5>{i18n.get_string('templates')}</h5>
+                        <h5><FontAwesomeIcon icon={faCloud}/> {i18n.get_string('templates')}</h5>
                         <hr/>
                         <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} onSaveTemplate={this.props.onSaveTemplate} type='l'/>
                     </div>

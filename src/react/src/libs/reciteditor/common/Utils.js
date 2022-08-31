@@ -215,6 +215,18 @@ export class JsNx{
     }
 }
 
+export class Storage {
+    static KEY_PREFIX = "reciteditor.";
+
+    static get(key){
+        return localStorage.getItem(Storage.KEY_PREFIX + key);
+    }
+
+    static set(key, value){
+        return localStorage.setItem(Storage.KEY_PREFIX + key, value);
+    }
+}
+
 export class Utils{
     static version = 1.0;
 
