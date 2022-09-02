@@ -276,6 +276,7 @@ export class DesignerState extends CanvasState{
         //body.appendChild(doc.firstChild);        
 
         body.onkeyup = this.mainView.onKey;
+        body.ondrag = this.mainView.onDragStart;
     }
 
     render(show, selectedElement, width){
@@ -298,6 +299,11 @@ export class DesignerState extends CanvasState{
 
         if((result.el !== null) && (result.el.tagName.toLowerCase() === 'body')){ 
             result.el = null;
+        }
+
+
+        if((result.el !== null) && (result.el.tagName.toLowerCase() === 'strong' || result.el.tagName.toLowerCase() === 'em')){ //If we click on bold or italic, select the parent
+            result.el = result.el.parentElement;
         }
 
         // if the selected element receives another click then it deselects it

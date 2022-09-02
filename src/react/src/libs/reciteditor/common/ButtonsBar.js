@@ -400,13 +400,13 @@ export class BtnSetCssProp extends Component{
             let range = selection.getRangeAt(0);
             let parent = range.startContainer.parentNode;
             
-            if (range.startOffset > 0 && !parent.style[prop]) {
-                let inner = document.createElement("span");
-                inner.style[prop] = this.getValue();
+            if (this.props.tagName.length > 0 && this.props.tagName.toUpperCase() != parent.tagName) {
+                let inner = document.createElement(this.props.tagName);
                 inner.innerHTML = text;
                 parent.innerHTML = parent.innerHTML.replace(text, inner.outerHTML);
-            }else if (this.props.tagName.length > 0 && this.props.tagName.toUpperCase() != parent.tagName) {
-                let inner = document.createElement(this.props.tagName);
+            }else if (range.startOffset > 0 && !parent.style[prop]) {
+                let inner = document.createElement("span");
+                inner.style[prop] = this.getValue();
                 inner.innerHTML = text;
                 parent.innerHTML = parent.innerHTML.replace(text, inner.outerHTML);
             } else if ((parent.style && parent.style[prop]) || this.props.tagName.toUpperCase() == parent.tagName) {

@@ -86,7 +86,7 @@ export class CanvasElement{
         return new CanvasElement(el, onSelectElement, onDropElement, onEditNodeText);
     }
 
-    onClickHandler(event){        
+    onClickHandler(event){
         event.preventDefault(); // Cancel the default action (in case of href)
         event.stopPropagation();
         this.state.clickCounter++;
@@ -113,7 +113,9 @@ export class CanvasElement{
     }
 
     onDblClick(){
-        this.onEditNodeText(this.dom);
+        if(!this.dom.hasAttribute("contenteditable")){
+            this.onEditNodeText(this.dom);
+        }
     }
 
     onDrop(event){
