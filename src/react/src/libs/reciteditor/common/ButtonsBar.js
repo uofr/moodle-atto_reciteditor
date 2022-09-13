@@ -27,7 +27,7 @@ import {faFont, faCode, faFileCode, faBold, faItalic, faAlignLeft, faAlignRight,
         faOutdent, faIndent, faUnderline, faStrikethrough, faListUl, faListOl, faRemoveFormat, faLink, faUnlink, faUndo, faRedo,
         faFillDrip, faHighlighter, faCamera, faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {ScreenCapture, UtilsHTML, ImageSrc, i18n} from '../RecitEditor';
+import {ScreenCapture, UtilsHTML,Utils, ImageSrc, i18n} from '../RecitEditor';
 
 export class ButtonsBar extends Component{
     static defaultProps = {
@@ -399,16 +399,17 @@ export class BtnSetCssProp extends Component{
             let text = selection.toString();
             let range = selection.getRangeAt(0);
             let parent = range.startContainer.parentNode;
+            let offset = Utils.getCaretCharacterOffsetWithin(parent);
             
             if (this.props.tagName.length > 0 && this.props.tagName.toUpperCase() != parent.tagName) {
                 let inner = document.createElement(this.props.tagName);
                 inner.innerHTML = text;
-                parent.innerHTML = parent.innerHTML.replace(text, inner.outerHTML);
+                parent.innerHTML = Utils.replaceAt(parent.innerHTML, text, inner.outerHTML, offset);
             }else if (range.startOffset > 0 && !parent.style[prop]) {
                 let inner = document.createElement("span");
                 inner.style[prop] = this.getValue();
                 inner.innerHTML = text;
-                parent.innerHTML = parent.innerHTML.replace(text, inner.outerHTML);
+                parent.innerHTML = Utils.replaceAt(parent.innerHTML, text, inner.outerHTML, offset);
             } else if ((parent.style && parent.style[prop]) || this.props.tagName.toUpperCase() == parent.tagName) {
                 parent.outerHTML = parent.innerHTML;
             }
