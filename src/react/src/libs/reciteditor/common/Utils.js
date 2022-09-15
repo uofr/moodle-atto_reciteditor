@@ -254,8 +254,10 @@ export class Utils{
     }    
 
     static replaceAt(s, subString, replacement, index) {
-        let p = s.substr(index-1).replace(subString, replacement);
-        return s.substr(0, index-1) + p;
+        let offset = index - subString.length;
+        let p = s.substr(index-offset).replace(subString, replacement);
+
+        return s.substr(0, index-offset) + p;
     }
 
     static getCaretCharacterOffsetWithin(element) {
