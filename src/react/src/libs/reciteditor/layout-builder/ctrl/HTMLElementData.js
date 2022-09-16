@@ -24,14 +24,14 @@
  import { i18n } from '../../RecitEditor';
  import {BsBackgroundProperty, BsBackgroundImageProperty, BsShadowProperty, BsIconProperty, BsIconSizeProperty, BsMarginProperty, BsPaddingProperty, HTMLClassProperty,
             HTMLWidthProperty, HTMLHeightProperty, HTMLFontSizeProperty, HTMLFontFamilyProperty, HTMLColorProperty, HTMLBackgroundProperty, HTMLHrefProperty, HTMLTargetProperty, 
-            HTMLSourceProperty, HTMLIdProperty, HTMLVideoButtonProperty, HTMLEmbedProperty, HTMLPropertiesData, BsTabProperty, BsTabJustifyProperty, BsAddTabProperty, HTMLMarginBorderPaddingProperty, BsAddAccordionProperty, BsBorderProperty, BsBorderColorProperty, BsBorderStyleProperty, BsBorderRadiusProperty, BsTextColorProperty, BsTextAlignmentProperty, BsTextSizeProperty, BsBtnBlockProperty, BsBtnOutlineProperty, BsBtnSizeProperty, BsTableActionProperty, BsTableBorderProperty, BsTableStripedProperty, BsTableCellActionProperty, HTMLAltProperty} from './HTMLProperties';
+            HTMLSourceProperty, HTMLIdProperty, HTMLVideoButtonProperty, HTMLEmbedProperty, HTMLPropertiesData, BsTabProperty, BsTabJustifyProperty, BsAddTabProperty, HTMLMarginBorderPaddingProperty, BsAddAccordionProperty, BsBorderProperty, BsBorderColorProperty, BsBorderStyleProperty, BsBorderRadiusProperty, BsTextColorProperty, BsTextAlignmentProperty, BsTextSizeProperty, BsBtnBlockProperty, BsBtnOutlineProperty, BsBtnSizeProperty, BsTableActionProperty, BsTableBorderProperty, BsTableStripedProperty, BsTableCellActionProperty, HTMLAltProperty, HTMLOuterHTMLProperty} from './HTMLProperties';
  import {HTMLHeadingElement, HTMLParagraphElement, HTMLButtonElement, HTMLButtonCollapseElement, HTMLLinkElement, HTMLAudioElement, HTMLVideoElement, HTMLButtonVideoElement, HTMLEmbedElement,
             HTMLNavElement, HTMLNavItemElement, HTMLNavLinkElement,
             HTMLBodyElement, HTMLDivElement, HTMLSpanElement, HTMLSectionElement, HTMLGridElement, HTMLRowElement, HTMLColElement, HTMLUListElement, HTMLOListElement, HTMLLIElement,
             HTMLAlertElement, HTMLCardElement, HTMLCardBodyElement, HTMLCardHeaderElement, HTMLCardFooterElement,
             HTMLMediaBSElement, HTMLMediaBSBodyElement, HTMLHRElement, HTMLCarouselElement, HTMLCarouselNavElement, HTMLAccordionElement, HTMLTabElement, HTMLAccordionNavElement, HTMLFlipCardElement,
             HTMLFlipCardFrontElement, HTMLFlipCardBackElement, HTMLTabPaneElement, HTMLTabContentElement, HTMLTableElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement, HTMLTableRowElement,
-            HTMLImageElement, HTMLImageWithCaptionElement, HTMLClickableImageElement, HTMLIconElement} from './HTMLElements';
+            HTMLImageElement, HTMLImageWithCaptionElement, HTMLClickableImageElement, HTMLIconElement, HTMLIframeElement} from './HTMLElements';
 
 export class HTMLElementData{
     static propertyList = {
@@ -152,6 +152,12 @@ export class HTMLElementData{
                 ]
             },
             {
+                name: 'outerhtml', description: i18n.get_string('source'), 
+                children: [
+                    new HTMLOuterHTMLProperty()
+                ]
+            },
+            {
                 name: 'alt', description: i18n.get_string('description'), 
                 children: [
                     new HTMLAltProperty()
@@ -207,6 +213,7 @@ export class HTMLElementData{
                 new HTMLLinkElement(),
                 new HTMLAudioElement(),
                 new HTMLVideoElement(i18n.get_string('video'), null, 'bootstrap'),
+                new HTMLIframeElement(),
                 new HTMLButtonVideoElement(),
                 new HTMLEmbedElement(),
                 new HTMLNavElement(),

@@ -120,6 +120,7 @@ $string['btnoutline'] = 'Button outline';
 $string['audio'] = 'Audio';
 $string['video'] = 'Video';
 $string['embed'] = 'Embed';
+$string['iframe'] = 'iFrame';
 $string['grid'] = 'Grid';
 $string['row'] = 'Row';
 $string['column'] = 'Column';

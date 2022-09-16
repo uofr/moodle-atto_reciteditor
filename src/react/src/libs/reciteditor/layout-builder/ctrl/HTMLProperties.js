@@ -337,8 +337,29 @@ export class HTMLAltProperty extends HTMLProperty{
     }
 
     onChange(el, value, data){
-        console.log(value)
         el.setAttribute("alt",  value);
+    }
+}
+
+export class HTMLOuterHTMLProperty extends HTMLProperty{
+    constructor(){
+        super('outerhtml', i18n.get_string('sourcecode'));
+        this.input = new TextArea(this.onChange.bind(this));
+    }
+
+    getValue(el, data){
+        return el.outerHTML;
+    }
+
+    onChange(el, value, data){
+        let el2 = document.createElement('div');
+        el2.innerHTML = value;
+        if (el2.children[0] && el2.children[0].tagName == 'IFRAME'){
+            for (let attr of el2.children[0].getAttributeNames()){
+                el.setAttribute(attr, el2.children[0].getAttribute(attr))
+            }
+        }
+        el2.remove()
     }
 }
 

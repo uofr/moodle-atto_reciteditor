@@ -38,6 +38,7 @@ $string['border'] = 'Bordure';
 $string['padding'] = 'Padding';
 $string['min'] = 'Min';
 $string['value'] = 'Valeur';
+$string['iframe'] = 'iFrame';
 $string['max'] = 'Max';
 $string['column'] = 'Colonne';
 $string['description'] = 'Description';

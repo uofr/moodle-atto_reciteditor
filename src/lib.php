@@ -126,6 +126,7 @@ function atto_reciteditor_strings_for_js() {
                                           'sourcecode',
                                           'proprieties',
                                           'tree',
+                                          'iframe',
                                           'insidebegining',
                                           'insideend',
                                           'inside',

@@ -276,6 +276,24 @@
      }
  }
  
+ export class HTMLIframeElement extends HTMLElement{
+     constructor(){
+         super(i18n.get_string('iframe'), 'iframe', 'native', {all: ['outerhtml','marginborderpadding', 'layout'], min: ['outerhtml']});
+         this.visible = false;
+     }
+ 
+     create(){ 
+         let el = document.createElement('iframe');
+         return el;
+     }
+ 
+     equal(el){
+         if(el === null){ return false; }
+ 
+         return (el.tagName == 'IFRAME');
+     }
+ }
+ 
  export class HTMLSpanElement extends HTMLElement{
      constructor(){
          super("Span", "span", 'native', HTMLPropertiesData.propsAssignmentFacade.containers);
