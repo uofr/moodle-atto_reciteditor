@@ -211,5 +211,6 @@ $string['id'] = 'ID';
 $string['striped'] = 'Striped';
 $string['sourcecodedesigner'] = 'Source code | designer';
 $string['nonbreakingspace'] = 'Non breaking space';
-
+$string['horizontalbar'] = 'Horizontal bar';
+$string['navigation'] = 'Navigation';
 ?>

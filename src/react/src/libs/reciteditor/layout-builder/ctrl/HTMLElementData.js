@@ -31,7 +31,7 @@
             HTMLAlertElement, HTMLCardElement, HTMLCardBodyElement, HTMLCardHeaderElement, HTMLCardFooterElement,
             HTMLMediaBSElement, HTMLMediaBSBodyElement, HTMLHRElement, HTMLCarouselElement, HTMLCarouselNavElement, HTMLAccordionElement, HTMLTabElement, HTMLAccordionNavElement, HTMLFlipCardElement,
             HTMLFlipCardFrontElement, HTMLFlipCardBackElement, HTMLTabPaneElement, HTMLTabContentElement, HTMLTableElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement, HTMLTableRowElement,
-            HTMLImageElement, HTMLImageWithCaptionElement, HTMLClickableImageElement, HTMLIconElement, HTMLIframeElement} from './HTMLElements';
+            HTMLImageElement, HTMLImageWithCaptionElement, HTMLClickableImageElement, HTMLIconElement, HTMLIframeElement, HTMLHorizontalBarElement} from './HTMLElements';
 
 export class HTMLElementData{
     static propertyList = {
@@ -203,26 +203,66 @@ export class HTMLElementData{
                 new HTMLHeadingElement("H5", 'h5'),
                 new HTMLHeadingElement("H6", 'h6'),
                 new HTMLParagraphElement(),
+                new HTMLUListElement(),
+                new HTMLOListElement(),
+                new HTMLLIElement(),
             ]
         },
         {
-            name: i18n.get_string('control'), 
+            name: i18n.get_string('media'), 
             children: [
-                new HTMLButtonElement(i18n.get_string('button'), 'button', 'bootstrap', HTMLPropertiesData.propsAssignmentFacade.buttons),
-              //  new HTMLButtonCollapseElement(),
-                new HTMLLinkElement(),
-                new HTMLAudioElement(),
+                new HTMLImageElement(),
+                new HTMLImageWithCaptionElement(),
+                new HTMLClickableImageElement(),
                 new HTMLVideoElement(i18n.get_string('video'), null, 'bootstrap'),
                 new HTMLIframeElement(),
                 new HTMLButtonVideoElement(),
-                new HTMLEmbedElement(),
+                new HTMLIconElement(),
+                new HTMLAudioElement(),
+                new HTMLEmbedElement()
+            ]
+        },
+        {
+            name: i18n.get_string('navigation'), 
+            children: [
+                new HTMLButtonElement(i18n.get_string('button'), 'a', 'bootstrap', HTMLPropertiesData.propsAssignmentFacade.buttons),
+                new HTMLButtonVideoElement(),
+                new HTMLLinkElement(),
                 new HTMLNavElement(),
                 new HTMLNavItemElement(),
                 new HTMLNavLinkElement()
             ]
         },
         {
-            name: i18n.get_string('container'), 
+            name: i18n.get_string('nativecomponents'), 
+            children: [
+                new HTMLAccordionElement(),
+                new HTMLAccordionNavElement(),
+                new HTMLCarouselElement(),
+                new HTMLCarouselNavElement(),
+                new HTMLFlipCardElement(),
+                new HTMLFlipCardFrontElement(),
+                new HTMLFlipCardBackElement(),
+                new HTMLTabElement(),
+                new HTMLTabPaneElement(),
+                new HTMLTabContentElement(),
+                new HTMLTableElement(),
+                new HTMLTableDataCellElement(),
+                new HTMLTableHeaderCellElement(),
+                new HTMLTableRowElement(),
+                new HTMLAlertElement(),
+                new HTMLCardElement(),
+                new HTMLCardBodyElement(),
+                new HTMLCardHeaderElement(),
+                new HTMLCardFooterElement(),
+                new HTMLMediaBSElement(),
+                new HTMLMediaBSBodyElement(),
+                new HTMLHRElement(),
+                new HTMLHorizontalBarElement()
+            ]
+        },
+        {
+            name: i18n.get_string('grid'), 
             children: [
                 new HTMLBodyElement(),
                 new HTMLDivElement(),
@@ -231,45 +271,6 @@ export class HTMLElementData{
                 new HTMLGridElement(),
                 new HTMLRowElement(),
                 new HTMLColElement(),
-                new HTMLUListElement(),
-                new HTMLOListElement(),
-                new HTMLLIElement(),
-                new HTMLAlertElement(),
-                new HTMLCardElement(),
-                new HTMLCardBodyElement(),
-                new HTMLCardHeaderElement(),
-                new HTMLCardFooterElement(),
-                new HTMLMediaBSElement(),
-                new HTMLMediaBSBodyElement(),
-                new HTMLHRElement()
-            ]
-        },
-        {
-            name: i18n.get_string('nativecomponents'), 
-            children: [
-                new HTMLCarouselElement(),
-                new HTMLCarouselNavElement(),
-                new HTMLAccordionElement(),
-                new HTMLTabElement(),
-                new HTMLAccordionNavElement(),
-                new HTMLFlipCardElement(),
-                new HTMLFlipCardFrontElement(),
-                new HTMLFlipCardBackElement(),
-                new HTMLTabPaneElement(),
-                new HTMLTabContentElement(),
-                new HTMLTableElement(),
-                new HTMLTableDataCellElement(),
-                new HTMLTableHeaderCellElement(),
-                new HTMLTableRowElement(),
-            ]
-        },
-        {
-            name: i18n.get_string('image'), 
-            children: [
-                new HTMLImageElement(),
-                new HTMLImageWithCaptionElement(),
-                new HTMLClickableImageElement(),
-                new HTMLIconElement()
             ]
         },
     ];

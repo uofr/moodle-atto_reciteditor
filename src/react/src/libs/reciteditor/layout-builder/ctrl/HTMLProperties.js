@@ -1540,7 +1540,7 @@ export class HTMLPropertiesData{
         },
         buttons: {
             min: ['bs-button'], 
-            all: ['bs-general', 'bs-button', 'bs-spacing', 'bs-border', 'font', 'layout', 'htmlattributes']
+            all: ['bs-general', 'bs-button', 'bs-spacing', 'bs-border', 'font', 'layout', 'link', 'htmlattributes']
         },
         containers: {
             min: ['bs-background', 'bs-border'],

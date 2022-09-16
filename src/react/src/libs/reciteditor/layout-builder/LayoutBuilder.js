@@ -58,10 +58,7 @@ export class LayoutBuilder extends Component
         this.onNavbarSelect = this.onNavbarSelect.bind(this);
         this.onSaveAndClose = this.onSaveAndClose.bind(this);
 
-        let device = Storage.get('lastDevice');
-        if (!device){
-            device = (window.screen.width <= LayoutBuilder.properties.maxScreenWidth ? 'lg' : 'xl');
-        }
+        let device = (window.screen.width <= LayoutBuilder.properties.maxScreenWidth ? 'lg' : 'xl');
 
         this.state = { device: device, view: 'designer'}; 
 
@@ -134,7 +131,6 @@ export class LayoutBuilder extends Component
         }
         else{
             this.setState({device: eventKey});
-            Storage.set('lastDevice', eventKey);
         }
     }
 
@@ -169,6 +165,8 @@ export class LayoutBuilder extends Component
             default: device = {width: 1500, height: 1050, scale: 1}; 
         }
 
+        let width = device.width + LayoutBuilder.properties.leftPanel.width + 15 + (this.state.view === 'sourceCodeDesigner' ? 780 : 0);
+        window.resizeTo(width, screen.availHeight);
         device.scale = getScale(device);
 
         return device;

@@ -231,7 +231,9 @@ function atto_reciteditor_strings_for_js() {
                                             'yes',
                                             'striped',
                                             'sourcecodedesigner',
-                                            'nonbreakingspace'
+                                            'nonbreakingspace',
+                                            'horizontalbar',
+                                            'navigation'
                                         ),
                                     'atto_reciteditor');
 }

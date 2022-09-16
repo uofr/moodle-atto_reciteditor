@@ -68,22 +68,10 @@ Y.namespace('M.atto_reciteditor').Button = Y.Base.create('button', Y.M.editor_at
         
         this.globalVars.popup = window.open(url,'HTML Bootstrap Editor','scrollbars=1');
 
-        if (this.globalVars.popup.outerWidth < screen.availWidth || this.globalVars.popup.outerHeight < screen.availHeight){
+        /*if (this.globalVars.popup.outerWidth < screen.availWidth || this.globalVars.popup.outerHeight < screen.availHeight){
             this.globalVars.popup.moveTo(0,0);
             this.globalVars.popup.resizeTo(screen.availWidth, screen.availHeight);
-        }
-
-        var oldPos = localStorage.getItem('reciteditor.pos');
-        if (oldPos){
-            oldPos = JSON.parse(oldPos);
-            this.globalVars.popup.moveTo(oldPos.x, oldPos.y);
-            this.globalVars.popup.resizeTo(oldPos.width, oldPos.height);
-        }
-
-        var saveCb = () => {//Save window dimensions & pos
-            localStorage.setItem('reciteditor.pos', JSON.stringify({x: this.globalVars.popup.screenX, y: this.globalVars.popup.screenY, width: this.globalVars.popup.outerWidth, height: this.globalVars.popup.outerHeight}))
-        }
-        this.globalVars.popup.addEventListener('resize', saveCb);
+        }*/
 
         this.globalVars.popup.attoInterface = {};
 

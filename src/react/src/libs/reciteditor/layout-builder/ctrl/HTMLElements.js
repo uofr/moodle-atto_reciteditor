@@ -154,7 +154,8 @@
      }
  
      create(){ 
-         let el = document.createElement("button");
+         let el = document.createElement("a");
+         el.setAttribute("href", "#");
          el.classList.add('btn');
          el.classList.add('btn-primary');
          el.innerHTML = i18n.get_string('button');
@@ -1105,6 +1106,19 @@
          super(i18n.get_string('split'), "hr", 'native', HTMLPropertiesData.propsAssignmentFacade.containers);
      }
  }
+
+ export class HTMLHorizontalBarElement extends HTMLElement{
+    constructor(){
+        super(i18n.get_string('horizontalbar'), "hr", 'native', HTMLPropertiesData.propsAssignmentFacade.containers);
+    }
+
+    create(){
+        let el = document.createElement("hr");
+        el.classList.add("bg-primary");
+        el.classList.add("p-2");
+        return el;
+    }
+}
  
  export class HTMLImageElement extends HTMLElement{
      constructor(){

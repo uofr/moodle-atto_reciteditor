@@ -49,7 +49,7 @@ export class ComponentProperties extends Component{
             title = <><FontAwesomeIcon icon={faCubes}/> {i18n.get_string('basic')}</>;
         }
 
-        let header = <div><h5>{title}</h5><hr/></div>;
+        let header = <div><h5 className="m-0 p-2">{title}</h5><hr className='mt-0'/></div>;
         
         if(this.props.element === null){ 
             return header; 
@@ -283,14 +283,15 @@ export class VisualComponentList extends Component{
     }
 
     render(){       
+//{HTMLElementData.elementListSortByName()}
         let main =
             <div className='component-list'>
                
                 {this.props.tab === "comp" &&
                     <div className='panel'>
-                        <h5><FontAwesomeIcon icon={faPuzzlePiece}/> {i18n.get_string('components')}</h5>
-                        <hr/>
-                        {HTMLElementData.elementListSortByName()}
+                        <h5 className="m-0 p-2"><FontAwesomeIcon icon={faPuzzlePiece}/> {i18n.get_string('components')}</h5>
+                        <hr className='mt-0'/>
+                        
                         <TokenList dataProvider={HTMLElementData.elementList} onDragEnd={this.props.onDragEnd}/>
                     </div>
 
@@ -298,16 +299,16 @@ export class VisualComponentList extends Component{
 
                 {this.props.tab === "lay" && 
                     <div className='panel'>
-                        <h5><FontAwesomeIcon icon={faObjectGroup}/> {i18n.get_string('layouts')}</h5>
-                        <hr/>
+                        <h5 className="m-0 p-2"><FontAwesomeIcon icon={faObjectGroup}/> {i18n.get_string('layouts')}</h5>
+                        <hr className='mt-0'/>
                         <TemplateList dataProvider={Templates.componentList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} type='c' />
                     </div>
                 }
 
                 {this.props.tab === "tpl" &&
                     <div className='panel'>
-                        <h5><FontAwesomeIcon icon={faCloud}/> {i18n.get_string('templates')}</h5>
-                        <hr/>
+                        <h5 className="m-0 p-2"><FontAwesomeIcon icon={faCloud}/> {i18n.get_string('templates')}</h5>
+                        <hr className='mt-0'/>
                         <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} onSaveTemplate={this.props.onSaveTemplate} type='l'/>
                     </div>
                 }
