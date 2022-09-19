@@ -286,7 +286,6 @@ class MainView extends Component{
                     <ButtonToolbar style={{height:'100%', backgroundColor: '#6c757d'}}>
                         <ButtonGroup aria-label="Buttons" style={{flexDirection: 'column' }}>
                             <LeftPanelButton checked={this.state.panels.components === 1} value='components,1' onClick={this.onPanelChange} title={i18n.get_string('templates')} glyph={faCloud} />
-                            <LeftPanelButton checked={this.state.panels.components === 2} value='components,2' onClick={this.onPanelChange} title={i18n.get_string('layouts')} glyph={faObjectGroup} />
                             <LeftPanelButton checked={this.state.panels.components === 3} value='components,3' onClick={this.onPanelChange} title={i18n.get_string('components')} glyph={faPuzzlePiece} />
                             <div style={{margin: '4px 0', height: '1px', backgroundColor: '#fff'}}></div>
                             <LeftPanelButton checked={this.state.panels.properties === 3} value='properties,3' onClick={this.onPanelChange} title={i18n.get_string('basic')} glyph={faCubes} />
@@ -299,7 +298,6 @@ class MainView extends Component{
                     {(this.state.panels.components | this.state.panels.properties | this.state.panels.treeView) >= 1 &&
                         <div className='panel-list' style={{width: `${LayoutBuilder.properties.leftPanel.panelList.width}px`}}>
                             {this.state.panels.components === 1 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='tpl'/>}
-                            {this.state.panels.components === 2 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='lay'/>}
                             {this.state.panels.components === 3 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='comp'/>}
                             {this.state.panels.properties === 1 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bs'/>}
                             {this.state.panels.properties === 2 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='html'/>}

@@ -297,14 +297,6 @@ export class VisualComponentList extends Component{
 
                 }
 
-                {this.props.tab === "lay" && 
-                    <div className='panel'>
-                        <h5 className="m-0 p-2"><FontAwesomeIcon icon={faObjectGroup}/> {i18n.get_string('layouts')}</h5>
-                        <hr className='mt-0'/>
-                        <TemplateList dataProvider={Templates.componentList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} type='c' />
-                    </div>
-                }
-
                 {this.props.tab === "tpl" &&
                     <div className='panel'>
                         <h5 className="m-0 p-2"><FontAwesomeIcon icon={faCloud}/> {i18n.get_string('templates')}</h5>

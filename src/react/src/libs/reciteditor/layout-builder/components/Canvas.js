@@ -128,7 +128,9 @@ export class CanvasElement{
         if(eventData.length > 0){
             let componentData = JSON.parse(eventData);
             el = HTMLElementData.createElement(componentData);
-            CanvasElement.create(el, this.onSelectCallback, this.onDropCallback, this.onEditNodeText);
+            if (el){
+                CanvasElement.create(el, this.onSelectCallback, this.onDropCallback, this.onEditNodeText);
+            }
         }
         else if (CanvasElement.draggingItem !== null){
             el = CanvasElement.draggingItem;
@@ -248,17 +250,11 @@ export class FloatingMenu extends Component{
         onMoveNodeDown: null,
         onDeleteElement: null,
         onCloneNode: null,
-        onSaveTemplate: null,
         device: null,
     };      
 
     constructor(props){
         super(props);
-
-        this.showModal = this.showModal.bind(this);
-        this.onSaveTemplate = this.onSaveTemplate.bind(this);
-
-        this.state = {showModal: false};
     }
 
     render(){
@@ -282,25 +278,14 @@ export class FloatingMenu extends Component{
                     <ButtonGroup size="sm">
                         <Button onDragStart={this.props.onDragElement} draggable="true" style={{cursor: 'grab'}}><FontAwesomeIcon  icon={faArrowsAlt} title={i18n.get_string('drag')}/></Button>
                         <Button onClick={this.props.onEdit}><FontAwesomeIcon  icon={faEdit} title={i18n.get_string('edit')}/></Button>
-                        <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faPuzzlePiece} title={i18n.get_string('createcomponent')}/></Button>
                         <Button onClick={() => this.props.onMoveNodeUp(null)}  ><FontAwesomeIcon icon={faArrowUp} title={i18n.get_string('moveelementup')}/></Button>
                         <Button onClick={() => this.props.onMoveNodeDown(null)}><FontAwesomeIcon icon={faArrowDown} title={i18n.get_string('moveelementdown')}/></Button>
                         <Button onClick={this.props.onCloneNode}><FontAwesomeIcon icon={faClone} title={i18n.get_string('clone')}/></Button>
                         <Button onClick={() => this.props.onDeleteElement(null)}><FontAwesomeIcon  icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
                     </ButtonGroup>
                 </ButtonToolbar>
-                {this.state.showModal && <TemplateForm onClose={() => this.showModal(false)} onSave={this.onSaveTemplate} title={i18n.get_string('createcomponent')} description={i18n.get_string('addcomponentdesc')}/>}
             </div>
         return main;
-    }
-
-    showModal(show){
-        this.setState({showModal: show});
-    }
-
-    onSaveTemplate(data){
-        this.props.onSaveTemplate(data.name, 'c');
-        this.showModal(false);
     }
 }
 

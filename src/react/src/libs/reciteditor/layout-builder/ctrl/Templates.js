@@ -24,7 +24,6 @@
 import { i18n, Assets, WebApi } from '../../RecitEditor';
 
 export class Templates{
-    static componentList = {myComponents: [], components: []};
     static layoutList = [];
 
     static webApi = new WebApi();
@@ -33,12 +32,7 @@ export class Templates{
         let p = Templates.webApi.getTemplateList();
         let p2 = p.then((webApiResult) => {
             if(webApiResult && !webApiResult.error){
-                let data = {c: [], l: []};
-                for (let d of webApiResult[0].data){
-                    data[d.type].push(d)
-                }
-                Templates.componentList.myComponents = data.c;
-                Templates.layoutList = data.l;
+                Templates.layoutList = webApiResult[0].data;
             }
             else{
                 alert(`Error: ${JSON.stringify(webApiResult)}`);
@@ -47,11 +41,6 @@ export class Templates{
         },
         (err, response) => {
             console.log(err, response);
-        });
-        
-        fetch(Assets.ComponentUrl).then(res => res.json())
-        .then((result) => {
-            Templates.componentList.components = result;
         });
 
         return p2;
