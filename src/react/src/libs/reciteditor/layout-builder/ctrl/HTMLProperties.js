@@ -1535,11 +1535,11 @@ export class HTMLPropertiesData{
             all: ['icon', 'font', 'bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes']
         },
         link: {
-            min: ['link'],
+            min: ['link', 'bs-button'],
             all: ['bs-general', 'bs-button', 'bs-spacing', 'bs-border', 'font', 'layout', 'link', 'htmlattributes']
         },
         buttons: {
-            min: ['bs-button'], 
+            min: ['link', 'bs-button'], 
             all: ['bs-general', 'bs-button', 'bs-spacing', 'bs-border', 'font', 'layout', 'link', 'htmlattributes']
         },
         containers: {
