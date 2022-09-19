@@ -96,7 +96,12 @@ export class HTMLElementData{
                 children: [
                     new BsTableActionProperty(),
                     new BsTableBorderProperty(),
-                    new BsTableStripedProperty(),
+                    new BsTableStripedProperty()
+                ]
+            },
+            {
+                name: 'bs-tablecell', description: i18n.get_string('table'), 
+                children: [
                     new BsTableCellActionProperty()
                 ]
             },

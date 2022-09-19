@@ -421,7 +421,7 @@
  
  export class HTMLTableElement extends HTMLElement{
      constructor(){
-         super(i18n.get_string('table'), 'table', 'nativecomponent', {all: ['table', ...HTMLPropertiesData.propsAssignmentFacade.containers.all], min: []});
+         super(i18n.get_string('table'), 'table', 'nativecomponent', {all: ['bs-table', ...HTMLPropertiesData.propsAssignmentFacade.containers.all], min: ['bs-table']});
          this.cssProp.prefix = 'table';
      }
  
@@ -448,7 +448,7 @@
  
  export class HTMLTableDataCellElement extends HTMLElement{
      constructor(){
-         super(i18n.get_string('tablecell'), "td", 'native', {all: ['tablecell', ...HTMLPropertiesData.propsAssignmentFacade.containers.all], min: []});
+         super(i18n.get_string('tablecell'), "td", 'native', {all: ['bs-tablecell', ...HTMLPropertiesData.propsAssignmentFacade.containers.all], min: ['bs-tablecell']});
          this.visible = false;
      }
  
@@ -461,7 +461,7 @@
  
  export class HTMLTableHeaderCellElement extends HTMLElement{
      constructor(){
-         super("Titre de la table", "th", 'native', {all: ['tablecell', ...HTMLPropertiesData.propsAssignmentFacade.containers.all], min: []});
+         super("Titre de la table", "th", 'native', {all: ['bs-tablecell', ...HTMLPropertiesData.propsAssignmentFacade.containers.all], min: ['bs-tablecell']});
          this.visible = false;
      }
  
