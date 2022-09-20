@@ -699,13 +699,16 @@ export class BsMarginProperty extends HTMLProperty{
         return result;
     }
 
-    onChange(el, value, data){                       
+    onChange(el, value, data){        
+        value.oldValue = value.oldValue.toString();
+        value.newValue = value.newValue.toString();
+
         if(value.oldValue.length > 0){
-            el.classList.remove(value.name + '-' + value.oldValue);
+            el.classList.remove(`${value.name}-${value.oldValue}`);
         }
        
         if(value.newValue.length > 0){
-            el.classList.add(value.name + '-' + value.newValue);
+            el.classList.add(`${value.name}-${value.newValue}`);
         }
     }
 }
@@ -714,12 +717,13 @@ export class BsPaddingProperty extends HTMLProperty{
     constructor(){
         super('padding',  i18n.get_string('padding'));
 
+        let items = [0, 1, 2, 3, 4, 5];
         this.options = [
-            {name: "pt", nbItems: 6}, 
-            {name: "pr", nbItems: 6}, 
-            {name: "pb",nbItems: 6}, 
-            {name: "pl", nbItems: 6}, 
-            {name: "p", nbItems: 6}
+            {name: "pt", items: items}, 
+            {name: "pr", items: items}, 
+            {name: "pb", items: items}, 
+            {name: "pl", items: items}, 
+            {name: "p", items: items}
         ];
 
         this.input = new LayoutSpacing(this.options, this.onChange.bind(this));
@@ -732,21 +736,23 @@ export class BsPaddingProperty extends HTMLProperty{
             for(let item of data.input.options){
                 let className = `${item.name}-${i}`;
                 if(el.classList.contains(className)){
-                    result.push(className);
+                    result.push({name: item.name, value: i});
                 }
             }
         }
         return result;
     }
 
-    onChange(el, value, data){                       
+    onChange(el, value, data){       
+        value.oldValue = value.oldValue.toString();
+        value.newValue = value.newValue.toString();
+
         if(value.oldValue.length > 0){
-            el.classList.remove(value.oldValue);
+            el.classList.remove(`${value.name}-${value.oldValue}`);
         }
-        
        
         if(value.newValue.length > 0){
-            el.classList.add(value.newValue);
+            el.classList.add(`${value.name}-${value.newValue}`);
         }
     }
 }
@@ -971,8 +977,12 @@ export class BsBorderProperty extends HTMLProperty{
     }
 
     onChange(el, value, data){
+        value.oldValue = value.oldValue.toString();
+        value.newValue = value.newValue.toString();
+
         if(value.oldValue.length > 0){
             el.style[value.name] = '';
+            el.style.borderStyle = '';
         }
         
         if(value.newValue.length > 0){
