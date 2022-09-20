@@ -157,12 +157,12 @@ export class LayoutBuilder extends Component
         }
 
         switch(this.state.device){
-            case 'xs': device = {width: 375, height: 667, scale: 1}; break;
-            case 'sm': device = {width: 768, height: 1024, scale: 1}; break;
-            case 'md': device = {width: 1024, height: 768, scale: 1}; break;
-            case 'lg': device = {width: 1366, height: 768, scale: 1}; break;
+            case 'xs': device = {name: 'xs', width: 375, height: 667, scale: 1}; break;
+            case 'sm': device = {name: 'sm', width: 768, height: 1024, scale: 1}; break;
+            case 'md': device = {name: 'md', width: 1024, height: 768, scale: 1}; break;
+            case 'lg': device = {name: 'lg', width: 1366, height: 768, scale: 1}; break;
             case 'xl':
-            default: device = {width: 1500, height: 1050, scale: 1}; 
+            default: device = {name: 'xl', width: 1500, height: 1050, scale: 1}; 
         }
 
         let width = device.width + LayoutBuilder.properties.leftPanel.width + 15 + (this.state.view === 'sourceCodeDesigner' ? 780 : 0);
@@ -185,6 +185,7 @@ class MainView extends Component{
         super(props);
 
         this.onSelectElement = this.onSelectElement.bind(this);
+        this.onUnselectElement = this.onUnselectElement.bind(this);
         this.onDeleteElement = this.onDeleteElement.bind(this);
         this.onReplaceNonBreakingSpace = this.onReplaceNonBreakingSpace.bind(this);
         this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
@@ -255,6 +256,10 @@ class MainView extends Component{
             this.setData(data);
             let view = this.props.view;
             this.setState({canvasState: view},  this.onPanelChange);
+        }
+
+        if(prevProps.device.name !== this.props.device.name){
+            this.onUnselectElement();
         }
 
         if(prevProps.content !== this.props.content){
@@ -351,6 +356,11 @@ class MainView extends Component{
         this.setState({selectedElement: null});
     }
 
+    onUnselectElement(){
+        let result = this.canvasState[this.state.canvasState].onSelectElement(null, null, this.state.panels);
+        this.setState({selectedElement: result.el, panels: result.panels});
+    }
+    
     onSelectElement(el){
         let result = this.canvasState[this.state.canvasState].onSelectElement(el, this.state.selectedElement, this.state.panels);
         this.setState({selectedElement: result.el, panels: result.panels});
@@ -425,19 +435,6 @@ class MainView extends Component{
                
                 return p2.then((img) => {
                     return Templates.onSave(name, type, el.outerHTML, img);
-                });
-            });
-        }
-        else{ //Component
-            p = html2canvas(this.state.selectedElement, {useCORS: true}).then((canvas) => {
-                let data = canvas.toDataURL();
-                let MAX_WIDTH = 300;
-                let MAX_HEIGHT = 300;
-                let fileType = "png"
-                let p2 = Utils.resizeImageFromSize(data, MAX_WIDTH, MAX_HEIGHT, fileType);
-               
-                return p2.then((img) => {
-                    return Templates.onSave(name, type, this.state.selectedElement.outerHTML, img);
                 });
             });
         }

@@ -301,11 +301,6 @@ export class DesignerState extends CanvasState{
             result.el = null;
         }
 
-
-        if((result.el !== null) && (result.el.tagName.toLowerCase() === 'strong' || result.el.tagName.toLowerCase() === 'em')){ //If we click on bold or italic, select the parent
-            result.el = result.el.parentElement;
-        }
-
         // if the selected element receives another click then it deselects it
         if(Object.is(result.el, selectedElement)){
             this.htmlCleaning(this.window.document);

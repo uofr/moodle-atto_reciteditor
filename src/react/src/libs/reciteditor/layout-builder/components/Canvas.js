@@ -267,7 +267,7 @@ export class FloatingMenu extends Component{
         let style = {display: 'block', top: 0, left: 0};
 
         let posCanvas = this.props.posCanvas;
-        let posEl = UtilsHTML.getBoundingClientRect(this.props.selectedElement, this.props.device.scale);
+        let posEl = UtilsHTML.getBoundingClientRect(this.props.selectedElement);
 
         style.top = Math.max(posCanvas.top + posEl.top - 32, 0);
         style.left = posCanvas.left + posEl.left;
@@ -313,7 +313,7 @@ export class NodeTextEditing extends Component{
         let style = {position: 'fixed', display: 'block', top: 0, left: 0};
 
         let posCanvas = this.props.posCanvas;
-        let posEl = UtilsHTML.getBoundingClientRect(this.props.selectedElement, this.props.device.scale);
+        let posEl = UtilsHTML.getBoundingClientRect(this.props.selectedElement);
 
         style.top = Math.max(posCanvas.top + posEl.top - 32, 0);
         style.left = posCanvas.left + posEl.left;
