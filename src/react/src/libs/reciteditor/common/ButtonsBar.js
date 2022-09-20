@@ -396,21 +396,26 @@ export class BtnSetCssProp extends Component{
         
         let selection = sel.sel;
         if (selection.rangeCount) {
-            let text = selection.toString();
             let range = selection.getRangeAt(0);
+            let clonedSelection = range.cloneContents();
+            let dummydiv = document.createElement('div'); //We have to create a dummy div to get the selected document fragment, fragment doesnt have innerhtml prop
+            dummydiv.appendChild(clonedSelection);
+            let text = dummydiv.innerHTML;
             let parent = range.startContainer.parentNode;
             let offset = Utils.getCaretCharacterOffsetWithin(parent);
             
-            if (this.props.tagName.length > 0 && this.props.tagName.toUpperCase() != parent.tagName) {
+            if (this.props.tagName.length > 0 && this.props.tagName.toUpperCase() != parent.tagName) {//If the prop is a tag name
                 let inner = document.createElement(this.props.tagName);
                 inner.innerHTML = text;
                 parent.innerHTML = Utils.replaceAt(parent.innerHTML, text, inner.outerHTML, offset);
+            }else if (text == parent.innerHTML && !parent.style[prop]) {//If the text selectioned is the whole tag, set style on the tag rather than create a span
+                parent.style[prop] = this.getValue();
             }else if (range.startOffset > 0 && !parent.style[prop]) {
                 let inner = document.createElement("span");
                 inner.style[prop] = this.getValue();
                 inner.innerHTML = text;
                 parent.innerHTML = Utils.replaceAt(parent.innerHTML, text, inner.outerHTML, offset);
-            } else if ((parent.style && parent.style[prop]) || this.props.tagName.toUpperCase() == parent.tagName) {
+            } else if ((parent.style && parent.style[prop]) || this.props.tagName.toUpperCase() == parent.tagName) {//Undo the style
                 parent.outerHTML = parent.innerHTML;
             }
         }

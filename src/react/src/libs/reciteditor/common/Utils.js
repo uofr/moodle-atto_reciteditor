@@ -251,13 +251,37 @@ export class Utils{
         });
         
         return vars;
-    }    
+    }
+    
+    static countOccurrencesInString(string, subString, allowOverlapping) {
+    
+        string += "";
+        subString += "";
+        if (subString.length <= 0) return (string.length + 1);
+    
+        var n = 0,
+            pos = 0,
+            step = allowOverlapping ? 1 : subString.length;
+    
+        while (true) {
+            pos = string.indexOf(subString, pos);
+            if (pos >= 0) {
+                ++n;
+                pos += step;
+            } else break;
+        }
+        return n;
+    }
 
     static replaceAt(s, subString, replacement, index) {
-        let offset = index - subString.length;
-        let p = s.substr(index-offset).replace(subString, replacement);
+        if (Utils.countOccurrencesInString(s, subString) < 2){
+            return s.replace(subString, replacement);
+        }else{ //There are multiple occurences of the substring in the string so replace only the one we want by index
+            let offset = index - subString.length;
+            let p = s.substr(index-offset).replace(subString, replacement);
 
-        return s.substr(0, index-offset) + p;
+            return s.substr(0, index-offset) + p;
+        }
     }
 
     static getCaretCharacterOffsetWithin(element) {
@@ -693,6 +717,14 @@ export class UtilsString
         }
     
         return true;
+    }
+
+    static replaceNonBreakingSpace(str){
+        let regex = new RegExp(/(\u00AB|\u2014)(?:\s+)?|(?:\s+)?([\?!:;\u00BB])/g);
+        str = str.replace("&nbsp; ", "");//Revert old nbsp
+        str = str.replace("&nbsp;", "");//Revert old nbsp
+        str = str.replace(regex, "$1&nbsp;$2");
+        return str;
     }
 }
 

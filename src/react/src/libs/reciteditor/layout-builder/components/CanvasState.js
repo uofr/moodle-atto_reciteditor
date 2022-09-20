@@ -22,7 +22,7 @@
  */
 
  import React from 'react';
- import {LayoutBuilder, Canvas, CanvasElement, FloatingMenu, NodeTextEditing, SourceCodeEditor, Assets, HTMLElementData, UtilsHTML, UtilsMoodle} from '../../RecitEditor';
+ import {LayoutBuilder, Canvas, CanvasElement, FloatingMenu, NodeTextEditing, SourceCodeEditor, Assets, HTMLElementData, UtilsHTML, UtilsMoodle, UtilsString} from '../../RecitEditor';
 
 class CanvasState{
     constructor(mainView){
@@ -275,7 +275,7 @@ export class DesignerState extends CanvasState{
         // React JS
         //body.appendChild(doc.firstChild);        
 
-        body.onkeyup = this.mainView.onKey;
+        body.onkeydown = this.mainView.onKey;
         body.ondrag = this.mainView.onDragStart;
     }
 
@@ -388,12 +388,12 @@ export class DesignerState extends CanvasState{
         if(el.isSameNode(this.window.document.body)){ return; }
 
         this.onBeforeChange()
-        let regex = new RegExp(/(\u00AB|\u2014)(?:\s+)?|(?:\s+)?([\?!:;\u00BB])/g);
-        el.innerHTML = el.innerHTML.replace("&nbsp; ", "");//Revert old nbsp
-        el.innerHTML = el.innerHTML.replace("&nbsp;", "");//Revert old nbsp
-        el.innerHTML = el.innerHTML.replace(regex, "$1&nbsp;$2");
-        if (el.firstElementChild){
-            this.onReplaceNonBreakingSpace(el.firstElementChild);//Element has a child i.e a span so we want to replace spaces in span as well
+        for (let t of el.childNodes){
+            t.textContent = UtilsString.replaceNonBreakingSpace(t.textContent)
+    
+            if (t.firstElementChild){
+                this.onReplaceNonBreakingSpace(t.firstElementChild);//Element has a child i.e a span so we want to replace spaces in span as well
+            }
         }
         this.onAfterChange();
     }
@@ -523,6 +523,14 @@ export class DesignerState extends CanvasState{
 
         if (e.ctrlKey && e.keyCode == 90){//ctrl z
             this.historyManager.onUndo(this.mainView.setData, this.mainView.getData());
+        }
+        
+        if (!e.shiftKey && e.keyCode == 13){//return
+            if (editingElement && editingElement.getAttribute('contenteditable') == 'true') {
+                // prevent the default behaviour of return key pressed
+                e.preventDefault()
+                return false;
+            }
         }
     }
 }
