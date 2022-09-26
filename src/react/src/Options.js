@@ -39,7 +39,7 @@ export class Options
     }
     
     static appTitle(){
-        return this.appName() + " | " + this.appVersion();
+        return this.appName() + " | v" + this.appVersion();
     }
 
     static versionHistory = [

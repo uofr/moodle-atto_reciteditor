@@ -1203,61 +1203,6 @@ export class BsTextAlignmentProperty extends HTMLProperty{
     }
 }
 
-export class BsTextSizeProperty extends HTMLProperty{
-    constructor(){
-        super('responsivesize',  i18n.get_string('responsivesize'));
-
-        this.options = [
-            {text: <FontAwesomeIcon icon={faRemoveFormat} title={i18n.get_string('default')}/>, value:'default'},
-            {text: 'SM', value:'sm' },
-            {text: 'MD', value:'md' },
-            {text: 'LG', value:'lg' },
-            {text: 'XL', value:'xl' }
-        ];
-
-        this.input = new RadioButton(this.options, this.onChange.bind(this), ['default']);
-    }
- 
-    getValue(el, data){
-        let sufix = ['left', 'right', 'center', 'justify'];
-
-        for(let option of data.input.options){
-            for(let s of sufix){
-                if (el.classList.contains(`text-${option.value}-${s}`)){
-                    return [option.value];
-                }
-            }
-        }
-        
-        return data.input.defaultValue;
-    }
-
-    onChange(el, value, data){                       
-        let sufix = ['left', 'right', 'center', 'justify'];
-        let className = null;
-
-        if(el.classList.length > 0){
-            for(let option of data.input.options){
-                for(let s of sufix){
-                    if(el.classList.contains(`text-${s}`)){
-                        className = `text-${value}-${s}`;
-                    }
-
-                    el.classList.remove(`text-${option.value}-${s}`);
-                }
-            }
-        }
-        
-        if(data.input.defaultValue.join() === value){
-            return;
-        }
-
-        if(className !== null){
-            el.classList.add(className);
-        }
-    }
-}
-
 export class BsBtnBlockProperty extends HTMLProperty{
     constructor(){
         super('btnblock',  i18n.get_string('buttonfullwidth'));

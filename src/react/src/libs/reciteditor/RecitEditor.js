@@ -24,6 +24,7 @@
 import React, { Component } from 'react';
 import { WordProcessor } from './word-processor/WordProcessor';
 import { LayoutBuilder } from './layout-builder/LayoutBuilder';
+import { Options } from '../../Options';
 import "./assets/css/components.scss";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -81,6 +82,10 @@ export class RecitEditor extends Component{
 
         // the content is not in the state because we don't want to refresh the component every time the user types something. This moves the caret to the beginning of the content.
         this.content = props.content; 
+    }
+
+    componentDidMount(){
+        window.document.title = Options.appTitle();    
     }
 
 	render(){
