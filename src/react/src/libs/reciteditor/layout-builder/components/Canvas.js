@@ -47,8 +47,13 @@ export class Canvas extends Component
     }
 }
 
+/**
+ * This class attaches all required events for edition to all dom elements.
+ * Example: For a dom element to be selectable, it needs to be wrapped with this class.
+ */
 export class CanvasElement{
     static draggingItem = null;
+    static instanceList = []; //Keep a list of instance to avoid recreating canvaselement if it was already instancied
 
     constructor(dom, onSelectCallback, onDropCallback, onEditNodeText){
         this.onDragOver = this.onDragOver.bind(this);
@@ -69,21 +74,37 @@ export class CanvasElement{
         this.dom.ondragover = this.onDragOver;
         this.dom.ondragenter = this.onDragEnter;
         this.dom.ondragleave = this.onDragLeave;
-      //  this.dom.ondragstart = this.onDragStart;
+        //this.dom.ondragstart = this.onDragStart;
         this.dom.ondrop = this.onDrop;
         this.dom.onclick = this.onClickHandler;
         this.dom.onmouseover = this.onMouseOver;
         this.dom.onmouseout = this.onMouseOut;
 
+        CanvasElement.instanceList.push(dom)
         this.state = {initDragging: false, onDragging: false, clickCounter: 0 };
 
-        for(let child of this.dom.childNodes){
-            CanvasElement.create(child, this.onSelectCallback, this.onDropCallback, this.onEditNodeText);
+    }
+
+    static isElementInstancied(el){
+        for (let instance of CanvasElement.instanceList){
+            if (Object.is(el, instance)){
+                return true;
+            }
         }
+        return false;
     }
 
     static create(el, onSelectElement, onDropElement, onEditNodeText){
-        return new CanvasElement(el, onSelectElement, onDropElement, onEditNodeText);
+        let canvasElement = null;
+        if (!CanvasElement.isElementInstancied(el)){
+            canvasElement = new CanvasElement(el, onSelectElement, onDropElement, onEditNodeText);
+        }
+
+        for(let child of el.childNodes){
+            CanvasElement.create(child, onSelectElement, onDropElement, onEditNodeText);
+        }
+
+        return canvasElement
     }
 
     onClickHandler(event){
@@ -285,52 +306,6 @@ export class FloatingMenu extends Component{
                     </ButtonGroup>
                 </ButtonToolbar>
             </div>
-        return main;
-    }
-}
-
-export class NodeTextEditing extends Component{
-    static defaultProps = {
-        posCanvas: null,
-        selectedElement: null,
-        onReplaceNonBreakingSpace: null,
-        window: null,
-        device: null
-    };      
-
-    constructor(props){
-        super(props);
-    }
-
-    render(){
-        if(this.props.posCanvas === null){ return null;}
-        if(this.props.selectedElement === null){ return null;}
-        if(this.props.device === null){ return null;}
-        if(this.props.selectedElement.getAttribute('contenteditable') !== 'true'){ return null; }
-        
-        this.props.selectedElement.removeAttribute('draggable');
-        
-        let style = {position: 'fixed', display: 'block', top: 0, left: 0};
-
-        let posCanvas = this.props.posCanvas;
-        let posEl = UtilsHTML.getBoundingClientRect(this.props.selectedElement);
-
-        style.top = Math.max(posCanvas.top + posEl.top - 32, 0);
-        style.left = posCanvas.left + posEl.left;
-
-        let main =  
-                <div style={style}>
-                   <ButtonToolbar>
-                        <ButtonGroup size="sm">
-                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="font-weight" defaultValue="normal" tagName="strong" value="bold" icon={faBold} title={i18n.get_string('bold')}/>
-                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="font-style" defaultValue="normal" tagName="em" value="italic" icon={faItalic} title={i18n.get_string('italic')}/>
-                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="text-decoration" defaultValue="normal" value="underline" icon={faUnderline} title={i18n.get_string('underline')}/>
-                            <BtnSetCssProp window={this.props.window} variant="primary" cssProp="text-decoration" defaultValue="normal" value="line-through" icon={faStrikethrough} title={i18n.get_string('strikethrough')}/>
-                            <Button title={i18n.get_string('nonbreakingspace')} onClick={() => this.props.onReplaceNonBreakingSpace()}><FontAwesomeIcon icon={faParagraph}/></Button>
-                        </ButtonGroup>
-                    </ButtonToolbar>
-                </div>;
-
         return main;
     }
 }

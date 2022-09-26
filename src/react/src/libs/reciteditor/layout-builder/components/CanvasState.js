@@ -22,6 +22,7 @@
  */
 
  import React from 'react';
+import { TextEditorModal } from '../../common/TextEditor';
  import {LayoutBuilder, Canvas, CanvasElement, FloatingMenu, NodeTextEditing, SourceCodeEditor, Assets, HTMLElementData, UtilsHTML, UtilsMoodle, UtilsString} from '../../RecitEditor';
 
 class CanvasState{
@@ -35,10 +36,8 @@ class CanvasState{
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
         this.onInsertNode = this.onInsertNode.bind(this);
-        this.onEditNodeText = this.onEditNodeText.bind(this);
         this.onLoadFrame = this.onLoadFrame.bind(this);
         this.htmlCleaning = this.htmlCleaning.bind(this);
-        this.onReplaceNonBreakingSpace = this.onReplaceNonBreakingSpace.bind(this);
         this.onKey = this.onKey.bind(this);
 
         this.onLoadFrame();
@@ -58,8 +57,8 @@ class CanvasState{
     onMoveNodeDown(selectedElement){}
     onCloneNode(selectedElement){}
     onInsertNode(elems){}
-    onEditNodeText(selectedElement){}
-    onReplaceNonBreakingSpace(selectedElement){}
+    onStartEditingNodeText(selectedElement){}
+    onFinishEditingNodeText(html){}
     onKey(e, editingElement){}
 
     onPanelChange(panels){ 
@@ -173,10 +172,6 @@ export class SourceCodeDesignerState extends CanvasState{
         this.designer.onDeleteElement(el);
     }
 
-    onReplaceNonBreakingSpace(el){
-        this.designer.onReplaceNonBreakingSpace(el);
-    }
-
     onMoveNodeUp(el){
         this.designer.onMoveNodeUp(el);
     }
@@ -198,8 +193,12 @@ export class SourceCodeDesignerState extends CanvasState{
         this.designer.onInsertNode(elems);
     }
 
-    onEditNodeText(el){
-        this.designer.onEditNodeText(el);
+    onStartEditingNodeText(el){
+        this.designer.onStartEditingNodeText(el);
+    }
+
+    onFinishEditingNodeText(html){
+        this.designer.onFinishEditingNodeText(html)
     }
 
     onPanelChange(panels){
@@ -215,7 +214,8 @@ export class DesignerState extends CanvasState{
         this.window = null;
         this.historyManager = historyManager;
         this.onKey = this.onKey.bind(this);
-        this.loadCount = 0
+        this.loadCount = 0;
+        this.editingElement = null;
     }
 
     onLoadFrame(){
@@ -270,7 +270,7 @@ export class DesignerState extends CanvasState{
 
 
         // pure JS
-        CanvasElement.create(body, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onEditNodeText);
+        CanvasElement.create(body, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
 
         // React JS
         //body.appendChild(doc.firstChild);        
@@ -285,10 +285,10 @@ export class DesignerState extends CanvasState{
         let main = 
             <Canvas style={{display: (show ? 'flex' : 'none') }}>
                 <iframe id="designer-canvas" className="canvas" style={this.getStyle(width)}></iframe>
-                <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement} onDragElement={this.mainView.onDragStart} onEdit={this.mainView.onEditNodeText}
+                <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement} onDragElement={this.mainView.onDragStart} onEdit={this.mainView.onStartEditingNodeText}
                             onDeleteElement={this.mainView.onDeleteElement} onMoveNodeUp={this.mainView.onMoveNodeUp} onMoveNodeDown={this.mainView.onMoveNodeDown} 
                              onCloneNode={this.mainView.onCloneNode} onSaveTemplate={this.mainView.onSaveTemplate} device={this.mainView.props.device} />
-                <NodeTextEditing posCanvas={posCanvas} window={this.window} selectedElement={selectedElement} onReplaceNonBreakingSpace={this.mainView.onReplaceNonBreakingSpace} device={this.mainView.props.device}/>
+                {this.editingElement && <TextEditorModal onClose={() => this.mainView.onFinishEditingNodeText(null)} onSave={(html) => this.mainView.onFinishEditingNodeText(html)} value={this.editingElement.outerHTML}/>}
             </Canvas>;
 
         return main; 
@@ -311,10 +311,6 @@ export class DesignerState extends CanvasState{
         }
         else{
             this.htmlCleaning(this.window.document);
-
-            if (selectedElement && selectedElement.innerHTML != this.editingElementText){
-                this.onAfterChange()
-            }
 
             result.panels.components = 0; // hide templates panel
             result.panels.properties = 3; // show bookmark properties panel
@@ -377,21 +373,6 @@ export class DesignerState extends CanvasState{
         el.remove();
         this.onAfterChange();
     }
-
-    onReplaceNonBreakingSpace(el){
-        if(!el){ return; } // Element does not exist
-        if(el.isSameNode(this.window.document.body)){ return; }
-
-        this.onBeforeChange()
-        for (let t of el.childNodes){
-            t.textContent = UtilsString.replaceNonBreakingSpace(t.textContent)
-    
-            if (t.firstElementChild){
-                this.onReplaceNonBreakingSpace(t.firstElementChild);//Element has a child i.e a span so we want to replace spaces in span as well
-            }
-        }
-        this.onAfterChange();
-    }
     
     onMoveNodeUp(el){
         if(el.isSameNode(this.window.document.body)){ return; }
@@ -437,7 +418,7 @@ export class DesignerState extends CanvasState{
         el.removeAttribute("data-selected");
         el.removeAttribute("contenteditable");
         parent.appendChild(el);
-        CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onEditNodeText);
+        CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
         this.onAfterChange();
     }
 
@@ -445,7 +426,7 @@ export class DesignerState extends CanvasState{
         this.onBeforeChange();
 
         for(let el of elems){
-            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onEditNodeText);
+            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
         }
         this.onAfterChange();
     }
@@ -473,7 +454,7 @@ export class DesignerState extends CanvasState{
             if(that.window){
                 let body = that.window.document.body;
                 body.innerHTML = value;
-                CanvasElement.create(body, that.mainView.onSelectElement, that.mainView.onDragEnd, that.mainView.onEditNodeText);
+                CanvasElement.create(body, that.mainView.onSelectElement, that.mainView.onDragEnd, that.mainView.onStartEditingNodeText);
             }
             else{
                 console.log("Loading designer canvas...");
@@ -483,30 +464,20 @@ export class DesignerState extends CanvasState{
         setTimeout(loading, 500);
     }
 
-    onEditNodeText(selectedElement){ 
-        let that = this;     
-      
-        let setCaretToEnd = function(el) {
-            el.focus();
-            
-            let range = document.createRange();
-            range.selectNodeContents(el);
-            range.collapse(true);
-            let sel = that.window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-          
-            // set scroll to the end if multiline
-            el.scrollTop = el.scrollHeight; 
-        }    
+    onStartEditingNodeText(selectedElement){ 
+        this.editingElement = selectedElement;
+    }
 
-        if(selectedElement === null){
-            return;
+    onFinishEditingNodeText(html){
+        if (html){
+            let dummydiv = document.createElement('div');
+            dummydiv.innerHTML = html;
+            let parent = this.editingElement.parentElement;
+            this.editingElement.replaceWith(...dummydiv.children);
+            CanvasElement.create(parent, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
         }
-
-        selectedElement.setAttribute('contenteditable', 'true');
-        this.editingElementText = selectedElement.innerHTML;
-        setCaretToEnd(selectedElement);
+        this.editingElement = null;
+        this.onAfterChange();
     }
 
     onKey(e, editingElement) {

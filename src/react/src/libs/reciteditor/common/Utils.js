@@ -720,6 +720,7 @@ export class UtilsString
     }
 
     static replaceNonBreakingSpace(str){
+        if (!str || str.length == 0) return;
         let regex = new RegExp(/(\u00AB|\u2014)(?:\s+)?|(?:\s+)?([\?!:;\u00BB])/g);
         str = str.replace("&nbsp; ", "");//Revert old nbsp
         str = str.replace("&nbsp;", "");//Revert old nbsp

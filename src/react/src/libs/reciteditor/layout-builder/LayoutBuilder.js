@@ -187,12 +187,12 @@ class MainView extends Component{
         this.onSelectElement = this.onSelectElement.bind(this);
         this.onUnselectElement = this.onUnselectElement.bind(this);
         this.onDeleteElement = this.onDeleteElement.bind(this);
-        this.onReplaceNonBreakingSpace = this.onReplaceNonBreakingSpace.bind(this);
         this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
         this.onInsertNode = this.onInsertNode.bind(this);
-        this.onEditNodeText = this.onEditNodeText.bind(this);
+        this.onStartEditingNodeText = this.onStartEditingNodeText.bind(this);
+        this.onFinishEditingNodeText = this.onFinishEditingNodeText.bind(this);
         this.onSaveTemplate = this.onSaveTemplate.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
@@ -371,11 +371,6 @@ class MainView extends Component{
         this.setState({selectedElement: null});
     }
 
-    onReplaceNonBreakingSpace(el){
-        this.canvasState[this.state.canvasState].onReplaceNonBreakingSpace(el || this.state.selectedElement);
-        this.forceUpdate();
-    }
-
     onMoveNodeUp(el){
         this.canvasState[this.state.canvasState].onMoveNodeUp(el || this.state.selectedElement);
         this.forceUpdate();
@@ -407,15 +402,20 @@ class MainView extends Component{
         event.dataTransfer.setDragImage(this.state.selectedElement, 0, 0);
     }
 
-    onEditNodeText(el){
+    onStartEditingNodeText(el){
         if(el instanceof HTMLElement){
-            this.canvasState[this.state.canvasState].onEditNodeText(el);
+            this.canvasState[this.state.canvasState].onStartEditingNodeText(el);
             this.setState({selectedElement: el});
         }
         else{
-            this.canvasState[this.state.canvasState].onEditNodeText(this.state.selectedElement);
+            this.canvasState[this.state.canvasState].onStartEditingNodeText(this.state.selectedElement);
             this.forceUpdate();
         }
+    }
+
+    onFinishEditingNodeText(html){
+        this.canvasState[this.state.canvasState].onFinishEditingNodeText(html);
+        this.forceUpdate();
     }
 
     onSaveTemplate(name, type){
@@ -425,8 +425,7 @@ class MainView extends Component{
             let el = this.canvasState.designer.getBody() || null;
             if(el === null){ return; }
 
-            el = el.firstChild;
-            p = html2canvas(el, {useCORS: true}).then((canvas) => {
+            p = html2canvas(el.firstChild, {useCORS: true}).then((canvas) => {
                 let data = canvas.toDataURL();
                 let MAX_WIDTH = 600;
                 let MAX_HEIGHT = 600;
