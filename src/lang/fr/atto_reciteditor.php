@@ -44,6 +44,7 @@ $string['column'] = 'Colonne';
 $string['description'] = 'Description';
 $string['name'] = 'Name';
 $string['line'] = 'Ligne';
+$string['title'] = 'Titre';
 $string['returntohtmleditor'] = 'Retourner à l`éditeur HTML'; 
 $string['recitthemeonly'] = 'Disponible seulement sur le thème RÉCIT';
 $string['bold'] = 'Gras';

@@ -532,13 +532,35 @@
          let card = document.createElement("div");
          card.classList.add("card");
          
-         let el = document.createElement("div");
-         el.classList.add("card-header");
-         card.appendChild(el);
+         let header = document.createElement("div");
+         header.classList.add('mx-auto', 'bg-white');
+         card.appendChild(header);
+         
+         let el = document.createElement("img");
+         el.classList.add("rounded-circle", "img-fluid", "shadow");
+         el.setAttribute("src", `${Assets.ImageAvatar}`);
+         el.style.height = '120px';
+         el.style.width = '120px';
+         el.style.marginTop = '-60px';
+         el.style.overflow = 'hidden';
+         el.style.borderRadius = '50%'
+         header.appendChild(el);
  
-         el = document.createElement("div");
-         el.classList.add("card-body");
-         card.appendChild(el);
+         let body = document.createElement("div");
+         body.classList.add("card-body");
+         card.appendChild(body);
+
+         el = document.createElement("h3");
+         el.style.color = '#fff';
+         el.innerHTML = i18n.get_string('title');
+         el.classList.add("text-center");
+         el.classList.add("mb-4");
+         body.appendChild(el);
+         
+         el = document.createElement("p");
+         el.style.color = '#c6c6c6';
+         el.innerHTML = 'Lorem';
+         body.appendChild(el);
  
          el = document.createElement("div");
          el.classList.add("card-footer");
@@ -635,21 +657,26 @@
              head.classList.add("card-header");
              head.classList.add("bg-primary");
              head.classList.add("text-center");
+             head.classList.add("rounded-top");
              face.appendChild(head);
  
              let head2 = document.createElement("div");
              head.appendChild(head2);
              
              let el = document.createElement("img");
-             el.classList.add("w-25");
              el.classList.add("rounded-circle");
              el.classList.add("shadow");
-             el.setAttribute("src", `${Assets.ImageEmptyHD}`);
+             el.setAttribute("src", `${Assets.ImageAvatar}`);
+             el.style.height = '120px';
+             el.style.width = '120px';
+             el.style.marginTop = '-60px';
              head2.appendChild(el);
              
              el = document.createElement("h3");
              el.style.color = '#fff';
-             el.innerHTML = 'Title '+v;
+             el.innerHTML = i18n.get_string('title')+' '+v;
+             el.classList.add("text-white");
+             el.classList.add("mt-3");
              head2.appendChild(el);
              
              el = document.createElement("p");
