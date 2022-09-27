@@ -97,7 +97,8 @@ class CanvasState{
 
     getStyle(width){
         let style = {width: width || this.mainView.props.device.width, height: this.mainView.props.device.height};
-        if(this.mainView.props.device.height > window.innerHeight){
+
+        if(this.mainView.props.device.scale < 1){
             style.transform = `scale(${this.mainView.props.device.scale})`;
             style.transformOrigin = "0 0";
         } 

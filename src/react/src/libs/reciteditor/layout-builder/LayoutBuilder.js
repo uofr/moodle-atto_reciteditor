@@ -57,6 +57,10 @@ export class LayoutBuilder extends Component
 
         this.onNavbarSelect = this.onNavbarSelect.bind(this);
         this.onSaveAndClose = this.onSaveAndClose.bind(this);
+        this.onWindowResize = this.onWindowResize.bind(this);
+        this.windowResizeTo = this.windowResizeTo.bind(this);
+
+        window.addEventListener("resize", this.onWindowResize);
 
         let device = (window.screen.width <= LayoutBuilder.properties.maxScreenWidth ? 'lg' : 'xl');
 
@@ -66,8 +70,11 @@ export class LayoutBuilder extends Component
         this.historyManager = new HistoryManager(); 
     }  
 
-	render(){
+    componentDidMount(){
+        this.windowResizeTo();
+    }
 
+	render(){
 		let main = 
 			<div className="layout-builder">                
                 <Navbar bg="dark" variant="dark" onSelect={this.onNavbarSelect} expand="sm">
@@ -131,8 +138,19 @@ export class LayoutBuilder extends Component
             this.historyManager.onRedo(this.mainViewRef.current.setData, this.mainViewRef.current.getData());
         }
         else{
-            this.setState({device: eventKey});
+            // device
+            this.setState({device: eventKey}, this.windowResizeTo);
         }
+    }
+
+    windowResizeTo(){
+        let device = this.getDeviceDimension();
+        let width = device.width + LayoutBuilder.properties.leftPanel.width + 15 + (this.state.view === 'sourceCodeDesigner' ? 780 : 0);
+        window.resizeTo(width, screen.availHeight);
+    }
+
+    onWindowResize(){
+        this.forceUpdate();
     }
 
     onSaveAndClose(){
@@ -145,7 +163,6 @@ export class LayoutBuilder extends Component
         
         function getScale(device){
             let result = 1;
-
             
             if(window.innerWidth - LayoutBuilder.properties.leftPanel.width <= device.width){
                 result = (window.innerWidth - LayoutBuilder.properties.leftPanel.width) / device.width;
@@ -166,8 +183,6 @@ export class LayoutBuilder extends Component
             default: device = {name: 'xl', width: 1500, height: 1050, scale: 1}; 
         }
 
-        let width = device.width + LayoutBuilder.properties.leftPanel.width + 15 + (this.state.view === 'sourceCodeDesigner' ? 780 : 0);
-        window.resizeTo(width, screen.availHeight);
         device.scale = getScale(device);
 
         return device;
