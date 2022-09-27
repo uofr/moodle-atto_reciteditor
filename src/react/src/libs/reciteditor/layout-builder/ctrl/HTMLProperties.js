@@ -1427,15 +1427,7 @@ export class BsTableCellActionProperty extends HTMLProperty{
                         
                     }
                     //deleteRow
-                    return {action: 'delete', nodes: null};;
-                }
-            },
-            {
-                text: <span><FontAwesomeIcon icon={faPlus}/>{i18n.get_string('column')}</span>, 
-                onClick: function(el){
-                    let table = el.parentElement.parentElement;
-                    let result = UtilsHTML.tableAddCol(table);
-                    return {action: 'insert', nodes: result};
+                    return {action: 'delete', nodes: null};
                 }
             },
             {
@@ -1456,7 +1448,15 @@ export class BsTableCellActionProperty extends HTMLProperty{
                     
                     return result;
                 }
-            }
+            },
+            {
+                text: <span><FontAwesomeIcon icon={faPlus}/>{i18n.get_string('column')}</span>, 
+                onClick: function(el){
+                    let table = el.parentElement.parentElement;
+                    let result = UtilsHTML.tableAddCol(table);
+                    return {action: 'insert', nodes: result};
+                }
+            },
         ];
 
         this.input = new ButtonGroup(this.options);
@@ -1502,7 +1502,7 @@ export class HTMLPropertiesData{
             all: ['bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'background', 'htmlattributes']
         },
         accordion: {
-            min: [],
+            min: ['accordion'],
             all: ['accordion', 'bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'background', 'htmlattributes']
         }
     };
