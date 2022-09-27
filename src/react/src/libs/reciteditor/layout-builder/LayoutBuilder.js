@@ -67,6 +67,7 @@ export class LayoutBuilder extends Component
     }  
 
 	render(){
+
 		let main = 
 			<div className="layout-builder">                
                 <Navbar bg="dark" variant="dark" onSelect={this.onNavbarSelect} expand="sm">
@@ -83,10 +84,10 @@ export class LayoutBuilder extends Component
                         <Nav className="mr-auto"></Nav>
 
                         <Nav className="mr-auto" activeKey={this.state.view}>
-                            <Nav.Link eventKey="designer" ><FontAwesomeIcon icon={faTh} title={i18n.get_string('canvas')}/>{` ${i18n.get_string('canvas')}`}</Nav.Link>
-                            <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title={i18n.get_string('preview')}/>{` ${i18n.get_string('preview')}`}</Nav.Link>
-                            <Nav.Link eventKey="sourceCode"><FontAwesomeIcon icon={faCode} title={i18n.get_string('sourcecode')}/>{` ${i18n.get_string('sourcecode')}`}</Nav.Link>
-                            <Nav.Link eventKey="sourceCodeDesigner"><FontAwesomeIcon icon={faColumns} title={i18n.get_string('sourcecodedesigner')}/>{` ${i18n.get_string('canvas')}-${i18n.get_string('sourcecode')}`}</Nav.Link>
+                            <Nav.Link eventKey="designer" ><FontAwesomeIcon icon={faTh} title={i18n.get_string('canvas')}/> <span className='d-mobile-none'>{i18n.get_string('canvas')}</span></Nav.Link>
+                            <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title={i18n.get_string('preview')}/> <span className='d-mobile-none'>{i18n.get_string('preview')}</span></Nav.Link>
+                            <Nav.Link eventKey="sourceCode"><FontAwesomeIcon icon={faCode} title={i18n.get_string('sourcecode')}/> <span className='d-mobile-none'>{i18n.get_string('sourcecode')}</span></Nav.Link>
+                            <Nav.Link eventKey="sourceCodeDesigner"><FontAwesomeIcon icon={faColumns} title={i18n.get_string('sourcecodedesigner')}/> <span className='d-mobile-none'>{i18n.get_string('canvas')}-{i18n.get_string('sourcecode')}</span></Nav.Link>
                         </Nav>
 
                         {(this.state.view == 'designer' || this.state.view == 'sourceCodeDesigner') && <>
