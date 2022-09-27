@@ -31,7 +31,7 @@
             HTMLAlertElement, HTMLCardElement, HTMLCardBodyElement, HTMLCardHeaderElement, HTMLCardFooterElement,
             HTMLMediaBSElement, HTMLMediaBSBodyElement, HTMLHRElement, HTMLCarouselElement, HTMLCarouselNavElement, HTMLAccordionElement, HTMLTabElement, HTMLAccordionNavElement, HTMLFlipCardElement,
             HTMLFlipCardFrontElement, HTMLFlipCardBackElement, HTMLTabPaneElement, HTMLTabContentElement, HTMLTableElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement, HTMLTableRowElement,
-            HTMLImageElement, HTMLImageWithCaptionElement, HTMLClickableImageElement, HTMLIconElement, HTMLIframeElement, HTMLHorizontalBarElement} from './HTMLElements';
+            HTMLImageElement, HTMLImageWithCaptionElement, HTMLClickableImageElement, HTMLIconElement, HTMLIframeElement, HTMLHorizontalBarElement, HTMLAvatarCardElement} from './HTMLElements';
 
 export class HTMLElementData{
     static propertyList = {
@@ -255,6 +255,7 @@ export class HTMLElementData{
                 new HTMLTableHeaderCellElement(),
                 new HTMLTableRowElement(),
                 new HTMLAlertElement(),
+                new HTMLAvatarCardElement(),
                 new HTMLCardElement(),
                 new HTMLCardBodyElement(),
                 new HTMLCardHeaderElement(),

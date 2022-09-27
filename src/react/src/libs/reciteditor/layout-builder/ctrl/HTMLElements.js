@@ -517,15 +517,15 @@
      }
  }
  
- export class HTMLCardElement extends HTMLDivElement{
+ export class HTMLAvatarCardElement extends HTMLDivElement{
      constructor(){
-         super(i18n.get_string('card'), "div", 'bootstrap');
+         super(i18n.get_string('avatarcard'), "div", 'bootstrap');
      }
  
      equal(el){
          if(el === null){ return false; }
  
-         return (el.classList.contains('card'));
+         return (el.classList.contains('avatarcard'));
      }
  
      create(){
@@ -563,6 +563,37 @@
          body.appendChild(el);
  
          el = document.createElement("div");
+         el.classList.add("card-footer");
+         card.appendChild(el);
+ 
+         return card;
+     }
+ }
+ 
+ export class HTMLCardElement extends HTMLDivElement{
+     constructor(){
+         super(i18n.get_string('card'), "div", 'bootstrap');
+     }
+ 
+     equal(el){
+         if(el === null){ return false; }
+ 
+         return (el.classList.contains('card'));
+     }
+ 
+     create(){
+         let card = document.createElement("div");
+         card.classList.add("card");
+         
+         let header = document.createElement("div");
+         header.classList.add('card-header');
+         card.appendChild(header);
+ 
+         let body = document.createElement("div");
+         body.classList.add("card-body");
+         card.appendChild(body);
+ 
+         let el = document.createElement("div");
          el.classList.add("card-footer");
          card.appendChild(el);
  

@@ -150,6 +150,7 @@ function atto_reciteditor_strings_for_js() {
                                           'tablerow',
                                           'listitem',
                                           'alert',
+                                          'avatarcard',
                                           'card',
                                           'cardbody',
                                           'cardheader',

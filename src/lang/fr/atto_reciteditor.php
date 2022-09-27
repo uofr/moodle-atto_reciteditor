@@ -132,6 +132,7 @@ $string['tablerow'] = 'Ligne de table';
 $string['listitem'] = 'Item de liste';
 $string['alert'] = 'Alerte';
 $string['card'] = 'Carte';
+$string['avatarcard'] = 'Carte avatar';
 $string['cardbody'] = 'Corps de carte';
 $string['cardheader'] = 'En-tête de carte';
 $string['cardfooter'] = 'Pied de carte';

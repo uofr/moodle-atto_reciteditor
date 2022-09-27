@@ -132,6 +132,7 @@ $string['tablerow'] = 'Table row';
 $string['listitem'] = 'List element';
 $string['alert'] = 'Alert';
 $string['card'] = 'Card';
+$string['avatarcard'] = 'Avatar card';
 $string['cardbody'] = 'Card body';
 $string['cardheader'] = 'Card header';
 $string['cardfooter'] = 'Card footer';
