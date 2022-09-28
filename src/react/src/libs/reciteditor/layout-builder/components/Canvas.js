@@ -26,6 +26,7 @@ import { ButtonToolbar, ButtonGroup, Button } from 'react-bootstrap';
 import {faArrowsAlt, faEdit, faBold, faArrowUp,faArrowDown, faTrashAlt, faClone, faItalic, faUnderline, faStrikethrough, faPuzzlePiece, faParagraph} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData, BtnSetCssProp, TemplateForm, UtilsHTML, i18n} from '../../RecitEditor';
+import { TextEditorModal } from '../../common/TextEditor';
 
 export class Canvas extends Component
 {
@@ -272,7 +273,7 @@ export class FloatingMenu extends Component{
         onDeleteElement: null,
         onCloneNode: null,
         device: null,
-    };      
+    };
 
     constructor(props){
         super(props);
@@ -289,6 +290,7 @@ export class FloatingMenu extends Component{
 
         let posCanvas = this.props.posCanvas;
         let posEl = UtilsHTML.getBoundingClientRect(this.props.selectedElement, this.props.device.scale);
+        let isEditable = TextEditorModal.isTagEditable(this.props.selectedElement.tagName); 
 
         style.top = Math.max(posCanvas.top + posEl.top - 32, 0);
         style.left = posCanvas.left + posEl.left;
@@ -298,11 +300,11 @@ export class FloatingMenu extends Component{
                 <ButtonToolbar>
                     <ButtonGroup size="sm">
                         <Button onDragStart={this.props.onDragElement} draggable="true" style={{cursor: 'grab'}}><FontAwesomeIcon  icon={faArrowsAlt} title={i18n.get_string('drag')}/></Button>
-                        <Button onClick={this.props.onEdit}><FontAwesomeIcon  icon={faEdit} title={i18n.get_string('edit')}/></Button>
+                        {isEditable && <Button onClick={this.props.onEdit}><FontAwesomeIcon icon={faEdit} title={i18n.get_string('edit')}/></Button>}
                         <Button onClick={() => this.props.onMoveNodeUp(null)}  ><FontAwesomeIcon icon={faArrowUp} title={i18n.get_string('moveelementup')}/></Button>
                         <Button onClick={() => this.props.onMoveNodeDown(null)}><FontAwesomeIcon icon={faArrowDown} title={i18n.get_string('moveelementdown')}/></Button>
                         <Button onClick={this.props.onCloneNode}><FontAwesomeIcon icon={faClone} title={i18n.get_string('clone')}/></Button>
-                        <Button onClick={() => this.props.onDeleteElement(null)}><FontAwesomeIcon  icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
+                        <Button onClick={() => this.props.onDeleteElement(null)}><FontAwesomeIcon icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
                     </ButtonGroup>
                 </ButtonToolbar>
             </div>

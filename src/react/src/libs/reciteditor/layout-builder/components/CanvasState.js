@@ -289,7 +289,7 @@ export class DesignerState extends CanvasState{
                 <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement} onDragElement={this.mainView.onDragStart} onEdit={this.mainView.onStartEditingNodeText}
                             onDeleteElement={this.mainView.onDeleteElement} onMoveNodeUp={this.mainView.onMoveNodeUp} onMoveNodeDown={this.mainView.onMoveNodeDown} 
                              onCloneNode={this.mainView.onCloneNode} onSaveTemplate={this.mainView.onSaveTemplate} device={this.mainView.props.device} />
-                {this.editingElement && <TextEditorModal onClose={() => this.mainView.onFinishEditingNodeText(null)} onSave={(html) => this.mainView.onFinishEditingNodeText(html)} value={this.editingElement.outerHTML}/>}
+                {this.editingElement && <TextEditorModal onClose={() => this.mainView.onFinishEditingNodeText(null)} onSave={(html) => this.mainView.onFinishEditingNodeText(html)} element={this.editingElement}/>}
             </Canvas>;
 
         return main; 
@@ -466,16 +466,13 @@ export class DesignerState extends CanvasState{
     }
 
     onStartEditingNodeText(selectedElement){ 
+        if (!TextEditorModal.isTagEditable(selectedElement.tagName)) return;
         this.editingElement = selectedElement;
     }
 
-    onFinishEditingNodeText(html){
-        if (html){
-            let dummydiv = document.createElement('div');
-            dummydiv.innerHTML = html;
-            let parent = this.editingElement.parentElement;
-            this.editingElement.replaceWith(...dummydiv.children);
-            CanvasElement.create(parent, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
+    onFinishEditingNodeText(el){
+        if (el){
+            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
         }
         this.editingElement = null;
         this.onAfterChange();

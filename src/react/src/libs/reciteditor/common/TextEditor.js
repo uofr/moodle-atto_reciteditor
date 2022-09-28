@@ -10,8 +10,30 @@ export class TextEditorModal extends React.Component {
     static defaultProps = {
         onClose: null,
         onSave: null,
-        value: ''
-    };    
+        element: null
+    };
+
+    static allowedTags = {
+        'p': {content: 'outerHTML'},
+        'h1': {content: 'outerHTML'},
+        'h2': {content: 'outerHTML'},
+        'h3': {content: 'outerHTML'},
+        'h4': {content: 'outerHTML'},
+        'h5': {content: 'outerHTML'},
+        'h6': {content: 'outerHTML'},
+        'td': {content: 'innerHTML', stripPTags: true},
+        'ul': {content: 'outerHTML'},
+        'ol': {content: 'outerHTML'},
+        'a': {content: 'innerHTML', stripPTags: true},
+        'em': {content: 'outerHTML'},
+        'pre': {content: 'outerHTML'},
+        'q': {content: 'outerHTML'},
+
+    };
+
+    static isTagEditable(tag){
+        return TextEditorModal.allowedTags[tag.toLowerCase()] ? true : false;
+    }
 
     constructor(props){
         super(props);
@@ -19,9 +41,11 @@ export class TextEditorModal extends React.Component {
         this.onDataChange = this.onDataChange.bind(this);
         this.editorRef = React.createRef();
 
-        this.state = {value: props.value};
+        let tag = TextEditorModal.allowedTags[props.element.tagName.toLowerCase()];
+        if (!tag) console.error('Text editor received unknown tag');
+        let html = props.element[tag.content];
+        this.state = {value: html, tag: tag};
         this.initModules();
-        console.log(props.value)
     }
 
     render(){
@@ -30,18 +54,18 @@ export class TextEditorModal extends React.Component {
                 <Modal.Body>
                     <div id="cktoolbar">
                         <span className="ql-formats">
-                            <button className="ql-bold"></button>
-                            <button className="ql-italic"></button>
-                            <button className="ql-underline"></button>
-                            <button className="ql-strike"></button>
+                            <button className="ql-bold" title={i18n.get_string('bold')}></button>
+                            <button className="ql-italic" title={i18n.get_string('italic')}></button>
+                            <button className="ql-underline" title={i18n.get_string('underline')}></button>
+                            <button className="ql-strike" title={i18n.get_string('strikethrough')}></button>
                         </span>
                         <span className="ql-formats">
-                            <select className="ql-color" />
-                            <select className="ql-background" />
+                            <select className="ql-color" title={i18n.get_string('fontcolor')}/>
+                            <select className="ql-background" title={i18n.get_string('bgcolor')}/>
                         </span>
                         <span className="ql-formats">
-                            <button className="ql-list" value="ordered"></button>
-                            <button className="ql-list" value="bullet"></button>
+                            <button className="ql-list" value="ordered" title={i18n.get_string('numberedlist')}></button>
+                            <button className="ql-list" value="bullet" title={i18n.get_string('list')}></button>
                         </span>
                         <span className='ql-formats'>
                             <select className="ql-header" defaultValue={''} onChange={(e) => e.persist()}>
@@ -53,7 +77,7 @@ export class TextEditorModal extends React.Component {
                             </select>
                         </span>
                         <span className="ql-formats">
-                            <button className="ql-clean"></button>
+                            <button className="ql-clean" title={i18n.get_string('removeformat')}></button>
                             <button className="ql-nonbreakingspace" title={i18n.get_string('nonbreakingspace')}>
                                 <FontAwesomeIcon icon={faParagraph}/>
                             </button>
@@ -75,8 +99,21 @@ export class TextEditorModal extends React.Component {
     }
 
     onSave(){
-        let val = this.state.value.replace(/<p(\s+[a-z0-9\-_\'\"=]+)*><\/p>/ig, '');//Remove empty tags
-        this.props.onSave(val);
+        let html = this.state.value.replace(/<p(\s+[a-z0-9\-_\'\"=]+)*><\/p>/ig, '');//Remove empty tags
+        if (this.state.tag.stripPTags){
+            html = html.replace(/(<p[^>]*>|<\/p>)/g, '');
+        }
+
+        let el = this.props.element;
+        if (this.state.tag.content == 'outerHTML'){
+            el = this.props.element.parentElement;
+            let dummydiv = document.createElement('div');
+            dummydiv.innerHTML = html;
+            this.props.element.replaceWith(...dummydiv.children);
+        }else{
+            el.innerHTML = html;
+        }
+        this.props.onSave(el);
     }
 
     initModules(){
