@@ -306,15 +306,15 @@ export class DesignerState extends CanvasState{
         if(Object.is(result.el, selectedElement)){
             this.htmlCleaning(this.window.document);
             
-            result.panels.components = 1; // show templates panel
-            result.panels.properties = 0; // hide properties panel
+            //result.panels.components = 1; // show templates panel
+            //result.panels.properties = 0; // hide properties panel
             result.el = null;
         }
         else{
             this.htmlCleaning(this.window.document);
 
-            result.panels.components = 0; // hide templates panel
-            result.panels.properties = 3; // show bookmark properties panel
+            //result.panels.components = 0; // hide templates panel
+            result.panels.properties = (result.panels.properties === 0 ? 3 : result.panels.properties); // if no properties panel is visible then it displays the basic panel
 
             if(result.el !== null){
                 if(result.el.getAttribute('data-selected') === '1'){
