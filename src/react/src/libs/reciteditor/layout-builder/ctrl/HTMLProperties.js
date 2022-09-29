@@ -1452,7 +1452,7 @@ export class BsTableCellActionProperty extends HTMLProperty{
             {
                 text: <span><FontAwesomeIcon icon={faPlus}/>{i18n.get_string('column')}</span>, 
                 onClick: function(el){
-                    let table = el.parentElement.parentElement;
+                    let table = UtilsHTML.getTableFromCell(el);
                     let result = UtilsHTML.tableAddCol(table);
                     return {action: 'insert', nodes: result};
                 }
