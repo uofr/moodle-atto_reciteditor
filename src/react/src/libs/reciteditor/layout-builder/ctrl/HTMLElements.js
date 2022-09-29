@@ -530,7 +530,7 @@
  
      create(){
          let card = document.createElement("div");
-         card.classList.add("card");
+         card.classList.add("card", "shadow");
          
          let header = document.createElement("div");
          header.classList.add('mx-auto', 'bg-white');
@@ -551,20 +551,18 @@
          card.appendChild(body);
 
          el = document.createElement("h3");
-         el.style.color = '#fff';
          el.innerHTML = i18n.get_string('title');
          el.classList.add("text-center");
          el.classList.add("mb-4");
          body.appendChild(el);
          
-         el = document.createElement("p");
-         el.style.color = '#c6c6c6';
-         el.innerHTML = 'Lorem';
+         el = document.createElement("hr");
          body.appendChild(el);
- 
-         el = document.createElement("div");
-         el.classList.add("card-footer");
-         card.appendChild(el);
+
+         el = document.createElement("p");
+         el.classList.add('dark-gray-text', 'text-center', 'mt-5');
+         el.innerHTML = 'Lorem ipsum dolor sit amet eos adipisci, consectetur adipisicing elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. A soluta corporis voluptate ab error quam dolores doloremque, quae consectetur.';
+         body.appendChild(el);
  
          return card;
      }
@@ -583,18 +581,31 @@
  
      create(){
          let card = document.createElement("div");
-         card.classList.add("card");
+         card.classList.add("card", "shadow", "border-0");
          
-         let header = document.createElement("div");
-         header.classList.add('card-header');
-         card.appendChild(header);
+         
+         let el = document.createElement("img");
+         el.classList.add("card-img-top");
+         el.setAttribute("src", `${Assets.ImageEmpty}`);
+         card.appendChild(el);
  
          let body = document.createElement("div");
-         body.classList.add("card-body");
+         body.classList.add("card-body", "bg-white");
          card.appendChild(body);
+
+         el = document.createElement("h3");
+         el.innerHTML = i18n.get_string('title');
+         el.classList.add("text-center");
+         el.classList.add("mb-4");
+         body.appendChild(el);
+         
+         el = document.createElement("p");
+         el.innerHTML = 'Lorem ipsum dolor sit amet eos adipisci, consectetur adipisicing elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. A soluta corporis voluptate ab error quam dolores doloremque, quae consectetur.';
+         body.appendChild(el);
  
-         let el = document.createElement("div");
-         el.classList.add("card-footer");
+         el = document.createElement("div");
+         el.innerHTML = "Footer";
+         el.classList.add("card-footer", "bg-white", "border-0");
          card.appendChild(el);
  
          return card;
@@ -704,24 +715,19 @@
              head2.appendChild(el);
              
              el = document.createElement("h3");
-             el.style.color = '#fff';
-             el.innerHTML = i18n.get_string('title')+' '+v;
+             el.innerHTML = i18n.get_string('title')+' '+i18n.get_string(v);
              el.classList.add("text-white");
              el.classList.add("mt-3");
              head2.appendChild(el);
+ 
+             let body = document.createElement("div");
+             body.classList.add("card-body");
+             face.appendChild(body);
              
              el = document.createElement("p");
-             el.style.color = '#c6c6c6';
-             el.innerHTML = 'Lorem';
-             head2.appendChild(el);
- 
-             el = document.createElement("div");
-             el.classList.add("card-body");
-             face.appendChild(el);
- 
-             el = document.createElement("div");
-             el.classList.add("card-footer");
-             face.appendChild(el);
+             el.classList.add('dark-gray-text', 'text-center');
+             el.innerHTML = 'Lorem ipsum dolor sit amet eos adipisci, consectetur adipisicing elit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. A soluta corporis voluptate ab error quam dolores doloremque, quae consectetur.';
+             body.appendChild(el);
          }
  
          return card;

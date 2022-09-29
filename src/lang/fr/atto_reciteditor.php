@@ -139,6 +139,7 @@ $string['cardfooter'] = 'Pied de carte';
 $string['flipcard'] = 'Carte pivotante';
 $string['front'] = 'Avant';
 $string['rear'] = 'Arrière';
+$string['back'] = 'Arrière';
 $string['media'] = 'Media';
 $string['mediabody'] = 'Corps de media';
 $string['carousel'] = 'Carousel';

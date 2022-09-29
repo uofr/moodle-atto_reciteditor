@@ -139,6 +139,7 @@ $string['cardfooter'] = 'Card footer';
 $string['flipcard'] = 'Flip card';
 $string['front'] = 'Front';
 $string['rear'] = 'Rear';
+$string['back'] = 'Rear';
 $string['media'] = 'Media';
 $string['mediabody'] = 'Media body';
 $string['carousel'] = 'Carousel';

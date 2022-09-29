@@ -92,6 +92,7 @@ function atto_reciteditor_strings_for_js() {
                                           'screenshot',
                                           'failedtodrop',
                                           'drag',
+                                          'back',
                                           'edit',
                                           'createcomponent',
                                           'moveelementup',
