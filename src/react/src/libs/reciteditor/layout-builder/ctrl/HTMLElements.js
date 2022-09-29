@@ -193,7 +193,7 @@
      equal(el){
          if(el === null){ return false; }
  
-         return (el.classList.contains('attoreciteditor_videobtn'));
+         return (el.classList.contains('attoreciteditor_videobtn') || el.classList.contains('videobtn'));//Videobtn is legacy class
      }
  
      create(){ 
