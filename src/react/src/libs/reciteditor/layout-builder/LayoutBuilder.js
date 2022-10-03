@@ -72,6 +72,7 @@ export class LayoutBuilder extends Component
 
     componentDidMount(){
         this.windowResizeTo();
+        window.moveTo(0,0);
     }
 
 	render(){
@@ -146,10 +147,11 @@ export class LayoutBuilder extends Component
     windowResizeTo(){
         let device = this.getDeviceDimension();
         let width = device.width + LayoutBuilder.properties.leftPanel.width + 15 + (this.state.view === 'sourceCodeDesigner' ? 780 : 0);
-        window.resizeTo(width, screen.availHeight);
+        window.resizeTo(Math.min(width, screen.availWidth), screen.availHeight);
     }
 
     onWindowResize(){
+        console.log("res")
         this.forceUpdate();
     }
 

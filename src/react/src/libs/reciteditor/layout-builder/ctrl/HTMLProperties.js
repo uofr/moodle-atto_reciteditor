@@ -28,14 +28,14 @@ import {Utils, UtilsHTML, i18n, LayoutSpacingEditor as VCLayoutSpacingEditor} fr
 import {HTMLElementData} from './HTMLElementData';
 
 class ColorSelectorInput{
-    constructor(options, onChange){
+    constructor(options, onChangeProp){
         this.type = 'colorselector'; // keep this attribute for backward compatibility
         this.options = options;
-        this.onChange = onChange;
+        this.onChangeProp = onChangeProp;
     }    
 
     onChange(el, value, data){
-        this.onChange(el, value, data);
+        this.onChangeProp(el, value, data);
     }
 }
 
@@ -56,40 +56,40 @@ class MinMaxValueInput{
 }
 
 class TextInput{
-    constructor(onChange){
+    constructor(onChangeProp){
         this.type = 'text'; // keep this attribute for backward compatibility
         this.defaultValue = '';
-        this.onChange = onChange;
+        this.onChangeProp = onChangeProp;
     }
 
     onChange(el, value, data){
-        this.onChange(el, value, data);
+        this.onChangeProp(el, value, data);
     }
 }
 
 class ComboBox{
-    constructor(options, onChange){
+    constructor(options, onChangeProp){
         this.type = 'combobox'; // keep this attribute for backward compatibility
         this.defaultValue = '';
         this.options = options;
-        this.onChange = onChange;
+        this.onChangeProp = onChangeProp;
     }
 
     onChange(el, value, data){
-        this.onChange(el, value, data);
+        this.onChangeProp(el, value, data);
     }
 }
 
 class RadioButton{
-    constructor(options, onChange, defaultValue){
+    constructor(options, onChangeProp, defaultValue){
         this.type = 'radio'; // keep this attribute for backward compatibility
         this.options = options;
         this.defaultValue = defaultValue || [];
-        this.onChange = onChange;
+        this.onChangeProp = onChangeProp;
     }
 
     onChange(el, value, data){
-        this.onChange(el, value, data);
+        this.onChangeProp(el, value, data);
     }
 }
 
@@ -117,15 +117,15 @@ class IconPicker{
 }
 
 class ImageSrc{
-    constructor(onChange){
+    constructor(onChangeProp){
         this.type = 'ImageSrc'; // keep this attribute for backward compatibility
         this.defaultValue = '';
-        this.onChange = onChange || null;
+        this.onChangeProp = onChangeProp || null;
     }
 
     onChange(el, value, data){
-        if(this.onChange){
-            this.onChange(el, value, data);
+        if(this.onChangeProp){
+            this.onChangeProp(el, value, data);
         }
         else{
             el.src = value;
@@ -134,40 +134,40 @@ class ImageSrc{
 }
 
 class TextArea{
-    constructor(onChange){
+    constructor(onChangeProp){
         this.type = 'textarea'; // keep this attribute for backward compatibility
         this.defaultValue = '';
-        this.onChange = onChange;
+        this.onChangeProp = onChangeProp;
     }
 
     onChange(el, value, data){
-        this.onChange(el, value, data);
+        this.onChangeProp(el, value, data);
     }
 }
 
 class LayoutSpacing{
-    constructor(options, onChange){
+    constructor(options, onChangeProp){
         this.type = 'layoutspacing'; // keep this attribute for backward compatibility
         this.defaultValue = '';
         this.options = options;
-        this.onChange = onChange;
+        this.onChangeProp = onChangeProp;
     }
 
     onChange(el, value, data){
-        this.onChange(el, value, data);
+        this.onChangeProp(el, value, data);
     }
 }
 
 class MultiSelect{
-    constructor(options, onChange){
+    constructor(options, onChangeProp){
         this.type = 'multipleselect'; // keep this attribute for backward compatibility
         this.defaultValue = '';
         this.options = options;
-        this.onChange = onChange;
+        this.onChangeProp = onChangeProp;
     }
 
     onChange(el, value, data){
-        this.onChange(el, value, data);
+        this.onChangeProp(el, value, data);
     }
 }
 
@@ -179,13 +179,13 @@ class ButtonGroup{
 }
 
 class LayoutSpacingEditor{
-    constructor(onChange){
+    constructor(onChangeProp){
         this.type = 'layoutspacingeditor'; // keep this attribute for backward compatibility
-        this.onChange = onChange;
+        this.onChangeProp = onChangeProp;
     }
 
     onChange(el, value, data){
-        this.onChange(el, value, data);
+        this.onChangeProp(el, value, data);
     }
 }
 
