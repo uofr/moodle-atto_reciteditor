@@ -31,7 +31,7 @@ class atto_reciteditor_external extends external_api {
     //
     public static function get_template_list_parameters() {
         return new external_function_parameters(array(
-            'type' => new external_value(PARAM_TEXT, 'tpl type', VALUE_OPTIONAL),
+            'type' => new external_value(PARAM_TEXT, 'tpl type', VALUE_DEFAULT, ''),
         ));
     }
 
