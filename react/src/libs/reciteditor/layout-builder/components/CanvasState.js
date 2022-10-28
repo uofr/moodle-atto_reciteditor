@@ -22,7 +22,8 @@
  */
 
  import React from 'react';
- import {Canvas, CanvasElement, FloatingMenu, NodeTextEditing, SourceCodeEditor, Assets, HTMLElementData, UtilsHTML, UtilsMoodle} from '../../RecitEditor';
+import { TextEditorModal } from '../../common/TextEditor';
+ import {LayoutBuilder, Canvas, CanvasElement, FloatingMenu, NodeTextEditing, SourceCodeEditor, Assets, HTMLElementData, UtilsHTML, UtilsMoodle, UtilsString} from '../../RecitEditor';
 
 class CanvasState{
     constructor(mainView){
@@ -35,10 +36,8 @@ class CanvasState{
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
         this.onInsertNode = this.onInsertNode.bind(this);
-        this.onEditNodeText = this.onEditNodeText.bind(this);
         this.onLoadFrame = this.onLoadFrame.bind(this);
         this.htmlCleaning = this.htmlCleaning.bind(this);
-        this.onReplaceNonBreakingSpace = this.onReplaceNonBreakingSpace.bind(this);
         this.onKey = this.onKey.bind(this);
 
         this.onLoadFrame();
@@ -49,7 +48,7 @@ class CanvasState{
     render(show, selectedElement){}
     onDragEnd(){}
     getData(htmlCleaning){}
-    setData(value){}
+    setData(value, selectedElement){}
     onBeforeChange(value, flags){}
     onContentChange(value, flags){}
     onAfterChange(value, flags){}
@@ -58,17 +57,16 @@ class CanvasState{
     onMoveNodeDown(selectedElement){}
     onCloneNode(selectedElement){}
     onInsertNode(elems){}
-    onEditNodeText(selectedElement){}
-    onReplaceNonBreakingSpace(selectedElement){}
+    onStartEditingNodeText(selectedElement){}
+    onFinishEditingNodeText(html){}
     onKey(e, editingElement){}
 
-    onCollapse(collapsed){ 
-        if (typeof collapsed == 'undefined') return false
-        return collapsed;
+    onPanelChange(panels){ 
+        return panels;
     }
 
-    onSelectElement(el, selectedElement, collapsed){ 
-        let result = {el: el, collapsed: collapsed };
+    onSelectElement(el, selectedElement, panels){ 
+        let result = {el: el, panels: panels };
         return result;
     }  
 
@@ -99,7 +97,8 @@ class CanvasState{
 
     getStyle(width){
         let style = {width: width || this.mainView.props.device.width, height: this.mainView.props.device.height};
-        if(this.mainView.props.device.height > window.innerHeight){
+
+        if(this.mainView.props.device.scale < 1){
             style.transform = `scale(${this.mainView.props.device.scale})`;
             style.transformOrigin = "0 0";
         } 
@@ -154,9 +153,9 @@ export class SourceCodeDesignerState extends CanvasState{
         return this.designer.getData(true);
     }
 
-    setData(data){
-        this.designer.setData(data);
-        this.sourceCode.setData(data);
+    setData(data, selectedElement){
+        this.designer.setData(data, selectedElement);
+        this.sourceCode.setData(data, selectedElement);
         return true;
     }
 
@@ -164,18 +163,14 @@ export class SourceCodeDesignerState extends CanvasState{
         this.designer.onDragEnd();
     }
 
-    onSelectElement(el, selectedElement, collapsed){
-        this.sourceCode.onSelectElement(el, selectedElement, collapsed);
-        let result = this.designer.onSelectElement(el, selectedElement, collapsed);
+    onSelectElement(el, selectedElement, panels){
+        this.sourceCode.onSelectElement(el, selectedElement, panels);
+        let result = this.designer.onSelectElement(el, selectedElement, panels);
         return result
     }
 
     onDeleteElement(el){
         this.designer.onDeleteElement(el);
-    }
-
-    onReplaceNonBreakingSpace(el){
-        this.designer.onReplaceNonBreakingSpace(el);
     }
 
     onMoveNodeUp(el){
@@ -199,13 +194,16 @@ export class SourceCodeDesignerState extends CanvasState{
         this.designer.onInsertNode(elems);
     }
 
-    onEditNodeText(el){
-        this.designer.onEditNodeText(el);
+    onStartEditingNodeText(el){
+        this.designer.onStartEditingNodeText(el);
     }
 
-    onCollapse(collapse){
-        let collapsed = this.designer.onCollapse(collapse);
-        return collapsed
+    onFinishEditingNodeText(html){
+        this.designer.onFinishEditingNodeText(html)
+    }
+
+    onPanelChange(panels){
+        return this.designer.onPanelChange(panels);
     }
 }
 
@@ -217,16 +215,26 @@ export class DesignerState extends CanvasState{
         this.window = null;
         this.historyManager = historyManager;
         this.onKey = this.onKey.bind(this);
+        this.loadCount = 0;
+        this.editingElement = null;
     }
 
     onLoadFrame(){
         let iframe = window.document.getElementById("designer-canvas");
+
         if(iframe){
             this.onInit(iframe);
             return;
         }
         else{
             console.log("Loading designer iframe...");
+
+            if(this.loadCount > 20){
+                console.log("Exiting because it was impossible to load the designer canvas.");
+                return;
+            }
+
+            this.loadCount++;
             setTimeout(this.onLoadFrame, 500);
         }
     }
@@ -263,12 +271,13 @@ export class DesignerState extends CanvasState{
 
 
         // pure JS
-        CanvasElement.create(body, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onEditNodeText);
+        CanvasElement.create(body, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
 
         // React JS
         //body.appendChild(doc.firstChild);        
 
-        body.onkeyup = this.mainView.onKey;
+        body.onkeydown = this.mainView.onKey;
+        body.ondrag = this.mainView.onDragStart;
     }
 
     render(show, selectedElement, width){
@@ -277,17 +286,17 @@ export class DesignerState extends CanvasState{
         let main = 
             <Canvas style={{display: (show ? 'flex' : 'none') }}>
                 <iframe id="designer-canvas" className="canvas" style={this.getStyle(width)}></iframe>
-                <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement} onDragElement={this.mainView.onDragStart} onEdit={this.mainView.onEditNodeText}
+                <FloatingMenu posCanvas={posCanvas} selectedElement={selectedElement} onDragElement={this.mainView.onDragStart} onEdit={this.mainView.onStartEditingNodeText}
                             onDeleteElement={this.mainView.onDeleteElement} onMoveNodeUp={this.mainView.onMoveNodeUp} onMoveNodeDown={this.mainView.onMoveNodeDown} 
                              onCloneNode={this.mainView.onCloneNode} onSaveTemplate={this.mainView.onSaveTemplate} device={this.mainView.props.device} />
-                <NodeTextEditing posCanvas={posCanvas} window={this.window} selectedElement={selectedElement} onReplaceNonBreakingSpace={this.mainView.onReplaceNonBreakingSpace} device={this.mainView.props.device}/>
+                {this.editingElement && <TextEditorModal onClose={() => this.mainView.onFinishEditingNodeText(null)} onSave={(html) => this.mainView.onFinishEditingNodeText(html)} element={this.editingElement}/>}
             </Canvas>;
 
         return main; 
     }
 
-    onSelectElement(el, selectedElement, collapsed){
-        let result = {el: el, collapsed: collapsed};
+    onSelectElement(el, selectedElement, panels){
+        let result = {el: el, panels: panels};
 
         if((result.el !== null) && (result.el.tagName.toLowerCase() === 'body')){ 
             result.el = null;
@@ -297,27 +306,15 @@ export class DesignerState extends CanvasState{
         if(Object.is(result.el, selectedElement)){
             this.htmlCleaning(this.window.document);
             
-            result.collapsed.components = false;
-            result.collapsed.properties = true;
+            //result.panels.components = 1; // show templates panel
+            //result.panels.properties = 0; // hide properties panel
             result.el = null;
         }
-       /* else if(selectedElement !== null){ 
-            this.htmlCleaning();
-            
-            result.collapsed.components = false;
-            result.collapsed.properties = true;
-            result.el = null;
-            return result; 
-        }*/
         else{
             this.htmlCleaning(this.window.document);
 
-            if (selectedElement && selectedElement.innerHTML != this.editingElementText){
-                this.onAfterChange()
-            }
-
-            result.collapsed.components = true;
-            result.collapsed.properties = false;
+            //result.panels.components = 0; // hide templates panel
+            result.panels.properties = (result.panels.properties === 0 ? 3 : result.panels.properties); // if no properties panel is visible then it displays the basic panel
 
             if(result.el !== null){
                 if(result.el.getAttribute('data-selected') === '1'){
@@ -333,9 +330,9 @@ export class DesignerState extends CanvasState{
                         elClass.onSelect(result.el);
                     }
                     if (elClass && elClass.collapsePanel){
-                        result.collapsed.components = elClass.collapsePanel.components;
-                        result.collapsed.properties = elClass.collapsePanel.properties;
-                        result.collapsed.treeView = elClass.collapsePanel.treeView;
+                        result.panels.components = elClass.collapsePanel.components;
+                        result.panels.properties = elClass.collapsePanel.properties;
+                        result.panels.treeView = elClass.collapsePanel.treeView;
                     }
                 }
             }
@@ -345,11 +342,12 @@ export class DesignerState extends CanvasState{
         return result;
     }
 
-    onCollapse(collapsed){
-        collapsed.components = false;
-        collapsed.properties = true;
-        collapsed.treeView = false;
-        return collapsed;
+    onPanelChange(panels){
+        panels.components = 1;
+        panels.properties = 0;
+        panels.treeView = 1;
+        
+        return panels;
     }
 
     onBeforeChange(){
@@ -374,18 +372,6 @@ export class DesignerState extends CanvasState{
 
         this.onBeforeChange();
         el.remove();
-        this.onAfterChange();
-    }
-
-    onReplaceNonBreakingSpace(el){
-        if(!el){ return; } // Element does not exist
-        if(el.isSameNode(this.window.document.body)){ return; }
-
-        this.onBeforeChange()
-        let regex = new RegExp(/(\u00AB|\u2014)(?:\s+)?|(?:\s+)?([\?!:;\u00BB])/g);
-        el.innerHTML = el.innerHTML.replace("&nbsp; ", "");//Revert old nbsp
-        el.innerHTML = el.innerHTML.replace("&nbsp;", "");//Revert old nbsp
-        el.innerHTML = el.innerHTML.replace(regex, "$1&nbsp;$2");
         this.onAfterChange();
     }
     
@@ -433,7 +419,7 @@ export class DesignerState extends CanvasState{
         el.removeAttribute("data-selected");
         el.removeAttribute("contenteditable");
         parent.appendChild(el);
-        CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onEditNodeText);
+        CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
         this.onAfterChange();
     }
 
@@ -441,7 +427,7 @@ export class DesignerState extends CanvasState{
         this.onBeforeChange();
 
         for(let el of elems){
-            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onEditNodeText);
+            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
         }
         this.onAfterChange();
     }
@@ -462,14 +448,14 @@ export class DesignerState extends CanvasState{
         return this.window.document.body;
     }
 
-    setData(value){
+    setData(value, selectedElement){
         let that = this;
 
         let loading = function(){
             if(that.window){
                 let body = that.window.document.body;
                 body.innerHTML = value;
-                CanvasElement.create(body, that.mainView.onSelectElement, that.mainView.onDragEnd, that.mainView.onEditNodeText);
+                CanvasElement.create(body, that.mainView.onSelectElement, that.mainView.onDragEnd, that.mainView.onStartEditingNodeText);
             }
             else{
                 console.log("Loading designer canvas...");
@@ -479,42 +465,36 @@ export class DesignerState extends CanvasState{
         setTimeout(loading, 500);
     }
 
-    onEditNodeText(selectedElement){ 
-        let that = this;     
-      
-        let setCaretToEnd = function(el) {
-            el.focus();
-            
-            let range = document.createRange();
-            range.selectNodeContents(el);
-            range.collapse(true);
-            let sel = that.window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-          
-            // set scroll to the end if multiline
-            el.scrollTop = el.scrollHeight; 
-        }    
+    onStartEditingNodeText(selectedElement){ 
+        if (!TextEditorModal.isTagEditable(selectedElement.tagName)) return;
+        this.editingElement = selectedElement;
+    }
 
-        if(selectedElement === null){
-            return;
+    onFinishEditingNodeText(el){
+        if (el){
+            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
         }
-
-        selectedElement.setAttribute('contenteditable', 'true');
-        this.editingElementText = selectedElement.innerHTML;
-        setCaretToEnd(selectedElement);
+        this.editingElement = null;
+        this.onAfterChange();
     }
 
     onKey(e, editingElement) {
-        if (e.keyCode === 46) {//del
-            console.log(editingElement)
+        /*if (e.keyCode === 46) {//del
             if (!editingElement || editingElement.getAttribute('contenteditable') != 'true') {
                 this.mainView.onDeleteElement(null);
             }
-        }
+        }*/
 
         if (e.ctrlKey && e.keyCode == 90){//ctrl z
             this.historyManager.onUndo(this.mainView.setData, this.mainView.getData());
+        }
+        
+        if (!e.shiftKey && e.keyCode == 13){//return
+            if (editingElement && editingElement.getAttribute('contenteditable') == 'true') {
+                // prevent the default behaviour of return key pressed
+                e.preventDefault()
+                return false;
+            }
         }
     }
 }
@@ -531,11 +511,12 @@ export class SourceCodeState extends CanvasState{
 
     render(show, selectedElement, width, height){
         let style = {
-            width: width || Math.min(this.mainView.props.device.width, window.innerWidth - 380 - 10), 
-            height: height || Math.min(this.mainView.props.device.height, window.innerHeight - 56 - 10), 
+            width: width || Math.min(this.mainView.props.device.width, window.innerWidth - LayoutBuilder.properties.leftPanel.width), 
+            height: height || Math.min(this.mainView.props.device.height, window.innerHeight - LayoutBuilder.properties.topNavBar.height), 
             display: (show ? 'block' : 'none'),
             overflowY: 'auto'
         };
+        
         return <SourceCodeEditor queryStr={this.queryStr} style={style} value={this.data} onChange={this.onAfterChange}/>
     }
 
@@ -560,27 +541,32 @@ export class SourceCodeState extends CanvasState{
         return UtilsHTML.removeTagId(result);
     }
 
-    setData(value, el){
-        el = el || null;
+    setData(value, selectedElement){
+        selectedElement = selectedElement || null;
 
-        if(el !== null){
-            this.queryStr = el.getAttribute("data-tag-id") || "";
+        if(selectedElement !== null){
+            this.queryStr = selectedElement.getAttribute("data-tag-id") || "";
         }        
         
         this.data = UtilsHTML.assignTagId(value);
     }
 
-    onSelectElement(el, selectedElement, collapsed){ 
+    onSelectElement(el, selectedElement, panels){ 
+        let result = {el: el, panels: panels };
+
+        if(el === null){return result;}
+
         this.queryStr = el.getAttribute("data-tag-id") || "";
-        let result = {el: el, collapsed: collapsed };
+        
         return result;
     }
 
-    onCollapse(collapsed){ 
-        collapsed.components = true;
-        collapsed.properties = true;
-        collapsed.treeView = false;
-        return collapsed;
+    onPanelChange(panels){ 
+        panels.components = 0;
+        panels.properties = 0;
+        panels.treeView = 1;
+        
+        return panels;
     }
 }
 
@@ -589,16 +575,25 @@ export class PreviewState extends CanvasState{
         super(mainView);
 
         this.iFrame = null;
+        this.loadCount = 0
     }
 
     onLoadFrame(){
         let iframe = window.document.getElementById("preview-canvas");
+
         if(iframe){
             this.onInit(iframe);
             return;
         }
         else{
             console.log("Loading preview iframe...");
+
+            if(this.loadCount > 20){
+                console.log("Exiting because it was impossible to load the preview canvas.");
+                return;
+            }
+            this.loadCount++;
+
             setTimeout(this.onLoadFrame, 500);
         }
     }
@@ -657,8 +652,8 @@ export class PreviewState extends CanvasState{
         return main;
     }
 
-    onSelectElement(el, selectedElement, collapsed){
-        let result = {el: null, collapsed: collapsed};
+    onSelectElement(el, selectedElement, panels){
+        let result = {el: null, panels: panels};
         return result;
     }
 
@@ -677,8 +672,16 @@ export class PreviewState extends CanvasState{
         return this.iFrame.document.body.innerHTML;
     }
 
-    setData(value){
+    setData(value, selectedElement){
         let body = this.iFrame.document.body;
         body.innerHTML = value;
+    }
+
+    onPanelChange(panels){
+        panels.components = 0;
+        panels.properties = 0;
+        panels.treeView = 0;
+
+        return panels;
     }
 }

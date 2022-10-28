@@ -42,6 +42,7 @@ export class ColorSelector extends Component {
         this.onChange = this.onChange.bind(this);
         this.options = this.props.options;
 
+        // set Bootstrap variant colors according to the theme
         if (this.props.flags && this.props.flags.fetchFromTheme){
             let cssRules = UtilsMoodle.getThemeMoodleCssRules(true);
 
@@ -49,7 +50,12 @@ export class ColorSelector extends Component {
                 for (let i in this.options){
                     let css = '.' + this.props.flags.prefix+this.options[i].value;
                     if (c.selectorText === css){
-                        this.options[i].style = {backgroundColor: c.style.backgroundColor, color: c.style.color, borderColor: c.style.backgroundColor};
+                        if(this.props.flags.prefix === 'text-'){
+                            this.options[i].style = {backgroundColor: c.style.color, borderColor: c.style.color};                            
+                        }
+                        else{
+                            this.options[i].style = {backgroundColor: c.style.backgroundColor, borderColor: c.style.backgroundColor};
+                        }
                     }
                 }
             }

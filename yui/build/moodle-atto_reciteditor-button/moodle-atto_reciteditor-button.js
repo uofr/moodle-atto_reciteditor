@@ -50,24 +50,32 @@ Y.namespace('M.atto_reciteditor').Button = Y.Base.create('button', Y.M.editor_at
         });
     },
 
+    globalVars: {popup: null},
+
     openHtmlEditor: function(e) {
         e.preventDefault();
+       
+        // if the reference exists and the window is not closed so we can bring it to the front with the method focus() method without having to recreate the window
+        if(this.globalVars.popup !== null && !this.globalVars.popup.closed){
+            this.globalVars.popup.focus();
+            return;
+        }
+
         var that = this;
        
         var url = M.cfg.wwwroot;
         url += "/lib/editor/atto/plugins/reciteditor/view.php";
         
-        var popup = window.open(url,'Éditeur RÉCIT','scrollbars=1');
+        this.globalVars.popup = window.open(url,'HTML Bootstrap Editor','scrollbars=1');
 
-        if (popup.outerWidth < screen.availWidth || popup.outerHeight < screen.availHeight)
-        {
-          popup.moveTo(0,0);
-          popup.resizeTo(screen.availWidth, screen.availHeight);
-        }
+        /*if (this.globalVars.popup.outerWidth < screen.availWidth || this.globalVars.popup.outerHeight < screen.availHeight){
+            this.globalVars.popup.moveTo(0,0);
+            this.globalVars.popup.resizeTo(screen.availWidth, screen.availHeight);
+        }*/
 
-        popup.attoInterface = {};
+        this.globalVars.popup.attoInterface = {};
 
-        popup.attoInterface.getSettings = function(){
+        this.globalVars.popup.attoInterface.getSettings = function(){
             var result = {};
             result.contextid = M.cfg.contextid;
             result.wwwroot = M.cfg.wwwroot;
@@ -77,7 +85,7 @@ Y.namespace('M.atto_reciteditor').Button = Y.Base.create('button', Y.M.editor_at
             return result;
         }
 
-        popup.attoInterface.getThemeCssRules = function(returnAllRules){
+        this.globalVars.popup.attoInterface.getThemeCssRules = function(returnAllRules){
             var styleSheets = window.document.styleSheets;
 
 
@@ -106,11 +114,11 @@ Y.namespace('M.atto_reciteditor').Button = Y.Base.create('button', Y.M.editor_at
             return cssRulesBuffer;
         }
 
-        popup.attoInterface.getThemeUrl = function(){
+        this.globalVars.popup.attoInterface.getThemeUrl = function(){
             return `${M.cfg.wwwroot}/theme/styles.php/${M.cfg.theme}/${M.cfg.themerev}_${M.recit.reciteditor.settings.currentthemesubrev}/all`;
         }
 
-        popup.attoInterface.getFileTransferData = function(){
+        this.globalVars.popup.attoInterface.getFileTransferData = function(){
             var host = that.get('host');
             var options = host.get('filepickeroptions').image || {};
             
@@ -140,16 +148,16 @@ Y.namespace('M.atto_reciteditor').Button = Y.Base.create('button', Y.M.editor_at
             return result;
         };
 
-        popup.attoInterface.getContent = function(){
+        this.globalVars.popup.attoInterface.getContent = function(){
             return that.editor.getHTML();
         };
 
-        popup.attoInterface.setContent = function(htmlStr){
+        this.globalVars.popup.attoInterface.setContent = function(htmlStr){
             that.editor.setHTML(htmlStr);
-            popup.close();
+            that.globalVars.popup.close();
         };
 
-        popup.M = M;
+        this.globalVars.popup.M = M;
     },
 });
 

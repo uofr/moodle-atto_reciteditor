@@ -27,7 +27,7 @@ import {faFont, faCode, faFileCode, faBold, faItalic, faAlignLeft, faAlignRight,
         faOutdent, faIndent, faUnderline, faStrikethrough, faListUl, faListOl, faRemoveFormat, faLink, faUnlink, faUndo, faRedo,
         faFillDrip, faHighlighter, faCamera, faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {ScreenCapture, UtilsHTML, ImageSrc, i18n} from '../RecitEditor';
+import {ScreenCapture, UtilsHTML,Utils, ImageSrc, i18n} from '../RecitEditor';
 
 export class ButtonsBar extends Component{
     static defaultProps = {
@@ -329,6 +329,7 @@ export class BtnSetCssProp extends Component{
         icon: null,
         cssProp: "",
         defaultValue: "",
+        tagName: "",
         value: "",
         onClick: null,
         title: "",
@@ -363,11 +364,19 @@ export class BtnSetCssProp extends Component{
             return this.props.defaultValue; 
         }
 
-        let currentValue = sel.node.style[this.props.cssProp] || "";
+        if (this.props.tagName.length > 0){
+            let tag = sel.node.tagName;
+            if (this.props.tagName.toUpperCase() == tag){
+                return this.props.value;
+            }
 
-        currentValue = (currentValue.length === 0 ? this.props.defaultValue : currentValue);
+        }else{
+            let currentValue = sel.node.style[this.props.cssProp] || "";
 
-        return currentValue;
+            currentValue = (currentValue.length === 0 ? this.props.defaultValue : currentValue);
+
+            return currentValue;
+        }
     }
 
     getValue(){
@@ -387,18 +396,28 @@ export class BtnSetCssProp extends Component{
         
         let selection = sel.sel;
         if (selection.rangeCount) {
-          let text = selection.toString();
-          let range = selection.getRangeAt(0);
-          let parent = range.startContainer.parentNode;
-          
-          if (range.startOffset > 0 && !parent.style[prop]) {
-            let inner = document.createElement("span");
-            inner.style[prop] = this.getValue();
-            inner.innerHTML = text;
-            parent.innerHTML = parent.innerHTML.replace(text, inner.outerHTML);
-          } else if (parent.style && parent.style[prop]) {
-            parent.outerHTML = parent.innerHTML;
-          }
+            let range = selection.getRangeAt(0);
+            let clonedSelection = range.cloneContents();
+            let dummydiv = document.createElement('div'); //We have to create a dummy div to get the selected document fragment, fragment doesnt have innerhtml prop
+            dummydiv.appendChild(clonedSelection);
+            let text = dummydiv.innerHTML;
+            let parent = range.startContainer.parentNode;
+            let offset = Utils.getCaretCharacterOffsetWithin(parent);
+            
+            if (this.props.tagName.length > 0 && this.props.tagName.toUpperCase() != parent.tagName) {//If the prop is a tag name
+                let inner = document.createElement(this.props.tagName);
+                inner.innerHTML = text;
+                parent.innerHTML = Utils.replaceAt(parent.innerHTML, text, inner.outerHTML, offset);
+            }else if (text == parent.innerHTML && !parent.style[prop]) {//If the text selectioned is the whole tag, set style on the tag rather than create a span
+                parent.style[prop] = this.getValue();
+            }else if (range.startOffset > 0 && !parent.style[prop]) {
+                let inner = document.createElement("span");
+                inner.style[prop] = this.getValue();
+                inner.innerHTML = text;
+                parent.innerHTML = Utils.replaceAt(parent.innerHTML, text, inner.outerHTML, offset);
+            } else if ((parent.style && parent.style[prop]) || this.props.tagName.toUpperCase() == parent.tagName) {//Undo the style
+                parent.outerHTML = parent.innerHTML;
+            }
         }
         
         if(sel.refreshSelection){

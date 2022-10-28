@@ -23,69 +23,83 @@
 
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button, Modal  } from 'react-bootstrap';
-import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCloud, faTimes, faCloudDownloadAlt, faCog} from '@fortawesome/free-solid-svg-icons';
+import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCubes, faCloud, faTimes, faCloudDownloadAlt, faCog, faPuzzlePiece, faObjectGroup} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  IconSelector, ColorSelector, HTMLElementData, Templates, i18n } from '../../RecitEditor';
+import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, Assets, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  IconSelector, ColorSelector, Templates, i18n } from '../../RecitEditor';
+import { HTMLElementData } from './HTMLElementData';
 
 export class ComponentProperties extends Component{
     static defaultProps = {
         element: null,
         onInsertNode: null,
-        onDeleteElement: null
+        onDeleteElement: null,
+        tab: 'bm'
     };
 
-    constructor(props){
-        super(props);
-
-        this.onSelectTab = this.onSelectTab.bind(this);
-
-        this.state = {tab: '0'};
-    }
-
     render(){
-        if(this.props.element === null){ return null; }
+        let title = <></>;
+
+        if(this.props.tab === "bs"){
+            title = <><i className='svgicon'>{Assets.faBootstrap}</i> {i18n.get_string('bootstrap')}</>;
+        }
+        else if(this.props.tab === "html"){
+            title = <><i className='svgicon'>{Assets.faHtml}</i> {i18n.get_string('htmlproprieties')}</>;
+        }
+        else if(this.props.tab === "bm"){
+            title = <><FontAwesomeIcon icon={faCubes}/> {i18n.get_string('basic')}</>;
+        }
+
+        let header = <div><h5 className="m-0 p-2">{title}</h5><hr className='mt-0'/></div>;
         
-        let elClass = HTMLElementData.getElementClass(null, this.props.element);
-
-        if(elClass === null){ return null;}
-
-        let properties = HTMLElementData.propertyList.filter(item => elClass.properties.includes(item.name));
-
+        if(this.props.element === null){ 
+            return header; 
+        }
         
-        if((properties === null) || (properties.length === 0)){ return null; }
-        
-        properties.sort((el1, el2) => { 
-            return elClass.properties.indexOf(el1.name) - elClass.properties.indexOf(el2.name)
-        });
-
-        let bootstrapProps = properties.filter(item => item.type === 'bootstrap');
-        let styleAttr = properties.filter(item => item.type === 'styleattr');
-        let attributes = properties.filter(item => item.type === 'htmlattr');
+        let propertyList = this.getPropertyList();
 
         let main = 
-            <div>
-                <Nav variant="tabs" activeKey={this.state.tab} onSelect={this.onSelectTab}>
-                    <Nav.Item>
-                        <Nav.Link eventKey="0">{i18n.get_string('bootstrap')}</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link eventKey="1">{i18n.get_string('htmlproprieties')}</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link eventKey="2">{i18n.get_string('style')}</Nav.Link>
-                    </Nav.Item>
-                </Nav>
-                {this.state.tab === "0" && <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={bootstrapProps} />}
-                {this.state.tab === "1" && <FormProperties element={this.props.element} properties={attributes} />}
-                {this.state.tab === "2" && <FormProperties element={this.props.element} properties={styleAttr} />}
+            <div className='panel'>
+                {header}
+
+                {this.props.tab === "bs" && 
+                        <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bootstrap} />
+                }
+                {this.props.tab === "html" && <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.html} />}
+                {this.props.tab === "bm" && <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bookmark} />}
             </div>
                 
                 
         return main;
     }
 
-    onSelectTab(k){
-        this.setState({tab: k});
+    getPropertyList(){
+        let result = {
+            bs: [],
+            html: [],
+            bm: []
+        };
+        
+        let elClass = HTMLElementData.getElementClass(null, this.props.element);
+
+        if(elClass === null){ return result;}
+        
+        result.bootstrap = HTMLElementData.propertyList.bootstrap.filter(item => elClass.properties.all.includes(item.name));
+        result.html =  HTMLElementData.propertyList.html.filter(item => elClass.properties.all.includes(item.name));
+        result.bookmark =  result.bootstrap.concat(result.html).filter(item => elClass.properties.min.includes(item.name));
+
+        result.bootstrap.sort((el1, el2) => { 
+            return elClass.properties.all.indexOf(el1.name) - elClass.properties.all.indexOf(el2.name)
+        });
+
+        result.html.sort((el1, el2) => { 
+            return elClass.properties.all.indexOf(el1.name) - elClass.properties.all.indexOf(el2.name)
+        });
+
+        result.bookmark.sort((el1, el2) => { 
+            return elClass.properties.min.indexOf(el1.name) - elClass.properties.min.indexOf(el2.name)
+        });
+
+        return result;
     }
 }
 
@@ -120,10 +134,7 @@ class FormProperties extends Component{
                     <h6  onClick={(event) => this.onCollapse(event, item.name)}><FontAwesomeIcon className="mr-1" icon={icon}/> {item.description}</h6>
                     {!collapsed && item.children.map((item2, index2) => {
                         let formItem = null;
-                        let flags = {};
-                        if(item2.input.getFlags){
-                            flags = item2.input.getFlags(this.props.element);
-                        }
+                        let flags = item2.getFlags(this.props.element);
                         
                         if(typeof flags.showLabel == "undefined" || flags.showLabel){
                             formItem = 
@@ -156,10 +167,7 @@ class FormProperties extends Component{
     createFormControl(data){
         let result = null;
         let value = data.getValue(this.props.element, data);
-        let flags = {};
-        if (data.input.getFlags){
-            flags = data.input.getFlags(this.props.element);
-        }
+        let flags = data.getFlags(this.props.element);
         
         switch(data.input.type){
             case 'radio':
@@ -210,7 +218,7 @@ class FormProperties extends Component{
                 result = 
                     <ButtonGroup>
                         {data.input.options.map((item, index) => {
-                            let btn = <Button key={index} onClick={() => this.onClick(item)}>{item.text}</Button>;
+                            let btn = <Button size="sm" key={index} onClick={() => this.onClick(item)}>{item.text}</Button>;
                             return (btn);
                         })}
                     </ButtonGroup>
@@ -220,7 +228,7 @@ class FormProperties extends Component{
                 result = <ImageSrc name={data.name} value={value} size="sm" onChange={(event) => this.onDataChange(event, data)}  />;
                 break;
             case 'button':
-                result = <Button onClick={() => this.onDataChange({target:{value:''}}, data)}>{data.input.text}</Button>
+                result = <Button size="sm" onClick={() => this.onDataChange({target:{value:''}}, data)}>{data.input.text}</Button>
                 break;
         }
   
@@ -264,53 +272,41 @@ class FormProperties extends Component{
 export class VisualComponentList extends Component{
     static defaultProps = {
         onDragEnd: null,
-        onSaveTemplate: null
+        onSaveTemplate: null,
+        tab: 'tpl'
     };
   
     constructor(props){
         super(props);
 
-        this.onSelectTab = this.onSelectTab.bind(this);
         this.loadTemplates = this.loadTemplates.bind(this);
-
-        this.state = {tab: '2'};
     }
 
     render(){       
+//{HTMLElementData.elementListSortByName()}
         let main =
             <div className='component-list'>
-                <Nav variant="tabs" activeKey={this.state.tab} onSelect={this.onSelectTab}>
-                    <Nav.Item>
-                        <Nav.Link eventKey="2">{i18n.get_string('templates')}</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                        <Nav.Link eventKey="1">{i18n.get_string('layouts')}</Nav.Link>
-                    </Nav.Item>                   
-                    <Nav.Item>
-                        <Nav.Link eventKey="0">{i18n.get_string('components')}</Nav.Link>
-                    </Nav.Item>
-                </Nav>
-                
-                {this.state.tab === "0" &&
-                    <>
-                        {HTMLElementData.elementListSortByName()}
+               
+                {this.props.tab === "comp" &&
+                    <div className='panel'>
+                        <h5 className="m-0 p-2"><FontAwesomeIcon icon={faPuzzlePiece}/> {i18n.get_string('components')}</h5>
+                        <hr className='mt-0'/>
+                        
                         <TokenList dataProvider={HTMLElementData.elementList} onDragEnd={this.props.onDragEnd}/>
-                    </>
+                    </div>
 
                 }
 
-                {this.state.tab === "1" && 
-                                <TemplateList dataProvider={Templates.componentList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} type='c' />}
-
-                {this.state.tab === "2" &&
-                                <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} onSaveTemplate={this.props.onSaveTemplate} type='l'/>}
+                {this.props.tab === "tpl" &&
+                    <div className='panel'>
+                        <h5 className="m-0 p-2"><FontAwesomeIcon icon={faCloud}/> {i18n.get_string('templates')}</h5>
+                        <hr className='mt-0'/>
+                        <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} onSaveTemplate={this.props.onSaveTemplate} type='l'/>
+                    </div>
+                }
             </div>;
 
         return main;
-    }
-
-    onSelectTab(k){
-        this.setState({tab: k});
     }
 
     loadTemplates(){

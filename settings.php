@@ -44,19 +44,6 @@ if ($ADMIN->fulltree) {
     $default = 'https://sn-recit-formation-a-distance.github.io/html-bootstrap-editor-showcase/index.html';
     $setting = new admin_setting_configtext($name, $title, $description, $default);
     $settings->add($setting);
-
-    $name = 'atto_reciteditor/enablecomponenttask';
-    $title = get_string('enablecomponenttask', 'atto_reciteditor');
-    $description = get_string('enablecomponenttaskdesc', 'atto_reciteditor');
-    $setting = new admin_setting_configcheckbox($name, $title, $description, 1);
-    $settings->add($setting);
-   
-    $name = 'atto_reciteditor/component_url';
-    $title = get_string('component_url', 'atto_reciteditor');
-    $description = get_string('component_urldesc', 'atto_reciteditor');
-    $default = 'https://sn-recit-formation-a-distance.github.io/html-bootstrap-editor-showcase/components.json';
-    $setting = new admin_setting_configtext($name, $title, $description, $default);
-    $settings->add($setting);
    
     $name = 'atto_reciteditor/stylesheet_to_add';
     $title = get_string('stylesheet_to_add', 'atto_reciteditor');

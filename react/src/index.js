@@ -22,7 +22,7 @@
  */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import {RecitEditor, UtilsMoodle} from './libs/reciteditor/RecitEditor';
 import {Options} from './Options';
 
@@ -34,5 +34,6 @@ else{
 }
 
 let attoInterface = UtilsMoodle.getAttoInterface();
-let node = document.getElementById('root');
-ReactDOM.render(<RecitEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent} />, node);
+let domContainer = document.getElementById('root');
+const root = createRoot(domContainer);
+root.render(<RecitEditor content={attoInterface.getContent()} onSaveAndClose={attoInterface.setContent} />);

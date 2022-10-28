@@ -22,10 +22,10 @@
  */
 
 import React, { Component } from 'react';
-import { Nav, Card, Navbar, Button } from 'react-bootstrap';
-import {faMobileAlt, faTabletAlt, faTh, faLaptop, faDesktop, faFileWord, faEye, faCode, faAngleRight, faAngleDown, faSave, faRedo, faUndo, faColumns} from '@fortawesome/free-solid-svg-icons';
+import { Nav, Navbar, Button, ButtonToolbar, ButtonGroup } from 'react-bootstrap';
+import {faMobileAlt, faTabletAlt, faTh, faLaptop, faDesktop, faFileWord, faEye, faCode, faSave, faRedo, faUndo, faColumns, faCloud, faPuzzlePiece,  faFileCode, faSitemap, faObjectGroup, faCubes} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {TreeView, CanvasElement, ComponentProperties, VisualComponentList, Assets, Templates, HistoryManager, Utils, i18n, DesignerState, PreviewState, SourceCodeDesignerState, SourceCodeState} from '../RecitEditor';
+import {TreeView, CanvasElement, ComponentProperties, VisualComponentList, Assets, Templates, HistoryManager, Utils, i18n, DesignerState, PreviewState, SourceCodeDesignerState, SourceCodeState, JsNx, Storage} from '../RecitEditor';
 import html2canvas from 'html2canvas';
 
 export class LayoutBuilder extends Component
@@ -39,17 +39,41 @@ export class LayoutBuilder extends Component
         options: {}
     };
 
+    static properties = {
+        topNavBar: {
+            height: 56
+        },
+        leftPanel: {
+            width: 446,
+            panelList: {
+                width: 380
+            }
+        },
+        maxScreenWidth: 1920
+    }
+
     constructor(props){
         super(props);
 
         this.onNavbarSelect = this.onNavbarSelect.bind(this);
         this.onSaveAndClose = this.onSaveAndClose.bind(this);
+        this.onWindowResize = this.onWindowResize.bind(this);
+        this.windowResizeTo = this.windowResizeTo.bind(this);
 
-        this.state = { device: (window.screen.width <= 1920 ? 'lg' : 'xl'), view: 'designer'}; 
+        window.addEventListener("resize", this.onWindowResize);
+
+        let device = (window.screen.width <= LayoutBuilder.properties.maxScreenWidth ? 'lg' : 'xl');
+
+        this.state = { device: device, view: 'designer'}; 
 
         this.mainViewRef = React.createRef();
         this.historyManager = new HistoryManager(); 
     }  
+
+    componentDidMount(){
+        this.windowResizeTo();
+        window.moveTo(0,0);
+    }
 
 	render(){
 		let main = 
@@ -68,10 +92,10 @@ export class LayoutBuilder extends Component
                         <Nav className="mr-auto"></Nav>
 
                         <Nav className="mr-auto" activeKey={this.state.view}>
-                            <Nav.Link eventKey="designer" ><FontAwesomeIcon icon={faTh} title={i18n.get_string('canvas')}/></Nav.Link>
-                            <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title={i18n.get_string('preview')}/></Nav.Link>
-                            <Nav.Link eventKey="sourceCode"><FontAwesomeIcon icon={faCode} title={i18n.get_string('sourcecode')}/></Nav.Link>
-                            <Nav.Link eventKey="sourceCodeDesigner"><FontAwesomeIcon icon={faColumns} title={i18n.get_string('sourcecodedesigner')}/></Nav.Link>
+                            <Nav.Link eventKey="designer" ><FontAwesomeIcon icon={faTh} title={i18n.get_string('canvas')}/> <span className='d-mobile-none'>{i18n.get_string('canvas')}</span></Nav.Link>
+                            <Nav.Link eventKey="preview" ><FontAwesomeIcon icon={faEye} title={i18n.get_string('preview')}/> <span className='d-mobile-none'>{i18n.get_string('preview')}</span></Nav.Link>
+                            <Nav.Link eventKey="sourceCode"><FontAwesomeIcon icon={faCode} title={i18n.get_string('sourcecode')}/> <span className='d-mobile-none'>{i18n.get_string('sourcecode')}</span></Nav.Link>
+                            <Nav.Link eventKey="sourceCodeDesigner"><FontAwesomeIcon icon={faColumns} title={i18n.get_string('sourcecodedesigner')}/> <span className='d-mobile-none'>{i18n.get_string('canvas')}-{i18n.get_string('sourcecode')}</span></Nav.Link>
                         </Nav>
 
                         {(this.state.view == 'designer' || this.state.view == 'sourceCodeDesigner') && <>
@@ -115,8 +139,20 @@ export class LayoutBuilder extends Component
             this.historyManager.onRedo(this.mainViewRef.current.setData, this.mainViewRef.current.getData());
         }
         else{
-            this.setState({device: eventKey});
+            // device
+            this.setState({device: eventKey}, this.windowResizeTo);
         }
+    }
+
+    windowResizeTo(){
+        let device = this.getDeviceDimension();
+        let width = device.width + LayoutBuilder.properties.leftPanel.width + 15 + (this.state.view === 'sourceCodeDesigner' ? 780 : 0);
+        window.resizeTo(Math.min(width, screen.availWidth), screen.availHeight);
+    }
+
+    onWindowResize(){
+        console.log("res")
+        this.forceUpdate();
     }
 
     onSaveAndClose(){
@@ -129,26 +165,24 @@ export class LayoutBuilder extends Component
         
         function getScale(device){
             let result = 1;
-
-            if(window.innerWidth - 380 <= device.width){
-                // 380 = left panel width; 10 = padding
-                result = (window.innerWidth - 380 - 10) / device.width;
+            
+            if(window.innerWidth - LayoutBuilder.properties.leftPanel.width <= device.width){
+                result = (window.innerWidth - LayoutBuilder.properties.leftPanel.width) / device.width;
             }
             else if(window.innerHeight <= device.height){
-                // 380 = top navbar; 10 = padding
-                result = (window.innerHeight - 56 -10) / device.height;
+                result = (window.innerHeight - LayoutBuilder.properties.topNavBar.height) / device.height;
             }
 
             return result;
         }
 
         switch(this.state.device){
-            case 'xs': device = {width: 375, height: 667, scale: 1}; break;
-            case 'sm': device = {width: 768, height: 1024, scale: 1}; break;
-            case 'md': device = {width: 1024, height: 768, scale: 1}; break;
-            case 'lg': device = {width: 1366, height: 768, scale: 1}; break;
+            case 'xs': device = {name: 'xs', width: 375, height: 667, scale: 1}; break;
+            case 'sm': device = {name: 'sm', width: 768, height: 1024, scale: 1}; break;
+            case 'md': device = {name: 'md', width: 1024, height: 768, scale: 1}; break;
+            case 'lg': device = {name: 'lg', width: 1366, height: 768, scale: 1}; break;
             case 'xl':
-            default: device = {width: 1500, height: 1050, scale: 1}; 
+            default: device = {name: 'xl', width: 1500, height: 1050, scale: 1}; 
         }
 
         device.scale = getScale(device);
@@ -169,21 +203,21 @@ class MainView extends Component{
         super(props);
 
         this.onSelectElement = this.onSelectElement.bind(this);
+        this.onUnselectElement = this.onUnselectElement.bind(this);
         this.onDeleteElement = this.onDeleteElement.bind(this);
-        this.onReplaceNonBreakingSpace = this.onReplaceNonBreakingSpace.bind(this);
         this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
         this.onInsertNode = this.onInsertNode.bind(this);
-        this.onEditNodeText = this.onEditNodeText.bind(this);
+        this.onStartEditingNodeText = this.onStartEditingNodeText.bind(this);
+        this.onFinishEditingNodeText = this.onFinishEditingNodeText.bind(this);
         this.onSaveTemplate = this.onSaveTemplate.bind(this);
-        this.onCollapse = this.onCollapse.bind(this);
-        this.setCollapse = this.setCollapse.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
         this.getData = this.getData.bind(this);
         this.setData = this.setData.bind(this);
         this.onKey = this.onKey.bind(this);
+        this.onPanelChange = this.onPanelChange.bind(this);
 
         let designer = new DesignerState(this, this.props.historyManager);
         let sourceCode = new SourceCodeState(this)
@@ -197,7 +231,11 @@ class MainView extends Component{
         this.state = {
             canvasState: 'designer',
             selectedElement: null,
-            collapsed: {components: false, properties: true, treeView: true}
+            panels: {
+                components: 1,
+                properties: 0,
+                treeView: 0
+            }
         };
     }
 
@@ -233,9 +271,13 @@ class MainView extends Component{
             }else{
                 data = this.canvasState[prevProps.view].getData();
             }
-            this.setData(data, this.state.selectedElement);
+            this.setData(data);
             let view = this.props.view;
-            this.setState({canvasState: view},  this.onCollapse);
+            this.setState({canvasState: view},  this.onPanelChange);
+        }
+
+        if(prevProps.device.name !== this.props.device.name){
+            this.onUnselectElement();
         }
 
         if(prevProps.content !== this.props.content){
@@ -248,7 +290,7 @@ class MainView extends Component{
     }
 
     setData(data){
-        return this.canvasState[this.props.view].setData(data);
+        return this.canvasState[this.props.view].setData(data, this.state.selectedElement);
     }
 
     forceRefresh(){
@@ -259,47 +301,38 @@ class MainView extends Component{
             this.forceUpdate();
         }
     }
-
+    
     render(){
-        let panelHeight = window.innerHeight - 56 - 10 - 100; // 56px = top navbar; 10px padding; card header = 100px
-        let openPanels = (!this.state.collapsed.components ? 1 : 0) + (!this.state.collapsed.properties ? 1 : 0) + (!this.state.collapsed.treeView ? 1 : 0);
-        panelHeight = `${panelHeight / openPanels}px`;
-
         let main =
             <div className="main">
-                <div className="left-area" >
-                    <Card>
-                        <Card.Header onClick={() => this.setCollapse('components')}>
-                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.components ? faAngleRight : faAngleDown)}/>
-                            {i18n.get_string('components')}
-                        </Card.Header>
-                        <Card.Body data-collapsed={(this.state.collapsed.components ? 1 : 0)} style={{height: panelHeight}}>
-                            <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate}/>
-                        </Card.Body>
-                    </Card>
-
-                    <Card>
-                        <Card.Header onClick={() => this.setCollapse('properties')}>
-                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.properties ? faAngleRight : faAngleDown)}/> {i18n.get_string('proprieties')}
-                        </Card.Header>
-                        <Card.Body className="properties"  data-collapsed={(this.state.collapsed.properties ? 1 : 0)}  style={{height: panelHeight}}>
-                            <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement}/>
-                        </Card.Body>
-                    </Card>
-
-                    <Card>
-                        <Card.Header onClick={() => this.setCollapse('treeView')}>
-                            <FontAwesomeIcon className="mr-1" icon={(this.state.collapsed.treeView ? faAngleRight : faAngleDown)}/> {i18n.get_string('tree')}
-                        </Card.Header>
-                        <Card.Body data-collapsed={(this.state.collapsed.treeView ? 1 : 0)}  style={{height: panelHeight}}>
-                            <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} view={this.props.view}
-                                    onDeleteElement={this.onDeleteElement} onMoveNodeUp={this.onMoveNodeUp} onMoveNodeDown={this.onMoveNodeDown} />
-                        </Card.Body>
-                    </Card>
+                <div className="left-area" style={{height: `calc(100vh - ${LayoutBuilder.properties.topNavBar.height}px`}}>
+                    <ButtonToolbar style={{height:'100%', backgroundColor: '#6c757d'}}>
+                        <ButtonGroup aria-label="Buttons" style={{flexDirection: 'column' }}>
+                            <LeftPanelButton checked={this.state.panels.components === 1} value='components,1' onClick={this.onPanelChange} title={i18n.get_string('templates')} glyph={faCloud} />
+                            <LeftPanelButton checked={this.state.panels.components === 3} value='components,3' onClick={this.onPanelChange} title={i18n.get_string('components')} glyph={faPuzzlePiece} />
+                            <div style={{margin: '4px 0', height: '1px', backgroundColor: '#fff'}}></div>
+                            <LeftPanelButton checked={this.state.panels.properties === 3} value='properties,3' onClick={this.onPanelChange} title={i18n.get_string('basic')} glyph={faCubes} />
+                            <LeftPanelButton checked={this.state.panels.properties === 1} value='properties,1' onClick={this.onPanelChange} title={i18n.get_string('bootstrap')} svg={Assets.faBootstrap} />
+                            <LeftPanelButton checked={this.state.panels.properties === 2} value='properties,2' onClick={this.onPanelChange} title={i18n.get_string('htmlproprieties')} svg={Assets.faHtml} />
+                            <div style={{margin: '4px 0', height: '1px', backgroundColor: '#fff'}}></div>
+                            <LeftPanelButton checked={this.state.panels.treeView === 1} value='treeView,1' onClick={this.onPanelChange} title={i18n.get_string('tree')} glyph={faSitemap} />
+                        </ButtonGroup>
+                    </ButtonToolbar>
+                    {(this.state.panels.components | this.state.panels.properties | this.state.panels.treeView) >= 1 &&
+                        <div className='panel-list' style={{width: `${LayoutBuilder.properties.leftPanel.panelList.width}px`}}>
+                            {this.state.panels.components === 1 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='tpl'/>}
+                            {this.state.panels.components === 3 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='comp'/>}
+                            {this.state.panels.properties === 1 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bs'/>}
+                            {this.state.panels.properties === 2 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='html'/>}
+                            {this.state.panels.properties === 3 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bm'/>}
+                            {this.state.panels.treeView === 1 && <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} 
+                                                                    view={this.props.view} onDeleteElement={this.onDeleteElement} onMoveNodeUp={this.onMoveNodeUp} onMoveNodeDown={this.onMoveNodeDown} />}
+                        </div>
+                    }
                 </div>
                 
                 <div className="center-area">
-                    <div className='row'>
+                    <div className='d-flex'>
                         {this.canvasState.sourceCodeDesigner.render(this.props.view, this.state.selectedElement)}
                         {this.canvasState.preview.render(this.props.view === 'preview', this.state.selectedElement)} 
                     </div>
@@ -308,6 +341,28 @@ class MainView extends Component{
            
 
         return main;
+    }
+
+    onPanelChange(value){
+        value = value || null;
+
+        let panels = this.state.panels;
+        let selectedElement = this.state.selectedElement;
+
+        if(value !== null){
+            let attr = value.split(',')[0];
+            value = parseInt(value.split(',')[1]);
+            panels[attr] = (panels[attr] === value ? 0 : value);
+        }
+        else{
+            panels = this.canvasState[this.state.canvasState].onPanelChange(panels);
+        }
+
+        if(panels.components === panels.properties && panels.properties === panels.treeView && panels.treeView === 0){
+            selectedElement = this.canvasState[this.state.canvasState].onSelectElement(this.state.selectedElement, this.state.selectedElement, JsNx.clone(panels)).el;
+        }
+        
+        this.setState({panels: panels, selectedElement: selectedElement});
     }
 
     onContentChange(data, origin){
@@ -319,19 +374,19 @@ class MainView extends Component{
         this.setState({selectedElement: null});
     }
 
+    onUnselectElement(){
+        let result = this.canvasState[this.state.canvasState].onSelectElement(null, null, this.state.panels);
+        this.setState({selectedElement: result.el, panels: result.panels});
+    }
+    
     onSelectElement(el){
-        let result = this.canvasState[this.state.canvasState].onSelectElement(el, this.state.selectedElement, this.state.collapsed);
-        this.setState({selectedElement: result.el, collapsed: result.collapsed});
+        let result = this.canvasState[this.state.canvasState].onSelectElement(el, this.state.selectedElement, this.state.panels);
+        this.setState({selectedElement: result.el, panels: result.panels});
     }
 
     onDeleteElement(el){
         this.canvasState[this.state.canvasState].onDeleteElement(el || this.state.selectedElement);
         this.setState({selectedElement: null});
-    }
-
-    onReplaceNonBreakingSpace(el){
-        this.canvasState[this.state.canvasState].onReplaceNonBreakingSpace(el || this.state.selectedElement);
-        this.forceUpdate();
     }
 
     onMoveNodeUp(el){
@@ -365,30 +420,20 @@ class MainView extends Component{
         event.dataTransfer.setDragImage(this.state.selectedElement, 0, 0);
     }
 
-    onEditNodeText(el){
+    onStartEditingNodeText(el){
         if(el instanceof HTMLElement){
-            this.canvasState[this.state.canvasState].onEditNodeText(el);
+            this.canvasState[this.state.canvasState].onStartEditingNodeText(el);
             this.setState({selectedElement: el});
         }
         else{
-            this.canvasState[this.state.canvasState].onEditNodeText(this.state.selectedElement);
+            this.canvasState[this.state.canvasState].onStartEditingNodeText(this.state.selectedElement);
             this.forceUpdate();
         }
     }
 
-    onCollapse(){
-        let collapsed = this.canvasState[this.state.canvasState].onCollapse(this.state.collapsed);
-        this.setState({collapsed: collapsed});
-    }
-
-    setCollapse(attr){
-        let data = this.state.collapsed;
-        data[attr] = !data[attr];
-        this.setState({collapsed: data});
-    }
-
-    getCollapse(){
-        return this.state.collapsed;
+    onFinishEditingNodeText(html){
+        this.canvasState[this.state.canvasState].onFinishEditingNodeText(html);
+        this.forceUpdate();
     }
 
     onSaveTemplate(name, type){
@@ -398,8 +443,7 @@ class MainView extends Component{
             let el = this.canvasState.designer.getBody() || null;
             if(el === null){ return; }
 
-            el = el.firstChild;
-            p = html2canvas(el, {useCORS: true}).then((canvas) => {
+            p = html2canvas(el.firstChild, {useCORS: true}).then((canvas) => {
                 let data = canvas.toDataURL();
                 let MAX_WIDTH = 600;
                 let MAX_HEIGHT = 600;
@@ -408,19 +452,6 @@ class MainView extends Component{
                
                 return p2.then((img) => {
                     return Templates.onSave(name, type, el.outerHTML, img);
-                });
-            });
-        }
-        else{ //Component
-            p = html2canvas(this.state.selectedElement, {useCORS: true}).then((canvas) => {
-                let data = canvas.toDataURL();
-                let MAX_WIDTH = 300;
-                let MAX_HEIGHT = 300;
-                let fileType = "png"
-                let p2 = Utils.resizeImageFromSize(data, MAX_WIDTH, MAX_HEIGHT, fileType);
-               
-                return p2.then((img) => {
-                    return Templates.onSave(name, type, this.state.selectedElement.outerHTML, img);
                 });
             });
         }
@@ -435,5 +466,31 @@ class MainView extends Component{
                 alert(`Error: ${webApiResult.msg}`);
         }
         });
+    }
+}
+
+class LeftPanelButton extends Component{
+    static defaultProps = {
+        checked: false,
+        onClick: null,
+        value: "",
+        title: "",
+        text: null,
+        glyph: null,
+        svg: null
+    };
+
+    render(){
+        let fontSize = (this.props.text ? '1rem' : '2rem');
+
+        let main =
+            <Button variant={(this.props.checked ? 'success' : 'secondary')} onClick={(e) => this.props.onClick(this.props.value)} style={{fontSize: fontSize, flex: 'none', minHeight: '55px'}} 
+                title={this.props.title}>
+                    {this.props.glyph && <FontAwesomeIcon icon={this.props.glyph}/>}
+                    {this.props.text && this.props.text}
+                    {this.props.svg && <i>{this.props.svg}</i>}
+            </Button>;
+
+        return main;
     }
 }

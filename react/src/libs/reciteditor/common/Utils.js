@@ -215,6 +215,18 @@ export class JsNx{
     }
 }
 
+export class Storage {
+    static KEY_PREFIX = "reciteditor.";
+
+    static get(key){
+        return localStorage.getItem(Storage.KEY_PREFIX + key);
+    }
+
+    static set(key, value){
+        return localStorage.setItem(Storage.KEY_PREFIX + key, value);
+    }
+}
+
 export class Utils{
     static version = 1.0;
 
@@ -239,7 +251,62 @@ export class Utils{
         });
         
         return vars;
-    }    
+    }
+    
+    static countOccurrencesInString(string, subString, allowOverlapping) {
+    
+        string += "";
+        subString += "";
+        if (subString.length <= 0) return (string.length + 1);
+    
+        var n = 0,
+            pos = 0,
+            step = allowOverlapping ? 1 : subString.length;
+    
+        while (true) {
+            pos = string.indexOf(subString, pos);
+            if (pos >= 0) {
+                ++n;
+                pos += step;
+            } else break;
+        }
+        return n;
+    }
+
+    static replaceAt(s, subString, replacement, index) {
+        if (Utils.countOccurrencesInString(s, subString) < 2){
+            return s.replace(subString, replacement);
+        }else{ //There are multiple occurences of the substring in the string so replace only the one we want by index
+            let offset = index - subString.length;
+            let p = s.substr(index-offset).replace(subString, replacement);
+
+            return s.substr(0, index-offset) + p;
+        }
+    }
+
+    static getCaretCharacterOffsetWithin(element) {
+        var caretOffset = 0;
+        var doc = element.ownerDocument || element.document;
+        var win = doc.defaultView || doc.parentWindow;
+        var sel;
+        if (typeof win.getSelection != "undefined") {
+            sel = win.getSelection();
+            if (sel.rangeCount > 0) {
+                var range = win.getSelection().getRangeAt(0);
+                var preCaretRange = range.cloneRange();
+                preCaretRange.selectNodeContents(element);
+                preCaretRange.setEnd(range.endContainer, range.endOffset);
+                caretOffset = preCaretRange.toString().length;
+            }
+        } else if ( (sel = doc.selection) && sel.type != "Control") {
+            var textRange = sel.createRange();
+            var preCaretTextRange = doc.body.createTextRange();
+            preCaretTextRange.moveToElementText(element);
+            preCaretTextRange.setEndPoint("EndToEnd", textRange);
+            caretOffset = preCaretTextRange.text.length;
+        }
+        return caretOffset;
+    }
 
     static RGBToHex(rgb) {
         rgb = rgb || "rgb(0,0,0)";
@@ -650,6 +717,15 @@ export class UtilsString
         }
     
         return true;
+    }
+
+    static replaceNonBreakingSpace(str){
+        if (!str || str.length == 0) return;
+        let regex = new RegExp(/(\u00AB|\u2014)(?:\s+)?|(?:\s+)?([\?!:;\u00BB])/g);
+        str = str.replace("&nbsp; ", "");//Revert old nbsp
+        str = str.replace("&nbsp;", "");//Revert old nbsp
+        str = str.replace(regex, "$1&nbsp;$2");
+        return str;
     }
 }
 

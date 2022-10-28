@@ -23,7 +23,7 @@
 
 import React, { Component } from 'react';
 import { ButtonToolbar, Button, ButtonGroup  } from 'react-bootstrap';
-import {faAngleRight, faAngleDown, faArrowUp, faArrowDown, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
+import {faAngleRight, faAngleDown, faArrowUp, faArrowDown, faTrashAlt, faSitemap} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData, UtilsHTML, i18n} from '../../RecitEditor';
 
@@ -64,7 +64,14 @@ export class TreeView extends Component{
         
         let treeView = this.createTreeViewData(data);
 
-        let main = <ul className='tree-view'>{this.renderTreeView(treeView, 0)}</ul>;
+        let main = 
+            <div className='panel'>
+                <h5><FontAwesomeIcon icon={faSitemap}/> {i18n.get_string('tree')}</h5>
+                <hr/>
+                <ul className='tree-view'>
+                    {this.renderTreeView(treeView, 0)}
+                </ul>
+            </div>;
 
         return main;
     }
