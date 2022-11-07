@@ -235,6 +235,21 @@ export class HTMLFontSizeProperty extends HTMLProperty{
     }
 }
 
+export class HTMLStyleProperty extends HTMLProperty{
+    constructor(){
+        super('style',  i18n.get_string('style'));
+        this.input = new TextInput(this.onChange.bind(this));
+    }
+
+    getValue(el, data){
+        return el.getAttribute('style');
+    }
+
+    onChange(el, value, data){
+        el.setAttribute('style', value);
+    }
+}
+
 export class HTMLFontFamilyProperty extends HTMLProperty{
     constructor(){
         super('fontfamily',  i18n.get_string('font'));
