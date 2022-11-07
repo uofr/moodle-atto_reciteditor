@@ -13,18 +13,14 @@ $string['fetch_components'] = 'Recherche de composants';
 // General settings tab.
 $string['configtitle'] = 'Éditeur HTML Bootstrap paramètres';
 $string['enableshowcase'] = 'Afficher la vitrine';
-$string['enableshowcasedesc'] = 'Enables a showcase page where you can put premade templates. Requires a PHP server';
+$string['enableshowcasedesc'] = 'Affiche une page où vous pouvez mettre des gabarits. Requiert un serveur PHP';
 $string['showcase_url'] = 'Vitrine URL';
-$string['showcase_urldesc'] = 'Showcase index where your showcase server runs';
-$string['enablecomponenttask'] = 'Chercher les nouveaux composants automatiquement';
-$string['enablecomponenttaskdesc'] = 'Enables a task where you can put premade components and it will fetch them weekly. Requires a PHP server';
-$string['component_url'] = 'Component Fetch URL';
-$string['component_urldesc'] = 'Component fetch php URL';
+$string['showcase_urldesc'] = 'URL où le serveur de la vitrine est';
 $string['generalsettings'] = 'General';
 $string['iconclass'] = 'Icônes à charger dans l\'éditeur';
 $string['iconclassdesc'] = 'Les classes nommées ci-dessus rendent disponibles les catégories d\'icônes pour les utilisateurs.';
 $string['stylesheet_to_add'] = 'Titre du CSS à charger dans l\'éditeur';
-$string['stylesheet_to_adddesc'] = 'Pleusieurs titres peuvent être ajouter en les séparant par une virgule';
+$string['stylesheet_to_adddesc'] = 'Pleusieurs titres peuvent être ajouter en les séparant par une virgule. Si vous possédez le thème RÉCIT, appliquez: theme-recit-custom-css';
 
 //React
 $string['inputurl'] = 'URL';
