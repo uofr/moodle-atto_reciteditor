@@ -284,6 +284,7 @@ export class FloatingMenu extends Component{
         if(this.props.posCanvas === null){ return null;}
         if(this.props.selectedElement === null){ return null;}
         if(this.props.device === null){ return null;}
+        if(this.props.selectedElement.tagName === 'BODY'){ return null; }
         if(this.props.selectedElement.getAttribute('contenteditable') === 'true'){ return null; }
 
         let style = {display: 'block', top: 0, left: 0};

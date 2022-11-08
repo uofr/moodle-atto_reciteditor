@@ -418,12 +418,12 @@ class TemplateList extends Component{
 
     render(){       
         let that = this;
+        // {this.props.type === 'l' && <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faSave} title={i18n.get_string('savetemplate')}/></Button>}
         let main =
             <div className="tab-content">
                 <div>
                     <ButtonToolbar style={{justifyContent: 'flex-end'}}>
                         <ButtonGroup >
-                                {this.props.type === 'l' && <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faSave} title={i18n.get_string('savetemplate')}/></Button>}
                                 <BtnUpload id="import-collection"  accept=".json" onChange={this.onImport} title={i18n.get_string('import')}/>
                                 {this.props.type === 'l' && this.state.UrlShowcase && <Button onClick={() => this.showShowcase(true)}><FontAwesomeIcon icon={faCloud} title={i18n.get_string('showroom')}/> {i18n.get_string('showroom')}</Button>}
                                 <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon icon={faCog} title={i18n.get_string('options')}/></Button>

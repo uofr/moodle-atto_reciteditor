@@ -298,9 +298,10 @@ export class DesignerState extends CanvasState{
     onSelectElement(el, selectedElement, panels){
         let result = {el: el, panels: panels};
 
-        if((result.el !== null) && (result.el.tagName.toLowerCase() === 'body')){ 
-            result.el = null;
-        }
+        //We allow body to be selected for save template button
+        //if((result.el !== null) && (result.el.tagName.toLowerCase() === 'body')){ 
+            //result.el = null;
+        //}
 
         // if the selected element receives another click then it deselects it
         if(Object.is(result.el, selectedElement)){

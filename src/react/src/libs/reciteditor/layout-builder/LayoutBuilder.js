@@ -326,7 +326,7 @@ class MainView extends Component{
                             {this.state.panels.properties === 2 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='html'/>}
                             {this.state.panels.properties === 3 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bm'/>}
                             {this.state.panels.treeView === 1 && <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} 
-                                                                    view={this.props.view} onDeleteElement={this.onDeleteElement} onMoveNodeUp={this.onMoveNodeUp} onMoveNodeDown={this.onMoveNodeDown} />}
+                                                                    view={this.props.view} onSaveElement={this.onSaveTemplate} onDeleteElement={this.onDeleteElement} onMoveNodeUp={this.onMoveNodeUp} onMoveNodeDown={this.onMoveNodeDown} />}
                         </div>
                     }
                 </div>
@@ -436,14 +436,14 @@ class MainView extends Component{
         this.forceUpdate();
     }
 
-    onSaveTemplate(name, type){
+    onSaveTemplate(name, type, ele){
         let p = null;
 
         if(type === 'l'){
-            let el = this.canvasState.designer.getBody() || null;
+            let el = ele || this.canvasState.designer.getBody() || null;
             if(el === null){ return; }
 
-            p = html2canvas(el.firstChild, {useCORS: true}).then((canvas) => {
+            p = html2canvas(el, {useCORS: true}).then((canvas) => {
                 let data = canvas.toDataURL();
                 let MAX_WIDTH = 600;
                 let MAX_HEIGHT = 600;
