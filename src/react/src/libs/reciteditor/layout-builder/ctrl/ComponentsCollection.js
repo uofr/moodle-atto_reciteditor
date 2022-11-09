@@ -23,7 +23,7 @@
 
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button, Modal  } from 'react-bootstrap';
-import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCubes, faCloud, faTimes, faCloudDownloadAlt, faCog, faPuzzlePiece, faObjectGroup} from '@fortawesome/free-solid-svg-icons';
+import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCubes, faCloud, faTimes, faCloudDownloadAlt, faCog, faPuzzlePiece, faArrowUp, faArrowDown} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, Assets, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  IconSelector, ColorSelector, Templates, i18n } from '../../RecitEditor';
 import { HTMLElementData } from './HTMLElementData';
@@ -273,6 +273,7 @@ export class VisualComponentList extends Component{
     static defaultProps = {
         onDragEnd: null,
         onSaveTemplate: null,
+        onInsert: null,
         tab: 'tpl'
     };
   
@@ -301,7 +302,7 @@ export class VisualComponentList extends Component{
                     <div className='panel'>
                         <h5 className="m-0 p-2"><FontAwesomeIcon icon={faCloud}/> {i18n.get_string('templates')}</h5>
                         <hr className='mt-0'/>
-                        <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} onSaveTemplate={this.props.onSaveTemplate} type='l'/>
+                        <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onInsert={this.props.onInsert} onChange={this.loadTemplates} onSaveTemplate={this.props.onSaveTemplate} type='l'/>
                     </div>
                 }
             </div>;
@@ -330,7 +331,8 @@ export class VisualComponentList extends Component{
 class TokenList extends Component{
     static defaultProps = {
         dataProvider: [],
-        onDragEnd: null
+        onDragEnd: null,
+        onInsert: null
     };
 
     constructor(props){
@@ -358,7 +360,7 @@ class TokenList extends Component{
                             {!collapsed && item.children.map((item2, index2) => {
                                 if(!item2.visible){ return null; }
 
-                                return (<Token data={item2} key={index2} onDragEnd={this.props.onDragEnd} />);
+                                return (<Token data={item2} key={index2} onDragEnd={this.props.onDragEnd} onInsert={this.props.onInsert} />);
                             })}
                         </ul>
 
@@ -384,6 +386,7 @@ class TemplateList extends Component{
         dataProvider: [],
         onDragEnd: null,
         onChange: null,
+        onInsert: null,
         type: 'c',
         onSaveTemplate: null
     };
@@ -405,7 +408,7 @@ class TemplateList extends Component{
         if (typeof M != 'undefined' && M.recit && M.recit.reciteditor && M.recit.reciteditor.settings.showcase_url && M.recit.reciteditor.settings.showcase_url.length > 0){
             url = M.recit.reciteditor.settings.showcase_url;
         }
-        this.state = {showModal: false, showMenu: false, showImport: false, showShowcase: false, UrlShowcase: url, collapse: {}};
+        this.state = {showModal: false, showMenu: false, showImport: false, showShowcase: false, UrlShowcase: url, collapse: {}, hoverimg: false};
     }    
 
     componentDidMount(){
@@ -419,6 +422,7 @@ class TemplateList extends Component{
     render(){       
         let that = this;
         // {this.props.type === 'l' && <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faSave} title={i18n.get_string('savetemplate')}/></Button>}
+        // <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon icon={faCog} title={i18n.get_string('options')}/></Button>
         let main =
             <div className="tab-content">
                 <div>
@@ -426,7 +430,6 @@ class TemplateList extends Component{
                         <ButtonGroup >
                                 <BtnUpload id="import-collection"  accept=".json" onChange={this.onImport} title={i18n.get_string('import')}/>
                                 {this.props.type === 'l' && this.state.UrlShowcase && <Button onClick={() => this.showShowcase(true)}><FontAwesomeIcon icon={faCloud} title={i18n.get_string('showroom')}/> {i18n.get_string('showroom')}</Button>}
-                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon icon={faCog} title={i18n.get_string('options')}/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                     {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider.myComponents)}><FontAwesomeIcon icon={faCloudDownloadAlt}/> {i18n.get_string('export')}</Button>}
@@ -554,11 +557,11 @@ class TemplateList extends Component{
 
     getToken(item, index, editable){
         if(this.props.type === 'l'){
-            return <TokenTemplate showMenu={this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} 
+            return <TokenTemplate showMenu={this.state.hovering == item.id} data={item} key={index} onDragEnd={this.props.onDragEnd} onInsert={this.props.onInsert} onHover={() => this.setState({hovering: item.id})} onMouseLeave={() => this.setState({hovering: null})}
                         onExport={(event) => this.onExport(event, item)} onDelete={(event) => this.onDelete(event, item)}/>
         }
         else{
-            return <Token showMenu={editable && this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} hoverimg={item.img}
+            return <Token showMenu={editable && this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} hoverimg={item.img} onInsert={this.props.onInsert}
                             onExport={(event) => this.onExport(event, item)} onDelete={(event) => this.onDelete(event, item)}/>
         }
     }
@@ -582,7 +585,10 @@ class Token extends Component
         showMenu: false,
         onExport: null,
         onDelete: null,
+        onInsert: null,
         hoverimg: null,
+        onHover: null,
+        onMouseLeave: null,
     };
     
     constructor(props){
@@ -596,7 +602,7 @@ class Token extends Component
 	
 	render(){
 		let main = 
-            <li className="token" data-type={this.props.data.type} draggable="true" onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}  onMouseEnter={() => this.onMouseEnter(this.props.hoverimg)} onMouseLeave={this.onMouseLeave} onMouseDown={this.onMouseLeave}>
+            <li className="token" data-type={this.props.data.type} draggable="true" onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} onMouseEnter={() => this.onMouseEnter(this.props.hoverimg)} onMouseLeave={this.onMouseLeave} onMouseDown={this.onMouseLeave}>
                 {this.props.data.name}   
                 {this.props.showMenu && 
                     <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
@@ -617,6 +623,7 @@ class Token extends Component
     
     onDragStart(event){
         event.dataTransfer.setData("componentData", JSON.stringify(this.props.data));
+        this.setState({imagePreview: false});
     }
     
     onDragEnd(event){
@@ -624,11 +631,18 @@ class Token extends Component
     }
 
     onMouseEnter(img){
-        if (!img) return;
-        this.setState({imagePreview: img});
+        if (this.props.onHover){
+            this.props.onHover();
+        }
+        if (img){
+            this.setState({imagePreview: img});
+        }
     }
 
     onMouseLeave(){
+        if (this.props.onMouseLeave){
+            this.props.onMouseLeave();
+        }
         this.setState({imagePreview: false});
     }
 }
@@ -638,7 +652,7 @@ class TokenTemplate extends Token{
         let item = this.props.data;
 
         let main =
-                <div className='template' onMouseEnter={() => this.onMouseEnter(this.props.data.img)} onMouseLeave={this.onMouseLeave} onMouseDown={this.onMouseLeave}
+                <div className='template' onMouseEnter={() => this.onMouseEnter(this.props.data.img)} onMouseLeave={this.onMouseLeave}
                         onDragEnd={this.props.onDragEnd} draggable="true" onDragStart={this.onDragStart}>
                     <div className="tplimg">
                         <img src={item.img}/>
@@ -647,13 +661,15 @@ class TokenTemplate extends Token{
                     {this.props.showMenu &&
                         <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                             <ButtonGroup size="sm">
+                                <Button onClick={() => this.props.onInsert('top', item.htmlstr)}><i title={i18n.get_string('inserttop')}>{Assets.faBorderTop}</i></Button>
+                                <Button onClick={() => this.props.onInsert('bottom', item.htmlstr)}><i title={i18n.get_string('insertbottom')}>{Assets.faBorderBottom}</i></Button>
                                 <Button onClick={this.props.onExport}><FontAwesomeIcon icon={faCloudDownloadAlt} title={i18n.get_string('export')}/></Button>
                                 <Button onClick={this.props.onDelete}><FontAwesomeIcon icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
                             </ButtonGroup>
                         </ButtonToolbar>
                     }
 
-                    {this.state.imagePreview && !this.props.showMenu &&
+                    {this.state.imagePreview &&
                         <div className='templatepreview'>
                             <img src={this.state.imagePreview}/>
                     </div>}

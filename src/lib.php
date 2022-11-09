@@ -54,6 +54,8 @@ function atto_reciteditor_strings_for_js() {
                                           'name',
                                           'recitthemeonly',
                                           'selecticon',
+                                          'inserttop',
+                                          'insertbottom',
                                           'deleteformat',
                                           'margin',
                                           'border',

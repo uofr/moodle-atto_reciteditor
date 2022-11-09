@@ -211,6 +211,7 @@ class MainView extends Component{
         this.onInsertNode = this.onInsertNode.bind(this);
         this.onStartEditingNodeText = this.onStartEditingNodeText.bind(this);
         this.onFinishEditingNodeText = this.onFinishEditingNodeText.bind(this);
+        this.onInsertTemplate = this.onInsertTemplate.bind(this);
         this.onSaveTemplate = this.onSaveTemplate.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
@@ -320,7 +321,7 @@ class MainView extends Component{
                     </ButtonToolbar>
                     {(this.state.panels.components | this.state.panels.properties | this.state.panels.treeView) >= 1 &&
                         <div className='panel-list' style={{width: `${LayoutBuilder.properties.leftPanel.panelList.width}px`}}>
-                            {this.state.panels.components === 1 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='tpl'/>}
+                            {this.state.panels.components === 1 && <VisualComponentList onDragEnd={this.onDragEnd} onInsert={this.onInsertTemplate} onSaveTemplate={this.onSaveTemplate} tab='tpl'/>}
                             {this.state.panels.components === 3 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='comp'/>}
                             {this.state.panels.properties === 1 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bs'/>}
                             {this.state.panels.properties === 2 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='html'/>}
@@ -410,6 +411,11 @@ class MainView extends Component{
 
     onInsertNode(elems){
         this.canvasState[this.state.canvasState].onInsertNode(elems);
+        this.forceUpdate();
+    }
+
+    onInsertTemplate(position, item){
+        this.canvasState[this.state.canvasState].onInsertTemplate(position, item);
         this.forceUpdate();
     }
 

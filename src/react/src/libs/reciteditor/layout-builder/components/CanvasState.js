@@ -57,6 +57,7 @@ class CanvasState{
     onMoveNodeDown(selectedElement){}
     onCloneNode(selectedElement){}
     onInsertNode(elems){}
+    onInsertTemplate(position, item){}
     onStartEditingNodeText(selectedElement){}
     onFinishEditingNodeText(html){}
     onKey(e, editingElement){}
@@ -431,6 +432,16 @@ export class DesignerState extends CanvasState{
             CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
         }
         this.onAfterChange();
+    }
+
+    onInsertTemplate(position, item){
+        let body = this.getBody();
+        if (position == 'top'){
+            body.insertAdjacentHTML('beforeend', item);
+        }else{  
+            body.insertAdjacentHTML('afterbegin', item);
+        }
+        this.onInsertNode(body.children);
     }
    
     getData(htmlCleaning){
