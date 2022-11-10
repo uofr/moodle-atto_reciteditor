@@ -34,7 +34,12 @@ html{
         .container{ border: $border-invisible-element; padding: 1rem!important; }
         .container-fluid{@extend .container;}
         .row{ border: $border-invisible-element;  padding: 1rem; }
-        .col, .col-12{ border: $border-invisible-element; min-height: 30px;}
+        .row:empty::before{content: "Row";}
+        
+        @for $i from 1 through 12 {
+            .col-#{$i}, .col-md-#{$i} {border: $border-invisible-element; min-height: 30px;}
+            .col-#{$i}:empty::before, .col-md-#{$i}:empty::before {content: 'Col'}
+        }
 
         .alert:empty::after{content: "Alert"}
         .card{@extend .extra-landmark;}

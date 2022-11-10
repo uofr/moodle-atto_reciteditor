@@ -61,6 +61,11 @@ html{
                                 margin: 13px;
                                 text-align: center;
                                 width: 40%;
+                                &:hover {
+                                    cursor: grab;
+                                    background-color: #ececec;
+                                    border: 1px dashed #007bff;
+                                }
                                 img {
                                     max-width: 90%;
                                     max-height: 100px;

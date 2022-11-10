@@ -57,21 +57,26 @@
      createElementDZ(desc){
          let el = document.createElement("div");
          el.classList.add("dropping-zone");
-         el.innerText = desc || "";
+         el.innerHTML = desc || "";
          return el;
      }
- 
+
+     getDescDZ(){
+        return "<span class='p-1 disabled badge ml-2 badge-warning'>"+this.getDesc()+"</span>";
+     }
+
      prepareDroppingZones(el){ 
+        let elName = this.getDescDZ();
          if(el.children.length > 0){
-             el.insertBefore(this.createElementDZ(i18n.get_string('insidebegining')), el.firstChild);    
-             el.appendChild(this.createElementDZ(i18n.get_string('insideend')));
+             el.insertBefore(this.createElementDZ(i18n.get_string('insidebegining')+elName), el.firstChild);    
+             el.appendChild(this.createElementDZ(i18n.get_string('insideend')+elName));
          } 
          else{
-             el.appendChild(this.createElementDZ(i18n.get_string('inside')));
+             el.appendChild(this.createElementDZ(i18n.get_string('inside')+elName));
          }
  
-         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')), el);
-         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')), el.nextSibling);
+         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')+elName), el);
+         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')+elName), el.nextSibling);
      }
  }
  
@@ -104,8 +109,8 @@
      }
  
      prepareDroppingZones(el){        
-         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')), el);
-         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')), el.nextSibling);
+         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')+this.getDescDZ()), el);
+         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')+this.getDescDZ()), el.nextSibling);
      }
  }
  
@@ -121,8 +126,8 @@
      }
  
      prepareDroppingZones(el){        
-         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')), el);
-         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')), el.nextSibling);
+         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')+this.getDescDZ()), el);
+         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')+this.getDescDZ()), el.nextSibling);
      }
  }
  
@@ -345,7 +350,7 @@
  
  export class HTMLRowElement extends HTMLElement{
      constructor(){
-         super(i18n.get_string('row'), 'row', 'bootstrap', HTMLPropertiesData.propsAssignmentFacade.containers);
+         super('Row', 'row', 'bootstrap', HTMLPropertiesData.propsAssignmentFacade.containers);
      }
  
      equal(el){
@@ -363,7 +368,7 @@
  
  export class HTMLColElement extends HTMLElement{
      constructor(){
-         super(i18n.get_string('column'), 'col', 'bootstrap', HTMLPropertiesData.propsAssignmentFacade.containers);
+         super('Col', 'col', 'bootstrap', HTMLPropertiesData.propsAssignmentFacade.containers);
      }
  
      equal(el){
@@ -386,11 +391,11 @@
  
      prepareDroppingZones(el){        
          if(el.children.length > 0){
-             el.insertBefore(this.createElementDZ(i18n.get_string('insidebegining')), el.firstChild);    
-             el.appendChild(this.createElementDZ(i18n.get_string('insideend')));
+             el.insertBefore(this.createElementDZ(i18n.get_string('insidebegining')+this.getDescDZ()), el.firstChild);    
+             el.appendChild(this.createElementDZ(i18n.get_string('insideend')+this.getDescDZ()));
          } 
          else{
-             el.appendChild(this.createElementDZ(i18n.get_string('inside')));
+             el.appendChild(this.createElementDZ(i18n.get_string('inside')+this.getDescDZ()));
          }
      }
  }
@@ -461,7 +466,7 @@
  
  export class HTMLTableHeaderCellElement extends HTMLElement{
      constructor(){
-         super("Titre de la table", "th", 'native', {all: ['bs-tablecell', ...HTMLPropertiesData.propsAssignmentFacade.containers.all], min: ['bs-tablecell']});
+         super(i18n.get_string('tableheader'), "th", 'native', {all: ['bs-tablecell', ...HTMLPropertiesData.propsAssignmentFacade.containers.all], min: ['bs-tablecell']});
          this.visible = false;
      }
  
