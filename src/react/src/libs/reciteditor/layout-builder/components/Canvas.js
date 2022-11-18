@@ -182,7 +182,7 @@ export class CanvasElement{
         //let el = React.createElement(component.element, {});
         //ReactDOM.render(el, this.dom);
 
-        this.onDropCallback(this.dom);     
+        this.onDropCallback(this.dom, el);
 
         return false;
     } 

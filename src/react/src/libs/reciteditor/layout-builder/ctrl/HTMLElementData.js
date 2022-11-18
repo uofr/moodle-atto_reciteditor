@@ -24,7 +24,7 @@
  import { i18n } from '../../RecitEditor';
  import {BsBackgroundProperty, BsBackgroundImageProperty, BsShadowProperty, BsIconProperty, BsIconSizeProperty, BsMarginProperty, BsPaddingProperty, HTMLClassProperty,
     HTMLStyleProperty, HTMLWidthProperty, HTMLHeightProperty, HTMLFontSizeProperty, HTMLFontFamilyProperty, HTMLColorProperty, HTMLBackgroundProperty, HTMLHrefProperty, HTMLTargetProperty, 
-            HTMLSourceProperty, HTMLIdProperty, HTMLVideoButtonProperty, HTMLVideoSourceProperty, HTMLEmbedProperty, HTMLPropertiesData, BsTabProperty, BsTabJustifyProperty, BsAddTabProperty, HTMLMarginBorderPaddingProperty, BsAddAccordionProperty, BsBorderProperty, BsBorderColorProperty, BsBorderStyleProperty, BsBorderRadiusProperty, BsTextColorProperty, BsTextAlignmentProperty, BsBtnBlockProperty, BsBtnOutlineProperty, BsBtnSizeProperty, BsTableActionProperty, BsTableBorderProperty, BsTableStripedProperty, BsTableCellActionProperty, HTMLAltProperty, HTMLOuterHTMLProperty} from './HTMLProperties';
+            HTMLSourceProperty, HTMLIdProperty, HTMLVideoButtonProperty, HTMLVideoSourceProperty, HTMLEmbedProperty, HTMLPropertiesData, BsTabProperty, BsTabJustifyProperty, BsAddTabProperty, HTMLMarginBorderPaddingProperty, BsAddAccordionProperty, BsBorderProperty, BsBorderColorProperty, BsBorderStyleProperty, BsBorderRadiusProperty, BsTextColorProperty, BsTextAlignmentProperty, BsBtnBlockProperty, BsBtnOutlineProperty, BsBtnSizeProperty, BsTableActionProperty, BsTableBorderProperty, BsTableStripedProperty, BsTableCellActionProperty, HTMLAltProperty, HTMLOuterHTMLProperty, ModalGridProperty} from './HTMLProperties';
  import {HTMLHeadingElement, HTMLParagraphElement, HTMLButtonElement, HTMLLinkElement, HTMLAudioElement, HTMLVideoElement, HTMLButtonVideoElement, HTMLEmbedElement,
             HTMLNavElement, HTMLNavItemElement, HTMLNavLinkElement,
             HTMLBodyElement, HTMLDivElement, HTMLSpanElement, HTMLSectionElement, HTMLGridElement, HTMLRowElement, HTMLColElement, HTMLUListElement, HTMLOListElement, HTMLLIElement,
@@ -53,11 +53,17 @@ export class HTMLElementData{
                 ]
             },            
             {
+                name: 'modal-grid', description: i18n.get_string('grid'), visible: false,
+                children: [
+                    new ModalGridProperty()
+                ]
+            },
+            {
                 name: 'bs-general', description: i18n.get_string('classlist'), 
                 children: [
                     new HTMLClassProperty()
                 ]
-            },
+            },   
             {
                 name: 'bs-spacing', description: i18n.get_string('spacing'), 
                 children: [
@@ -357,8 +363,13 @@ export class HTMLElementData{
                 console.log(componentData);
                 return;
             }
-            el = new DOMParser().parseFromString(html, "text/html");
-            el = el.body.firstChild;
+            let htmlEl = new DOMParser().parseFromString(html, "text/html");
+            el = htmlEl.body.firstChild;
+            if (htmlEl.body.childElementCount > 1){
+                let div = document.createElement('div');
+                div.innerHTML = htmlEl.body.innerHTML;
+                el = div;
+            }
         }
         else{
             console.log(`Component type not found: ${componentData}`);

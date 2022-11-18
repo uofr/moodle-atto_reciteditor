@@ -35,7 +35,7 @@ class CanvasState{
         this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
-        this.onInsertNode = this.onInsertNode.bind(this);
+        this.onAfterInsertNode = this.onAfterInsertNode.bind(this);
         this.onLoadFrame = this.onLoadFrame.bind(this);
         this.htmlCleaning = this.htmlCleaning.bind(this);
         this.onKey = this.onKey.bind(this);
@@ -56,7 +56,7 @@ class CanvasState{
     onMoveNodeUp(selectedElement){}
     onMoveNodeDown(selectedElement){}
     onCloneNode(selectedElement){}
-    onInsertNode(elems){}
+    onAfterInsertNode(elems){}
     onInsertTemplate(position, item){}
     onStartEditingNodeText(selectedElement){}
     onFinishEditingNodeText(html){}
@@ -71,7 +71,7 @@ class CanvasState{
         return result;
     }  
 
-    htmlCleaning(htmlDoc){
+    htmlCleaning(htmlDoc, keepSelectedElement){
         htmlDoc = htmlDoc || null;
         if(htmlDoc === null){
             return;
@@ -91,8 +91,10 @@ class CanvasState{
             
             item.removeAttribute("data-hovering");
             item.removeAttribute("contenteditable");
-            item.removeAttribute("data-selected");
-            item.removeAttribute("draggable");
+            if (!keepSelectedElement){
+                item.removeAttribute("data-selected");
+                item.removeAttribute("draggable");
+            }
         });
     }
 
@@ -191,8 +193,8 @@ export class SourceCodeDesignerState extends CanvasState{
         this.designer.onCloneNode(el);
     }
 
-    onInsertNode(elems){
-        this.designer.onInsertNode(elems);
+    onAfterInsertNode(elems){
+        this.designer.onAfterInsertNode(elems);
     }
 
     onStartEditingNodeText(el){
@@ -272,7 +274,7 @@ export class DesignerState extends CanvasState{
 
 
         // pure JS
-        CanvasElement.create(body, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
+        CanvasElement.create(body, this.mainView.onSelectElement, this.mainView.onDrop, this.mainView.onStartEditingNodeText);
 
         // React JS
         //body.appendChild(doc.firstChild);        
@@ -364,7 +366,7 @@ export class DesignerState extends CanvasState{
     
     onDragEnd(){
         this.onBeforeChange();
-        this.htmlCleaning(this.window.document);
+        this.htmlCleaning(this.window.document, true);
         this.onAfterChange();
     }
 
@@ -421,15 +423,15 @@ export class DesignerState extends CanvasState{
         el.removeAttribute("data-selected");
         el.removeAttribute("contenteditable");
         parent.appendChild(el);
-        CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
+        CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDrop, this.mainView.onStartEditingNodeText);
         this.onAfterChange();
     }
 
-    onInsertNode(elems){
+    onAfterInsertNode(elems){
         this.onBeforeChange();
 
         for(let el of elems){
-            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
+            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDrop, this.mainView.onStartEditingNodeText);
         }
         this.onAfterChange();
     }
@@ -441,7 +443,7 @@ export class DesignerState extends CanvasState{
         }else{  
             body.insertAdjacentHTML('afterbegin', item);
         }
-        this.onInsertNode(body.children);
+        this.onAfterInsertNode(body.children);
     }
    
     getData(htmlCleaning){
@@ -467,7 +469,7 @@ export class DesignerState extends CanvasState{
             if(that.window){
                 let body = that.window.document.body;
                 body.innerHTML = value;
-                CanvasElement.create(body, that.mainView.onSelectElement, that.mainView.onDragEnd, that.mainView.onStartEditingNodeText);
+                CanvasElement.create(body, that.mainView.onSelectElement, that.mainView.onDrop, that.mainView.onStartEditingNodeText);
             }
             else{
                 console.log("Loading designer canvas...");
@@ -484,7 +486,7 @@ export class DesignerState extends CanvasState{
 
     onFinishEditingNodeText(el){
         if (el){
-            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
+            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDrop, this.mainView.onStartEditingNodeText);
         }
         this.editingElement = null;
         this.onAfterChange();

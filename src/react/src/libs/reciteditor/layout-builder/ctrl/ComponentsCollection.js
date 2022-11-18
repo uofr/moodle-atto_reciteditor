@@ -27,11 +27,12 @@ import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCubes, faCloud, faTime
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, Assets, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  IconSelector, ColorSelector, Templates, i18n } from '../../RecitEditor';
 import { HTMLElementData } from './HTMLElementData';
+import { GridBuilder } from '../components/GridBuilder';
 
 export class ComponentProperties extends Component{
     static defaultProps = {
         element: null,
-        onInsertNode: null,
+        onAfterInsertNode: null,
         onDeleteElement: null,
         tab: 'bm'
     };
@@ -62,10 +63,10 @@ export class ComponentProperties extends Component{
                 {header}
 
                 {this.props.tab === "bs" && 
-                        <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bootstrap} />
+                        <FormProperties element={this.props.element} onAfterReplaceNode={this.props.onAfterReplaceNode} onAfterInsertNode={this.props.onAfterInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bootstrap} />
                 }
-                {this.props.tab === "html" && <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.html} />}
-                {this.props.tab === "bm" && <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bookmark} />}
+                {this.props.tab === "html" && <FormProperties element={this.props.element} onAfterInsertNode={this.props.onAfterInsertNode} onAfterReplaceNode={this.props.onAfterReplaceNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.html} />}
+                {this.props.tab === "bm" && <FormProperties element={this.props.element} onAfterInsertNode={this.props.onAfterInsertNode} onAfterReplaceNode={this.props.onAfterReplaceNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bookmark} />}
             </div>
                 
                 
@@ -76,7 +77,7 @@ export class ComponentProperties extends Component{
         let result = {
             bs: [],
             html: [],
-            bm: []
+            bm: [],
         };
         
         let elClass = HTMLElementData.getElementClass(null, this.props.element);
@@ -107,7 +108,8 @@ class FormProperties extends Component{
     static defaultProps = {
         element: null,
         properties: [],
-        onInsertNode: null,
+        onAfterInsertNode: null,
+        onAfterReplaceNode: null,
         onDeleteElement: null
     };
 
@@ -131,7 +133,7 @@ class FormProperties extends Component{
 
                 let form = 
                 <Form key={index} onSubmit={this.onSubmit} className="mb-4">
-                    <h6  onClick={(event) => this.onCollapse(event, item.name)}><FontAwesomeIcon className="mr-1" icon={icon}/> {item.description}</h6>
+                    {item.visible != false && <h6  onClick={(event) => this.onCollapse(event, item.name)}><FontAwesomeIcon className="mr-1" icon={icon}/> {item.description}</h6>}
                     {!collapsed && item.children.map((item2, index2) => {
                         let formItem = null;
                         let flags = item2.getFlags(this.props.element);
@@ -198,6 +200,10 @@ class FormProperties extends Component{
                 result = <IconSelector name={data.name} value={value} text={data.input.text}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
+            case 'gridbuilder':
+                result = <GridBuilder name={data.name} value={value} text={data.input.text}
+                                onSave={(event) => this.onModalSave(event, data)} />;
+                break;
             case 'multipleselect':
                 result = <MultipleSelect name={data.name} values={value} options={data.input.options} autoAdd={flags.autoAdd}
                                 onChange={(event) => this.onDataChange(event, data)} />;
@@ -244,11 +250,15 @@ class FormProperties extends Component{
         }
     }
 
+    onModalSave(event, componentData){
+        this.props.onAfterReplaceNode([this.props.element]);       
+    }
+
     onClick(item){
         let result = item.onClick(this.props.element);
 
         if(result.action === 'insert'){
-            this.props.onInsertNode(result.nodes);
+            this.props.onAfterInsertNode(result.nodes);
         }
         else if(result.action === 'delete'){
             this.props.onDeleteElement();

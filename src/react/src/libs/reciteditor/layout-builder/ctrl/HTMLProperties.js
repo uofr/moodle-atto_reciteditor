@@ -116,6 +116,13 @@ class IconPicker{
     }
 }
 
+class GridBuilder{
+    constructor(){
+        this.type = 'gridbuilder'; // keep this attribute for backward compatibility
+        this.text = i18n.get_string('gridbuilder');
+    }
+}
+
 class ImageSrc{
     constructor(onChangeProp){
         this.type = 'ImageSrc'; // keep this attribute for backward compatibility
@@ -631,6 +638,20 @@ export class BsIconProperty extends HTMLProperty{
 
     getValue(el, data){
         return el.getAttribute('class');
+    }
+}
+
+export class ModalGridProperty extends HTMLProperty{
+    constructor(){
+       super('grid',  i18n.get_string('grid'), new GridBuilder());
+    }
+
+    getValue(el, data){
+        return el;
+    }
+
+    getFlags(){
+        return {showLabel:false};
     }
 }
 

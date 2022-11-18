@@ -25,7 +25,7 @@ import React, { Component } from 'react';
 import { Nav, Navbar, Button, ButtonToolbar, ButtonGroup } from 'react-bootstrap';
 import {faMobileAlt, faTabletAlt, faTh, faLaptop, faDesktop, faFileWord, faEye, faCode, faSave, faRedo, faUndo, faColumns, faCloud, faPuzzlePiece,  faFileCode, faSitemap, faObjectGroup, faCubes} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {TreeView, CanvasElement, ComponentProperties, VisualComponentList, Assets, Templates, HistoryManager, Utils, i18n, DesignerState, PreviewState, SourceCodeDesignerState, SourceCodeState, JsNx, Storage} from '../RecitEditor';
+import {HTMLElementData, TreeView, CanvasElement, ComponentProperties, VisualComponentList, Assets, Templates, HistoryManager, Utils, i18n, DesignerState, PreviewState, SourceCodeDesignerState, SourceCodeState, JsNx, Storage} from '../RecitEditor';
 import html2canvas from 'html2canvas';
 
 export class LayoutBuilder extends Component
@@ -151,7 +151,6 @@ export class LayoutBuilder extends Component
     }
 
     onWindowResize(){
-        console.log("res")
         this.forceUpdate();
     }
 
@@ -208,13 +207,15 @@ class MainView extends Component{
         this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
-        this.onInsertNode = this.onInsertNode.bind(this);
+        this.onAfterInsertNode = this.onAfterInsertNode.bind(this);
+        this.onAfterReplaceNode = this.onAfterReplaceNode.bind(this);
         this.onStartEditingNodeText = this.onStartEditingNodeText.bind(this);
         this.onFinishEditingNodeText = this.onFinishEditingNodeText.bind(this);
         this.onInsertTemplate = this.onInsertTemplate.bind(this);
         this.onSaveTemplate = this.onSaveTemplate.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
+        this.onDrop = this.onDrop.bind(this);
         this.getData = this.getData.bind(this);
         this.setData = this.setData.bind(this);
         this.onKey = this.onKey.bind(this);
@@ -322,10 +323,10 @@ class MainView extends Component{
                     {(this.state.panels.components | this.state.panels.properties | this.state.panels.treeView) >= 1 &&
                         <div className='panel-list' style={{width: `${LayoutBuilder.properties.leftPanel.panelList.width}px`}}>
                             {this.state.panels.components === 1 && <VisualComponentList onDragEnd={this.onDragEnd} onInsert={this.onInsertTemplate} onSaveTemplate={this.onSaveTemplate} tab='tpl'/>}
-                            {this.state.panels.components === 3 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='comp'/>}
-                            {this.state.panels.properties === 1 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bs'/>}
-                            {this.state.panels.properties === 2 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='html'/>}
-                            {this.state.panels.properties === 3 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bm'/>}
+                            {this.state.panels.components === 3 && <VisualComponentList onDragEnd={this.onDragEnd} onInsert={this.onInsertTemplate} onSaveTemplate={this.onSaveTemplate} tab='comp'/>}
+                            {this.state.panels.properties === 1 && <ComponentProperties onAfterInsertNode={this.onAfterInsertNode} onAfterReplaceNode={this.onAfterReplaceNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bs'/>}
+                            {this.state.panels.properties === 2 && <ComponentProperties onAfterInsertNode={this.onAfterInsertNode} onAfterReplaceNode={this.onAfterReplaceNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='html'/>}
+                            {this.state.panels.properties === 3 && <ComponentProperties onAfterInsertNode={this.onAfterInsertNode} onAfterReplaceNode={this.onAfterReplaceNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bm'/>}
                             {this.state.panels.treeView === 1 && <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} 
                                                                     view={this.props.view} onSaveElement={this.onSaveTemplate} onDeleteElement={this.onDeleteElement} onMoveNodeUp={this.onMoveNodeUp} onMoveNodeDown={this.onMoveNodeDown} />}
                         </div>
@@ -370,9 +371,19 @@ class MainView extends Component{
         this.canvasState[this.state.canvasState].onContentChange(data, origin);
     }
 
+    onDrop(dom, newEl){
+        if (newEl){
+            let cl = HTMLElementData.getElementClass(null, newEl);
+            if (cl && cl.modalCreation){
+                this.onSelectElement(newEl);
+            }else{
+                this.setState({selectedElement: null})
+            }
+        }
+    }
+
     onDragEnd(){
         this.canvasState[this.state.canvasState].onDragEnd();
-        this.setState({selectedElement: null});
     }
 
     onUnselectElement(){
@@ -409,8 +420,13 @@ class MainView extends Component{
         this.forceUpdate();
     }
 
-    onInsertNode(elems){
-        this.canvasState[this.state.canvasState].onInsertNode(elems);
+    onAfterInsertNode(elems){
+        this.canvasState[this.state.canvasState].onAfterInsertNode(elems);
+        this.forceUpdate();
+    }
+
+    onAfterReplaceNode(elems){
+        this.canvasState[this.state.canvasState].onAfterInsertNode(elems);
         this.forceUpdate();
     }
 

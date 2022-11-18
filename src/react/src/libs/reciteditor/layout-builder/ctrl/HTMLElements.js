@@ -21,14 +21,13 @@
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
 
- import React from 'react';
- import {i18n, Assets} from '../../RecitEditor';
- import {HTMLPropertiesData} from './HTMLProperties';
+import {i18n, Assets} from '../../RecitEditor';
+import {HTMLPropertiesData} from './HTMLProperties';
  
  /**
   * Abstract class
   */
- class HTMLElement{
+class HTMLElement{
      constructor(name, tagName, type, properties){
          this.name = name || "";
          this.tagName = tagName || "";
@@ -314,7 +313,35 @@
  
  export class HTMLGridElement extends HTMLElement{
      constructor(){
-         super(i18n.get_string('grid'), 'grid', 'bootstrap', HTMLPropertiesData.propsAssignmentFacade.containers);
+         super(i18n.get_string('grid'), 'grid', 'bootstrap', {
+         min: [ 'modal-grid', 'bs-background', 'bs-border'],
+         all: [ 'modal-grid', 'bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'background', 'htmlattributes']});
+         this.modalCreation = true;
+     }
+
+     create(){
+        let el = document.createElement("div");
+        el.classList.add("container-fluid");
+        el.setAttribute('data-empty', '1')
+        
+        let row = document.createElement("div");
+        row.classList.add("row");
+        el.appendChild(row);
+
+        
+        let col = document.createElement("div");
+        col.classList.add("col");
+        row.appendChild(col);
+
+        col = document.createElement("div");
+        col.classList.add("col");
+        row.appendChild(col);
+
+        col = document.createElement("div");
+        col.classList.add("col");
+        row.appendChild(col);
+
+        return el;
      }
  
      equal(el){
@@ -323,34 +350,12 @@
          return (el.classList.contains('container') || el.classList.contains('container-fluid'));
      }
      
-     create(){
-         let el = document.createElement("div");
-         el.classList.add("container");
-         
-         let row = document.createElement("div");
-         row.classList.add("row");
-         el.appendChild(row);
- 
-         
-         let col = document.createElement("div");
-         col.classList.add("col");
-         row.appendChild(col);
- 
-         col = document.createElement("div");
-         col.classList.add("col");
-         row.appendChild(col);
- 
-         col = document.createElement("div");
-         col.classList.add("col");
-         row.appendChild(col);
- 
-         return el;
-     }
  }
  
  export class HTMLRowElement extends HTMLElement{
      constructor(){
          super('Row', 'row', 'bootstrap', HTMLPropertiesData.propsAssignmentFacade.containers);
+         this.visible = false;
      }
  
      equal(el){
@@ -369,6 +374,7 @@
  export class HTMLColElement extends HTMLElement{
      constructor(){
          super('Col', 'col', 'bootstrap', HTMLPropertiesData.propsAssignmentFacade.containers);
+         this.visible = false;
      }
  
      equal(el){
