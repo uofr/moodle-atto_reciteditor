@@ -307,15 +307,17 @@ class HTMLElement{
  
  export class HTMLSectionElement extends HTMLElement{
      constructor(){
-         super("Section", "section", 'native', HTMLPropertiesData.propsAssignmentFacade.containers);
+         super("Section", "section", 'native', {
+            min: ['bs-grid', 'modal-grid', 'bs-background', 'bs-border'],
+            all: ['bs-grid', 'modal-grid', 'bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'background', 'htmlattributes']});
      }
  }
  
  export class HTMLGridElement extends HTMLElement{
      constructor(){
          super(i18n.get_string('grid'), 'grid', 'bootstrap', {
-         min: [ 'modal-grid', 'bs-background', 'bs-border'],
-         all: [ 'modal-grid', 'bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'background', 'htmlattributes']});
+         min: ['bs-grid', 'modal-grid', 'bs-background', 'bs-border'],
+         all: ['bs-grid', 'modal-grid', 'bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'background', 'htmlattributes']});
          this.modalCreation = true;
      }
 
@@ -354,7 +356,9 @@ class HTMLElement{
  
  export class HTMLRowElement extends HTMLElement{
      constructor(){
-         super('Row', 'row', 'bootstrap', HTMLPropertiesData.propsAssignmentFacade.containers);
+         super('Row', 'row', 'bootstrap', {
+            min: ['bs-row', 'bs-background', 'bs-border'],
+            all: ['bs-row', 'bs-grid', 'bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'background', 'htmlattributes']});
          this.visible = false;
      }
  

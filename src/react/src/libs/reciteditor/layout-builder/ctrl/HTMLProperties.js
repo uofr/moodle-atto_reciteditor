@@ -83,6 +83,21 @@ class ComboBox{
 class RadioButton{
     constructor(options, onChangeProp, defaultValue){
         this.type = 'radio'; // keep this attribute for backward compatibility
+        this.toggleType = 'radio'; // keep this attribute for backward compatibility
+        this.options = options;
+        this.defaultValue = defaultValue || [];
+        this.onChangeProp = onChangeProp;
+    }
+
+    onChange(el, value, data){
+        this.onChangeProp(el, value, data);
+    }
+}
+
+class CheckboxButton{
+    constructor(options, onChangeProp, defaultValue){
+        this.type = 'radio'; // keep this attribute for backward compatibility
+        this.toggleType = 'checkbox'; // keep this attribute for backward compatibility
         this.options = options;
         this.defaultValue = defaultValue || [];
         this.onChangeProp = onChangeProp;
@@ -1268,6 +1283,97 @@ export class BsBtnBlockProperty extends HTMLProperty{
 
         if(value.length > 0){
             el.classList.add(value);
+        }
+    }
+}
+
+export class BsGridResponsiveProperty extends HTMLProperty{
+    constructor(){
+        super('gridresponsive', i18n.get_string('reverserow'));
+
+        this.options = [
+            {text:i18n.get_string('yes'), value: "flex-md-row-reverse"},
+            {text:i18n.get_string('no'), value: ""}     
+        ];
+
+        this.input = new RadioButton(this.options, this.onChange.bind(this));
+    }
+ 
+    getValue(el, data){
+        let result = "";
+                        
+        if(el.classList.contains("flex-md-row-reverse")){
+            result = "flex-md-row-reverse";
+        }
+
+        return result;
+    }
+
+    onChange(el, value, data){                       
+        if(el.classList.contains("flex-md-row-reverse")){
+            el.classList.remove("flex-md-row-reverse");
+        }
+        if(el.classList.contains("flex-md-row")){
+            el.classList.remove("flex-md-row");
+        }
+
+        if(value.length > 0){
+            el.classList.add(value);
+        }
+    }
+}
+
+export class BsGridPaddingProperty extends HTMLProperty{
+    static classList = {
+        top: ['pt-3', 'pt-md-4', 'pt-lg-5'],
+        bottom: ['pb-3', 'pb-md-4', 'pb-lg-5'],
+        lateral: ['px-3', 'px-md-4', 'px-lg-5'],
+    }
+    constructor(){
+        super('gridpadding', i18n.get_string('paddingtype'));
+
+        this.options = [
+            {text:i18n.get_string('top'), value: "top"},
+            {text:i18n.get_string('bottom'), value: "bottom"},   
+            {text:i18n.get_string('lateral'), value: "lateral"},  
+        ];
+
+        this.input = new CheckboxButton(this.options, this.onChange.bind(this));
+    }
+ 
+    getValue(el, data){
+        let result = [];
+    
+        for (let v in BsGridPaddingProperty.classList){
+            let exists = true;
+            for (let cl of BsGridPaddingProperty.classList[v]){
+                if(!el.classList.contains(cl)){
+                    exists = false;
+                }
+            }
+            if (exists){
+                result.push(v)
+            }
+        }
+
+        return result;
+    }
+
+    onChange(el, values, data){      
+        for (let v in BsGridPaddingProperty.classList){
+            for (let cl of BsGridPaddingProperty.classList[v]){
+                if(el.classList.contains(cl)){
+                    el.classList.remove(cl);
+                }
+            }
+        }
+
+        if(values.length > 0){
+            for (let v of values){
+                for (let cl of BsGridPaddingProperty.classList[v]){
+                    el.classList.add(cl);
+                }
+            }
         }
     }
 }

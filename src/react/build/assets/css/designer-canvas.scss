@@ -31,7 +31,7 @@ html{
         table{border: $border-invisible-element; border-width: 3px;}
         section:empty::before{content: "Section";}
         
-        .container{ border: $border-invisible-element; padding: 1rem!important; }
+        .container{ border: $border-invisible-element; padding: 1rem; }
         .container-fluid{@extend .container;}
         .row{ border: $border-invisible-element;  padding: 1rem; }
         .row:empty::before{content: "Row";}

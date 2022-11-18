@@ -98,7 +98,7 @@ export class GridBuilder extends Component{
                                     arr.push(
                                         <option key={0} value='0' disabled>{i18n.get_string('selectoption')}</option>
                                     );
-                                    for (let i = 2; i <= 4; i++) {
+                                    for (let i = 1; i <= 4; i++) {
                                         arr.push(
                                             <option key={i} value={i}>{i}</option>
                                         );

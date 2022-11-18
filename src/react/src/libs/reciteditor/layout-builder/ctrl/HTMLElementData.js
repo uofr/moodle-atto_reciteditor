@@ -24,7 +24,7 @@
  import { i18n } from '../../RecitEditor';
  import {BsBackgroundProperty, BsBackgroundImageProperty, BsShadowProperty, BsIconProperty, BsIconSizeProperty, BsMarginProperty, BsPaddingProperty, HTMLClassProperty,
     HTMLStyleProperty, HTMLWidthProperty, HTMLHeightProperty, HTMLFontSizeProperty, HTMLFontFamilyProperty, HTMLColorProperty, HTMLBackgroundProperty, HTMLHrefProperty, HTMLTargetProperty, 
-            HTMLSourceProperty, HTMLIdProperty, HTMLVideoButtonProperty, HTMLVideoSourceProperty, HTMLEmbedProperty, HTMLPropertiesData, BsTabProperty, BsTabJustifyProperty, BsAddTabProperty, HTMLMarginBorderPaddingProperty, BsAddAccordionProperty, BsBorderProperty, BsBorderColorProperty, BsBorderStyleProperty, BsBorderRadiusProperty, BsTextColorProperty, BsTextAlignmentProperty, BsBtnBlockProperty, BsBtnOutlineProperty, BsBtnSizeProperty, BsTableActionProperty, BsTableBorderProperty, BsTableStripedProperty, BsTableCellActionProperty, HTMLAltProperty, HTMLOuterHTMLProperty, ModalGridProperty} from './HTMLProperties';
+            HTMLSourceProperty, HTMLIdProperty, HTMLVideoButtonProperty, HTMLVideoSourceProperty, HTMLEmbedProperty, HTMLPropertiesData, BsTabProperty, BsTabJustifyProperty, BsAddTabProperty, HTMLMarginBorderPaddingProperty, BsAddAccordionProperty, BsBorderProperty, BsBorderColorProperty, BsBorderStyleProperty, BsBorderRadiusProperty, BsTextColorProperty, BsTextAlignmentProperty, BsBtnBlockProperty, BsBtnOutlineProperty, BsBtnSizeProperty, BsTableActionProperty, BsTableBorderProperty, BsTableStripedProperty, BsTableCellActionProperty, HTMLAltProperty, HTMLOuterHTMLProperty, ModalGridProperty, BsGridResponsiveProperty, BsGridPaddingProperty} from './HTMLProperties';
  import {HTMLHeadingElement, HTMLParagraphElement, HTMLButtonElement, HTMLLinkElement, HTMLAudioElement, HTMLVideoElement, HTMLButtonVideoElement, HTMLEmbedElement,
             HTMLNavElement, HTMLNavItemElement, HTMLNavLinkElement,
             HTMLBodyElement, HTMLDivElement, HTMLSpanElement, HTMLSectionElement, HTMLGridElement, HTMLRowElement, HTMLColElement, HTMLUListElement, HTMLOListElement, HTMLLIElement,
@@ -56,6 +56,18 @@ export class HTMLElementData{
                 name: 'modal-grid', description: i18n.get_string('grid'), visible: false,
                 children: [
                     new ModalGridProperty()
+                ]
+            },     
+            {
+                name: 'bs-grid', description: i18n.get_string('grid'),
+                children: [
+                    new BsGridPaddingProperty()
+                ]
+            },
+            {
+                name: 'bs-row', description: i18n.get_string('row'),
+                children: [
+                    new BsGridResponsiveProperty()
                 ]
             },
             {
@@ -205,6 +217,17 @@ export class HTMLElementData{
 
     static elementList = [
         {
+            name: i18n.get_string('layout'), 
+            children: [
+                new HTMLBodyElement(),
+                new HTMLDivElement(),
+                new HTMLSectionElement(),
+                new HTMLGridElement(),
+                new HTMLRowElement(),
+                new HTMLColElement(),
+            ]
+        },
+        {
             name: i18n.get_string('text'),
             children: [
                 new HTMLHeadingElement("H1", 'h1'),
@@ -217,6 +240,7 @@ export class HTMLElementData{
                 new HTMLUListElement(),
                 new HTMLOListElement(),
                 new HTMLLIElement(),
+                new HTMLSpanElement(),
             ]
         },
         {
@@ -271,18 +295,6 @@ export class HTMLElementData{
                 new HTMLMediaBSBodyElement(),
                 new HTMLHRElement(),
                 new HTMLHorizontalBarElement()
-            ]
-        },
-        {
-            name: i18n.get_string('grid'), 
-            children: [
-                new HTMLBodyElement(),
-                new HTMLDivElement(),
-                new HTMLSpanElement(),
-                new HTMLSectionElement(),
-                new HTMLGridElement(),
-                new HTMLRowElement(),
-                new HTMLColElement(),
             ]
         },
     ];

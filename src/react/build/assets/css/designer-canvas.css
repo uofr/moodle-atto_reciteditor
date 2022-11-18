@@ -49,7 +49,7 @@ html {
       content: "Section"; }
     html body .container, html body .container-fluid {
       border: 2px dashed #c9c5c5;
-      padding: 1rem !important; }
+      padding: 1rem; }
     html body .row {
       border: 2px dashed #c9c5c5;
       padding: 1rem; }
