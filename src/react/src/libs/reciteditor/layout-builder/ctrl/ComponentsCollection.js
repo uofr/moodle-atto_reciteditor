@@ -63,10 +63,10 @@ export class ComponentProperties extends Component{
                 {header}
 
                 {this.props.tab === "bs" && 
-                        <FormProperties element={this.props.element} onAfterReplaceNode={this.props.onAfterReplaceNode} onAfterInsertNode={this.props.onAfterInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bootstrap} />
+                        <FormProperties element={this.props.element} onAfterReplaceNode={this.props.onAfterReplaceNode} onAfterChange={this.props.onAfterChange} onAfterInsertNode={this.props.onAfterInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bootstrap} />
                 }
-                {this.props.tab === "html" && <FormProperties element={this.props.element} onAfterInsertNode={this.props.onAfterInsertNode} onAfterReplaceNode={this.props.onAfterReplaceNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.html} />}
-                {this.props.tab === "bm" && <FormProperties element={this.props.element} onAfterInsertNode={this.props.onAfterInsertNode} onAfterReplaceNode={this.props.onAfterReplaceNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bookmark} />}
+                {this.props.tab === "html" && <FormProperties element={this.props.element} onAfterInsertNode={this.props.onAfterInsertNode} onAfterChange={this.props.onAfterChange} onAfterReplaceNode={this.props.onAfterReplaceNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.html} />}
+                {this.props.tab === "bm" && <FormProperties element={this.props.element} onAfterInsertNode={this.props.onAfterInsertNode} onAfterChange={this.props.onAfterChange} onAfterReplaceNode={this.props.onAfterReplaceNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bookmark} />}
             </div>
                 
                 
@@ -110,6 +110,7 @@ class FormProperties extends Component{
         properties: [],
         onAfterInsertNode: null,
         onAfterReplaceNode: null,
+        onAfterChange: null,
         onDeleteElement: null
     };
 
@@ -173,7 +174,7 @@ class FormProperties extends Component{
         
         switch(data.input.type){
             case 'radio':
-                result = <ToggleButtons type="radio" name={data.name} value={value} bsSize="sm" defaultValue={value}
+                result = <ToggleButtons type={data.input.toggleType} name={data.name} value={value} bsSize="sm" defaultValue={value}
                                 options={data.input.options} onChange={(event) => this.onDataChange(event, data)}/>;
                 break;
             case 'text':
@@ -247,6 +248,7 @@ class FormProperties extends Component{
         if (componentData.input.onChange){
             componentData.input.onChange(this.props.element, event.target.value, componentData);
             this.forceUpdate();
+            this.props.onAfterChange();
         }
     }
 

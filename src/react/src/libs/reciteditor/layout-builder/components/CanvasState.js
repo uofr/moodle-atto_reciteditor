@@ -180,6 +180,10 @@ export class SourceCodeDesignerState extends CanvasState{
         this.designer.onMoveNodeUp(el);
     }
 
+    onAfterChange(){
+        this.designer.onAfterChange();
+    }
+
     onKey(e, selectedElement){
         this.sourceCode.onKey(e, selectedElement);
         this.designer.onKey(e, selectedElement);
