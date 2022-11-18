@@ -49,7 +49,7 @@ export class GridBuilder extends Component{
             let t = {};
             cols.push(t);
         }
-        this.state = {data: {numcols: 0, cols: cols, responsive: 'md'}, modal:false};
+        this.state = {data: {numcols: 0, cols: cols, responsive: 'md', verticalspace: 1}, modal:false};
         if (this.isEmpty()){
             this.state.modal = true;
         }
@@ -115,6 +115,12 @@ export class GridBuilder extends Component{
                                 {text:<><FontAwesomeIcon icon={faLaptop} title="LG" /> lg</>, value: 'lg'},
                                 {text:<><FontAwesomeIcon icon={faDesktop} title="XL" /> xl</>, value: 'xl'},
                             ]} onChange={this.onDataChange}/>
+                            
+                            <h5>{i18n.get_string('verticalspace')}</h5>
+                            <ToggleButtons type="radio" bsSize="sm" className='gridbuilder_toggle' name='verticalspace' value={this.state.data.verticalspace} options={[
+                                {text:i18n.get_string('yes'), value: 1},
+                                {text:i18n.get_string('no'), value: 0}
+                            ]} onChange={this.onDataChange}/>
                         </div>
                     </div>
                      {numcols > 0 && <div className='p-1 mt-2'><h5 className='mt-3'>{i18n.get_string('definecols')}</h5>
@@ -165,6 +171,9 @@ export class GridBuilder extends Component{
             return "col-12 col-"+curDev+"-"+cols[col][curDev];
         }
         let cl = "col-12";
+        if (this.state.data.verticalspace == 1){
+            cl = cl + " py-2";
+        }
         for (let dev in cols[col]){
             cl = cl + " col-"+dev+"-"+cols[col][dev]+" ";
         }
@@ -220,13 +229,13 @@ export class GridBuilder extends Component{
     }
 
     onSave(){
-        if (!confirm(i18n.get_string('confirmreplace'))) return;
+        //if (!confirm(i18n.get_string('confirmreplace'))) return;
         let numcols = this.state.data.numcols;
-        let cols = this.state.data.cols;
-        let html = '<div class="row">';
+        if (numcols == 0) return;
+        let html = '<div class="row flex-md-row justify-content-md-center">';
         
         for (let i = 1; i <= numcols; i++) {
-            html = html + "<div class='col-12 col-"+this.getColClasses(i)+"'></div>";
+            html = html + "<div class='"+this.getColClasses(i)+"'></div>";
         }
         html = html + "</div>";
         this.props.value.innerHTML = html;

@@ -62,6 +62,8 @@ function atto_reciteditor_strings_for_js() {
                                           'large',
                                           'all',
                                           'create',
+                                          'reverserow',
+                                          'verticalspace',
                                           'herit',
                                           'inputurl',
                                           'createlink',
