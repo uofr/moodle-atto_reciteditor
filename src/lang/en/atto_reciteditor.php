@@ -232,9 +232,14 @@ $string['all'] = 'All';
 $string['bottom'] = 'Bottom';
 $string['reverserow'] = 'Reverse columns on mobile';
 $string['lateral'] = 'lateral';
+$string['search'] = 'Search';
 $string['verticalspace'] = 'Vertical space';
 $string['large'] = 'Large';
 $string['responsive'] = 'Responsive';
 $string['create'] = 'Create';
 $string['herit'] = 'Inherit';
+$string['imagebank'] = "Image bank";
+$string['category'] = "Category";
+$string['pixabaykey'] = "Pixabay API Key";
+$string['pixabaykeydesc'] = 'Find your API key at <a href="https://pixabay.com/api/docs/">https://pixabay.com/api/docs/</a>';
 ?>

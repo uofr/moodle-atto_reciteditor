@@ -231,6 +231,11 @@ $string['definecols'] = 'Définir les colonnes:';
 $string['gridbuilder'] = 'Construire la grille';
 $string['create'] = 'Créer';
 $string['herit'] = 'Hérité';
+$string['search'] = 'Rechercher';
 $string['coltotal'] = 'La grille est définie selon une capacité de 12 espacements par ligne';
 $string['confirmreplace'] = 'Le contenu de l\'élément sera remplacé. Êtes-vous sûr de vouloir continuer?';
+$string['pixabaykey'] = "Clé API Pixabay";
+$string['imagebank'] = "Banque d'images";
+$string['category'] = "Categorie";
+$string['pixabaykeydesc'] = 'Trouvez votre clé API ici <a href="https://pixabay.com/api/docs/">https://pixabay.com/api/docs/</a>';
 ?>

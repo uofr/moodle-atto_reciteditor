@@ -34,6 +34,7 @@ function atto_reciteditor_before_standard_top_of_body_html() {
         'showcase_url' => get_config('atto_reciteditor', 'enableshowcase') == 1 ? get_config('atto_reciteditor', 'showcase_url') : '',
         'stylesheet_to_add' => get_config('atto_reciteditor', 'stylesheet_to_add'),
         'iconclass' => get_config('atto_reciteditor', 'iconclass'),
+        'pixabaykey' => get_config('atto_reciteditor', 'pixabaykey'),
     );
 
     $PAGE->requires->js_init_call('M.recit.reciteditor.init_settings', array($settings));
@@ -49,6 +50,8 @@ function atto_reciteditor_strings_for_js() {
                                           'howmuchcols',
                                           'selectoption',
                                           'definecols',
+                                          'imagebank',
+                                          'category',
                                           'gridbuilder',
                                           'confirmreplace',
                                           'coltotal',
@@ -64,6 +67,7 @@ function atto_reciteditor_strings_for_js() {
                                           'create',
                                           'reverserow',
                                           'verticalspace',
+                                          'search',
                                           'herit',
                                           'inputurl',
                                           'createlink',

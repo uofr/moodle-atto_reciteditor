@@ -302,6 +302,7 @@ class HTMLElement{
  export class HTMLSpanElement extends HTMLElement{
      constructor(){
          super("Span", "span", 'native', HTMLPropertiesData.propsAssignmentFacade.containers);
+         this.visible = false;
      }
  }
  
@@ -413,6 +414,7 @@ class HTMLElement{
  export class HTMLUListElement extends HTMLElement{
      constructor(){
          super(i18n.get_string('list'), "ul", 'native', HTMLPropertiesData.propsAssignmentFacade.containers);
+         this.visible = false;
      }
  
      create(){
@@ -619,7 +621,6 @@ class HTMLElement{
          body.appendChild(el);
  
          el = document.createElement("div");
-         el.innerHTML = "Footer";
          el.classList.add("card-footer", "bg-white", "border-0");
          card.appendChild(el);
  

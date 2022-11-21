@@ -131,6 +131,17 @@ class IconPicker{
     }
 }
 
+class PixabayPicker{
+    constructor(){
+        this.type = 'pixabay'; // keep this attribute for backward compatibility
+        this.text = 'Pixabay';
+    }
+
+    onChange(el, value, data){
+        el.setAttribute('src', value);
+    }
+}
+
 class GridBuilder{
     constructor(){
         this.type = 'gridbuilder'; // keep this attribute for backward compatibility
@@ -356,6 +367,16 @@ export class HTMLTargetProperty extends HTMLProperty{
 export class HTMLSourceProperty extends HTMLProperty{
     constructor(){
         super('src',  i18n.get_string('source'), new ImageSrc());
+    }
+
+    getValue(el, data){
+        return el.src;
+    }
+}
+
+export class HTMLImageBankProperty extends HTMLProperty{
+    constructor(){
+        super('src',  i18n.get_string('imagebank'), new PixabayPicker());
     }
 
     getValue(el, data){

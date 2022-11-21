@@ -118,6 +118,7 @@ html{
                         max-height: 50% !important;
                     }
                 }
+
                 
                 .floating-menu{ position:fixed;}
             
@@ -133,6 +134,14 @@ html{
                         }
                     }
                 }   
+            }
+        }
+        .img-bay {
+            img{height: 100px;}
+            border: 1px solid #000;
+            cursor: pointer;
+            &:hover{
+                border: 1px solid #c6c6c6;
             }
         }
         

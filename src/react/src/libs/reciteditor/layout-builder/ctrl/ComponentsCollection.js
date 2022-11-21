@@ -28,6 +28,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, Assets, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  IconSelector, ColorSelector, Templates, i18n } from '../../RecitEditor';
 import { HTMLElementData } from './HTMLElementData';
 import { GridBuilder } from '../components/GridBuilder';
+import { ImagePixaBay } from '../../common/ImagePixaBay';
 
 export class ComponentProperties extends Component{
     static defaultProps = {
@@ -199,6 +200,10 @@ class FormProperties extends Component{
                 break;
             case 'iconselector':
                 result = <IconSelector name={data.name} value={value} text={data.input.text}
+                                onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'pixabay':
+                result = <ImagePixaBay name={data.name} value={value} text={data.input.text}
                                 onChange={(event) => this.onDataChange(event, data)} />;
                 break;
             case 'gridbuilder':

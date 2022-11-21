@@ -291,7 +291,12 @@ export class FloatingMenu extends Component{
 
         let posCanvas = this.props.posCanvas;
         let posEl = UtilsHTML.getBoundingClientRect(this.props.selectedElement, this.props.device.scale);
-        let isEditable = TextEditorModal.isTagEditable(this.props.selectedElement.tagName); 
+        let isEditable = TextEditorModal.isTagEditable(this.props.selectedElement.tagName);
+        let name = '';
+        let cl = HTMLElementData.getElementClass(null, this.props.selectedElement);
+        if (cl){
+            name = cl.getDesc();
+        }
 
         style.top = Math.max(posCanvas.top + posEl.top - 32, 0);
         style.left = posCanvas.left + posEl.left;
@@ -300,7 +305,7 @@ export class FloatingMenu extends Component{
             <div className='floating-menu' style={style}>
                 <ButtonToolbar>
                     <ButtonGroup size="sm">
-                        <Button onDragStart={this.props.onDragElement} draggable="true" style={{cursor: 'grab'}}><FontAwesomeIcon  icon={faArrowsAlt} title={i18n.get_string('drag')}/></Button>
+                        <Button onDragStart={this.props.onDragElement} draggable="true" style={{cursor: 'grab'}}><FontAwesomeIcon  icon={faArrowsAlt} title={i18n.get_string('drag')}/> {name}</Button>
                         {isEditable && <Button onClick={this.props.onEdit}><FontAwesomeIcon icon={faEdit} title={i18n.get_string('edit')}/></Button>}
                         <Button onClick={() => this.props.onMoveNodeUp(null)}  ><FontAwesomeIcon icon={faArrowUp} title={i18n.get_string('moveelementup')}/></Button>
                         <Button onClick={() => this.props.onMoveNodeDown(null)}><FontAwesomeIcon icon={faArrowDown} title={i18n.get_string('moveelementdown')}/></Button>

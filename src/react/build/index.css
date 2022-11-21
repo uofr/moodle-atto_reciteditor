@@ -660,6 +660,16 @@ html body #root .layout-builder .tree-view ul .btn-toolbar .btn-group-actions {
 html body #root .layout-builder .tree-view ul .btn-toolbar:hover .btn-group-actions {
   display: flex;
 }
+html body .img-bay {
+  border: 1px solid #000;
+  cursor: pointer;
+}
+html body .img-bay img {
+  height: 100px;
+}
+html body .img-bay:hover {
+  border: 1px solid #c6c6c6;
+}
 html body .react-codemirror .ͼd {
   color: #bd9797;
 }

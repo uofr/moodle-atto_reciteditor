@@ -52,6 +52,13 @@ if ($ADMIN->fulltree) {
     $setting = new admin_setting_configtext($name, $title, $description, $default);
     $settings->add($setting);
    
+    $name = 'atto_reciteditor/pixabaykey';
+    $title = get_string('pixabaykey', 'atto_reciteditor');
+    $description = get_string('pixabaykeydesc', 'atto_reciteditor');
+    $default = '';
+    $setting = new admin_setting_configtext($name, $title, $description, $default);
+    $settings->add($setting);
+   
     $name = 'atto_reciteditor/iconclass';
     $title = get_string('iconclass', 'atto_reciteditor');
     $description = get_string('iconclassdesc', 'atto_reciteditor');
