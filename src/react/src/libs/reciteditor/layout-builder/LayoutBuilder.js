@@ -25,7 +25,7 @@ import React, { Component } from 'react';
 import { Nav, Navbar, Button, ButtonToolbar, ButtonGroup } from 'react-bootstrap';
 import {faMobileAlt, faTabletAlt, faTh, faLaptop, faDesktop, faFileWord, faEye, faCode, faSave, faRedo, faUndo, faColumns, faCloud, faPuzzlePiece,  faFileCode, faSitemap, faObjectGroup, faCubes} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {HTMLElementData, TreeView, CanvasElement, ComponentProperties, VisualComponentList, Assets, Templates, HistoryManager, Utils, i18n, DesignerState, PreviewState, SourceCodeDesignerState, SourceCodeState, JsNx, Storage} from '../RecitEditor';
+import {HTMLElementData, TreeView, CanvasElement, ComponentProperties, VisualComponentList, Assets, $glVars, Templates, HistoryManager, Utils, i18n, DesignerState, PreviewState, SourceCodeDesignerState, SourceCodeState, JsNx, Storage} from '../RecitEditor';
 import html2canvas from 'html2canvas';
 
 export class LayoutBuilder extends Component
@@ -487,10 +487,11 @@ class MainView extends Component{
 
         p.then((webApiResult) => {
             if(!webApiResult.error){
+                $glVars.feedback.showInfo(i18n.get_string('pluginname'), i18n.get_string('msgsuccess'), 3);
                 that.loadTemplates();                
             }
             else{
-                alert(`Error: ${webApiResult.msg}`);
+                $glVars.feedback.showError(i18n.get_string('pluginname'), webApiResult.msg);
         }
         });
     }

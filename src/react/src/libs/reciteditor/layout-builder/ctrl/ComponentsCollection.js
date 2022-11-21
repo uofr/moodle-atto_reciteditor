@@ -523,6 +523,7 @@ class TemplateList extends Component{
             if(!webApiResult.error){
                 that.showImport(false);
                 that.props.onChange();
+                $glVars.feedback.showInfo(i18n.get_string('pluginname'), i18n.get_string('msgsuccess'), 3);
             }
             else{
                 alert(`Error: ${webApiResult}`);
@@ -544,6 +545,7 @@ class TemplateList extends Component{
         window.document.body.appendChild(node); // required for firefox
         node.click();
         node.remove();
+        $glVars.feedback.showInfo(i18n.get_string('pluginname'), i18n.get_string('msgsuccess'), 3);
     }
 
     onDelete(event, item){
@@ -558,9 +560,10 @@ class TemplateList extends Component{
         promise.then((webApiResult) => {
             if(!webApiResult[0].error){
                 that.props.onChange();
+                $glVars.feedback.showInfo(i18n.get_string('pluginname'), i18n.get_string('msgsuccess'), 3);
             }
             else{
-                alert(`Error: ${webApiResult}`);
+                $glVars.feedback.showError(i18n.get_string('pluginname'), JSON.stringify(webApiResult));
             }
         },
         (err, response) => {
