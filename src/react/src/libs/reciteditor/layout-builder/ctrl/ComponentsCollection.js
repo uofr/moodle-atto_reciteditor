@@ -25,7 +25,7 @@ import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button, Modal  } from 'react-bootstrap';
 import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCubes, faCloud, faTimes, faCloudDownloadAlt, faCog, faPuzzlePiece, faArrowUp, faArrowDown} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, Assets, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  IconSelector, ColorSelector, Templates, i18n } from '../../RecitEditor';
+import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, $glVars, Assets, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  IconSelector, ColorSelector, Templates, i18n } from '../../RecitEditor';
 import { HTMLElementData } from './HTMLElementData';
 import { GridBuilder } from '../components/GridBuilder';
 import { ImagePixaBay } from '../../common/ImagePixaBay';
@@ -678,8 +678,8 @@ class TokenTemplate extends Token{
                     {this.props.showMenu &&
                         <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                             <ButtonGroup size="sm">
-                                <Button onClick={() => this.props.onInsert('top', item.htmlstr)}><i title={i18n.get_string('inserttop')}>{Assets.faBorderTop}</i></Button>
-                                <Button onClick={() => this.props.onInsert('bottom', item.htmlstr)}><i title={i18n.get_string('insertbottom')}>{Assets.faBorderBottom}</i></Button>
+                                <Button onClick={() => this.onInsert('top', item.htmlstr)}><i title={i18n.get_string('inserttop')}>{Assets.faBorderTop}</i></Button>
+                                <Button onClick={() => this.onInsert('bottom', item.htmlstr)}><i title={i18n.get_string('insertbottom')}>{Assets.faBorderBottom}</i></Button>
                                 <Button onClick={this.props.onExport}><FontAwesomeIcon icon={faCloudDownloadAlt} title={i18n.get_string('export')}/></Button>
                                 <Button onClick={this.props.onDelete}><FontAwesomeIcon icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
                             </ButtonGroup>
@@ -692,6 +692,11 @@ class TokenTemplate extends Token{
                     </div>}
                 </div>
         return main;
+    }
+
+    onInsert(pos, html){
+        this.props.onInsert(pos, html);
+        $glVars.feedback.showInfo(i18n.get_string('pluginname'), i18n.get_string('templateadded'), 3);
     }
 }
 

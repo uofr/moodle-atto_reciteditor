@@ -162,6 +162,16 @@ html{
     .gridbuilder_toggle .btn.active {
         background-color: #ffc107 !important;
     }
+    //////////////////////////////////////////////////////////////
+    // VisualFeedback
+    //////////////////////////////////////////////////////////////
+    .VisualFeedback{
+        position: fixed; z-index: 9999; padding: 0; margin: 0; max-width: 800px; max-height: 500px; overflow: auto;
+    }
+    
+    .VisualFeedback[data-feedback-type="error"]{overflow: auto; top: 50%; left: 50%; transform: translate(-50%,-50%);}
+    .VisualFeedback[data-feedback-type="warning"]{top: auto; left: auto; right: 0; bottom: 0;}
+    .VisualFeedback[data-feedback-type="info"]{top: auto; left: auto; right: 0; bottom: 0;}
 }
 
 .templatevitrine {

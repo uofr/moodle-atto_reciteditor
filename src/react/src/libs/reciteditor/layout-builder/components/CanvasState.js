@@ -443,9 +443,9 @@ export class DesignerState extends CanvasState{
     onInsertTemplate(position, item){
         let body = this.getBody();
         if (position == 'top'){
-            body.insertAdjacentHTML('beforeend', item);
-        }else{  
             body.insertAdjacentHTML('afterbegin', item);
+        }else{  
+            body.insertAdjacentHTML('beforeend', item);
         }
         this.onAfterInsertNode(body.children);
     }

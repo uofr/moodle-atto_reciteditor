@@ -241,5 +241,6 @@ $string['herit'] = 'Inherit';
 $string['imagebank'] = "Image bank";
 $string['category'] = "Category";
 $string['pixabaykey'] = "Pixabay API Key";
+$string['templateadded'] = 'Template has been added to the page';
 $string['pixabaykeydesc'] = 'Find your API key at <a href="https://pixabay.com/api/docs/">https://pixabay.com/api/docs/</a>';
 ?>

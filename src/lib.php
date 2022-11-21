@@ -52,6 +52,7 @@ function atto_reciteditor_strings_for_js() {
                                           'definecols',
                                           'imagebank',
                                           'category',
+                                          'templateadded',
                                           'gridbuilder',
                                           'confirmreplace',
                                           'coltotal',
