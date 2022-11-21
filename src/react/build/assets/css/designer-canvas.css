@@ -43,7 +43,8 @@ html {
     html body div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.dropping-zone):not(.carousel-item) {
       border: 2px dashed #c9c5c5; }
     html body section {
-      border: 2px dashed #c9c5c5; }
+      border: 2px dashed #c9c5c5;
+      padding: 1rem; }
     html body table {
       border: 2px dashed #c9c5c5;
       border-width: 3px; }
