@@ -24,6 +24,10 @@ html{
         /* for firefox */
         height: 100%; 
 
+        .nopointerevents {
+            pointer-events: none;
+        }
+
         div:empty:not(.col):not(.embedelement):not(.col-12):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before{content: "Div"}
         .embedelement:empty::before{content: "Embed"}
         div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.dropping-zone):not(.carousel-item){ border: $border-invisible-element; }    

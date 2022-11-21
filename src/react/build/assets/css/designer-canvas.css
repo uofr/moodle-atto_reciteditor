@@ -34,6 +34,8 @@ html {
     /* for firefox */
     height: 100%;
     /* Those elements have priority over the previous ones*/ }
+    html body .nopointerevents {
+      pointer-events: none; }
     html body div:empty:not(.col):not(.embedelement):not(.col-12):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before {
       content: "Div"; }
     html body .embedelement:empty::before {

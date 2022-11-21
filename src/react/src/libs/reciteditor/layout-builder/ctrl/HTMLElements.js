@@ -61,7 +61,7 @@ class HTMLElement{
      }
 
      getDescDZ(){
-        return "<span class='p-1 disabled badge ml-2 badge-warning'>"+this.getDesc()+"</span>";
+        return "<span class='p-1 disabled badge ml-2 badge-warning nopointerevents'>"+this.getDesc()+"</span>";
      }
 
      prepareDroppingZones(el){ 
@@ -530,6 +530,8 @@ class HTMLElement{
          el.classList.add("alert");
          el.classList.add("alert-primary");
          el.setAttribute("role", "alert");
+         let p = document.createElement('p');
+         el.appendChild(p)
          return el;
      }
  }
@@ -1196,6 +1198,7 @@ class HTMLElement{
         let el = document.createElement("hr");
         el.classList.add("bg-primary");
         el.classList.add("p-2");
+        el.classList.add("m-0");
         return el;
     }
 }
