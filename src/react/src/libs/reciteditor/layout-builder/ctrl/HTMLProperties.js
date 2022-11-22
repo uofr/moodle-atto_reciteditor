@@ -626,6 +626,38 @@ export class BsBackgroundImageProperty extends HTMLProperty{
     }
 }
 
+export class HTMLBackgroundCoverProperty extends HTMLProperty{
+    constructor(){
+        super('backgroundcover',  i18n.get_string('backgroundcover'));
+
+        this.options = [
+            {text:i18n.get_string('yes'), value: "cover"},
+            {text:i18n.get_string('no'), value: ""}                       
+        ];
+
+        this.input = new RadioButton(this.options, this.onChange.bind(this));
+    }
+ 
+    getValue(el, data){
+        let result = "";
+                        
+        if(el.style.backgroundSize == 'cover'){
+            result = "cover";
+        }
+
+        return result;
+    }
+
+    onChange(el, value, data){
+
+        if(value.length > 0){
+            el.style.backgroundSize = 'cover';
+        }else{
+            el.style.backgroundSize = '';
+        }
+    }
+}
+
 export class BsShadowProperty extends HTMLProperty{
     constructor(){
         super('shadow',  i18n.get_string('shadow'));

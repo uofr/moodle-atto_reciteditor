@@ -240,4 +240,5 @@ $string['category'] = "Categorie";
 $string['pixabaykeydesc'] = 'Trouvez votre clé API ici <a href="https://pixabay.com/api/docs/">https://pixabay.com/api/docs/</a>';
 $string['templateadded'] = 'Le gabarit a été ajouté à la page';
 $string['msgsuccess'] = "L'opération a été complété avec succès";
+$string['backgroundcover'] = "Couvrir avec l'image d'arrière-plan";
 ?>
