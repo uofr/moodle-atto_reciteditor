@@ -41,6 +41,7 @@ export class HTMLElementData{
                 children: [
                     new BsBackgroundProperty(),
                     new BsBackgroundImageProperty(),
+                    new HTMLImageBankProperty(),
                     new HTMLBackgroundCoverProperty(),
                     new BsShadowProperty()
                 ]

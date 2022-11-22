@@ -105,29 +105,27 @@ export class ImagePixaBay extends Component {
      
         let modal = <Modal key="2" dialogClassName='iconselectormodal' show={this.state.modal} onHide={() => this.handleClose()}>
         <Modal.Header closeButton>
-          <Modal.Title>Pixabay</Modal.Title>
+          <Modal.Title><a href="https://pixabay.com/" target="_blank" style={{margin:'auto'}}>
+                    <img src="https://pixabay.com/static/img/logo.svg" style={{width:"94px"}}/> Free Images
+                </a></Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <Form.Row>
-                <a href="https://pixabay.com/" target="_blank" style={{margin:'auto'}}>
-                    <img src="https://pixabay.com/static/img/logo.svg" style={{width:"94px"}}/> Free Images
-                </a>
-            </Form.Row>
-            <Form.Row>
-                <Form.Group as={Col}>
+           
+            <Form.Row>               
+                <Form.Group as={Col} className='col-8'>
+                    <Form.Label>{i18n.get_string('keyword')}</Form.Label>
+                    <FormControl className={"InputText"} type="text" value={this.state.search} onChange={(e) => this.onSearch(e)} onSubmit={() => this.onQuery()} />
+                </Form.Group>
+                <Form.Group as={Col} className='col-3'>
                     <Form.Label>{i18n.get_string('category')}</Form.Label>
                     <ComboBox onChange={(e) => this.setState({category: e.target.value})} value={this.state.category} options={this.categories}/>
                 </Form.Group>
-                <Form.Group as={Col}>
-                    <Form.Label>{i18n.get_string('search')}</Form.Label>
-                    <FormControl className={"InputText"} type="text" value={this.state.search} onChange={(e) => this.onSearch(e)} onSubmit={() => this.onQuery()} placeholder={i18n.get_string('search')} />
-                </Form.Group>
-                <Form.Group as={Col}>
+                <Form.Group as={Col} className='col-1'>
                     <Form.Label>&nbsp;</Form.Label>
-                    <Button onClick={() => this.onQuery()} className='form-control'><FontAwesomeIcon icon={faSearch} /> {i18n.get_string('search')}</Button>
+                    <Button onClick={() => this.onQuery()} className='form-control' title= {i18n.get_string('search')}><FontAwesomeIcon icon={faSearch} /></Button>
                 </Form.Group>
             </Form.Row>
-            <div className='d-flex' style={{flexWrap:'wrap',maxHeight:'600px',overflowY:'auto'}}>
+            <div className='d-flex mb-5' style={{flexWrap:'wrap',maxHeight:'600px',overflowY:'auto'}}>
                 {this.state.data.map((res, i) => {
                     return <div key={i} className='m-2 img-bay' onClick={() => this.onAdd(res.largeImageURL)}><img src={res.previewURL}/></div>
                 })}

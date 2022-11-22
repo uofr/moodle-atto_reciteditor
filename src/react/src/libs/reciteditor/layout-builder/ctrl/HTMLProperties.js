@@ -134,7 +134,7 @@ class IconPicker{
 class PixabayPicker{
     constructor(){
         this.type = 'pixabay'; // keep this attribute for backward compatibility
-        this.text = 'Pixabay';
+        this.text = `${i18n.get_string('imagebank')} Pixabay`;
     }
 
     onChange(el, value, data){
@@ -310,7 +310,7 @@ export class HTMLFontFamilyProperty extends HTMLProperty{
 
 export class HTMLColorProperty extends HTMLProperty{
     constructor(){
-        super('color',  i18n.get_string('color'), new ColorPicker('color'));
+        super('color',  i18n.get_string('textcolor'), new ColorPicker('color'));
     }
 
     getValue(el, data){
@@ -376,9 +376,13 @@ export class HTMLSourceProperty extends HTMLProperty{
 
 export class HTMLImageBankProperty extends HTMLProperty{
     constructor(){
-        super('src',  i18n.get_string('imagebank'), new PixabayPicker());
+        super('src', '', new PixabayPicker());
     }
 
+    getFlags(){
+        return {autoAdd: false, showLabel: false};
+    }
+    
     getValue(el, data){
         return el.src;
     }
@@ -701,7 +705,11 @@ export class BsShadowProperty extends HTMLProperty{
 
 export class BsIconProperty extends HTMLProperty{
     constructor(){
-       super('icon',  i18n.get_string('icon'), new IconPicker());
+       super('icon', '', new IconPicker());
+    }
+
+    getFlags(){
+        return {autoAdd: false, showLabel: false};
     }
 
     getValue(el, data){
@@ -1219,7 +1227,7 @@ export class BsBorderRadiusProperty extends HTMLProperty{
 
 export class BsTextColorProperty extends HTMLProperty{
     constructor(){
-        super('color',  i18n.get_string('color'));
+        super('color',  i18n.get_string('textcolor'));
 
         this.options = [
             {text:"", value: "primary"},

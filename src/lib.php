@@ -264,7 +264,10 @@ function atto_reciteditor_strings_for_js() {
                                             'sourcecodedesigner',
                                             'nonbreakingspace',
                                             'horizontalbar',
-                                            'navigation'
+                                            'navigation',
+                                            'textcolor',
+                                            'keyword',
+                                            'tableheader'
                                         ),
                                     'atto_reciteditor');
 }

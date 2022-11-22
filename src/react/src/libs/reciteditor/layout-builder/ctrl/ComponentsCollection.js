@@ -25,7 +25,8 @@ import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button, Modal  } from 'react-bootstrap';
 import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCubes, faCloud, faTimes, faCloudDownloadAlt, faCog, faPuzzlePiece, faArrowUp, faArrowDown} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, $glVars, Assets, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  IconSelector, ColorSelector, Templates, i18n } from '../../RecitEditor';
+import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, $glVars, Assets, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  
+    IconSelector, ColorSelector, Templates, i18n } from '../../RecitEditor';
 import { HTMLElementData } from './HTMLElementData';
 import { GridBuilder } from '../components/GridBuilder';
 import { ImagePixaBay } from '../../common/ImagePixaBay';
@@ -42,16 +43,16 @@ export class ComponentProperties extends Component{
         let title = <></>;
 
         if(this.props.tab === "bs"){
-            title = <><i className='svgicon'>{Assets.faBootstrap}</i> {i18n.get_string('bootstrap')}</>;
+            title = <><i className='svgicon mr-2'>{Assets.faBootstrap}</i> {i18n.get_string('bootstrap')}</>;
         }
         else if(this.props.tab === "html"){
-            title = <><i className='svgicon'>{Assets.faHtml}</i> {i18n.get_string('htmlproprieties')}</>;
+            title = <><i className='svgicon mr-2'>{Assets.faHtml}</i> {i18n.get_string('htmlproprieties')}</>;
         }
         else if(this.props.tab === "bm"){
-            title = <><FontAwesomeIcon icon={faCubes}/> {i18n.get_string('basic')}</>;
+            title = <><FontAwesomeIcon icon={faCubes} className='mr-2'/> {i18n.get_string('basic')}</>;
         }
 
-        let header = <div><h5 className="m-0 p-2">{title}</h5><hr className='mt-0'/></div>;
+        let header = <div><h5 className="m-0 p-2 d-flex">{title}</h5><hr className='mt-0'/></div>;
         
         if(this.props.element === null){ 
             return header; 
@@ -120,33 +121,31 @@ class FormProperties extends Component{
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onDataChange = this.onDataChange.bind(this);
-        this.onCollapse = this.onCollapse.bind(this);
+        //this.onCollapse = this.onCollapse.bind(this);
 
-        this.state = {collapsed: {}}
+        //this.state = {collapsed: {}}
     }
     
     render(){
         let main =
         <div className="tab-content">
             {this.props.properties.map((item, index) => {
-                let collapsed = (typeof this.state.collapsed[item.name] === "undefined" ? false : this.state.collapsed[item.name]);
+               // let collapsed = (typeof this.state.collapsed[item.name] === "undefined" ? false : this.state.collapsed[item.name]);
                 
-                let icon = collapsed ? faAngleRight : faAngleDown;
+               // let icon = collapsed ? faAngleRight : faAngleDown;
 
                 let form = 
                 <Form key={index} onSubmit={this.onSubmit} className="mb-4">
-                    {item.visible != false && <h6  onClick={(event) => this.onCollapse(event, item.name)}><FontAwesomeIcon className="mr-1" icon={icon}/> {item.description}</h6>}
-                    {!collapsed && item.children.map((item2, index2) => {
+                    {/*item.visible != false && <h6  onClick={(event) => this.onCollapse(event, item.name)}><FontAwesomeIcon className="mr-1" icon={icon}/> {item.description}</h6>*/}
+                    {/*!collapsed &&*/ item.children.map((item2, index2) => {
                         let formItem = null;
                         let flags = item2.getFlags(this.props.element);
                         
                         if(typeof flags.showLabel == "undefined" || flags.showLabel){
                             formItem = 
-                            <Form.Group size="sm" key={index2} as={Row} style={{alignItems: "center"}}  controlId={`formitem${index}${index2}`}>
-                                <Form.Label column sm="4">{item2.text}</Form.Label>
-                                <Col sm="8">
-                                    {this.createFormControl(item2)}
-                                </Col>
+                            <Form.Group size="sm" key={index2} style={{alignItems: "center"}}  controlId={`formitem${index}${index2}`}>
+                                <Form.Label>{item2.text}</Form.Label>
+                                {this.createFormControl(item2)}
                             </Form.Group>;
                             
                         }else{
@@ -243,9 +242,7 @@ class FormProperties extends Component{
                 result = <Button size="sm" onClick={() => this.onDataChange({target:{value:''}}, data)}>{data.input.text}</Button>
                 break;
         }
-  
-       /* <TableActions showRmCol={data.input.showRmCol}
-        onChange={(event) => this.onDataChange(event, data, true)} />;*/
+
         return result;
     }
 
@@ -276,14 +273,14 @@ class FormProperties extends Component{
         event.preventDefault();
     }
     
-    onCollapse(event, id){
+    /*onCollapse(event, id){
         event.stopPropagation();
         event.preventDefault();
 
         let collapsed = this.state.collapsed;
         collapsed[id] = (typeof collapsed[id] === 'undefined' ? false : !collapsed[id]);
         this.setState({collapsed: collapsed});
-    }
+    }*/
 }
 
 export class VisualComponentList extends Component{

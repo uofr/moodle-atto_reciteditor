@@ -85,10 +85,8 @@ html{
                             
                             ul{list-style: none; padding-left: 0;
                                 .token-section{ font-weight: 500;}
-                                .token{
-                                    
-                                     margin: 3px; padding: 5px; text-align: center; cursor: grab; display: inline-flex;
-                                     font-weight: 500; border-radius: 6px;
+                                .token{margin: 2px; padding: 4px; text-align: center; cursor: grab; display: inline-flex;
+                                     font-weight: 400; border-radius: 4px; font-size: .9rem;
                                 }
                                 .token[data-type='native']{background-color: #6c757d; color: #FFF;}
                                 .token[data-type='bootstrap']{background-color: #007bff; color: #FFF;}

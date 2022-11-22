@@ -69,7 +69,7 @@ export class TreeView extends Component{
         let main = 
             <div className='panel'>
                 <h5 className='m-0 p-2'><FontAwesomeIcon icon={faSitemap}/> {i18n.get_string('tree')}</h5>
-                <hr/>
+                <hr className='mt-0'/>
                 <ul className='tree-view'>
                     {this.renderTreeView(treeView, 0)}
                 </ul>
