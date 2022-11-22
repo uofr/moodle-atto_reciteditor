@@ -22,6 +22,7 @@ export class TextEditorModal extends React.Component {
         'h5': {content: 'outerHTML'},
         'h6': {content: 'outerHTML'},
         'td': {content: 'innerHTML', stripPTags: true},
+        'th': {content: 'innerHTML', stripPTags: true},
         'ul': {content: 'outerHTML'},
         'ol': {content: 'outerHTML'},
         'a': {content: 'innerHTML', stripPTags: true},
@@ -58,6 +59,9 @@ export class TextEditorModal extends React.Component {
                             <button className="ql-italic" title={i18n.get_string('italic')}></button>
                             <button className="ql-underline" title={i18n.get_string('underline')}></button>
                             <button className="ql-strike" title={i18n.get_string('strikethrough')}></button>
+                        </span>
+                        <span className="ql-formats">
+                            <button className="ql-link" title={i18n.get_string('link')}></button>
                         </span>
                         <span className="ql-formats">
                             <select className="ql-color" title={i18n.get_string('fontcolor')}/>

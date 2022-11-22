@@ -550,6 +550,7 @@ class HTMLElement{
      create(){
          let card = document.createElement("div");
          card.classList.add("card", "shadow");
+         card.style.marginTop = '-60px';
          
          let header = document.createElement("div");
          header.classList.add('mx-auto', 'bg-white');
@@ -704,6 +705,8 @@ class HTMLElement{
          card.classList.add("card");
          card.classList.add("attoreciteditor_flipcard2");
          card.classList.add("manual-flip-click");
+         card.style.marginTop = '-60px';
+
          let cardinner = document.createElement("div");
          cardinner.classList.add("flipcard-inner");
          card.appendChild(cardinner);
@@ -848,6 +851,12 @@ class HTMLElement{
          if(el === null){ return false; }
  
          return (el.classList.contains('carousel') || el.classList.contains('carousel-inner') || el.classList.contains('carousel-item'));
+     }
+
+     getDesc(el){
+        if (el.classList.contains('carousel')) return i18n.get_string('carousel');
+        if (el.classList.contains('carousel-inner')) return 'Carousel inner';
+        if (el.classList.contains('carousel-item')) return 'Carousel item';
      }
  
      create(){
