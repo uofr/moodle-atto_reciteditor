@@ -41,7 +41,7 @@ export class HTMLElementData{
                 children: [
                     new BsBackgroundProperty(),
                     new BsBackgroundImageProperty(),
-                    new HTMLImageBankProperty(),
+                    new HTMLImageBankProperty(false),
                     new HTMLBackgroundCoverProperty(),
                     new BsShadowProperty()
                 ]
@@ -173,7 +173,7 @@ export class HTMLElementData{
                 name: 'source', description: i18n.get_string('source'), 
                 children: [
                     new HTMLSourceProperty(),
-                    new HTMLImageBankProperty()
+                    new HTMLImageBankProperty(true)
                 ]
             },
             {

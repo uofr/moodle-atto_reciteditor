@@ -132,13 +132,14 @@ class IconPicker{
 }
 
 class PixabayPicker{
-    constructor(){
+    constructor(onChangeProp){
         this.type = 'pixabay'; // keep this attribute for backward compatibility
         this.text = `${i18n.get_string('imagebank')} Pixabay`;
+        this.onChangeProp = onChangeProp;
     }
 
     onChange(el, value, data){
-        el.setAttribute('src', value);
+        this.onChangeProp(el, value, data);
     }
 }
 
@@ -375,8 +376,10 @@ export class HTMLSourceProperty extends HTMLProperty{
 }
 
 export class HTMLImageBankProperty extends HTMLProperty{
-    constructor(){
-        super('src', '', new PixabayPicker());
+    constructor(isSrc){
+        super('src', '');
+        this.input = new PixabayPicker(this.onChange.bind(this));
+        this.isSrc = isSrc;
     }
 
     getFlags(){
@@ -384,7 +387,19 @@ export class HTMLImageBankProperty extends HTMLProperty{
     }
     
     getValue(el, data){
-        return el.src;
+        if (this.isSrc){
+            return el.src;
+        }else{
+            return el.style.backgroundImage;
+        }
+    }
+
+    onChange(el, value, data){
+        if (this.isSrc){
+           el.setAttribute('src', value);
+        }else{
+            el.style.backgroundImage = 'url('+value+')';
+        }
     }
 }
 
