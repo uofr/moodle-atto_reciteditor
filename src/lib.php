@@ -55,6 +55,7 @@ function atto_reciteditor_strings_for_js() {
                                           'templateadded',
                                           'msgsuccess',
                                           'backgroundcover',
+                                          'verticalalign',
                                           'gridbuilder',
                                           'confirmreplace',
                                           'coltotal',

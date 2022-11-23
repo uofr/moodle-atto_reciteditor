@@ -1399,6 +1399,39 @@ export class BsGridResponsiveProperty extends HTMLProperty{
     }
 }
 
+export class BsGridVerticalAlignProperty extends HTMLProperty{
+    constructor(){
+        super('gridalign', i18n.get_string('verticalalign'));
+
+        this.options = [
+            {text:i18n.get_string('yes'), value: "align-self-center"},
+            {text:i18n.get_string('no'), value: ""}     
+        ];
+
+        this.input = new RadioButton(this.options, this.onChange.bind(this));
+    }
+ 
+    getValue(el, data){
+        let result = "";
+                        
+        if(el.classList.contains("align-self-center")){
+            result = "align-self-center";
+        }
+
+        return result;
+    }
+
+    onChange(el, value, data){
+        if(el.classList.contains("align-self-center")){
+            el.classList.remove("align-self-center");
+        }
+
+        if(value.length > 0){
+            el.classList.add(value);
+        }
+    }
+}
+
 export class BsGridPaddingProperty extends HTMLProperty{
     static classList = {
         top: ['pt-3', 'pt-md-4', 'pt-lg-5'],

@@ -24,12 +24,12 @@
  import { i18n } from '../../RecitEditor';
  import {BsBackgroundProperty, BsBackgroundImageProperty, BsShadowProperty, BsIconProperty, BsIconSizeProperty, BsMarginProperty, BsPaddingProperty, HTMLClassProperty,
     HTMLStyleProperty, HTMLWidthProperty, HTMLHeightProperty, HTMLFontSizeProperty, HTMLFontFamilyProperty, HTMLColorProperty, HTMLBackgroundProperty, HTMLHrefProperty, HTMLTargetProperty, 
-            HTMLSourceProperty, HTMLIdProperty, HTMLVideoButtonProperty, HTMLVideoSourceProperty, HTMLEmbedProperty, HTMLPropertiesData, BsTabProperty, BsTabJustifyProperty, BsAddTabProperty, HTMLMarginBorderPaddingProperty, BsAddAccordionProperty, BsBorderProperty, BsBorderColorProperty, BsBorderStyleProperty, BsBorderRadiusProperty, BsTextColorProperty, BsTextAlignmentProperty, BsBtnBlockProperty, BsBtnOutlineProperty, BsBtnSizeProperty, BsTableActionProperty, BsTableBorderProperty, BsTableStripedProperty, BsTableCellActionProperty, HTMLAltProperty, HTMLOuterHTMLProperty, ModalGridProperty, BsGridResponsiveProperty, BsGridPaddingProperty, HTMLImageBankProperty, HTMLBackgroundCoverProperty} from './HTMLProperties';
+            HTMLSourceProperty, HTMLIdProperty, HTMLVideoButtonProperty, HTMLVideoSourceProperty, HTMLEmbedProperty, HTMLPropertiesData, BsTabProperty, BsTabJustifyProperty, BsAddTabProperty, HTMLMarginBorderPaddingProperty, BsAddAccordionProperty, BsBorderProperty, BsBorderColorProperty, BsBorderStyleProperty, BsBorderRadiusProperty, BsTextColorProperty, BsTextAlignmentProperty, BsBtnBlockProperty, BsBtnOutlineProperty, BsBtnSizeProperty, BsTableActionProperty, BsTableBorderProperty, BsTableStripedProperty, BsTableCellActionProperty, HTMLAltProperty, HTMLOuterHTMLProperty, ModalGridProperty, BsGridResponsiveProperty, BsGridPaddingProperty, HTMLImageBankProperty, HTMLBackgroundCoverProperty, BsGridVerticalAlignProperty} from './HTMLProperties';
  import {HTMLHeadingElement, HTMLParagraphElement, HTMLButtonElement, HTMLLinkElement, HTMLAudioElement, HTMLVideoElement, HTMLButtonVideoElement, HTMLEmbedElement,
             HTMLNavElement, HTMLNavItemElement, HTMLNavLinkElement,
             HTMLBodyElement, HTMLDivElement, HTMLSpanElement, HTMLSectionElement, HTMLGridElement, HTMLRowElement, HTMLColElement, HTMLUListElement, HTMLOListElement, HTMLLIElement,
             HTMLAlertElement, HTMLCardElement, HTMLCardBodyElement, HTMLCardHeaderElement, HTMLCardFooterElement,
-            HTMLMediaBSElement, HTMLMediaBSBodyElement, HTMLHRElement, HTMLCarouselElement, HTMLCarouselNavElement, HTMLAccordionElement, HTMLTabElement, HTMLAccordionNavElement, HTMLFlipCardElement,
+            HTMLHRElement, HTMLCarouselElement, HTMLCarouselNavElement, HTMLAccordionElement, HTMLTabElement, HTMLAccordionNavElement, HTMLFlipCardElement,
             HTMLFlipCardFrontElement, HTMLFlipCardBackElement, HTMLTabPaneElement, HTMLTabContentElement, HTMLTableElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement, HTMLTableRowElement,
             HTMLImageElement, HTMLImageWithCaptionElement, HTMLClickableImageElement, HTMLIconElement, HTMLIframeElement, HTMLHorizontalBarElement, HTMLAvatarCardElement} from './HTMLElements';
 
@@ -70,6 +70,12 @@ export class HTMLElementData{
                 name: 'bs-row', description: i18n.get_string('row'),
                 children: [
                     new BsGridResponsiveProperty()
+                ]
+            },
+            {
+                name: 'bs-col', description: i18n.get_string('column'),
+                children: [
+                    new BsGridVerticalAlignProperty()
                 ]
             },
             {
@@ -174,6 +180,12 @@ export class HTMLElementData{
                 children: [
                     new HTMLSourceProperty(),
                     new HTMLImageBankProperty(true)
+                ]
+            },
+            {
+                name: 'sourceaudio', description: i18n.get_string('source'), 
+                children: [
+                    new HTMLSourceProperty()
                 ]
             },
             {
@@ -294,8 +306,6 @@ export class HTMLElementData{
                 new HTMLCardBodyElement(),
                 new HTMLCardHeaderElement(),
                 new HTMLCardFooterElement(),
-                new HTMLMediaBSElement(),
-                new HTMLMediaBSBodyElement(),
                 new HTMLHRElement(),
                 new HTMLHorizontalBarElement()
             ]

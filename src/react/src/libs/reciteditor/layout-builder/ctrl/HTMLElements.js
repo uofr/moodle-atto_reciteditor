@@ -219,7 +219,7 @@ class HTMLElement{
  
  export class HTMLAudioElement extends HTMLMediaElement{
      constructor(){
-         super(i18n.get_string('audio'), 'audio', 'native', {all: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'source', 'layout'], min:[]});
+         super(i18n.get_string('audio'), 'audio', 'native', {all: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'sourceaudio', 'layout'], min:['sourceaudio']});
      }
  
      create(){ 
@@ -378,7 +378,9 @@ class HTMLElement{
  
  export class HTMLColElement extends HTMLElement{
      constructor(){
-         super('Col', 'col', 'bootstrap', HTMLPropertiesData.propsAssignmentFacade.containers);
+         super('Col', 'col', 'bootstrap', {
+            min: ['bs-col', 'bs-background', 'bs-border'],
+            all: ['bs-col', 'bs-grid', 'bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'background', 'htmlattributes']});
          this.visible = false;
      }
  
@@ -790,54 +792,6 @@ class HTMLElement{
      onSelect(el){
          let flipcard = el.parentElement.parentElement;
          flipcard.classList.add('hover');
-     }
- }
- 
- export class HTMLMediaBSElement extends HTMLDivElement{
-     constructor(){
-         super(i18n.get_string('media'), "div", 'bootstrap');
-     }
- 
-     equal(el){
-         if(el === null){ return false; }
- 
-         return (el.classList.contains('media'));
-     }
- 
-     create(){
-         let media = document.createElement("div");
-         media.classList.add("media");
-         
-         let el = document.createElement("img");
-         el.classList.add("mr-3");
-         el.setAttribute("src", `${Assets.ImageEmpty}`);
-         media.appendChild(el);
- 
-         let body = document.createElement("div");
-         body.classList.add("media-body");
-         media.appendChild(body);
- 
-         el = document.createElement("h5");
-         el.classList.add("mt-0");
-         el.innerHTML = 'Media heading';
-         body.appendChild(el);
- 
-         body.innerHTML += "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.";
- 
-         return media;
-     }
- }
- 
- export class HTMLMediaBSBodyElement extends HTMLDivElement{
-     constructor(){
-         super(i18n.get_string('mediabody'), "div", 'bootstrap');
-         this.visible = false;
-     }
- 
-     equal(el){
-         if(el === null){ return false; }
- 
-         return (el.classList.contains('media-body'));
      }
  }
  

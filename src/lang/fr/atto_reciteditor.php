@@ -244,4 +244,5 @@ $string['msgsuccess'] = "L'opération a été complétée avec succès.";
 $string['backgroundcover'] = "Couvrir avec l'image d'arrière-plan";
 $string['keyword'] = "Mot-clé";
 $string['tableheader'] = "En-tête";
+$string['verticalalign'] = "Centrer verticalement";
 ?>
