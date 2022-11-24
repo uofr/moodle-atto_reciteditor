@@ -45,6 +45,7 @@ export class TextEditorModal extends React.Component {
         let tag = TextEditorModal.allowedTags[props.element.tagName.toLowerCase()];
         if (!tag) console.error('Text editor received unknown tag');
         let html = props.element[tag.content];
+        html = this.preProcess(html);
         this.state = {value: html, tag: tag};
         this.initModules();
     }
@@ -98,6 +99,34 @@ export class TextEditorModal extends React.Component {
         return main;
     }
 
+    preProcess(html){
+        let el = document.createElement('div');
+        el.innerHTML = html;
+        let els = el.querySelectorAll('i.fa');
+        if (els.length > 0){
+            for (let i of els){
+                i.innerHTML = i.getAttribute('class');//keep class in inner as editor will remove class attribute, will be readded in postprocess
+            }
+        }
+        return el.innerHTML;
+    }
+
+    postProcess(html){
+        let el = document.createElement('div');
+        el.innerHTML = html;
+        let els = el.querySelectorAll('i.fa');
+        if (els.length > 0){
+            for (let i of els){
+                i.setAttribute('class', i.innerText);
+                i.innerHTML = '';
+                if (i.parentElement.tagName == 'EM'){
+                    i.parentElement.replaceWith(i)
+                }
+            }
+        }
+        return el.innerHTML;
+    }
+
     onDataChange(val){
         this.setState({value: val});
     }
@@ -107,6 +136,7 @@ export class TextEditorModal extends React.Component {
         if (this.state.tag.stripPTags){
             html = html.replace(/(<p[^>]*>|<\/p>)/g, '');
         }
+        html = this.postProcess(html);
 
         let el = this.props.element;
         if (this.state.tag.content == 'outerHTML'){
@@ -148,8 +178,6 @@ class EditorModuleNonBreakingSpace {
 
     static replaceNonBreakingSpace(el){
         for (let t of el.childNodes){
-    
-
             if (t.innerHTML){
                 t.innerHTML = UtilsString.replaceNonBreakingSpace(t.innerHTML)
             }else{
@@ -158,3 +186,30 @@ class EditorModuleNonBreakingSpace {
         }
     }
 }
+
+const Parchment = Quill.import('parchment');
+
+
+let Align = new Parchment.Attributor.Class('fa', 'fa-');
+Parchment.register(Align);
+const Inline = Quill.import('blots/inline');
+export class FaRule extends Inline {
+    static blotName = 'fa';
+    static tagName = 'i';
+    static className = 'fa';
+    /**
+     * Converts the HTML tag to image blot
+     * @param value
+     */
+    static create(value) {
+      let node = super.create();
+      Object.getOwnPropertyNames(value).forEach((attribute_name) => {
+        node.setAttribute(attribute_name, value[attribute_name]);
+      });
+  
+      return node;
+    }
+
+    optimize(c){}
+}
+Quill.register(FaRule);
