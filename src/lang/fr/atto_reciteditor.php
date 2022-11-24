@@ -245,4 +245,7 @@ $string['backgroundcover'] = "Couvrir avec l'image d'arrière-plan";
 $string['keyword'] = "Mot-clé";
 $string['tableheader'] = "En-tête";
 $string['verticalalign'] = "Centrer verticalement";
+$string['heading'] = "Titre";
+$string['headingwithicon'] = "Titre avec icône";
+$string['appliedasstyle'] = "Appliqué comme style";
 ?>

@@ -22,10 +22,11 @@
  */
 
 import React from 'react';
-import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus, faMinus, faEllipsisH, faGripLines, faSquare, faRuler, faEllipsisV, faFolder} from '@fortawesome/free-solid-svg-icons';
+import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus, faMinus, faEllipsisH, faGripLines, faSquare, faRuler, faEllipsisV, faFolder, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {Utils, UtilsHTML, i18n, LayoutSpacingEditor as VCLayoutSpacingEditor} from '../../RecitEditor';
 import {HTMLElementData} from './HTMLElementData';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 class ColorSelectorInput{
     constructor(options, onChangeProp){
@@ -1076,7 +1077,9 @@ export class BsAddAccordionProperty extends HTMLProperty{
 
 export class BsBorderProperty extends HTMLProperty{
     constructor(){
-        super('border',  i18n.get_string('border'));
+        super('border', <>{i18n.get_string('border')} <OverlayTrigger overlay={
+            <Tooltip>{i18n.get_string('appliedasstyle')}</Tooltip>}>
+                <a><FontAwesomeIcon icon={faInfoCircle}/> </a></OverlayTrigger></>);
 
         this.options = [
             {name: "border-top-width", items: ['0px','1px','2px','5px','10px','20px']}, 

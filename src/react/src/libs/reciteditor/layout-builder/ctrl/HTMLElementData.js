@@ -51,9 +51,9 @@ export class HTMLElementData{
                 children: [
                     new BsIconProperty(),
                     new BsIconSizeProperty(),
-                    new BsTextColorProperty
+                    new BsTextColorProperty()
                 ]
-            },            
+            },
             {
                 name: 'modal-grid', description: i18n.get_string('grid'), visible: false,
                 children: [
@@ -153,7 +153,7 @@ export class HTMLElementData{
                     new HTMLHeightProperty(),
                     new HTMLMarginBorderPaddingProperty()
                 ]
-            },
+            },  
             {
                 name: 'font', description: i18n.get_string('font'), 
                 children: [
@@ -245,12 +245,12 @@ export class HTMLElementData{
         {
             name: i18n.get_string('text'),
             children: [
-                new HTMLHeadingElement("H1", 'h1'),
-                new HTMLHeadingElement("H2", 'h2'),
-                new HTMLHeadingElement("H3", 'h3'),
-                new HTMLHeadingElement("H4", 'h4'),
-                new HTMLHeadingElement("H5", 'h5'),
-                new HTMLHeadingElement("H6", 'h6'),
+                new HTMLHeadingElement('H1', 'h1'),
+                new HTMLHeadingElement('H2', 'h2'),
+                new HTMLHeadingElement('H3', 'h3'),
+                new HTMLHeadingElement('H4', 'h4'),
+                new HTMLHeadingElement('H5', 'h5'),
+                new HTMLHeadingElement('H6', 'h6'),
                 new HTMLParagraphElement(),
                 new HTMLUListElement(),
                 new HTMLOListElement(),

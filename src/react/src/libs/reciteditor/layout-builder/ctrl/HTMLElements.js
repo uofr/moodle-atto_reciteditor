@@ -60,12 +60,12 @@ class HTMLElement{
          return el;
      }
 
-     getDescDZ(){
-        return "<span class='p-1 disabled badge ml-2 badge-warning nopointerevents'>"+this.getDesc()+"</span>";
+     getDescDZ(el){
+        return "<span class='p-1 disabled badge ml-2 badge-warning nopointerevents'>"+this.getDesc(el)+"</span>";
      }
 
      prepareDroppingZones(el){ 
-        let elName = this.getDescDZ();
+        let elName = this.getDescDZ(el);
          if(el.children.length > 0){
              el.insertBefore(this.createElementDZ(i18n.get_string('insidebegining')+elName), el.firstChild);    
              el.appendChild(this.createElementDZ(i18n.get_string('insideend')+elName));
@@ -97,21 +97,44 @@ class HTMLElement{
  }
  
  export class HTMLHeadingElement extends HTMLElement{
-     constructor(name, tagName){
-         super(name, tagName, 'native', HTMLPropertiesData.propsAssignmentFacade.text);
+     constructor(name, tagName, icon){
+         super(name, tagName, 'native', {
+            min: ['bs-text'],
+            all: ['bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'font', 'layout', 'background',  'htmlattributes']
+        },);
+        this.icon = icon;
      }
  
      create(){ 
          let el = document.createElement(this.tagName);
-         el.innerText = el.tagName.toLowerCase();
+         el.innerText = this.name;
+         if (this.icon){
+            el.innerHTML = "<i class='fa fa-anchor'></i> " + el.innerText;
+        }
          return el;
      }
  
      prepareDroppingZones(el){        
-         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')+this.getDescDZ()), el);
-         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')+this.getDescDZ()), el.nextSibling);
+         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')+this.getDescDZ(el)), el);
+         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')+this.getDescDZ(el)), el.nextSibling);
+     }
+ 
+     equal(el){
+         if(el === null){ return false; }
+ 
+         for (let i = 1; i < 7; i++){
+            if (el.tagName.toLowerCase() == "h"+i){
+                return true;
+            }
+        }
+        return false;
+     }
+
+     getDesc(el){
+        return el.tagName;
      }
  }
+
  
  export class HTMLParagraphElement extends HTMLElement{
      constructor(){
@@ -416,7 +439,6 @@ class HTMLElement{
  export class HTMLUListElement extends HTMLElement{
      constructor(){
          super(i18n.get_string('list'), "ul", 'native', HTMLPropertiesData.propsAssignmentFacade.containers);
-         this.visible = false;
      }
  
      create(){
@@ -506,6 +528,7 @@ class HTMLElement{
  export class HTMLLIElement extends HTMLElement{
      constructor(){
          super(i18n.get_string('listitem'), "li", 'native', {all: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'font', 'layout', 'background'], min: []});
+        this.visible = false;
      }
  
      create(){
@@ -552,7 +575,7 @@ class HTMLElement{
      create(){
          let card = document.createElement("div");
          card.classList.add("card", "shadow");
-         card.style.marginTop = '-60px';
+         card.style.marginTop = '60px';
          
          let header = document.createElement("div");
          header.classList.add('mx-auto', 'bg-white');
@@ -707,7 +730,7 @@ class HTMLElement{
          card.classList.add("card");
          card.classList.add("attoreciteditor_flipcard2");
          card.classList.add("manual-flip-click");
-         card.style.marginTop = '-60px';
+         card.style.marginTop = '60px';
 
          let cardinner = document.createElement("div");
          cardinner.classList.add("flipcard-inner");

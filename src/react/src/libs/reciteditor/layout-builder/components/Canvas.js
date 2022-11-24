@@ -295,7 +295,7 @@ export class FloatingMenu extends Component{
         let name = '';
         let cl = HTMLElementData.getElementClass(null, this.props.selectedElement);
         if (cl){
-            name = cl.getDesc();
+            name = cl.getDesc(this.props.selectedElement);
         }
 
         style.top = Math.max(posCanvas.top + posEl.top - 32, 0);

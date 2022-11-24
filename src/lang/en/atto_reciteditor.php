@@ -249,4 +249,7 @@ $string['backgroundcover'] = "Cover with background image";
 $string['keyword'] = "Keyword";
 $string['tableheader'] = "Table Header";
 $string['verticalalign'] = "Center vertically";
+$string['heading'] = "Heading";
+$string['appliedasstyle'] = "Applied as style";
+$string['headingwithicon'] = "Heading with icon";
 ?>
