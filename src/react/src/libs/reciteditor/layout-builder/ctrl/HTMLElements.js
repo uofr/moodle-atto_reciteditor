@@ -1284,7 +1284,7 @@ class HTMLElement{
      equal(el){
          if(el === null){ return false; }
  
-         return (el.classList.contains('fa') || (el.classList[0] && el.classList[0].includes('icon-')));
+         return (el.classList.contains('fa') || (el.tagName == 'I' && el.classList[0] && el.innerHTML == ''));
      }
  
      create(){
