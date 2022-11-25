@@ -484,8 +484,30 @@ export class DesignerState extends CanvasState{
     }
 
     onStartEditingNodeText(selectedElement){ 
-        if (!TextEditorModal.isTagEditable(selectedElement.tagName)) return;
-        this.editingElement = selectedElement;
+        if (TextEditorModal.isTagEditable(selectedElement.tagName)){
+            this.editingElement = selectedElement;
+        }else{
+            let that = this;     
+        
+            let setCaretToEnd = function(el) {
+                el.focus();
+                
+                let range = document.createRange();
+                range.selectNodeContents(el);
+                range.collapse(true);
+                let sel = that.window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            
+                // set scroll to the end if multiline
+                el.scrollTop = el.scrollHeight; 
+            }    
+            if(selectedElement === null){
+                return;
+            }
+            selectedElement.setAttribute('contenteditable', 'true');
+            setCaretToEnd(selectedElement);
+        }
     }
 
     onFinishEditingNodeText(el){

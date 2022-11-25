@@ -291,7 +291,7 @@ export class FloatingMenu extends Component{
 
         let posCanvas = this.props.posCanvas;
         let posEl = UtilsHTML.getBoundingClientRect(this.props.selectedElement, this.props.device.scale);
-        let isEditable = TextEditorModal.isTagEditable(this.props.selectedElement.tagName);
+        let isEditable = true;//TextEditorModal.isTagEditable(this.props.selectedElement.tagName);
         let name = '';
         let cl = HTMLElementData.getElementClass(null, this.props.selectedElement);
         if (cl){
