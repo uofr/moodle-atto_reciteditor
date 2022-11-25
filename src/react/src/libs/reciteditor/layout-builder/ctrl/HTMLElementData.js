@@ -32,6 +32,8 @@
             HTMLHRElement, HTMLCarouselElement, HTMLCarouselNavElement, HTMLAccordionElement, HTMLTabElement, HTMLAccordionNavElement, HTMLFlipCardElement,
             HTMLFlipCardFrontElement, HTMLFlipCardBackElement, HTMLTabPaneElement, HTMLTabContentElement, HTMLTableElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement, HTMLTableRowElement,
             HTMLImageElement, HTMLImageWithCaptionElement, HTMLClickableImageElement, HTMLIconElement, HTMLIframeElement, HTMLHorizontalBarElement, HTMLAvatarCardElement} from './HTMLElements';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export class HTMLElementData{
     static propertyList = {
@@ -249,7 +251,7 @@ export class HTMLElementData{
             ]
         },
         {
-            name: i18n.get_string('text'),
+            name: <>{i18n.get_string('text')} <a target='_blank' href='https://www.w3.org/WAI/tutorials/page-structure/headings/#heading-ranks'><FontAwesomeIcon icon={faInfoCircle}/> </a></>,
             children: [
                 new HTMLHeadingElement('H1', 'h1'),
                 new HTMLHeadingElement('H2', 'h2'),

@@ -406,7 +406,7 @@ export class HTMLImageBankProperty extends HTMLProperty{
 
 export class HTMLAltProperty extends HTMLProperty{
     constructor(){
-        super('alt',  i18n.get_string('description'));
+        super('alt',  <>{i18n.get_string('description')} <a target='_blank' href='https://www.w3.org/WAI/tutorials/images/decision-tree/'><FontAwesomeIcon icon={faInfoCircle}/> </a></>);
         this.input = new TextInput(this.onChange.bind(this));
     }
 
@@ -648,7 +648,9 @@ export class BsBackgroundImageProperty extends HTMLProperty{
 
 export class HTMLBackgroundCoverProperty extends HTMLProperty{
     constructor(){
-        super('backgroundcover',  i18n.get_string('backgroundcover'));
+        super('backgroundcover', <>{i18n.get_string('backgroundcover')} <OverlayTrigger overlay={
+            <Tooltip>{i18n.get_string('appliedasstyle')}</Tooltip>}>
+                <a className='color-primary'><FontAwesomeIcon icon={faInfoCircle}/> </a></OverlayTrigger></>);
 
         this.options = [
             {text:i18n.get_string('yes'), value: "cover"},
@@ -1079,7 +1081,7 @@ export class BsBorderProperty extends HTMLProperty{
     constructor(){
         super('border', <>{i18n.get_string('border')} <OverlayTrigger overlay={
             <Tooltip>{i18n.get_string('appliedasstyle')}</Tooltip>}>
-                <a><FontAwesomeIcon icon={faInfoCircle}/> </a></OverlayTrigger></>);
+                <a className='color-primary'><FontAwesomeIcon icon={faInfoCircle}/> </a></OverlayTrigger></>);
 
         this.options = [
             {name: "border-top-width", items: ['0px','1px','2px','5px','10px','20px']}, 

@@ -18,7 +18,7 @@ $string['showcase_url'] = 'Vitrine URL';
 $string['showcase_urldesc'] = 'URL où le serveur de la vitrine est';
 $string['generalsettings'] = 'General';
 $string['iconclass'] = 'Icônes à charger dans l\'éditeur';
-$string['iconclassdesc'] = 'Les classes nommées ci-dessus rendent disponibles les catégories d\'icônes pour les utilisateurs.';
+$string['iconclassdesc'] = 'Les classes nommées ci-dessus rendent disponibles les catégories d\'icônes pour les utilisateurs. Si vous possédez le thème RÉCIT, appliquez: Fontawesome 4.7=.fa-,Fontawesome 5=.fas-, Fontelleo=.icon-, RÉCITFAD=.recitfad-';
 $string['stylesheet_to_add'] = 'Titre du CSS à charger dans l\'éditeur';
 $string['stylesheet_to_adddesc'] = 'Plusieurs titres peuvent être ajoutés en les séparant par une virgule. Si vous possédez le thème RÉCIT, appliquez: theme-recit-custom-css';
 

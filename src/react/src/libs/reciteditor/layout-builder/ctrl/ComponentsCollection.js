@@ -386,9 +386,6 @@ class TokenList extends Component{
     }
 
     onCollapse(event, id){
-        event.stopPropagation();
-        event.preventDefault();
-
         let collapsed = this.state.collapsed;
         collapsed[id] = !collapsed[id] || false;
         this.setState({collapsed: collapsed});
