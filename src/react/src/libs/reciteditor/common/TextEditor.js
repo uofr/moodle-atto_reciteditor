@@ -29,6 +29,7 @@ export class TextEditorModal extends React.Component {
         'em': {content: 'outerHTML'},
         'pre': {content: 'outerHTML'},
         'q': {content: 'outerHTML'},
+        'figcaption': {content: 'innerHTML', stripPTags: true},
 
     };
 

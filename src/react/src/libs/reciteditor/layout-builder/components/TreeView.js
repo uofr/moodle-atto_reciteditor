@@ -22,10 +22,10 @@
  */
 
 import React, { Component } from 'react';
-import { ButtonToolbar, Button, ButtonGroup  } from 'react-bootstrap';
+import { ButtonToolbar, Button, ButtonGroup } from 'react-bootstrap';
 import {faAngleRight, faSave, faAngleDown, faArrowUp, faArrowDown, faTrashAlt, faSitemap} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {HTMLElementData, UtilsHTML, i18n, TemplateForm} from '../../RecitEditor';
+import {HTMLElementData, UtilsHTML, UtilsString, i18n, TemplateForm} from '../../RecitEditor';
 
 export class TreeView extends Component{
     static defaultProps = {
@@ -164,7 +164,7 @@ export class TreeView extends Component{
     getNodeDesc(node){
         let elClass = HTMLElementData.getElementClass(null, node);
 
-        return (elClass ? elClass.getDesc(node) : node.tagName.toLowerCase());
+        return (elClass ? elClass.getDesc(node) : UtilsString.capitalizeFirstLetter(node.tagName.toLowerCase()));
     }
 
     onCollapse(event, id){

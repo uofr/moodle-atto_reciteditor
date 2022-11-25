@@ -727,6 +727,10 @@ export class UtilsString
         str = str.replace(regex, "$1&nbsp;$2");
         return str;
     }
+
+    static capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 }
 
 export class UtilsDateTime
