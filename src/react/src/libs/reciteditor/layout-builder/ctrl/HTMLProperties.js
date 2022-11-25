@@ -1124,6 +1124,48 @@ export class BsBorderProperty extends HTMLProperty{
     }
 }
 
+export class BsHeadingProperty extends HTMLProperty{
+    constructor(){
+        super('headingprop', i18n.get_string('headingstyle'));
+
+        this.options = [
+            {text:'h1', value: "h1"},                
+            {text:'h2', value: "h2"},                
+            {text:'h3', value: "h3"},                
+            {text:'h4', value: "h4"},                
+            {text:'h5', value: "h5"},                
+            {text:'h6', value: "h6"},
+        ];
+
+        this.input = new RadioButton(this.options, this.onChange.bind(this));
+    }
+
+    getValue(el, data){
+        let result = "";
+
+        let classList = [...el.classList]
+
+        for(let item of data.input.options){
+            if(classList.includes(`${item.value}`)){
+                result = item.value;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    onChange(el, value, data){                       
+        for(let item of data.input.options){
+            el.classList.remove(`${item.value}`);
+        }
+
+        if(value.length > 0){
+            el.classList.add(`${value}`);
+        }
+    }
+}
+
 export class BsBorderColorProperty extends HTMLProperty{
     constructor(){
         super('bordercolor',  i18n.get_string('bordercolor'));

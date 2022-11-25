@@ -246,6 +246,7 @@ $string['keyword'] = "Mot-clé";
 $string['tableheader'] = "En-tête";
 $string['verticalalign'] = "Centrer verticalement";
 $string['heading'] = "Titre";
+$string['headingstyle'] = "Apparence du titre";
 $string['headingwithicon'] = "Titre avec icône";
 $string['appliedasstyle'] = "Appliqué comme style";
 ?>

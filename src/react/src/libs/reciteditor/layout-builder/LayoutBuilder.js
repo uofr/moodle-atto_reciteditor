@@ -186,6 +186,10 @@ export class LayoutBuilder extends Component
 
         device.scale = getScale(device);
 
+        if (device.scale == 1 && device.height > window.innerHeight){
+            device.height = window.innerHeight;
+        }
+
         return device;
     }
 }

@@ -57,6 +57,7 @@ function atto_reciteditor_strings_for_js() {
                                           'backgroundcover',
                                           'verticalalign',
                                           'heading',
+                                          'headingstyle',
                                           'headingwithicon',
                                           'appliedasstyle',
                                           'gridbuilder',

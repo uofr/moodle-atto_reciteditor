@@ -99,17 +99,17 @@ class HTMLElement{
  export class HTMLHeadingElement extends HTMLElement{
      constructor(name, tagName, icon){
          super(name, tagName, 'native', {
-            min: ['bs-text'],
-            all: ['bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'font', 'layout', 'background',  'htmlattributes']
+            min: ['heading', 'bs-text'],
+            all: ['heading', 'bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'font', 'layout', 'background',  'htmlattributes']
         },);
         this.icon = icon;
      }
  
      create(){ 
          let el = document.createElement(this.tagName);
-         el.innerText = this.name;
+         el.innerText = i18n.get_string('heading');
          if (this.icon){
-            el.innerHTML = "<i class='fa fa-anchor'></i> " + el.innerText;
+            el.innerHTML = "<i class='fa fa-search'></i> " + el.innerText;
         }
          return el;
      }
@@ -649,7 +649,7 @@ class HTMLElement{
          body.appendChild(el);
  
          el = document.createElement("div");
-         el.classList.add("card-footer", "bg-white", "border-0");
+         el.classList.add("card-footer", "bg-white", "border-0", "mb-0");
          card.appendChild(el);
  
          return card;

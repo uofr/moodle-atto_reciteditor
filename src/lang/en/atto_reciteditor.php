@@ -250,6 +250,7 @@ $string['keyword'] = "Keyword";
 $string['tableheader'] = "Table Header";
 $string['verticalalign'] = "Center vertically";
 $string['heading'] = "Heading";
+$string['headingstyle'] = "Heading Style";
 $string['appliedasstyle'] = "Applied as style";
 $string['headingwithicon'] = "Heading with icon";
 ?>
