@@ -25,7 +25,7 @@ import { faImage, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { Component } from 'react';
 import { Button, Col, Form, FormControl, InputGroup, Modal } from 'react-bootstrap';
-import { i18n, ComboBox } from '../RecitEditor';
+import { i18n, ComboBox, MoodleUploadFile } from '../RecitEditor';
 import { Pagination } from './Pagination';
 
 export class ImagePixaBay extends Component {
@@ -92,6 +92,7 @@ export class ImagePixaBay extends Component {
         ]
     
         this.state = {modal: false, data: [], pagination: {}, category: ''}
+        this.moodleUpload = new MoodleUploadFile();
     }
 
 
@@ -127,7 +128,7 @@ export class ImagePixaBay extends Component {
             </Form.Row>
             <div className='d-flex mb-5' style={{flexWrap:'wrap',maxHeight:'600px',overflowY:'auto'}}>
                 {this.state.data.map((res, i) => {
-                    return <div key={i} className='m-2 img-bay' onClick={() => this.onAdd(res.largeImageURL)}><img src={res.previewURL}/></div>
+                    return <div key={i} className='m-2 img-bay' onClick={() => this.onUpload(res.largeImageURL)}><img src={res.previewURL}/></div>
                 })}
             </div>
             {this.state.data.length > 0 && <Pagination pagination={this.state.pagination} onChangePage={(p) => this.onChangePage(p)}/>}
@@ -171,6 +172,26 @@ export class ImagePixaBay extends Component {
         })
     }
 
+    onUpload(url){
+        this.handleClose();
+        this.moodleUpload.onUploadDone = (url) => this.onAdd(url);
+        fetch(url)
+        .then(res => res.blob())
+        .then(blob => {
+            this.moodleUpload.upload(this.generateFileName(), blob)
+        });
+    }
+
+    generateFileName(){
+        var dt = new Date().getTime();
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = (dt + Math.random()*16)%16 | 0;
+            dt = Math.floor(dt/16);
+            return (c=='x' ? r :(r&0x3|0x8)).toString(16);
+        });
+        return uuid + '.jpg';
+    }    
+
     onAdd(url){
         let eventData = {
             target: {name: this.props.name, value: url}                
@@ -181,6 +202,5 @@ export class ImagePixaBay extends Component {
         if (this.props.onCommit){
             this.props.onCommit(eventData);
         }
-        this.handleClose();
     }
 }
