@@ -36,6 +36,7 @@ export class ImageSrc extends Component {
         autoSelect: false,
         onCommit: null,
         disabled: false,
+        accept: "",
         size: ""
     };
     
@@ -55,7 +56,7 @@ export class ImageSrc extends Component {
                             onKeyDown={this.props.onKeyDown} autoFocus={this.props.autoFocus} autoSelect={this.props.autoSelect} onCommit={this.props.onCommit} disabled={this.props.disabled}
                             size={this.props.size}/>
                     <InputGroup.Append>
-                        <BtnUpload id="file-upload" size="btn-sm" accept=".jpg, .png" onChange={this.onUpload}/>
+                        <BtnUpload id="file-upload" size="btn-sm" accept={this.props.accept} onChange={this.onUpload}/>
                     </InputGroup.Append>
                 </InputGroup>
         return (main);

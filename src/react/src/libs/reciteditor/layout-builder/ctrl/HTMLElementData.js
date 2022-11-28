@@ -193,7 +193,7 @@ export class HTMLElementData{
             {
                 name: 'sourceaudio', description: i18n.get_string('source'), 
                 children: [
-                    new HTMLSourceProperty()
+                    new HTMLSourceProperty('.mp3,.wav')
                 ]
             },
             {

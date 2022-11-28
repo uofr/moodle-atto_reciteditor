@@ -152,10 +152,16 @@ class GridBuilder{
 }
 
 class ImageSrc{
-    constructor(onChangeProp){
+    constructor(onChangeProp, accept){
         this.type = 'ImageSrc'; // keep this attribute for backward compatibility
         this.defaultValue = '';
         this.onChangeProp = onChangeProp || null;
+
+        if (accept){
+            this.accept = accept;
+        }else{
+            this.accept = ".jpg,.png";
+        }
     }
 
     onChange(el, value, data){
@@ -367,8 +373,8 @@ export class HTMLTargetProperty extends HTMLProperty{
 }
 
 export class HTMLSourceProperty extends HTMLProperty{
-    constructor(){
-        super('src',  i18n.get_string('source'), new ImageSrc());
+    constructor(accept){
+        super('src',  i18n.get_string('source'), new ImageSrc(null, accept));
     }
 
     getValue(el, data){

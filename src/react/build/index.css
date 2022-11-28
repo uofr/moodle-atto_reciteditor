@@ -686,9 +686,6 @@ html body .react-codemirror .ͼo .cm-activeLine {
 html body .react-codemirror .ͼo .cm-activeLine .cm-matchingBracket {
   background-color: rgba(240, 240, 12, 0.1);
 }
-html .gridbuilder_toggle .btn.active {
-  background-color: #ffc107 !important;
-}
 html .VisualFeedback {
   position: fixed;
   z-index: 9999;
