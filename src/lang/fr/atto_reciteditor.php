@@ -18,7 +18,7 @@ $string['showcase_url'] = 'Vitrine URL';
 $string['showcase_urldesc'] = 'URL où le serveur de la vitrine est';
 $string['generalsettings'] = 'General';
 $string['iconclass'] = 'Icônes à charger dans l\'éditeur';
-$string['iconclassdesc'] = 'Les classes nommées ci-dessus rendent disponibles les catégories d\'icônes pour les utilisateurs. Si vous possédez le thème RÉCIT, appliquez: Fontawesome 4.7=.fa-,Fontawesome 5=.fas-, Fontelleo=.icon-, RÉCITFAD=.recitfad-';
+$string['iconclassdesc'] = 'Les classes nommées ci-dessus rendent disponibles les catégories d\'icônes pour les utilisateurs. Si vous possédez le thème RÉCIT, appliquez: Fontawesome 4.7=.fa-,Fontawesome 5=.fas-, Fontello=.icon-, RÉCITFAD=.recitfad-';
 $string['stylesheet_to_add'] = 'Titre du CSS à charger dans l\'éditeur';
 $string['stylesheet_to_adddesc'] = 'Plusieurs titres peuvent être ajoutés en les séparant par une virgule. Si vous possédez le thème RÉCIT, appliquez: theme-recit-custom-css';
 
@@ -238,7 +238,9 @@ $string['confirmreplace'] = 'Le contenu de l\'élément sera remplacé. Êtes-vo
 $string['pixabaykey'] = "Clé API Pixabay";
 $string['imagebank'] = "Banque d'images";
 $string['category'] = "Catégorie";
-$string['pixabaykeydesc'] = 'Trouvez votre clé API ici <a href="https://pixabay.com/api/docs/">https://pixabay.com/api/docs/</a>';
+$string['pixabaykeydesc'] = "Pour rendre disponible la fonction Pixabay à l'intérieur de l'éditeur, l'administrateur doit :<br>
+1. Créer un compte Pixabay, ce qui va générer une clé API automatiquement<br>
+2. Copier la clé API générée dans la rubrique 'Parameters' sur cette page: <a href='https://pixabay.com/api/docs/'>https://pixabay.com/api/docs/</a>";
 $string['templateadded'] = 'Le gabarit a été ajouté à la page.';
 $string['msgsuccess'] = "L'opération a été complétée avec succès.";
 $string['backgroundcover'] = "Couvrir avec l'image d'arrière-plan";
