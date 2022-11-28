@@ -1490,11 +1490,13 @@ export class BsGridPaddingProperty extends HTMLProperty{
         top: ['pt-3', 'pt-md-4', 'pt-lg-5'],
         bottom: ['pb-3', 'pb-md-4', 'pb-lg-5'],
         lateral: ['px-3', 'px-md-4', 'px-lg-5'],
+        remove: ['p-', 'pb-', 'pt-', 'pl-', 'pr-', 'px-']
     }
     constructor(){
         super('gridpadding', i18n.get_string('paddingtype'));
 
         this.options = [
+            {text:<FontAwesomeIcon icon={faRemoveFormat}/>, value: "remove"},
             {text:i18n.get_string('top'), value: "top"},
             {text:i18n.get_string('bottom'), value: "bottom"},   
             {text:i18n.get_string('lateral'), value: "lateral"},  
@@ -1521,7 +1523,18 @@ export class BsGridPaddingProperty extends HTMLProperty{
         return result;
     }
 
-    onChange(el, values, data){      
+    onChange(el, values, data){
+        if (values.includes('remove')){
+            for (let cl of el.classList){
+                for (let toRemove of BsGridPaddingProperty.classList['remove']){
+                    if (cl.startsWith(toRemove)){
+                        el.classList.remove(cl);
+                    }
+                }
+            }
+            return;
+        }
+
         for (let v in BsGridPaddingProperty.classList){
             for (let cl of BsGridPaddingProperty.classList[v]){
                 if(el.classList.contains(cl)){

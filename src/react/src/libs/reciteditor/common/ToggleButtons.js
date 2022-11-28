@@ -45,7 +45,7 @@ export class ToggleButtons extends Component {
         this.onChange = this.onChange.bind(this);
     }
 
-    render() {       
+    render() {   
         let main = 
             <ButtonToolbar style={this.props.style} className={this.props.className} data-read-only={(this.props.disabled ? 1 : 0)}>                        
                 <ToggleButtonGroup size={this.props.bsSize} type={this.props.type} name={this.props.name} value={this.props.value} defaultValue={this.props.defaultValue} onChange={this.onChange}>                                
