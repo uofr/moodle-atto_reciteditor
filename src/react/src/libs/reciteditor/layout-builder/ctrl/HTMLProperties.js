@@ -1773,7 +1773,7 @@ export class HTMLPropertiesData{
         },
         text: {
             min: ['bs-text'],
-            all: ['bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'font', 'layout', 'background',  'htmlattributes']
+            all: ['bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'font', 'layout', 'background', 'htmlattributes']
         },
         image:  {
             min:['source', 'alt'],
@@ -1781,7 +1781,7 @@ export class HTMLPropertiesData{
         },
         video: {
             min: ['videosource'],
-            all: ['bs-general', 'bs-spacing', 'bs-border', 'videosource', 'layout', 'htmlattributes']
+            all: ['bs-general', 'bs-spacing', 'bs-border', 'videosource', 'layout', 'background', 'htmlattributes']
         },
         icon: {
             min: ['icon'],

@@ -53,7 +53,7 @@ export class HTMLElementData{
                 children: [
                     new BsIconProperty(),
                     new BsIconSizeProperty(),
-                    new BsTextColorProperty()
+                    new BsBackgroundProperty(),
                 ]
             },
             {
