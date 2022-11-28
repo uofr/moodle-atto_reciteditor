@@ -22,8 +22,8 @@
  */
 
 import React, { Component } from 'react';
-import { ButtonToolbar, ButtonGroup, Button } from 'react-bootstrap';
-import {faArrowsAlt, faEdit, faBold, faArrowUp,faArrowDown, faTrashAlt, faClone, faItalic, faUnderline, faStrikethrough, faPuzzlePiece, faParagraph} from '@fortawesome/free-solid-svg-icons';
+import { ButtonToolbar, ButtonGroup, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import {faArrowsAlt, faEdit, faBold, faArrowUp,faArrowDown, faTrashAlt, faClone, faItalic, faUnderline, faStrikethrough, faPuzzlePiece, faParagraph, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {HTMLElementData, BtnSetCssProp, TemplateForm, UtilsHTML, i18n} from '../../RecitEditor';
 import { TextEditorModal } from '../../common/TextEditor';
@@ -293,9 +293,11 @@ export class FloatingMenu extends Component{
         let posEl = UtilsHTML.getBoundingClientRect(this.props.selectedElement, this.props.device.scale);
         let isEditable = true;//TextEditorModal.isTagEditable(this.props.selectedElement.tagName);
         let name = '';
+        let help = null;
         let cl = HTMLElementData.getElementClass(null, this.props.selectedElement);
         if (cl){
             name = cl.getDesc(this.props.selectedElement);
+            help = cl.getHelpText(this.props.selectedElement);
         }
 
         style.top = Math.max(posCanvas.top + posEl.top - 32, 0);
@@ -311,6 +313,7 @@ export class FloatingMenu extends Component{
                         <Button onClick={() => this.props.onMoveNodeDown(null)}><FontAwesomeIcon icon={faArrowDown} title={i18n.get_string('moveelementdown')}/></Button>
                         <Button onClick={this.props.onCloneNode}><FontAwesomeIcon icon={faClone} title={i18n.get_string('clone')}/></Button>
                         <Button onClick={() => this.props.onDeleteElement(null)}><FontAwesomeIcon icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
+                        {help && <OverlayTrigger overlay={<Tooltip>{help}</Tooltip>}><Button><FontAwesomeIcon icon={faInfoCircle}/> </Button></OverlayTrigger>}
                     </ButtonGroup>
                 </ButtonToolbar>
             </div>

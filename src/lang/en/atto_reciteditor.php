@@ -253,4 +253,6 @@ $string['heading'] = "Heading";
 $string['headingstyle'] = "Heading Style";
 $string['appliedasstyle'] = "Applied as style";
 $string['headingwithicon'] = "Heading with icon";
+$string['audiohelp'] = "The minimum dimension is 300px x 40px. 
+If the object is placed inside a responsive column, the minimum dimensions under all circumstances Cellular - iPad - Desktop must be greater than 300px.";
 ?>

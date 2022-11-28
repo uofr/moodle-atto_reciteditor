@@ -41,6 +41,10 @@ class HTMLElement{
      getDesc(el){
          return this.name;
      }
+
+     getHelpText(el){
+        return null;
+     }
  
      create(){ 
          let el = document.createElement(this.tagName);
@@ -256,6 +260,10 @@ class HTMLElement{
          let el = document.createElement(this.tagName);
          el.setAttribute('controls', '');
          return el;
+     }
+
+     getHelpText(){
+        return i18n.get_string('audiohelp');
      }
  }
  

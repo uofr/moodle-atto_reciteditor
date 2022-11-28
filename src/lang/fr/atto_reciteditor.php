@@ -251,4 +251,7 @@ $string['heading'] = "Titre";
 $string['headingstyle'] = "Apparence du titre";
 $string['headingwithicon'] = "Titre avec icône";
 $string['appliedasstyle'] = "Appliqué comme style";
+$string['audiohelp'] = "
+La dimension minimale est de 300px x 40px.
+Si l'objet est placé à l'intérieur d'une colonne responsive, les dimensions minimales dans toutes les circonstances Cellulaire - iPad - Desktop doivent être supérieures à 300px.";
 ?>

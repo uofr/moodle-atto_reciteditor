@@ -58,6 +58,7 @@ function atto_reciteditor_strings_for_js() {
                                           'verticalalign',
                                           'heading',
                                           'headingstyle',
+                                          'audiohelp',
                                           'headingwithicon',
                                           'appliedasstyle',
                                           'gridbuilder',
