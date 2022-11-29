@@ -1490,8 +1490,22 @@ export class BsGridPaddingProperty extends HTMLProperty{
         top: ['pt-3', 'pt-md-4', 'pt-lg-5'],
         bottom: ['pb-3', 'pb-md-4', 'pb-lg-5'],
         lateral: ['px-3', 'px-md-4', 'px-lg-5'],
-        remove: ['p-', 'pb-', 'pt-', 'pl-', 'pr-', 'px-']
+        remove: ['p-', 'pb-', 'pt-', 'pl-', 'pr-', 'px-', 'py-']
     }
+
+    static getPaddingClassList(){
+        let result = [];
+        for (let item of BsGridPaddingProperty.classList['remove']){
+            for(let i = 0; i < 6; i++){
+                result.push(item+i);
+                result.push(`${item}md-${i}`);
+                result.push(`${item}lg-${i}`);
+            }
+        }
+
+        return result;
+    }
+
     constructor(){
         super('gridpadding', i18n.get_string('paddingtype'));
 
@@ -1525,13 +1539,9 @@ export class BsGridPaddingProperty extends HTMLProperty{
 
     onChange(el, values, data){
         if (values.includes('remove')){
-            for (let cl of el.classList){
-                for (let toRemove of BsGridPaddingProperty.classList['remove']){
-                    if (cl.startsWith(toRemove)){
-                        el.classList.remove(cl);
-                    }
-                }
-            }
+            let combinations = BsGridPaddingProperty.getPaddingClassList();
+            el.classList.remove(...combinations);
+            
             return;
         }
 

@@ -181,14 +181,10 @@ export class LayoutBuilder extends Component
             case 'md': device = {name: 'md', width: 1024, height: 768, scale: 1}; break;
             case 'lg': device = {name: 'lg', width: 1366, height: 768, scale: 1}; break;
             case 'xl':
-            default: device = {name: 'xl', width: 1500, height: 1050, scale: 1}; 
+            default: device = {name: 'xl', width: 1500, height: window.innerHeight, scale: 1}; 
         }
 
         device.scale = getScale(device);
-
-        if (device.scale == 1 && device.height > window.innerHeight){
-            device.height = window.innerHeight;
-        }
 
         return device;
     }
