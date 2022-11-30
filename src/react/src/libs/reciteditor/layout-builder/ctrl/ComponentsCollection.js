@@ -36,6 +36,7 @@ export class ComponentProperties extends Component{
         element: null,
         onAfterInsertNode: null,
         onDeleteElement: null,
+        onAfterAssignProperty: null,
         tab: 'bm'
     };
 
@@ -65,10 +66,10 @@ export class ComponentProperties extends Component{
                 {header}
 
                 {this.props.tab === "bs" && 
-                        <FormProperties element={this.props.element} onAfterReplaceNode={this.props.onAfterReplaceNode} onAfterChange={this.props.onAfterChange} onAfterInsertNode={this.props.onAfterInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bootstrap} />
+                        <FormProperties element={this.props.element} onAfterReplaceNode={this.props.onAfterReplaceNode} onAfterAssignProperty={this.props.onAfterAssignProperty} onAfterInsertNode={this.props.onAfterInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bootstrap} />
                 }
-                {this.props.tab === "html" && <FormProperties element={this.props.element} onAfterInsertNode={this.props.onAfterInsertNode} onAfterChange={this.props.onAfterChange} onAfterReplaceNode={this.props.onAfterReplaceNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.html} />}
-                {this.props.tab === "bm" && <FormProperties element={this.props.element} onAfterInsertNode={this.props.onAfterInsertNode} onAfterChange={this.props.onAfterChange} onAfterReplaceNode={this.props.onAfterReplaceNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bookmark} />}
+                {this.props.tab === "html" && <FormProperties element={this.props.element} onAfterInsertNode={this.props.onAfterInsertNode} onAfterAssignProperty={this.props.onAfterAssignProperty} onAfterReplaceNode={this.props.onAfterReplaceNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.html} />}
+                {this.props.tab === "bm" && <FormProperties element={this.props.element} onAfterInsertNode={this.props.onAfterInsertNode} onAfterAssignProperty={this.props.onAfterAssignProperty} onAfterReplaceNode={this.props.onAfterReplaceNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bookmark} />}
             </div>
                 
                 
@@ -112,7 +113,7 @@ class FormProperties extends Component{
         properties: [],
         onAfterInsertNode: null,
         onAfterReplaceNode: null,
-        onAfterChange: null,
+        onAfterAssignProperty: null,
         onDeleteElement: null
     };
 
@@ -250,7 +251,7 @@ class FormProperties extends Component{
         if (componentData.input.onChange){
             componentData.input.onChange(this.props.element, event.target.value, componentData);
             this.forceUpdate();
-            this.props.onAfterChange();
+            this.props.onAfterAssignProperty();
         }
     }
 

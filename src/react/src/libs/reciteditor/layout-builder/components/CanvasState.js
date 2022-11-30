@@ -117,11 +117,7 @@ export class SourceCodeDesignerState extends CanvasState{
         this.sourceCode = sourceCodeState;
     }
 
-
     render(view, selectedElement){
-        this.view = view;
-        this.selectedElement = selectedElement;
-
         let col = "";
         let sourceCodeWidth = null;
         let sourceCodeHeight = null;
@@ -145,11 +141,10 @@ export class SourceCodeDesignerState extends CanvasState{
     
     onContentChange(val, origin){
         if (origin == 'designer'){
-            this.sourceCode.setData(val)
+            this.sourceCode.setData(val);
         }else if (origin == 'sourceCode'){
             this.designer.setData(val)
         }
-
     }
 
     getData(){
@@ -178,10 +173,6 @@ export class SourceCodeDesignerState extends CanvasState{
 
     onMoveNodeUp(el){
         this.designer.onMoveNodeUp(el);
-    }
-
-    onAfterChange(){
-        this.designer.onAfterChange();
     }
 
     onKey(e, selectedElement){
@@ -276,7 +267,6 @@ export class DesignerState extends CanvasState{
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
-
         // pure JS
         CanvasElement.create(body, this.mainView.onSelectElement, this.mainView.onDrop, this.mainView.onStartEditingNodeText);
 
@@ -365,7 +355,7 @@ export class DesignerState extends CanvasState{
     }
 
     onAfterChange(){
-        this.mainView.onContentChange(this.getData(), 'designer')
+        this.mainView.onContentChange(this.getData(), 'designer');
     }
     
     onDragEnd(){
@@ -543,7 +533,7 @@ export class SourceCodeState extends CanvasState{
     constructor(mainView){
         super(mainView);
 
-        this.onAfterChange = this.onAfterChange.bind(this);
+        this.onChange = this.onChange.bind(this);
 
         this.queryStr = "";
         this.data = "";
@@ -557,12 +547,12 @@ export class SourceCodeState extends CanvasState{
             overflowY: 'auto'
         };
         
-        return <SourceCodeEditor queryStr={this.queryStr} style={style} value={this.data} onChange={this.onAfterChange}/>
+        return <SourceCodeEditor queryStr={this.queryStr} style={style} value={this.data} onChange={this.onChange}/>
     }
 
-    onAfterChange(value){
+    onChange(value){
         this.data = value;
-        this.mainView.onContentChange(value, 'sourceCode')
+        this.mainView.onContentChange(value, 'sourceCode');
     }
 
     htmlCleaning(){

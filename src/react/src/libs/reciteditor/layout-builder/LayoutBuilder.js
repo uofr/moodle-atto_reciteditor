@@ -209,7 +209,7 @@ class MainView extends Component{
         this.onCloneNode = this.onCloneNode.bind(this);
         this.onAfterInsertNode = this.onAfterInsertNode.bind(this);
         this.onAfterReplaceNode = this.onAfterReplaceNode.bind(this);
-        this.onAfterChange = this.onAfterChange.bind(this);
+        this.onAfterAssignProperty = this.onAfterAssignProperty.bind(this);
         this.onStartEditingNodeText = this.onStartEditingNodeText.bind(this);
         this.onFinishEditingNodeText = this.onFinishEditingNodeText.bind(this);
         this.onInsertTemplate = this.onInsertTemplate.bind(this);
@@ -279,7 +279,7 @@ class MainView extends Component{
             this.setState({canvasState: view},  this.onPanelChange);
         }
 
-        if(prevProps.device.name !== this.props.device.name){
+        if((prevProps.device.name !== this.props.device.name) || (prevProps.view !== this.props.view)){
             this.onUnselectElement();
         }
 
@@ -325,9 +325,9 @@ class MainView extends Component{
                         <div className='panel-list' style={{width: `${LayoutBuilder.properties.leftPanel.panelList.width}px`}}>
                             {this.state.panels.components === 1 && <VisualComponentList onDragEnd={this.onDragEnd} onInsert={this.onInsertTemplate} onSaveTemplate={this.onSaveTemplate} tab='tpl'/>}
                             {this.state.panels.components === 3 && <VisualComponentList onDragEnd={this.onDragEnd} onInsert={this.onInsertTemplate} onSaveTemplate={this.onSaveTemplate} tab='comp'/>}
-                            {this.state.panels.properties === 1 && <ComponentProperties onAfterInsertNode={this.onAfterInsertNode} onAfterChange={this.onAfterChange} onAfterReplaceNode={this.onAfterReplaceNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bs'/>}
-                            {this.state.panels.properties === 2 && <ComponentProperties onAfterInsertNode={this.onAfterInsertNode} onAfterChange={this.onAfterChange} onAfterReplaceNode={this.onAfterReplaceNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='html'/>}
-                            {this.state.panels.properties === 3 && <ComponentProperties onAfterInsertNode={this.onAfterInsertNode} onAfterChange={this.onAfterChange} onAfterReplaceNode={this.onAfterReplaceNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bm'/>}
+                            {this.state.panels.properties === 1 && <ComponentProperties onAfterInsertNode={this.onAfterInsertNode} onAfterAssignProperty={this.onAfterAssignProperty} onAfterReplaceNode={this.onAfterReplaceNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bs'/>}
+                            {this.state.panels.properties === 2 && <ComponentProperties onAfterInsertNode={this.onAfterInsertNode} onAfterAssignProperty={this.onAfterAssignProperty} onAfterReplaceNode={this.onAfterReplaceNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='html'/>}
+                            {this.state.panels.properties === 3 && <ComponentProperties onAfterInsertNode={this.onAfterInsertNode} onAfterAssignProperty={this.onAfterAssignProperty} onAfterReplaceNode={this.onAfterReplaceNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bm'/>}
                             {this.state.panels.treeView === 1 && <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} 
                                                                     view={this.props.view} onSaveElement={this.onSaveTemplate} onDeleteElement={this.onDeleteElement} onMoveNodeUp={this.onMoveNodeUp} onMoveNodeDown={this.onMoveNodeDown} />}
                         </div>
@@ -387,8 +387,13 @@ class MainView extends Component{
         this.canvasState[this.state.canvasState].onDragEnd();
     }
 
-    onAfterChange(){
-        this.canvasState[this.state.canvasState].onAfterChange();
+    onAfterAssignProperty(){
+        // When sourceCodeDesigner view is open, we should refresh the code source after assigning a property
+        /*if (this.props.view == 'sourceCodeDesigner'){
+            let data = this.canvasState.designer.getData(false);
+            this.canvasState.sourceCode.setData(data);
+            this.canvasState.sourceCode.refresh();
+        }*/
     }
 
     onUnselectElement(){
