@@ -108,11 +108,11 @@ export class LayoutBuilder extends Component
                         }
 
                         <Nav activeKey={this.state.device}>
-                            <Nav.Link eventKey="xs"><FontAwesomeIcon icon={faMobileAlt} title="XS"/></Nav.Link>
-                            <Nav.Link eventKey="sm"><FontAwesomeIcon icon={faTabletAlt} title="SM"/></Nav.Link>
-                            <Nav.Link eventKey="md"><FontAwesomeIcon icon={faTabletAlt} title="MD" style={{transform: 'rotate(90deg)'}}/></Nav.Link>
-                            <Nav.Link eventKey="lg"><FontAwesomeIcon icon={faLaptop} title="LG"/></Nav.Link>
-                            <Nav.Link eventKey="xl"><FontAwesomeIcon icon={faDesktop} title="XL"/></Nav.Link>    
+                            <Nav.Link eventKey="xs"><FontAwesomeIcon icon={faMobileAlt} title={i18n.get_string('smartphone')}/></Nav.Link>
+                            <Nav.Link eventKey="sm"><FontAwesomeIcon icon={faTabletAlt} title={i18n.get_string('verticaltablet')}/></Nav.Link>
+                            <Nav.Link eventKey="md"><FontAwesomeIcon icon={faTabletAlt} title={i18n.get_string('horizontaltablet')} style={{transform: 'rotate(90deg)'}}/></Nav.Link>
+                            <Nav.Link eventKey="lg"><FontAwesomeIcon icon={faLaptop} title={i18n.get_string('hdscreen')}/></Nav.Link>
+                            <Nav.Link eventKey="xl"><FontAwesomeIcon icon={faDesktop} title={i18n.get_string('fhdscreen')}/></Nav.Link>    
                         </Nav>
                         <Nav className="separator"></Nav>
                         <Button variant="success" size="sm"  onClick={this.onSaveAndClose}><FontAwesomeIcon icon={faSave} title={i18n.get_string('save')}/> {i18n.get_string('save')}</Button>
@@ -168,7 +168,7 @@ export class LayoutBuilder extends Component
             if(window.innerWidth - LayoutBuilder.properties.leftPanel.width <= device.width){
                 result = (window.innerWidth - LayoutBuilder.properties.leftPanel.width) / device.width;
             }
-            else if(window.innerHeight <= device.height){
+            else if(window.innerHeight < device.height){
                 result = (window.innerHeight - LayoutBuilder.properties.topNavBar.height) / device.height;
             }
 
@@ -176,10 +176,10 @@ export class LayoutBuilder extends Component
         }
 
         switch(this.state.device){
-            case 'xs': device = {name: 'xs', width: 375, height: 667, scale: 1}; break;
-            case 'sm': device = {name: 'sm', width: 768, height: 1024, scale: 1}; break;
-            case 'md': device = {name: 'md', width: 1024, height: 768, scale: 1}; break;
-            case 'lg': device = {name: 'lg', width: 1366, height: 768, scale: 1}; break;
+            case 'xs': device = {name: 'xs', width: 375, height: window.innerHeight, scale: 1}; break;
+            case 'sm': device = {name: 'sm', width: 768, height: window.innerHeight, scale: 1}; break;
+            case 'md': device = {name: 'md', width: 1024, height: window.innerHeight, scale: 1}; break;
+            case 'lg': device = {name: 'lg', width: 1366, height: window.innerHeight, scale: 1}; break;
             case 'xl':
             default: device = {name: 'xl', width: 1500, height: window.innerHeight, scale: 1}; 
         }

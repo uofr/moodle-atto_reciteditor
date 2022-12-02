@@ -44,7 +44,6 @@ $string['name'] = 'Name';
 $string['line'] = 'Ligne';
 $string['title'] = 'Titre';
 $string['returntohtmleditor'] = 'Retourner à l’éditeur HTML'; 
-$string['recitthemeonly'] = 'Disponible seulement sur le thème RÉCIT';
 $string['bold'] = 'Gras';
 $string['italic'] = 'Italique';
 $string['underline'] = 'Sous-ligné';
@@ -208,9 +207,6 @@ $string['outline'] = 'Contour';
 $string['size'] = 'Taille';
 $string['big'] = 'Gros';
 $string['paddingtype'] = 'Type de padding';
-$string['margetype'] = 'Type de marge';
-$string['thin'] = 'Mince';
-$string['large'] = 'Large';
 $string['responsive'] = 'Sélectionner la taille du tableau en fonction du type d\'écran';
 $string['top'] = 'Haut';
 $string['all'] = 'Partout';
@@ -254,4 +250,9 @@ $string['appliedasstyle'] = "Appliqué comme style";
 $string['audiohelp'] = "
 La dimension minimale est de 300px x 40px.
 Si l'objet est placé à l'intérieur d'une colonne responsive, les dimensions minimales dans toutes les circonstances Cellulaire - iPad - Desktop doivent être supérieures à 300px.";
+$string['smartphone'] = "Téléphone intelligent";
+$string['verticaltablet'] = "Tablette verticale";
+$string['horizontaltablet'] = "Tablette horizontale";
+$string['hdscreen'] = "Écran HD";
+$string['fhdscreen'] = "Écran FHD";
 ?>

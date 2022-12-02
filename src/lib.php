@@ -67,11 +67,8 @@ function atto_reciteditor_strings_for_js() {
                                           'top',
                                           'bottom',
                                           'lateral',
-                                          'thin',
                                           'paddingtype',
-                                          'margetype',
                                           'responsive',
-                                          'large',
                                           'all',
                                           'create',
                                           'reverserow',
@@ -84,7 +81,6 @@ function atto_reciteditor_strings_for_js() {
                                           'openinnewwindow',
                                           'description',
                                           'name',
-                                          'recitthemeonly',
                                           'selecticon',
                                           'inserttop',
                                           'insertbottom',
@@ -273,7 +269,12 @@ function atto_reciteditor_strings_for_js() {
                                             'navigation',
                                             'textcolor',
                                             'keyword',
-                                            'tableheader'
+                                            'tableheader',
+                                            'smartphone',
+                                            'verticaltablet',
+                                            'horizontaltablet',
+                                            'hdscreen',
+                                            'fhdscreen'
                                         ),
                                     'atto_reciteditor');
 }
