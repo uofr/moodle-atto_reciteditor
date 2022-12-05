@@ -1090,11 +1090,11 @@ export class BsBorderProperty extends HTMLProperty{
                 <a className='color-primary'><FontAwesomeIcon icon={faInfoCircle}/> </a></OverlayTrigger></>);
 
         this.options = [
-            {name: "border-top-width", items: ['0px','1px','2px','5px','10px','20px']}, 
-            {name: "border-right-width", items: ['0px','1px','2px','5px','10px','20px']}, 
-            {name: "border-bottom-width", items: ['0px','1px','2px','5px','10px','20px']}, 
-            {name: "border-left-width", items: ['0px','1px','2px','5px','10px','20px']}, 
-            {name: "border-width", items: ['0px','1px','2px','5px','10px','20px']}
+            {name: "-top", items: ['0px','1px','2px','5px','10px','20px']}, 
+            {name: "-right", items: ['0px','1px','2px','5px','10px','20px']}, 
+            {name: "-bottom", items: ['0px','1px','2px','5px','10px','20px']}, 
+            {name: "-left", items: ['0px','1px','2px','5px','10px','20px']}, 
+            {name: "", items: ['0px','1px','2px','5px','10px','20px']}
         ];
 
         this.input = new LayoutSpacing(this.options, this.onChange.bind(this));
@@ -1105,8 +1105,8 @@ export class BsBorderProperty extends HTMLProperty{
 
         for(let i = 0; i <= 5; i++){
             for(let item of data.input.options){
-                if(el.style[item.name] == item.items[i]){
-                    result.push({name:item.name, value: el.style[item.name]});
+                if(el.style['border'+item.name+'-width'] == item.items[i]){
+                    result.push({name:item.name, value: item.items[i]});
                 }
             }
         }
@@ -1119,14 +1119,14 @@ export class BsBorderProperty extends HTMLProperty{
         value.newValue = value.newValue.toString();
 
         if(value.oldValue.length > 0){
-            el.style[value.name] = '';
-            el.style.borderStyle = '';
+            el.style['border'+value.name+'-width'] = '';
+            el.style['border'+value.name+'-style'] = '';
         }
         
         if(value.newValue.length > 0){
-            el.style[value.name] = value.newValue;
-            if (!el.style.borderStyle){
-                el.style.borderStyle = 'solid'; //Set solid if not set, otherwise border wont show
+            el.style['border'+value.name+'-width'] = value.newValue;
+            if (!el.style['border-style']){
+                el.style['border'+value.name+'-style'] = 'solid'; //Set solid if not set, otherwise border wont show
             }
         }
     }
@@ -1243,7 +1243,10 @@ export class BsBorderStyleProperty extends HTMLProperty{
         return [el.style.borderStyle];
     }
 
-    onChange(el, value, data){                       
+    onChange(el, value, data){
+        for (let c of ['top', 'bottom', 'left', 'right']){
+            el.style['border-'+c+'-style'] = '';
+        }                      
         el.style.borderStyle = value;
     }
 }
