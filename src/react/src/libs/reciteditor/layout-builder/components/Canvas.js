@@ -300,6 +300,7 @@ export class FloatingMenu extends Component{
             help = cl.getHelpText(this.props.selectedElement);
         }
 
+        // 32px = ButtonToolBar thickness
         style.top = Math.max(posCanvas.top + posEl.top - 32, 0);
         style.left = posCanvas.left + posEl.left;
 

@@ -163,28 +163,25 @@ export class LayoutBuilder extends Component
         let device = null;
         
         function getScale(device){
-            let result = 1;
-            
-            if(window.innerWidth - LayoutBuilder.properties.leftPanel.width <= device.width){
-                result = (window.innerWidth - LayoutBuilder.properties.leftPanel.width) / device.width;
-            }
-            else if(window.innerHeight < device.height){
-                result = (window.innerHeight - LayoutBuilder.properties.topNavBar.height) / device.height;
-            }
-
-            return result;
+            return Math.min(1, (window.innerWidth - LayoutBuilder.properties.leftPanel.width) / device.width);
         }
 
+        let deviceHeight = window.innerHeight - LayoutBuilder.properties.topNavBar.height;
+
         switch(this.state.device){
-            case 'xs': device = {name: 'xs', width: 375, height: window.innerHeight, scale: 1}; break;
-            case 'sm': device = {name: 'sm', width: 768, height: window.innerHeight, scale: 1}; break;
-            case 'md': device = {name: 'md', width: 1024, height: window.innerHeight, scale: 1}; break;
-            case 'lg': device = {name: 'lg', width: 1366, height: window.innerHeight, scale: 1}; break;
+            case 'xs': device = {name: 'xs', width: 375, height: deviceHeight, scale: 1}; break;
+            case 'sm': device = {name: 'sm', width: 768, height: deviceHeight, scale: 1}; break;
+            case 'md': device = {name: 'md', width: 1024, height: deviceHeight, scale: 1}; break;
+            case 'lg': device = {name: 'lg', width: 1366, height: deviceHeight, scale: 1}; break;
             case 'xl':
-            default: device = {name: 'xl', width: 1500, height: window.innerHeight, scale: 1}; 
+            default: device = {name: 'xl', width: 1500, height: deviceHeight, scale: 1}; 
         }
 
         device.scale = getScale(device);
+
+        if(device.scale < 1){
+            device.height = deviceHeight / device.scale;
+        }
 
         return device;
     }
