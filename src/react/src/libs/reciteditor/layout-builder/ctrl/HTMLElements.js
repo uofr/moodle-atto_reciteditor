@@ -354,42 +354,42 @@ class HTMLElement{
  
  export class HTMLGridElement extends HTMLElement{
      constructor(){
-         super(i18n.get_string('grid'), 'grid', 'bootstrap', {
+         super('Container', 'grid', 'bootstrap', {
          min: ['bs-grid', 'modal-grid', 'bs-background', 'bs-border'],
          all: ['bs-grid', 'modal-grid', 'bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'background', 'htmlattributes']});
          this.modalCreation = true;
      }
 
-     create(){
-        let el = document.createElement("div");
-        el.classList.add("container-fluid");
-        el.setAttribute('data-empty', '1')
-        
-        let row = document.createElement("div");
-        row.classList.add("row");
-        el.appendChild(row);
+    create(){
+    let el = document.createElement("div");
+    el.classList.add("container-fluid");
+    el.setAttribute('data-empty', '1')
+    
+    let row = document.createElement("div");
+    row.classList.add("row");
+    el.appendChild(row);
 
-        
-        let col = document.createElement("div");
-        col.classList.add("col");
-        row.appendChild(col);
+    
+    let col = document.createElement("div");
+    col.classList.add("col");
+    row.appendChild(col);
 
-        col = document.createElement("div");
-        col.classList.add("col");
-        row.appendChild(col);
+    col = document.createElement("div");
+    col.classList.add("col");
+    row.appendChild(col);
 
-        col = document.createElement("div");
-        col.classList.add("col");
-        row.appendChild(col);
+    col = document.createElement("div");
+    col.classList.add("col");
+    row.appendChild(col);
 
-        return el;
-     }
+    return el;
+    }
  
-     equal(el){
-         if(el === null){ return false; }
- 
-         return (el.classList.contains('container') || el.classList.contains('container-fluid'));
-     }
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('container') || el.classList.contains('container-fluid'));
+    }
      
  }
  
