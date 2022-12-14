@@ -12,3 +12,9 @@ After installing this plugin, it is necessary to place it in the Atto bar.
 
 ## Showcase
 https://github.com/SN-RECIT-formation-a-distance/html-bootstrap-editor-showcase
+
+## Pixabay API
+To make the Pixabay feature available inside the editor, the administrator must:
+1. Create a Pixabay account, which will generate an API key automatically
+2. Copy the generated API key in the 'Parameters' section on this page: https://pixabay.com/api/docs/
+3. Assign the atto_reciteditor setting **pixabaykey**.
