@@ -20,7 +20,7 @@ $string['generalsettings'] = 'General';
 $string['iconclass'] = 'Icônes à charger dans l\'éditeur';
 $string['iconclassdesc'] = 'Les classes nommées ci-dessus rendent disponibles les catégories d\'icônes pour les utilisateurs. Si vous possédez le thème RÉCIT, appliquez: Fontawesome 4.7=.fa-,Fontawesome 5=.fas-, Fontello=.icon-, RÉCITFAD=.recitfad-';
 $string['stylesheet_to_add'] = 'Titre du CSS à charger dans l\'éditeur';
-$string['stylesheet_to_adddesc'] = 'Plusieurs titres peuvent être ajoutés en les séparant par une virgule. Si vous possédez le thème RÉCIT, appliquez: theme-recit-custom-css';
+$string['stylesheet_to_adddesc'] = 'Plusieurs titres peuvent être ajoutés en les séparant par une virgule. Si vous possédez le thème RÉCIT, appliquez: theme-recit-custom-css. <a href="https://github.com/SN-RECIT-formation-a-distance/moodle-atto_reciteditor/blob/master/README.md#css-loading" target="_blank">Plus d\'information</a>';
 
 //React
 $string['inputurl'] = 'URL';
