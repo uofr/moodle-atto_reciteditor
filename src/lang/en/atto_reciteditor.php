@@ -13,7 +13,7 @@ $string['fetch_components'] = 'Fetch components';
 // General settings tab.
 $string['configtitle'] = 'HTML Bootstrap Editor Settings';
 $string['enableshowcase'] = 'Enable showcase';
-$string['enableshowcasedesc'] = 'Enables a showcase page where you can put premade templates. Requires a PHP server';
+$string['enableshowcasedesc'] = 'Enables a showcase page where you can put premade templates. Requires a PHP server.';
 $string['showcase_url'] = 'Showcase URL';
 $string['showcase_urldesc'] = 'Showcase index where your showcase server runs';
 $string['enablecomponenttask'] = 'Enable component fetch task';
@@ -22,9 +22,9 @@ $string['component_url'] = 'Component fetch URL';
 $string['component_urldesc'] = 'Component fetch php URL';
 $string['generalsettings'] = 'General';
 $string['iconclass'] = 'Icons to be loaded';
-$string['iconclassdesc'] = 'CSS classes written above will load icons in icon selector';
-$string['stylesheet_to_add'] = 'Title of style sheets to be loaded by the editor';
-$string['stylesheet_to_adddesc'] = 'Specify the title of style sheets to be loaded. Multiple titles can be added by using a comma. You can find more detailed instructions <a href="https://github.com/SN-RECIT-formation-a-distance/moodle-atto_reciteditor/blob/master/README.md#css-loading" target="_blank">here</a>';
+$string['iconclassdesc'] = 'CSS classes written above will load icons in icon selector.';
+$string['stylesheet_to_add'] = 'Title of style sheets to be loaded by the editor.';
+$string['stylesheet_to_adddesc'] = 'Specify the title of style sheets to be loaded. Multiple titles can be added by using a comma. You can find more detailed instructions <a href="https://github.com/SN-RECIT-formation-a-distance/moodle-atto_reciteditor/blob/master/README.md#css-loading" target="_blank">here</a>.';
 
 //React
 $string['inputurl'] = 'Input URL';
@@ -239,7 +239,7 @@ $string['imagebank'] = "Image bank";
 $string['category'] = "Category";
 $string['pixabaykey'] = "Pixabay API Key";
 $string['templateadded'] = 'Template has been added to the page';
-$string['pixabaykeydesc'] = 'Find your API key at <a href="https://pixabay.com/api/docs/">https://pixabay.com/api/docs/</a>';
+$string['pixabaykeydesc'] = 'Find your API key at <a href="https://pixabay.com/api/docs/">https://pixabay.com/api/docs/</a>.';
 $string['msgsuccess'] = "Operation was successful";
 $string['backgroundcover'] = "Cover with background image";
 $string['keyword'] = "Keyword";
