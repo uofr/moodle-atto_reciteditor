@@ -21,14 +21,13 @@
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
 
- import React from 'react';
- import {i18n, Assets} from '../../RecitEditor';
- import {HTMLPropertiesData} from './HTMLProperties';
+import {i18n, Assets} from '../../RecitEditor';
+import {HTMLPropertiesData} from './HTMLProperties';
  
  /**
   * Abstract class
   */
- class HTMLElement{
+class HTMLElement{
      constructor(name, tagName, type, properties){
          this.name = name || "";
          this.tagName = tagName || "";
@@ -41,6 +40,10 @@
  
      getDesc(el){
          return this.name;
+     }
+
+     getHelpText(el){
+        return null;
      }
  
      create(){ 
@@ -57,21 +60,26 @@
      createElementDZ(desc){
          let el = document.createElement("div");
          el.classList.add("dropping-zone");
-         el.innerText = desc || "";
+         el.innerHTML = desc || "";
          return el;
      }
- 
+
+     getDescDZ(el){
+        return "<span class='p-1 disabled badge ml-2 badge-warning nopointerevents'>"+this.getDesc(el)+"</span>";
+     }
+
      prepareDroppingZones(el){ 
+        let elName = this.getDescDZ(el);
          if(el.children.length > 0){
-             el.insertBefore(this.createElementDZ(i18n.get_string('insidebegining')), el.firstChild);    
-             el.appendChild(this.createElementDZ(i18n.get_string('insideend')));
+             el.insertBefore(this.createElementDZ(i18n.get_string('insidebegining')+elName), el.firstChild);    
+             el.appendChild(this.createElementDZ(i18n.get_string('insideend')+elName));
          } 
          else{
-             el.appendChild(this.createElementDZ(i18n.get_string('inside')));
+             el.appendChild(this.createElementDZ(i18n.get_string('inside')+elName));
          }
  
-         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')), el);
-         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')), el.nextSibling);
+         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')+elName), el);
+         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')+elName), el.nextSibling);
      }
  }
  
@@ -93,21 +101,44 @@
  }
  
  export class HTMLHeadingElement extends HTMLElement{
-     constructor(name, tagName){
-         super(name, tagName, 'native', HTMLPropertiesData.propsAssignmentFacade.text);
+     constructor(name, tagName, icon){
+         super(name, tagName, 'native', {
+            min: ['heading', 'bs-text'],
+            all: ['heading', 'bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'font', 'layout', 'background',  'htmlattributes']
+        },);
+        this.icon = icon;
      }
  
      create(){ 
          let el = document.createElement(this.tagName);
-         el.innerText = el.tagName.toLowerCase();
+         el.innerText = i18n.get_string('heading');
+         if (this.icon){
+            el.innerHTML = "<i class='fa fa-search'></i> " + el.innerText;
+        }
          return el;
      }
  
      prepareDroppingZones(el){        
-         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')), el);
-         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')), el.nextSibling);
+         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')+this.getDescDZ(el)), el);
+         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')+this.getDescDZ(el)), el.nextSibling);
+     }
+ 
+     equal(el){
+         if(el === null){ return false; }
+ 
+         for (let i = 1; i < 7; i++){
+            if (el.tagName.toLowerCase() == "h"+i){
+                return true;
+            }
+        }
+        return false;
+     }
+
+     getDesc(el){
+        return el.tagName;
      }
  }
+
  
  export class HTMLParagraphElement extends HTMLElement{
      constructor(){
@@ -121,8 +152,8 @@
      }
  
      prepareDroppingZones(el){        
-         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')), el);
-         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')), el.nextSibling);
+         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('before')+this.getDescDZ()), el);
+         el.parentNode.insertBefore(this.createElementDZ(i18n.get_string('after')+this.getDescDZ()), el.nextSibling);
      }
  }
  
@@ -138,6 +169,13 @@
          el.setAttribute('href', '#');
          el.setAttribute('target', '_self');
          return el;
+     }
+ }
+ 
+ export class HTMLImageFigureElement extends HTMLElement{
+     constructor(){
+         super(i18n.get_string('imagewithcaption'), "figure", 'native', HTMLPropertiesData.propsAssignmentFacade.general);
+         this.visible = false;
      }
  }
  
@@ -215,13 +253,17 @@
  
  export class HTMLAudioElement extends HTMLMediaElement{
      constructor(){
-         super(i18n.get_string('audio'), 'audio', 'native', {all: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'source', 'layout'], min:[]});
+         super(i18n.get_string('audio'), 'audio', 'native', {all: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'sourceaudio', 'layout'], min:['sourceaudio']});
      }
  
      create(){ 
          let el = document.createElement(this.tagName);
          el.setAttribute('controls', '');
          return el;
+     }
+
+     getHelpText(){
+        return i18n.get_string('audiohelp');
      }
  }
  
@@ -298,54 +340,65 @@
  export class HTMLSpanElement extends HTMLElement{
      constructor(){
          super("Span", "span", 'native', HTMLPropertiesData.propsAssignmentFacade.containers);
+         this.visible = false;
      }
  }
  
  export class HTMLSectionElement extends HTMLElement{
      constructor(){
-         super("Section", "section", 'native', HTMLPropertiesData.propsAssignmentFacade.containers);
+         super("Section", "section", 'native', {
+            min: ['bs-grid', 'modal-grid', 'bs-background', 'bs-border'],
+            all: ['bs-grid', 'modal-grid', 'bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'background', 'htmlattributes']});
      }
  }
  
  export class HTMLGridElement extends HTMLElement{
      constructor(){
-         super(i18n.get_string('grid'), 'grid', 'bootstrap', HTMLPropertiesData.propsAssignmentFacade.containers);
+         super('Container', 'grid', 'bootstrap', {
+         min: ['bs-grid', 'modal-grid', 'bs-background', 'bs-border'],
+         all: ['bs-grid', 'modal-grid', 'bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'background', 'htmlattributes']});
+         this.modalCreation = true;
      }
+
+    create(){
+    let el = document.createElement("div");
+    el.classList.add("container-fluid");
+    el.setAttribute('data-empty', '1')
+    
+    let row = document.createElement("div");
+    row.classList.add("row");
+    el.appendChild(row);
+
+    
+    let col = document.createElement("div");
+    col.classList.add("col");
+    row.appendChild(col);
+
+    col = document.createElement("div");
+    col.classList.add("col");
+    row.appendChild(col);
+
+    col = document.createElement("div");
+    col.classList.add("col");
+    row.appendChild(col);
+
+    return el;
+    }
  
-     equal(el){
-         if(el === null){ return false; }
- 
-         return (el.classList.contains('container') || el.classList.contains('container-fluid'));
-     }
+    equal(el){
+        if(el === null){ return false; }
+
+        return (el.classList.contains('container') || el.classList.contains('container-fluid'));
+    }
      
-     create(){
-         let el = document.createElement("div");
-         el.classList.add("container");
-         
-         let row = document.createElement("div");
-         row.classList.add("row");
-         el.appendChild(row);
- 
-         
-         let col = document.createElement("div");
-         col.classList.add("col");
-         row.appendChild(col);
- 
-         col = document.createElement("div");
-         col.classList.add("col");
-         row.appendChild(col);
- 
-         col = document.createElement("div");
-         col.classList.add("col");
-         row.appendChild(col);
- 
-         return el;
-     }
  }
  
  export class HTMLRowElement extends HTMLElement{
      constructor(){
-         super(i18n.get_string('row'), 'row', 'bootstrap', HTMLPropertiesData.propsAssignmentFacade.containers);
+         super('Row', 'row', 'bootstrap', {
+            min: ['bs-row', 'bs-background', 'bs-border'],
+            all: ['bs-row', 'bs-grid', 'bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'background', 'htmlattributes']});
+         this.visible = false;
      }
  
      equal(el){
@@ -363,7 +416,10 @@
  
  export class HTMLColElement extends HTMLElement{
      constructor(){
-         super(i18n.get_string('column'), 'col', 'bootstrap', HTMLPropertiesData.propsAssignmentFacade.containers);
+         super('Col', 'col', 'bootstrap', {
+            min: ['bs-col', 'bs-background', 'bs-border'],
+            all: ['bs-col', 'bs-grid', 'bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'layout', 'background', 'htmlattributes']});
+         this.visible = false;
      }
  
      equal(el){
@@ -386,11 +442,11 @@
  
      prepareDroppingZones(el){        
          if(el.children.length > 0){
-             el.insertBefore(this.createElementDZ(i18n.get_string('insidebegining')), el.firstChild);    
-             el.appendChild(this.createElementDZ(i18n.get_string('insideend')));
+             el.insertBefore(this.createElementDZ(i18n.get_string('insidebegining')+this.getDescDZ()), el.firstChild);    
+             el.appendChild(this.createElementDZ(i18n.get_string('insideend')+this.getDescDZ()));
          } 
          else{
-             el.appendChild(this.createElementDZ(i18n.get_string('inside')));
+             el.appendChild(this.createElementDZ(i18n.get_string('inside')+this.getDescDZ()));
          }
      }
  }
@@ -461,7 +517,7 @@
  
  export class HTMLTableHeaderCellElement extends HTMLElement{
      constructor(){
-         super("Titre de la table", "th", 'native', {all: ['bs-tablecell', ...HTMLPropertiesData.propsAssignmentFacade.containers.all], min: ['bs-tablecell']});
+         super(i18n.get_string('tableheader'), "th", 'native', {all: ['bs-tablecell', ...HTMLPropertiesData.propsAssignmentFacade.containers.all], min: ['bs-tablecell']});
          this.visible = false;
      }
  
@@ -487,6 +543,7 @@
  export class HTMLLIElement extends HTMLElement{
      constructor(){
          super(i18n.get_string('listitem'), "li", 'native', {all: ['bs-general', 'bs-spacingborder', 'htmlattributes', 'font', 'layout', 'background'], min: []});
+        this.visible = false;
      }
  
      create(){
@@ -513,6 +570,8 @@
          el.classList.add("alert");
          el.classList.add("alert-primary");
          el.setAttribute("role", "alert");
+         let p = document.createElement('p');
+         el.appendChild(p)
          return el;
      }
  }
@@ -531,6 +590,7 @@
      create(){
          let card = document.createElement("div");
          card.classList.add("card", "shadow");
+         card.style.marginTop = '60px';
          
          let header = document.createElement("div");
          header.classList.add('mx-auto', 'bg-white');
@@ -604,8 +664,7 @@
          body.appendChild(el);
  
          el = document.createElement("div");
-         el.innerHTML = "Footer";
-         el.classList.add("card-footer", "bg-white", "border-0");
+         el.classList.add("card-footer", "bg-white", "border-0", "mb-0");
          card.appendChild(el);
  
          return card;
@@ -686,6 +745,8 @@
          card.classList.add("card");
          card.classList.add("attoreciteditor_flipcard2");
          card.classList.add("manual-flip-click");
+         card.style.marginTop = '60px';
+
          let cardinner = document.createElement("div");
          cardinner.classList.add("flipcard-inner");
          card.appendChild(cardinner);
@@ -772,54 +833,6 @@
      }
  }
  
- export class HTMLMediaBSElement extends HTMLDivElement{
-     constructor(){
-         super(i18n.get_string('media'), "div", 'bootstrap');
-     }
- 
-     equal(el){
-         if(el === null){ return false; }
- 
-         return (el.classList.contains('media'));
-     }
- 
-     create(){
-         let media = document.createElement("div");
-         media.classList.add("media");
-         
-         let el = document.createElement("img");
-         el.classList.add("mr-3");
-         el.setAttribute("src", `${Assets.ImageEmpty}`);
-         media.appendChild(el);
- 
-         let body = document.createElement("div");
-         body.classList.add("media-body");
-         media.appendChild(body);
- 
-         el = document.createElement("h5");
-         el.classList.add("mt-0");
-         el.innerHTML = 'Media heading';
-         body.appendChild(el);
- 
-         body.innerHTML += "Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.";
- 
-         return media;
-     }
- }
- 
- export class HTMLMediaBSBodyElement extends HTMLDivElement{
-     constructor(){
-         super(i18n.get_string('mediabody'), "div", 'bootstrap');
-         this.visible = false;
-     }
- 
-     equal(el){
-         if(el === null){ return false; }
- 
-         return (el.classList.contains('media-body'));
-     }
- }
- 
  export class HTMLCarouselElement extends HTMLDivElement{
      constructor(){
          super(i18n.get_string('carousel'), "div", 'nativecomponent', HTMLPropertiesData.propsAssignmentFacade.general);
@@ -830,6 +843,12 @@
          if(el === null){ return false; }
  
          return (el.classList.contains('carousel') || el.classList.contains('carousel-inner') || el.classList.contains('carousel-item'));
+     }
+
+     getDesc(el){
+        if (el.classList.contains('carousel')) return i18n.get_string('carousel');
+        if (el.classList.contains('carousel-inner')) return 'Carousel inner';
+        if (el.classList.contains('carousel-item')) return 'Carousel item';
      }
  
      create(){
@@ -1180,6 +1199,7 @@
         let el = document.createElement("hr");
         el.classList.add("bg-primary");
         el.classList.add("p-2");
+        el.classList.add("m-0");
         return el;
     }
 }
@@ -1212,6 +1232,7 @@
          let div = document.createElement("figure");
          div.classList.add('figure-caption');
          div.classList.add('text-center');
+         div.classList.add('p-2');
          
          let el = document.createElement("img");
          el.setAttribute('src', `${Assets.ImageEmpty}`);
@@ -1220,7 +1241,7 @@
          div.appendChild(el);
  
          el = document.createElement("figcaption");
-         el.innerHTML = "Source : Nom de l'auteur, <span class='font-italic'>titre de la photo ou de l'oeuvre</span> (année), nom de l'institution qui possède l'œuvre.";
+         el.innerHTML = "Source : Nom de l'auteur, <em>titre de la photo ou de l'oeuvre</em> (année), nom de l'institution qui possède l'œuvre.";
          div.appendChild(el);
  
          return div;
@@ -1271,7 +1292,7 @@
      equal(el){
          if(el === null){ return false; }
  
-         return (el.classList.contains('fa') || (el.classList[0] && el.classList[0].includes('icon-')));
+         return (el.classList.contains('fa') || (el.tagName == 'I' && el.classList[0] && el.innerHTML == ''));
      }
  
      create(){

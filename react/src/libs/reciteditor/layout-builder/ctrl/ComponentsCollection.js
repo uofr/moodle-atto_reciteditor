@@ -23,16 +23,20 @@
 
 import React, { Component } from 'react';
 import { Form, Row, Col, Nav, ButtonToolbar, ButtonGroup, Button, Modal  } from 'react-bootstrap';
-import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCubes, faCloud, faTimes, faCloudDownloadAlt, faCog, faPuzzlePiece, faObjectGroup} from '@fortawesome/free-solid-svg-icons';
+import { faSave, faTrashAlt, faAngleRight, faAngleDown, faCubes, faCloud, faTimes, faCloudDownloadAlt, faCog, faPuzzlePiece, faArrowUp, faArrowDown} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, Assets, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  IconSelector, ColorSelector, Templates, i18n } from '../../RecitEditor';
+import { LayoutSpacingEditor, LayoutSpacing, MultipleSelect, $glVars, Assets, ToggleButtons, InputColor, InputText, InputTextArea, MinValueMax, ComboBox, ImageSrc, BtnUpload,  
+    IconSelector, ColorSelector, Templates, i18n } from '../../RecitEditor';
 import { HTMLElementData } from './HTMLElementData';
+import { GridBuilder } from '../components/GridBuilder';
+import { ImagePixaBay } from '../../common/ImagePixaBay';
 
 export class ComponentProperties extends Component{
     static defaultProps = {
         element: null,
-        onInsertNode: null,
+        onAfterInsertNode: null,
         onDeleteElement: null,
+        onAfterAssignProperty: null,
         tab: 'bm'
     };
 
@@ -40,16 +44,16 @@ export class ComponentProperties extends Component{
         let title = <></>;
 
         if(this.props.tab === "bs"){
-            title = <><i className='svgicon'>{Assets.faBootstrap}</i> {i18n.get_string('bootstrap')}</>;
+            title = <><i className='svgicon mr-2'>{Assets.faBootstrap}</i> {i18n.get_string('bootstrap')}</>;
         }
         else if(this.props.tab === "html"){
-            title = <><i className='svgicon'>{Assets.faHtml}</i> {i18n.get_string('htmlproprieties')}</>;
+            title = <><i className='svgicon mr-2'>{Assets.faHtml}</i> {i18n.get_string('htmlproprieties')}</>;
         }
         else if(this.props.tab === "bm"){
-            title = <><FontAwesomeIcon icon={faCubes}/> {i18n.get_string('basic')}</>;
+            title = <><FontAwesomeIcon icon={faCubes} className='mr-2'/> {i18n.get_string('basic')}</>;
         }
 
-        let header = <div><h5 className="m-0 p-2">{title}</h5><hr className='mt-0'/></div>;
+        let header = <div><h5 className="m-0 p-2 d-flex">{title}</h5><hr className='mt-0'/></div>;
         
         if(this.props.element === null){ 
             return header; 
@@ -62,10 +66,10 @@ export class ComponentProperties extends Component{
                 {header}
 
                 {this.props.tab === "bs" && 
-                        <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bootstrap} />
+                        <FormProperties element={this.props.element} onAfterReplaceNode={this.props.onAfterReplaceNode} onAfterAssignProperty={this.props.onAfterAssignProperty} onAfterInsertNode={this.props.onAfterInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bootstrap} />
                 }
-                {this.props.tab === "html" && <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.html} />}
-                {this.props.tab === "bm" && <FormProperties element={this.props.element} onInsertNode={this.props.onInsertNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bookmark} />}
+                {this.props.tab === "html" && <FormProperties element={this.props.element} onAfterInsertNode={this.props.onAfterInsertNode} onAfterAssignProperty={this.props.onAfterAssignProperty} onAfterReplaceNode={this.props.onAfterReplaceNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.html} />}
+                {this.props.tab === "bm" && <FormProperties element={this.props.element} onAfterInsertNode={this.props.onAfterInsertNode} onAfterAssignProperty={this.props.onAfterAssignProperty} onAfterReplaceNode={this.props.onAfterReplaceNode} onDeleteElement={this.props.onDeleteElement} properties={propertyList.bookmark} />}
             </div>
                 
                 
@@ -76,7 +80,7 @@ export class ComponentProperties extends Component{
         let result = {
             bs: [],
             html: [],
-            bm: []
+            bm: [],
         };
         
         let elClass = HTMLElementData.getElementClass(null, this.props.element);
@@ -107,7 +111,9 @@ class FormProperties extends Component{
     static defaultProps = {
         element: null,
         properties: [],
-        onInsertNode: null,
+        onAfterInsertNode: null,
+        onAfterReplaceNode: null,
+        onAfterAssignProperty: null,
         onDeleteElement: null
     };
 
@@ -116,33 +122,31 @@ class FormProperties extends Component{
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onDataChange = this.onDataChange.bind(this);
-        this.onCollapse = this.onCollapse.bind(this);
+        //this.onCollapse = this.onCollapse.bind(this);
 
-        this.state = {collapsed: {}}
+        //this.state = {collapsed: {}}
     }
     
     render(){
         let main =
         <div className="tab-content">
             {this.props.properties.map((item, index) => {
-                let collapsed = (typeof this.state.collapsed[item.name] === "undefined" ? false : this.state.collapsed[item.name]);
+               // let collapsed = (typeof this.state.collapsed[item.name] === "undefined" ? false : this.state.collapsed[item.name]);
                 
-                let icon = collapsed ? faAngleRight : faAngleDown;
+               // let icon = collapsed ? faAngleRight : faAngleDown;
 
                 let form = 
                 <Form key={index} onSubmit={this.onSubmit} className="mb-4">
-                    <h6  onClick={(event) => this.onCollapse(event, item.name)}><FontAwesomeIcon className="mr-1" icon={icon}/> {item.description}</h6>
-                    {!collapsed && item.children.map((item2, index2) => {
+                    {/*item.visible != false && <h6  onClick={(event) => this.onCollapse(event, item.name)}><FontAwesomeIcon className="mr-1" icon={icon}/> {item.description}</h6>*/}
+                    {/*!collapsed &&*/ item.children.map((item2, index2) => {
                         let formItem = null;
                         let flags = item2.getFlags(this.props.element);
                         
                         if(typeof flags.showLabel == "undefined" || flags.showLabel){
                             formItem = 
-                            <Form.Group size="sm" key={index2} as={Row} style={{alignItems: "center"}}  controlId={`formitem${index}${index2}`}>
-                                <Form.Label column sm="4">{item2.text}</Form.Label>
-                                <Col sm="8">
-                                    {this.createFormControl(item2)}
-                                </Col>
+                            <Form.Group size="sm" key={index2} style={{alignItems: "center"}}  controlId={`formitem${index}${index2}`}>
+                                <Form.Label>{item2.text}</Form.Label>
+                                {this.createFormControl(item2)}
                             </Form.Group>;
                             
                         }else{
@@ -171,7 +175,7 @@ class FormProperties extends Component{
         
         switch(data.input.type){
             case 'radio':
-                result = <ToggleButtons type="radio" name={data.name} value={value} bsSize="sm" defaultValue={value}
+                result = <ToggleButtons type={data.input.toggleType} name={data.name} value={value} bsSize="sm" defaultValue={value}
                                 options={data.input.options} onChange={(event) => this.onDataChange(event, data)}/>;
                 break;
             case 'text':
@@ -197,6 +201,14 @@ class FormProperties extends Component{
             case 'iconselector':
                 result = <IconSelector name={data.name} value={value} text={data.input.text}
                                 onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'pixabay':
+                result = <ImagePixaBay name={data.name} value={value} text={data.input.text}
+                                onChange={(event) => this.onDataChange(event, data)} />;
+                break;
+            case 'gridbuilder':
+                result = <GridBuilder name={data.name} value={value} text={data.input.text}
+                                onSave={(event) => this.onModalSave(event, data)} />;
                 break;
             case 'multipleselect':
                 result = <MultipleSelect name={data.name} values={value} options={data.input.options} autoAdd={flags.autoAdd}
@@ -225,15 +237,13 @@ class FormProperties extends Component{
               
                 break;
             case 'ImageSrc':
-                result = <ImageSrc name={data.name} value={value} size="sm" onChange={(event) => this.onDataChange(event, data)}  />;
+                result = <ImageSrc name={data.name} accept={data.input.accept} value={value} size="sm" onChange={(event) => this.onDataChange(event, data)}  />;
                 break;
             case 'button':
                 result = <Button size="sm" onClick={() => this.onDataChange({target:{value:''}}, data)}>{data.input.text}</Button>
                 break;
         }
-  
-       /* <TableActions showRmCol={data.input.showRmCol}
-        onChange={(event) => this.onDataChange(event, data, true)} />;*/
+
         return result;
     }
 
@@ -241,14 +251,19 @@ class FormProperties extends Component{
         if (componentData.input.onChange){
             componentData.input.onChange(this.props.element, event.target.value, componentData);
             this.forceUpdate();
+            this.props.onAfterAssignProperty();
         }
+    }
+
+    onModalSave(event, componentData){
+        this.props.onAfterReplaceNode([this.props.element]);       
     }
 
     onClick(item){
         let result = item.onClick(this.props.element);
 
         if(result.action === 'insert'){
-            this.props.onInsertNode(result.nodes);
+            this.props.onAfterInsertNode(result.nodes);
         }
         else if(result.action === 'delete'){
             this.props.onDeleteElement();
@@ -259,20 +274,21 @@ class FormProperties extends Component{
         event.preventDefault();
     }
     
-    onCollapse(event, id){
+    /*onCollapse(event, id){
         event.stopPropagation();
         event.preventDefault();
 
         let collapsed = this.state.collapsed;
         collapsed[id] = (typeof collapsed[id] === 'undefined' ? false : !collapsed[id]);
         this.setState({collapsed: collapsed});
-    }
+    }*/
 }
 
 export class VisualComponentList extends Component{
     static defaultProps = {
         onDragEnd: null,
         onSaveTemplate: null,
+        onInsert: null,
         tab: 'tpl'
     };
   
@@ -301,7 +317,7 @@ export class VisualComponentList extends Component{
                     <div className='panel'>
                         <h5 className="m-0 p-2"><FontAwesomeIcon icon={faCloud}/> {i18n.get_string('templates')}</h5>
                         <hr className='mt-0'/>
-                        <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onChange={this.loadTemplates} onSaveTemplate={this.props.onSaveTemplate} type='l'/>
+                        <TemplateList dataProvider={Templates.layoutList} onDragEnd={this.props.onDragEnd} onInsert={this.props.onInsert} onChange={this.loadTemplates} onSaveTemplate={this.props.onSaveTemplate} type='l'/>
                     </div>
                 }
             </div>;
@@ -330,7 +346,8 @@ export class VisualComponentList extends Component{
 class TokenList extends Component{
     static defaultProps = {
         dataProvider: [],
-        onDragEnd: null
+        onDragEnd: null,
+        onInsert: null
     };
 
     constructor(props){
@@ -358,7 +375,7 @@ class TokenList extends Component{
                             {!collapsed && item.children.map((item2, index2) => {
                                 if(!item2.visible){ return null; }
 
-                                return (<Token data={item2} key={index2} onDragEnd={this.props.onDragEnd} />);
+                                return (<Token data={item2} key={index2} onDragEnd={this.props.onDragEnd} onInsert={this.props.onInsert} />);
                             })}
                         </ul>
 
@@ -370,9 +387,6 @@ class TokenList extends Component{
     }
 
     onCollapse(event, id){
-        event.stopPropagation();
-        event.preventDefault();
-
         let collapsed = this.state.collapsed;
         collapsed[id] = !collapsed[id] || false;
         this.setState({collapsed: collapsed});
@@ -384,6 +398,7 @@ class TemplateList extends Component{
         dataProvider: [],
         onDragEnd: null,
         onChange: null,
+        onInsert: null,
         type: 'c',
         onSaveTemplate: null
     };
@@ -405,7 +420,7 @@ class TemplateList extends Component{
         if (typeof M != 'undefined' && M.recit && M.recit.reciteditor && M.recit.reciteditor.settings.showcase_url && M.recit.reciteditor.settings.showcase_url.length > 0){
             url = M.recit.reciteditor.settings.showcase_url;
         }
-        this.state = {showModal: false, showMenu: false, showImport: false, showShowcase: false, UrlShowcase: url, collapse: {}};
+        this.state = {showModal: false, showMenu: false, showImport: false, showShowcase: false, UrlShowcase: url, collapse: {}, hoverimg: false};
     }    
 
     componentDidMount(){
@@ -418,15 +433,15 @@ class TemplateList extends Component{
 
     render(){       
         let that = this;
+        // {this.props.type === 'l' && <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faSave} title={i18n.get_string('savetemplate')}/></Button>}
+        // <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon icon={faCog} title={i18n.get_string('options')}/></Button>
         let main =
             <div className="tab-content">
                 <div>
                     <ButtonToolbar style={{justifyContent: 'flex-end'}}>
                         <ButtonGroup >
-                                {this.props.type === 'l' && <Button onClick={() => this.showModal(true)}><FontAwesomeIcon icon={faSave} title={i18n.get_string('savetemplate')}/></Button>}
                                 <BtnUpload id="import-collection"  accept=".json" onChange={this.onImport} title={i18n.get_string('import')}/>
                                 {this.props.type === 'l' && this.state.UrlShowcase && <Button onClick={() => this.showShowcase(true)}><FontAwesomeIcon icon={faCloud} title={i18n.get_string('showroom')}/> {i18n.get_string('showroom')}</Button>}
-                                <Button onClick={() => this.showMenu(!this.state.showMenu)} variant={(this.state.showMenu ? 'warning' : 'primary')}><FontAwesomeIcon icon={faCog} title={i18n.get_string('options')}/></Button>
                         </ButtonGroup>
                     </ButtonToolbar>
                     {this.state.showMenu &&  this.props.type === 'c' && <Button onClick={(event) => this.onExport(event, this.props.dataProvider.myComponents)}><FontAwesomeIcon icon={faCloudDownloadAlt}/> {i18n.get_string('export')}</Button>}
@@ -503,6 +518,7 @@ class TemplateList extends Component{
             if(!webApiResult.error){
                 that.showImport(false);
                 that.props.onChange();
+                $glVars.feedback.showInfo(i18n.get_string('pluginname'), i18n.get_string('msgsuccess'), 3);
             }
             else{
                 alert(`Error: ${webApiResult}`);
@@ -524,6 +540,7 @@ class TemplateList extends Component{
         window.document.body.appendChild(node); // required for firefox
         node.click();
         node.remove();
+        $glVars.feedback.showInfo(i18n.get_string('pluginname'), i18n.get_string('msgsuccess'), 3);
     }
 
     onDelete(event, item){
@@ -538,9 +555,10 @@ class TemplateList extends Component{
         promise.then((webApiResult) => {
             if(!webApiResult[0].error){
                 that.props.onChange();
+                $glVars.feedback.showInfo(i18n.get_string('pluginname'), i18n.get_string('msgsuccess'), 3);
             }
             else{
-                alert(`Error: ${webApiResult}`);
+                $glVars.feedback.showError(i18n.get_string('pluginname'), JSON.stringify(webApiResult));
             }
         },
         (err, response) => {
@@ -554,11 +572,11 @@ class TemplateList extends Component{
 
     getToken(item, index, editable){
         if(this.props.type === 'l'){
-            return <TokenTemplate showMenu={this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} 
+            return <TokenTemplate showMenu={this.state.hovering == item.id} data={item} key={index} onDragEnd={this.props.onDragEnd} onInsert={this.props.onInsert} onHover={() => this.setState({hovering: item.id})} onMouseLeave={() => this.setState({hovering: null})}
                         onExport={(event) => this.onExport(event, item)} onDelete={(event) => this.onDelete(event, item)}/>
         }
         else{
-            return <Token showMenu={editable && this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} hoverimg={item.img}
+            return <Token showMenu={editable && this.state.showMenu} data={item} key={index} onDragEnd={this.props.onDragEnd} hoverimg={item.img} onInsert={this.props.onInsert}
                             onExport={(event) => this.onExport(event, item)} onDelete={(event) => this.onDelete(event, item)}/>
         }
     }
@@ -582,7 +600,10 @@ class Token extends Component
         showMenu: false,
         onExport: null,
         onDelete: null,
+        onInsert: null,
         hoverimg: null,
+        onHover: null,
+        onMouseLeave: null,
     };
     
     constructor(props){
@@ -596,7 +617,7 @@ class Token extends Component
 	
 	render(){
 		let main = 
-            <li className="token" data-type={this.props.data.type} draggable="true" onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}  onMouseEnter={() => this.onMouseEnter(this.props.hoverimg)} onMouseLeave={this.onMouseLeave} onMouseDown={this.onMouseLeave}>
+            <li className="token" data-type={this.props.data.type} draggable="true" onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} onMouseEnter={() => this.onMouseEnter(this.props.hoverimg)} onMouseLeave={this.onMouseLeave} onMouseDown={this.onMouseLeave}>
                 {this.props.data.name}   
                 {this.props.showMenu && 
                     <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
@@ -617,6 +638,7 @@ class Token extends Component
     
     onDragStart(event){
         event.dataTransfer.setData("componentData", JSON.stringify(this.props.data));
+        this.setState({imagePreview: false});
     }
     
     onDragEnd(event){
@@ -624,11 +646,18 @@ class Token extends Component
     }
 
     onMouseEnter(img){
-        if (!img) return;
-        this.setState({imagePreview: img});
+        if (this.props.onHover){
+            this.props.onHover();
+        }
+        if (img){
+            this.setState({imagePreview: img});
+        }
     }
 
     onMouseLeave(){
+        if (this.props.onMouseLeave){
+            this.props.onMouseLeave();
+        }
         this.setState({imagePreview: false});
     }
 }
@@ -638,7 +667,7 @@ class TokenTemplate extends Token{
         let item = this.props.data;
 
         let main =
-                <div className='template' onMouseEnter={() => this.onMouseEnter(this.props.data.img)} onMouseLeave={this.onMouseLeave} onMouseDown={this.onMouseLeave}
+                <div className='template' onMouseEnter={() => this.onMouseEnter(this.props.data.img)} onMouseLeave={this.onMouseLeave}
                         onDragEnd={this.props.onDragEnd} draggable="true" onDragStart={this.onDragStart}>
                     <div className="tplimg">
                         <img src={item.img}/>
@@ -647,18 +676,25 @@ class TokenTemplate extends Token{
                     {this.props.showMenu &&
                         <ButtonToolbar style={{marginLeft: "1rem", display: "inline-flex"}}>
                             <ButtonGroup size="sm">
+                                <Button onClick={() => this.onInsert('top', item.htmlstr)}><i title={i18n.get_string('inserttop')}>{Assets.faBorderTop}</i></Button>
+                                <Button onClick={() => this.onInsert('bottom', item.htmlstr)}><i title={i18n.get_string('insertbottom')}>{Assets.faBorderBottom}</i></Button>
                                 <Button onClick={this.props.onExport}><FontAwesomeIcon icon={faCloudDownloadAlt} title={i18n.get_string('export')}/></Button>
                                 <Button onClick={this.props.onDelete}><FontAwesomeIcon icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
                             </ButtonGroup>
                         </ButtonToolbar>
                     }
 
-                    {this.state.imagePreview && !this.props.showMenu &&
+                    {this.state.imagePreview &&
                         <div className='templatepreview'>
                             <img src={this.state.imagePreview}/>
                     </div>}
                 </div>
         return main;
+    }
+
+    onInsert(pos, html){
+        this.props.onInsert(pos, html);
+        $glVars.feedback.showInfo(i18n.get_string('pluginname'), i18n.get_string('templateadded'), 3);
     }
 }
 

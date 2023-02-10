@@ -34,6 +34,8 @@ export class ToggleButtons extends Component {
         options: [], // {value: "", text:"", glyph: ""}
         bsSize: "", // "" | sm | lg
         style: null,
+        label: '',
+        className: '',
         disabled: false
     };
       
@@ -43,18 +45,19 @@ export class ToggleButtons extends Component {
         this.onChange = this.onChange.bind(this);
     }
 
-    render() {       
+    render() {   
         let main = 
-            <ButtonToolbar style={this.props.style} data-read-only={(this.props.disabled ? 1 : 0)}>                        
+            <ButtonToolbar style={this.props.style} className={this.props.className} data-read-only={(this.props.disabled ? 1 : 0)}>                        
                 <ToggleButtonGroup size={this.props.bsSize} type={this.props.type} name={this.props.name} value={this.props.value} defaultValue={this.props.defaultValue} onChange={this.onChange}>                                
                     {this.props.options.map((item, index) => {   
                         let element = 
-                            <BsToggleButton key={index} variant={"primary"} value={item.value} disabled={this.props.disabled}>
+                            <BsToggleButton key={index} variant={"outline-primary"} value={item.value} disabled={this.props.disabled}>
                                 {item.glyph}
                                 {item.text}
                             </BsToggleButton>;
                         return (element);
-                    })}                                    
+                    })}
+                    <span className='text-muted ml-3'>{this.props.label}</span>
                 </ToggleButtonGroup>
             </ButtonToolbar>;
         return (main);

@@ -96,7 +96,7 @@ export class IconSelector extends Component {
           <Modal.Title>{i18n.get_string('selecticon')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <FormControl className={"InputText mb-3"} type="text" value={this.state.search} onChange={this.onSearch} placeholder={"Recherche"} />
+            <FormControl className={"InputText mb-3"} type="text" value={this.state.search} onChange={this.onSearch} placeholder={i18n.get_string('search')} />
             <IFrame style={{width: '100%', height: '70vh', border: '0'}}>
                 <div style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
                     {this.cssRules.url && <link rel="stylesheet" href={this.cssRules.url[0]}/>}

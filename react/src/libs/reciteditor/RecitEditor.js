@@ -27,6 +27,7 @@ import { LayoutBuilder } from './layout-builder/LayoutBuilder';
 import { Options } from '../../Options';
 import "./assets/css/components.scss";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { FeedbackCtrl, VisualFeedback } from './common/Feedback';
 
 //////////////////////////////////////////////////
 // Note: the "export *" will only export the classes marked with "export" in their definition
@@ -63,6 +64,10 @@ export * from './layout-builder/ctrl/HTMLElements';
 export * from './layout-builder/ctrl/HTMLProperties';
 export * from './layout-builder/LayoutBuilder';
 
+export const $glVars = {
+    feedback: new FeedbackCtrl()
+}
+
 export class RecitEditor extends Component{
     static defaultProps = {
         name: "",
@@ -81,20 +86,26 @@ export class RecitEditor extends Component{
         this.state = {builder: this.props.builder};
 
         // the content is not in the state because we don't want to refresh the component every time the user types something. This moves the caret to the beginning of the content.
-        this.content = props.content; 
+        this.content = props.content;
     }
 
     componentDidMount(){
-        window.document.title = Options.appTitle();    
+        window.document.title = Options.appTitle(); 
+        $glVars.feedback.addObserver("App", () => this.onFeedback()); 
     }
 
 	render(){
-		let main = 
-                this.state.builder === "word" ? 
+		let main = <div>
+                {this.state.builder === "word" ? 
                     <WordProcessor content={this.content} onSelectBuilder={this.onSelectBuilder} onChange={this.onChange} options={this.props.options}/> 
                     : 
-                    <LayoutBuilder content={this.content} onSelectBuilder={this.onSelectBuilder} onChange={this.onChange} onSaveAndClose={this.props.onSaveAndClose} options={this.props.options}/>
-		return (main);
+                    <LayoutBuilder content={this.content} onSelectBuilder={this.onSelectBuilder} onChange={this.onChange} onSaveAndClose={this.props.onSaveAndClose} options={this.props.options}/>}
+        
+            {$glVars.feedback.msg.map((item, index) => {  
+                return (<VisualFeedback key={index} id={index} msg={item.msg} type={item.type} title={item.title} timeout={item.timeout}/>);
+            })}
+        </div>
+		return main;
     }
     
     onChange(content, forceUpdate){
@@ -103,6 +114,10 @@ export class RecitEditor extends Component{
         if(forceUpdate){
             this.forceUpdate();
         }
+    }
+
+    onFeedback(){
+        this.forceUpdate();
     }
 
     onSelectBuilder(option){

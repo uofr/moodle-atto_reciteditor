@@ -23,15 +23,17 @@
  import React from 'react';
  import { i18n } from '../../RecitEditor';
  import {BsBackgroundProperty, BsBackgroundImageProperty, BsShadowProperty, BsIconProperty, BsIconSizeProperty, BsMarginProperty, BsPaddingProperty, HTMLClassProperty,
-            HTMLWidthProperty, HTMLHeightProperty, HTMLFontSizeProperty, HTMLFontFamilyProperty, HTMLColorProperty, HTMLBackgroundProperty, HTMLHrefProperty, HTMLTargetProperty, 
-            HTMLSourceProperty, HTMLIdProperty, HTMLVideoButtonProperty, HTMLVideoSourceProperty, HTMLEmbedProperty, HTMLPropertiesData, BsTabProperty, BsTabJustifyProperty, BsAddTabProperty, HTMLMarginBorderPaddingProperty, BsAddAccordionProperty, BsBorderProperty, BsBorderColorProperty, BsBorderStyleProperty, BsBorderRadiusProperty, BsTextColorProperty, BsTextAlignmentProperty, BsBtnBlockProperty, BsBtnOutlineProperty, BsBtnSizeProperty, BsTableActionProperty, BsTableBorderProperty, BsTableStripedProperty, BsTableCellActionProperty, HTMLAltProperty, HTMLOuterHTMLProperty} from './HTMLProperties';
+    HTMLStyleProperty, HTMLWidthProperty, HTMLHeightProperty, HTMLFontSizeProperty, HTMLFontFamilyProperty, HTMLColorProperty, HTMLBackgroundProperty, HTMLHrefProperty, HTMLTargetProperty, 
+            HTMLSourceProperty, HTMLIdProperty, HTMLVideoButtonProperty, HTMLVideoSourceProperty, HTMLEmbedProperty, HTMLPropertiesData, BsTabProperty, BsTabJustifyProperty, BsAddTabProperty, HTMLMarginBorderPaddingProperty, BsAddAccordionProperty, BsBorderProperty, BsBorderColorProperty, BsBorderStyleProperty, BsBorderRadiusProperty, BsTextColorProperty, BsTextAlignmentProperty, BsBtnBlockProperty, BsBtnOutlineProperty, BsBtnSizeProperty, BsTableActionProperty, BsTableBorderProperty, BsTableStripedProperty, BsTableCellActionProperty, HTMLAltProperty, HTMLOuterHTMLProperty, ModalGridProperty, BsGridResponsiveProperty, BsGridPaddingProperty, HTMLImageBankProperty, HTMLBackgroundCoverProperty, BsGridVerticalAlignProperty, BsHeadingProperty} from './HTMLProperties';
  import {HTMLHeadingElement, HTMLParagraphElement, HTMLButtonElement, HTMLLinkElement, HTMLAudioElement, HTMLVideoElement, HTMLButtonVideoElement, HTMLEmbedElement,
             HTMLNavElement, HTMLNavItemElement, HTMLNavLinkElement,
             HTMLBodyElement, HTMLDivElement, HTMLSpanElement, HTMLSectionElement, HTMLGridElement, HTMLRowElement, HTMLColElement, HTMLUListElement, HTMLOListElement, HTMLLIElement,
             HTMLAlertElement, HTMLCardElement, HTMLCardBodyElement, HTMLCardHeaderElement, HTMLCardFooterElement,
-            HTMLMediaBSElement, HTMLMediaBSBodyElement, HTMLHRElement, HTMLCarouselElement, HTMLCarouselNavElement, HTMLAccordionElement, HTMLTabElement, HTMLAccordionNavElement, HTMLFlipCardElement,
+            HTMLHRElement, HTMLCarouselElement, HTMLCarouselNavElement, HTMLAccordionElement, HTMLTabElement, HTMLAccordionNavElement, HTMLFlipCardElement,
             HTMLFlipCardFrontElement, HTMLFlipCardBackElement, HTMLTabPaneElement, HTMLTabContentElement, HTMLTableElement, HTMLTableDataCellElement, HTMLTableHeaderCellElement, HTMLTableRowElement,
-            HTMLImageElement, HTMLImageWithCaptionElement, HTMLClickableImageElement, HTMLIconElement, HTMLIframeElement, HTMLHorizontalBarElement, HTMLAvatarCardElement} from './HTMLElements';
+            HTMLImageElement, HTMLImageWithCaptionElement, HTMLClickableImageElement, HTMLIconElement, HTMLIframeElement, HTMLHorizontalBarElement, HTMLAvatarCardElement, HTMLImageFigureElement} from './HTMLElements';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export class HTMLElementData{
     static propertyList = {
@@ -41,6 +43,8 @@ export class HTMLElementData{
                 children: [
                     new BsBackgroundProperty(),
                     new BsBackgroundImageProperty(),
+                    new HTMLImageBankProperty(false),
+                    new HTMLBackgroundCoverProperty(),
                     new BsShadowProperty()
                 ]
             },
@@ -49,15 +53,39 @@ export class HTMLElementData{
                 children: [
                     new BsIconProperty(),
                     new BsIconSizeProperty(),
-                    new BsTextColorProperty
+                    new BsTextColorProperty(),
                 ]
-            },            
+            },
+            {
+                name: 'modal-grid', description: i18n.get_string('grid'), visible: false,
+                children: [
+                    new ModalGridProperty()
+                ]
+            },     
+            {
+                name: 'bs-grid', description: i18n.get_string('grid'),
+                children: [
+                    new BsGridPaddingProperty()
+                ]
+            },
+            {
+                name: 'bs-row', description: i18n.get_string('row'),
+                children: [
+                    new BsGridResponsiveProperty()
+                ]
+            },
+            {
+                name: 'bs-col', description: i18n.get_string('column'),
+                children: [
+                    new BsGridVerticalAlignProperty()
+                ]
+            },
             {
                 name: 'bs-general', description: i18n.get_string('classlist'), 
                 children: [
                     new HTMLClassProperty()
                 ]
-            },
+            },   
             {
                 name: 'bs-spacing', description: i18n.get_string('spacing'), 
                 children: [
@@ -118,6 +146,12 @@ export class HTMLElementData{
                     new BsAddAccordionProperty()
                 ]
             },
+            {
+                name: 'heading', description: i18n.get_string('heading'), 
+                children: [
+                    new BsHeadingProperty(),
+                ]
+            }, 
         ],
         html: [
             {
@@ -127,7 +161,7 @@ export class HTMLElementData{
                     new HTMLHeightProperty(),
                     new HTMLMarginBorderPaddingProperty()
                 ]
-            },
+            },  
             {
                 name: 'font', description: i18n.get_string('font'), 
                 children: [
@@ -139,7 +173,7 @@ export class HTMLElementData{
             {
                 name: 'background', description: i18n.get_string('background'), 
                 children: [
-                   new HTMLBackgroundProperty()
+                   new HTMLBackgroundProperty(),
                 ]
             },
             {
@@ -152,7 +186,14 @@ export class HTMLElementData{
             {
                 name: 'source', description: i18n.get_string('source'), 
                 children: [
-                    new HTMLSourceProperty()
+                    new HTMLSourceProperty(),
+                    new HTMLImageBankProperty(true)
+                ]
+            },
+            {
+                name: 'sourceaudio', description: i18n.get_string('source'), 
+                children: [
+                    new HTMLSourceProperty('.mp3,.wav')
                 ]
             },
             {
@@ -171,7 +212,8 @@ export class HTMLElementData{
                 name: 'htmlattributes', description: i18n.get_string('htmlattributes'), 
                 children: [
                     new HTMLIdProperty(),
-                    new HTMLClassProperty()
+                    new HTMLClassProperty(),
+                    new HTMLStyleProperty()
                 ]
             },
             {
@@ -198,18 +240,31 @@ export class HTMLElementData{
 
     static elementList = [
         {
-            name: i18n.get_string('text'),
+            name: i18n.get_string('layout'), 
             children: [
-                new HTMLHeadingElement("H1", 'h1'),
-                new HTMLHeadingElement("H2", 'h2'),
-                new HTMLHeadingElement("H3", 'h3'),
-                new HTMLHeadingElement("H4", 'h4'),
-                new HTMLHeadingElement("H5", 'h5'),
-                new HTMLHeadingElement("H6", 'h6'),
+                new HTMLBodyElement(),
+                new HTMLDivElement(),
+                new HTMLSectionElement(),
+                new HTMLGridElement(),
+                new HTMLRowElement(),
+                new HTMLColElement(),
+            ]
+        },
+        {
+            name: <>{i18n.get_string('text')} <a target='_blank' href='https://www.w3.org/WAI/tutorials/page-structure/headings/#heading-ranks'><FontAwesomeIcon icon={faInfoCircle}/> </a></>,
+            children: [
+                new HTMLHeadingElement('H1', 'h1'),
+                new HTMLHeadingElement('H2', 'h2'),
+                new HTMLHeadingElement('H3', 'h3'),
+                new HTMLHeadingElement('H4', 'h4'),
+                new HTMLHeadingElement('H5', 'h5'),
+                new HTMLHeadingElement('H6', 'h6'),
+                new HTMLHeadingElement(i18n.get_string('headingwithicon'), 'h3', true),
                 new HTMLParagraphElement(),
                 new HTMLUListElement(),
                 new HTMLOListElement(),
                 new HTMLLIElement(),
+                new HTMLSpanElement(),
             ]
         },
         {
@@ -217,6 +272,7 @@ export class HTMLElementData{
             children: [
                 new HTMLImageElement(),
                 new HTMLImageWithCaptionElement(),
+                new HTMLImageFigureElement(),
                 new HTMLClickableImageElement(),
                 new HTMLVideoElement(i18n.get_string('video'), null, 'bootstrap'),
                 new HTMLIframeElement(),
@@ -260,22 +316,8 @@ export class HTMLElementData{
                 new HTMLCardBodyElement(),
                 new HTMLCardHeaderElement(),
                 new HTMLCardFooterElement(),
-                new HTMLMediaBSElement(),
-                new HTMLMediaBSBodyElement(),
                 new HTMLHRElement(),
                 new HTMLHorizontalBarElement()
-            ]
-        },
-        {
-            name: i18n.get_string('grid'), 
-            children: [
-                new HTMLBodyElement(),
-                new HTMLDivElement(),
-                new HTMLSpanElement(),
-                new HTMLSectionElement(),
-                new HTMLGridElement(),
-                new HTMLRowElement(),
-                new HTMLColElement(),
             ]
         },
     ];
@@ -356,8 +398,13 @@ export class HTMLElementData{
                 console.log(componentData);
                 return;
             }
-            el = new DOMParser().parseFromString(html, "text/html");
-            el = el.body.firstChild;
+            let htmlEl = new DOMParser().parseFromString(html, "text/html");
+            el = htmlEl.body.firstChild;
+            if (htmlEl.body.childElementCount > 1){
+                let div = document.createElement('div');
+                div.innerHTML = htmlEl.body.innerHTML;
+                el = div;
+            }
         }
         else{
             console.log(`Component type not found: ${componentData}`);

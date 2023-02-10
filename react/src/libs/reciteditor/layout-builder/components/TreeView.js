@@ -22,10 +22,10 @@
  */
 
 import React, { Component } from 'react';
-import { ButtonToolbar, Button, ButtonGroup  } from 'react-bootstrap';
-import {faAngleRight, faAngleDown, faArrowUp, faArrowDown, faTrashAlt, faSitemap} from '@fortawesome/free-solid-svg-icons';
+import { ButtonToolbar, Button, ButtonGroup } from 'react-bootstrap';
+import {faAngleRight, faSave, faAngleDown, faArrowUp, faArrowDown, faTrashAlt, faSitemap} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {HTMLElementData, UtilsHTML, i18n} from '../../RecitEditor';
+import {HTMLElementData, UtilsHTML, UtilsString, i18n, TemplateForm} from '../../RecitEditor';
 
 export class TreeView extends Component{
     static defaultProps = {
@@ -33,6 +33,7 @@ export class TreeView extends Component{
         onSelect: null,
         selectedElement: null,
         onDeleteElement: null,
+        onSaveElement: null,
         onMoveNodeUp: null,
         onMoveNodeDown: null,
         view: 'designer'
@@ -42,8 +43,9 @@ export class TreeView extends Component{
         super(props);
 
         this.onCollapse = this.onCollapse.bind(this);
+        this.onSaveTemplate = this.onSaveTemplate.bind(this);
 
-        this.state = {notCollapsed: {}};
+        this.state = {notCollapsed: {}, saveElement: false};
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -66,11 +68,12 @@ export class TreeView extends Component{
 
         let main = 
             <div className='panel'>
-                <h5><FontAwesomeIcon icon={faSitemap}/> {i18n.get_string('tree')}</h5>
-                <hr/>
+                <h5 className='m-0 p-2'><FontAwesomeIcon icon={faSitemap}/> {i18n.get_string('tree')}</h5>
+                <hr className='mt-0'/>
                 <ul className='tree-view'>
                     {this.renderTreeView(treeView, 0)}
                 </ul>
+                {this.state.saveElement && <TemplateForm onClose={() => this.setState({saveElement:false})} onSave={this.onSaveTemplate} title={i18n.get_string('createtemplate')} description={i18n.get_string('addcomponentdesc')}/>}
             </div>;
 
         return main;
@@ -80,25 +83,31 @@ export class TreeView extends Component{
         let id = `id${key}`;
 
         let result = null;
-           
-        let selected = (this.props.selectedElement !== null &&  this.props.selectedElement.isSameNode(node.dom));
+        
+        let selected = (this.props.selectedElement !== null && this.props.selectedElement.isSameNode(node.dom)); //If root isn't selected
         let extraClasses = (selected ? 'disabled btn-warning' : '');
         
+        //node.dom.isSameNode(this.props.data) checks if root node is selected
         let btn =  
             <ButtonToolbar aria-label="Item actions" style={{flexWrap: "nowrap"}}>
                 <ButtonGroup>
                     <Button variant="link" className={`p-1 ${extraClasses}`} style={{whiteSpace: "nowrap"}} onClick={() => this.props.onSelect(node.dom)} >{` ${node.text}`}</Button>
                 </ButtonGroup>
-                {!node.dom.isSameNode(this.props.data) &&
-                    <ButtonGroup size="sm" className="btn-group-actions" style={(selected ? {display: 'flex'} : {})}>
-                        <Button onClick={() => this.props.onMoveNodeUp(node.dom)}  ><FontAwesomeIcon icon={faArrowUp} title={i18n.get_string('moveelementup')}/></Button>
-                        <Button onClick={() => this.props.onMoveNodeDown(node.dom)}><FontAwesomeIcon icon={faArrowDown} title={i18n.get_string('moveelementdown')}/></Button>
-                        <Button onClick={() => this.props.onDeleteElement(node.dom)}><FontAwesomeIcon  icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
+                
+                {selected && 
+                    <ButtonGroup size="sm" className="ml-2 btn-group-actions" style={(selected ? {display: 'flex'} : {})}>
+                        {!node.dom.isSameNode(this.props.data) && <> 
+                            <Button onClick={() => this.props.onMoveNodeUp(node.dom)}><FontAwesomeIcon icon={faArrowUp} title={i18n.get_string('moveelementup')}/></Button>
+                            <Button onClick={() => this.props.onMoveNodeDown(node.dom)}><FontAwesomeIcon icon={faArrowDown} title={i18n.get_string('moveelementdown')}/></Button>
+                            <Button onClick={() => this.props.onDeleteElement(node.dom)}><FontAwesomeIcon icon={faTrashAlt} title={i18n.get_string('delete')}/></Button>
+                        </>}
+                        <Button onClick={() => this.setState({saveElement:node.dom})}><FontAwesomeIcon icon={faSave} title={i18n.get_string('save')}/></Button>
                     </ButtonGroup>
                 }
+                
             </ButtonToolbar>;
 
-        let icon = (this.state.notCollapsed[id] ? faAngleDown : faAngleRight);
+        let icon = ((this.state.notCollapsed[id] || node.dom.contains(this.props.selectedElement)) ? faAngleDown : faAngleRight);
 
         if(node.children.length > 0){
             result = 
@@ -130,6 +139,11 @@ export class TreeView extends Component{
         return result;
     }
 
+    onSaveTemplate(data){
+        this.props.onSaveElement(data.name, 'l', this.state.saveElement);
+        this.setState({saveElement:false});
+    }
+
     createTreeViewData(node){
         let result = {text: this.getNodeDesc(node), dom: node, children: []};
 
@@ -150,7 +164,7 @@ export class TreeView extends Component{
     getNodeDesc(node){
         let elClass = HTMLElementData.getElementClass(null, node);
 
-        return (elClass ? elClass.getDesc(node) : node.tagName.toLowerCase());
+        return (elClass ? elClass.getDesc(node) : UtilsString.capitalizeFirstLetter(node.tagName.toLowerCase()));
     }
 
     onCollapse(event, id){

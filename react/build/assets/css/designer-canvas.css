@@ -34,6 +34,11 @@ html {
     /* for firefox */
     height: 100%;
     /* Those elements have priority over the previous ones*/ }
+    html body .nopointerevents {
+      pointer-events: none; }
+    html body .tag-empty, html body div:empty:not(.col):not(.embedelement):not(.col-12):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before, html body .embedelement:empty::before, html body section:empty::before, html body p:empty::before, html body .row:empty::before, html body .col-1:empty::before, html body .col-md-1:empty::before, html body .col-2:empty::before, html body .col-md-2:empty::before, html body .col-3:empty::before, html body .col-md-3:empty::before, html body .col-4:empty::before, html body .col-md-4:empty::before, html body .col-5:empty::before, html body .col-md-5:empty::before, html body .col-6:empty::before, html body .col-md-6:empty::before, html body .col-7:empty::before, html body .col-md-7:empty::before, html body .col-8:empty::before, html body .col-md-8:empty::before, html body .col-9:empty::before, html body .col-md-9:empty::before, html body .col-10:empty::before, html body .col-md-10:empty::before, html body .col-11:empty::before, html body .col-md-11:empty::before, html body .col-12:empty::before, html body .col-md-12:empty::before, html body .alert:empty::after, html body .card-header:empty::before, html body .card-body:empty::before, html body .card-footer:empty::before, html body td:empty::before, html body th:empty::before, html body .attoreciteditor_imgclick a:empty::before {
+      background-color: #ffd75e;
+      padding: 5px; }
     html body div:empty:not(.col):not(.embedelement):not(.col-12):not(.dropping-zone):not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer)::before {
       content: "Div"; }
     html body .embedelement:empty::before {
@@ -41,21 +46,83 @@ html {
     html body div:not(.alert):not(.card):not(.card-header):not(.card-body):not(.card-footer):not(.dropping-zone):not(.carousel-item) {
       border: 2px dashed #c9c5c5; }
     html body section {
-      border: 2px dashed #c9c5c5; }
+      border: 2px dashed #c9c5c5;
+      padding: 1rem; }
     html body table {
       border: 2px dashed #c9c5c5;
       border-width: 3px; }
     html body section:empty::before {
       content: "Section"; }
+    html body p:empty::before {
+      content: "P"; }
     html body .container, html body .container-fluid {
       border: 2px dashed #c9c5c5;
-      padding: 1rem !important; }
+      padding: 1rem; }
     html body .row {
       border: 2px dashed #c9c5c5;
       padding: 1rem; }
-    html body .col, html body .col-12 {
+    html body .row:empty::before {
+      content: "Row"; }
+    html body .col-1, html body .col-md-1 {
       border: 2px dashed #c9c5c5;
       min-height: 30px; }
+    html body .col-1:empty::before, html body .col-md-1:empty::before {
+      content: 'Col'; }
+    html body .col-2, html body .col-md-2 {
+      border: 2px dashed #c9c5c5;
+      min-height: 30px; }
+    html body .col-2:empty::before, html body .col-md-2:empty::before {
+      content: 'Col'; }
+    html body .col-3, html body .col-md-3 {
+      border: 2px dashed #c9c5c5;
+      min-height: 30px; }
+    html body .col-3:empty::before, html body .col-md-3:empty::before {
+      content: 'Col'; }
+    html body .col-4, html body .col-md-4 {
+      border: 2px dashed #c9c5c5;
+      min-height: 30px; }
+    html body .col-4:empty::before, html body .col-md-4:empty::before {
+      content: 'Col'; }
+    html body .col-5, html body .col-md-5 {
+      border: 2px dashed #c9c5c5;
+      min-height: 30px; }
+    html body .col-5:empty::before, html body .col-md-5:empty::before {
+      content: 'Col'; }
+    html body .col-6, html body .col-md-6 {
+      border: 2px dashed #c9c5c5;
+      min-height: 30px; }
+    html body .col-6:empty::before, html body .col-md-6:empty::before {
+      content: 'Col'; }
+    html body .col-7, html body .col-md-7 {
+      border: 2px dashed #c9c5c5;
+      min-height: 30px; }
+    html body .col-7:empty::before, html body .col-md-7:empty::before {
+      content: 'Col'; }
+    html body .col-8, html body .col-md-8 {
+      border: 2px dashed #c9c5c5;
+      min-height: 30px; }
+    html body .col-8:empty::before, html body .col-md-8:empty::before {
+      content: 'Col'; }
+    html body .col-9, html body .col-md-9 {
+      border: 2px dashed #c9c5c5;
+      min-height: 30px; }
+    html body .col-9:empty::before, html body .col-md-9:empty::before {
+      content: 'Col'; }
+    html body .col-10, html body .col-md-10 {
+      border: 2px dashed #c9c5c5;
+      min-height: 30px; }
+    html body .col-10:empty::before, html body .col-md-10:empty::before {
+      content: 'Col'; }
+    html body .col-11, html body .col-md-11 {
+      border: 2px dashed #c9c5c5;
+      min-height: 30px; }
+    html body .col-11:empty::before, html body .col-md-11:empty::before {
+      content: 'Col'; }
+    html body .col-12, html body .col-md-12 {
+      border: 2px dashed #c9c5c5;
+      min-height: 30px; }
+    html body .col-12:empty::before, html body .col-md-12:empty::before {
+      content: 'Col'; }
     html body .alert:empty::after {
       content: "Alert"; }
     html body .card-header:empty::before {

@@ -727,6 +727,10 @@ export class UtilsString
         str = str.replace(regex, "$1&nbsp;$2");
         return str;
     }
+
+    static capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 }
 
 export class UtilsDateTime
@@ -1149,7 +1153,7 @@ export class UtilsHTML{
         zoom = zoom || 1;
         let data = JSON.parse(JSON.stringify(el.getBoundingClientRect()));
 
-        if (zoom !== 1) {
+        if (zoom < 1) {
             data.x = data.x * zoom;
             data.y = data.y * zoom;
             data.top = data.top * zoom;

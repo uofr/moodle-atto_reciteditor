@@ -22,10 +22,11 @@
  */
 
 import React from 'react';
-import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus, faMinus, faEllipsisH, faGripLines, faSquare, faRuler, faEllipsisV, faFolder} from '@fortawesome/free-solid-svg-icons';
+import { faRemoveFormat, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify, faPlus, faMinus, faEllipsisH, faGripLines, faSquare, faRuler, faEllipsisV, faFolder, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {Utils, UtilsHTML, i18n, LayoutSpacingEditor as VCLayoutSpacingEditor} from '../../RecitEditor';
 import {HTMLElementData} from './HTMLElementData';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 class ColorSelectorInput{
     constructor(options, onChangeProp){
@@ -83,6 +84,21 @@ class ComboBox{
 class RadioButton{
     constructor(options, onChangeProp, defaultValue){
         this.type = 'radio'; // keep this attribute for backward compatibility
+        this.toggleType = 'radio'; // keep this attribute for backward compatibility
+        this.options = options;
+        this.defaultValue = defaultValue || [];
+        this.onChangeProp = onChangeProp;
+    }
+
+    onChange(el, value, data){
+        this.onChangeProp(el, value, data);
+    }
+}
+
+class CheckboxButton{
+    constructor(options, onChangeProp, defaultValue){
+        this.type = 'radio'; // keep this attribute for backward compatibility
+        this.toggleType = 'checkbox'; // keep this attribute for backward compatibility
         this.options = options;
         this.defaultValue = defaultValue || [];
         this.onChangeProp = onChangeProp;
@@ -116,11 +132,36 @@ class IconPicker{
     }
 }
 
-class ImageSrc{
+class PixabayPicker{
     constructor(onChangeProp){
+        this.type = 'pixabay'; // keep this attribute for backward compatibility
+        this.text = `${i18n.get_string('imagebank')} Pixabay`;
+        this.onChangeProp = onChangeProp;
+    }
+
+    onChange(el, value, data){
+        this.onChangeProp(el, value, data);
+    }
+}
+
+class GridBuilder{
+    constructor(){
+        this.type = 'gridbuilder'; // keep this attribute for backward compatibility
+        this.text = i18n.get_string('gridbuilder');
+    }
+}
+
+class ImageSrc{
+    constructor(onChangeProp, accept){
         this.type = 'ImageSrc'; // keep this attribute for backward compatibility
         this.defaultValue = '';
         this.onChangeProp = onChangeProp || null;
+
+        if (accept){
+            this.accept = accept;
+        }else{
+            this.accept = ".jpg,.png";
+        }
     }
 
     onChange(el, value, data){
@@ -235,6 +276,21 @@ export class HTMLFontSizeProperty extends HTMLProperty{
     }
 }
 
+export class HTMLStyleProperty extends HTMLProperty{
+    constructor(){
+        super('style',  i18n.get_string('style'));
+        this.input = new TextInput(this.onChange.bind(this));
+    }
+
+    getValue(el, data){
+        return el.getAttribute('style');
+    }
+
+    onChange(el, value, data){
+        el.setAttribute('style', value);
+    }
+}
+
 export class HTMLFontFamilyProperty extends HTMLProperty{
     constructor(){
         super('fontfamily',  i18n.get_string('font'));
@@ -262,7 +318,7 @@ export class HTMLFontFamilyProperty extends HTMLProperty{
 
 export class HTMLColorProperty extends HTMLProperty{
     constructor(){
-        super('color',  i18n.get_string('color'), new ColorPicker('color'));
+        super('color',  i18n.get_string('textcolor'), new ColorPicker('color'));
     }
 
     getValue(el, data){
@@ -317,8 +373,8 @@ export class HTMLTargetProperty extends HTMLProperty{
 }
 
 export class HTMLSourceProperty extends HTMLProperty{
-    constructor(){
-        super('src',  i18n.get_string('source'), new ImageSrc());
+    constructor(accept){
+        super('src',  i18n.get_string('source'), new ImageSrc(null, accept));
     }
 
     getValue(el, data){
@@ -326,9 +382,37 @@ export class HTMLSourceProperty extends HTMLProperty{
     }
 }
 
+export class HTMLImageBankProperty extends HTMLProperty{
+    constructor(isSrc){
+        super('src', '');
+        this.input = new PixabayPicker(this.onChange.bind(this));
+        this.isSrc = isSrc;
+    }
+
+    getFlags(){
+        return {autoAdd: false, showLabel: false};
+    }
+    
+    getValue(el, data){
+        if (this.isSrc){
+            return el.src;
+        }else{
+            return el.style.backgroundImage;
+        }
+    }
+
+    onChange(el, value, data){
+        if (this.isSrc){
+           el.setAttribute('src', value);
+        }else{
+            el.style.backgroundImage = 'url('+value+')';
+        }
+    }
+}
+
 export class HTMLAltProperty extends HTMLProperty{
     constructor(){
-        super('alt',  i18n.get_string('description'));
+        super('alt',  <>{i18n.get_string('description')} <a target='_blank' href='https://www.w3.org/WAI/tutorials/images/decision-tree/'><FontAwesomeIcon icon={faInfoCircle}/> </a></>);
         this.input = new TextInput(this.onChange.bind(this));
     }
 
@@ -568,6 +652,40 @@ export class BsBackgroundImageProperty extends HTMLProperty{
     }
 }
 
+export class HTMLBackgroundCoverProperty extends HTMLProperty{
+    constructor(){
+        super('backgroundcover', <>{i18n.get_string('backgroundcover')} <OverlayTrigger overlay={
+            <Tooltip>{i18n.get_string('appliedasstyle')}</Tooltip>}>
+                <a className='color-primary'><FontAwesomeIcon icon={faInfoCircle}/> </a></OverlayTrigger></>);
+
+        this.options = [
+            {text:i18n.get_string('yes'), value: "cover"},
+            {text:i18n.get_string('no'), value: ""}                       
+        ];
+
+        this.input = new RadioButton(this.options, this.onChange.bind(this));
+    }
+ 
+    getValue(el, data){
+        let result = "";
+                        
+        if(el.style.backgroundSize == 'cover'){
+            result = "cover";
+        }
+
+        return result;
+    }
+
+    onChange(el, value, data){
+
+        if(value.length > 0){
+            el.style.backgroundSize = 'cover';
+        }else{
+            el.style.backgroundSize = '';
+        }
+    }
+}
+
 export class BsShadowProperty extends HTMLProperty{
     constructor(){
         super('shadow',  i18n.get_string('shadow'));
@@ -611,11 +729,29 @@ export class BsShadowProperty extends HTMLProperty{
 
 export class BsIconProperty extends HTMLProperty{
     constructor(){
-       super('icon',  i18n.get_string('icon'), new IconPicker());
+       super('icon', '', new IconPicker());
+    }
+
+    getFlags(){
+        return {autoAdd: false, showLabel: false};
     }
 
     getValue(el, data){
         return el.getAttribute('class');
+    }
+}
+
+export class ModalGridProperty extends HTMLProperty{
+    constructor(){
+       super('grid',  i18n.get_string('grid'), new GridBuilder());
+    }
+
+    getValue(el, data){
+        return el;
+    }
+
+    getFlags(){
+        return {showLabel:false};
     }
 }
 
@@ -949,14 +1085,16 @@ export class BsAddAccordionProperty extends HTMLProperty{
 
 export class BsBorderProperty extends HTMLProperty{
     constructor(){
-        super('border',  i18n.get_string('border'));
+        super('border', <>{i18n.get_string('border')} <OverlayTrigger overlay={
+            <Tooltip>{i18n.get_string('appliedasstyle')}</Tooltip>}>
+                <a className='color-primary'><FontAwesomeIcon icon={faInfoCircle}/> </a></OverlayTrigger></>);
 
         this.options = [
-            {name: "border-top-width", items: ['0px','1px','2px','5px','10px','20px']}, 
-            {name: "border-right-width", items: ['0px','1px','2px','5px','10px','20px']}, 
-            {name: "border-bottom-width", items: ['0px','1px','2px','5px','10px','20px']}, 
-            {name: "border-left-width", items: ['0px','1px','2px','5px','10px','20px']}, 
-            {name: "border-width", items: ['0px','1px','2px','5px','10px','20px']}
+            {name: "-top", items: ['0px','1px','2px','5px','10px','20px']}, 
+            {name: "-right", items: ['0px','1px','2px','5px','10px','20px']}, 
+            {name: "-bottom", items: ['0px','1px','2px','5px','10px','20px']}, 
+            {name: "-left", items: ['0px','1px','2px','5px','10px','20px']}, 
+            {name: "", items: ['0px','1px','2px','5px','10px','20px']}
         ];
 
         this.input = new LayoutSpacing(this.options, this.onChange.bind(this));
@@ -967,8 +1105,8 @@ export class BsBorderProperty extends HTMLProperty{
 
         for(let i = 0; i <= 5; i++){
             for(let item of data.input.options){
-                if(el.style[item.name] == item.items[i]){
-                    result.push({name:item.name, value: el.style[item.name]});
+                if(el.style['border'+item.name+'-width'] == item.items[i]){
+                    result.push({name:item.name, value: item.items[i]});
                 }
             }
         }
@@ -981,15 +1119,57 @@ export class BsBorderProperty extends HTMLProperty{
         value.newValue = value.newValue.toString();
 
         if(value.oldValue.length > 0){
-            el.style[value.name] = '';
-            el.style.borderStyle = '';
+            el.style['border'+value.name+'-width'] = '';
+            el.style['border'+value.name+'-style'] = '';
         }
         
         if(value.newValue.length > 0){
-            el.style[value.name] = value.newValue;
-            if (!el.style.borderStyle){
-                el.style.borderStyle = 'solid'; //Set solid if not set, otherwise border wont show
+            el.style['border'+value.name+'-width'] = value.newValue;
+            if (!el.style['border-style']){
+                el.style['border'+value.name+'-style'] = 'solid'; //Set solid if not set, otherwise border wont show
             }
+        }
+    }
+}
+
+export class BsHeadingProperty extends HTMLProperty{
+    constructor(){
+        super('headingprop', i18n.get_string('headingstyle'));
+
+        this.options = [
+            {text:'h1', value: "h1"},                
+            {text:'h2', value: "h2"},                
+            {text:'h3', value: "h3"},                
+            {text:'h4', value: "h4"},                
+            {text:'h5', value: "h5"},                
+            {text:'h6', value: "h6"},
+        ];
+
+        this.input = new RadioButton(this.options, this.onChange.bind(this));
+    }
+
+    getValue(el, data){
+        let result = "";
+
+        let classList = [...el.classList]
+
+        for(let item of data.input.options){
+            if(classList.includes(`${item.value}`)){
+                result = item.value;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    onChange(el, value, data){                       
+        for(let item of data.input.options){
+            el.classList.remove(`${item.value}`);
+        }
+
+        if(value.length > 0){
+            el.classList.add(`${value}`);
         }
     }
 }
@@ -1063,7 +1243,10 @@ export class BsBorderStyleProperty extends HTMLProperty{
         return [el.style.borderStyle];
     }
 
-    onChange(el, value, data){                       
+    onChange(el, value, data){
+        for (let c of ['top', 'bottom', 'left', 'right']){
+            el.style['border-'+c+'-style'] = '';
+        }                      
         el.style.borderStyle = value;
     }
 }
@@ -1115,7 +1298,7 @@ export class BsBorderRadiusProperty extends HTMLProperty{
 
 export class BsTextColorProperty extends HTMLProperty{
     constructor(){
-        super('color',  i18n.get_string('color'));
+        super('color',  i18n.get_string('textcolor'));
 
         this.options = [
             {text:"", value: "primary"},
@@ -1232,6 +1415,153 @@ export class BsBtnBlockProperty extends HTMLProperty{
 
         if(value.length > 0){
             el.classList.add(value);
+        }
+    }
+}
+
+export class BsGridResponsiveProperty extends HTMLProperty{
+    constructor(){
+        super('gridresponsive', i18n.get_string('reverserow'));
+
+        this.options = [
+            {text:i18n.get_string('yes'), value: "flex-md-row-reverse"},
+            {text:i18n.get_string('no'), value: ""}     
+        ];
+
+        this.input = new RadioButton(this.options, this.onChange.bind(this));
+    }
+ 
+    getValue(el, data){
+        let result = "";
+                        
+        if(el.classList.contains("flex-md-row-reverse")){
+            result = "flex-md-row-reverse";
+        }
+
+        return result;
+    }
+
+    onChange(el, value, data){                       
+        if(el.classList.contains("flex-md-row-reverse")){
+            el.classList.remove("flex-md-row-reverse");
+        }
+        if(el.classList.contains("flex-md-row")){
+            el.classList.remove("flex-md-row");
+        }
+
+        if(value.length > 0){
+            el.classList.add(value);
+        }
+    }
+}
+
+export class BsGridVerticalAlignProperty extends HTMLProperty{
+    constructor(){
+        super('gridalign', i18n.get_string('verticalalign'));
+
+        this.options = [
+            {text:i18n.get_string('yes'), value: "align-self-center"},
+            {text:i18n.get_string('no'), value: ""}     
+        ];
+
+        this.input = new RadioButton(this.options, this.onChange.bind(this));
+    }
+ 
+    getValue(el, data){
+        let result = "";
+                        
+        if(el.classList.contains("align-self-center")){
+            result = "align-self-center";
+        }
+
+        return result;
+    }
+
+    onChange(el, value, data){
+        if(el.classList.contains("align-self-center")){
+            el.classList.remove("align-self-center");
+        }
+
+        if(value.length > 0){
+            el.classList.add(value);
+        }
+    }
+}
+
+export class BsGridPaddingProperty extends HTMLProperty{
+    static classList = {
+        top: ['pt-3', 'pt-md-4', 'pt-lg-5'],
+        bottom: ['pb-3', 'pb-md-4', 'pb-lg-5'],
+        lateral: ['px-3', 'px-md-4', 'px-lg-5'],
+        remove: ['p-', 'pb-', 'pt-', 'pl-', 'pr-', 'px-', 'py-']
+    }
+
+    static getPaddingClassList(){
+        let result = [];
+        for (let item of BsGridPaddingProperty.classList['remove']){
+            for(let i = 0; i < 6; i++){
+                result.push(item+i);
+                result.push(`${item}md-${i}`);
+                result.push(`${item}lg-${i}`);
+            }
+        }
+
+        return result;
+    }
+
+    constructor(){
+        super('gridpadding', i18n.get_string('paddingtype'));
+
+        this.options = [
+            {text:<FontAwesomeIcon icon={faRemoveFormat}/>, value: "remove"},
+            {text:i18n.get_string('top'), value: "top"},
+            {text:i18n.get_string('bottom'), value: "bottom"},   
+            {text:i18n.get_string('lateral'), value: "lateral"},  
+        ];
+
+        this.input = new CheckboxButton(this.options, this.onChange.bind(this));
+    }
+ 
+    getValue(el, data){
+        let result = [];
+    
+        for (let v in BsGridPaddingProperty.classList){
+            let exists = true;
+            for (let cl of BsGridPaddingProperty.classList[v]){
+                if(!el.classList.contains(cl)){
+                    exists = false;
+                }
+            }
+            if (exists){
+                result.push(v)
+            }
+        }
+
+        return result;
+    }
+
+    onChange(el, values, data){
+        if (values.includes('remove')){
+            let combinations = BsGridPaddingProperty.getPaddingClassList();
+            el.classList.remove(...combinations);
+            
+            return;
+        }
+
+        for (let v in BsGridPaddingProperty.classList){
+            for (let cl of BsGridPaddingProperty.classList[v]){
+                if(el.classList.contains(cl)){
+                    el.classList.remove(cl);
+                }
+            }
+        }
+
+        if(values.length > 0){
+            for (let v of values){
+                for (let cl of BsGridPaddingProperty.classList[v]){
+                    el.classList.add(cl);
+                }
+            }
         }
     }
 }
@@ -1475,7 +1805,7 @@ export class HTMLPropertiesData{
         },
         text: {
             min: ['bs-text'],
-            all: ['bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'font', 'layout', 'background',  'htmlattributes']
+            all: ['bs-general', 'bs-text', 'bs-background', 'bs-spacing', 'bs-border', 'font', 'layout', 'background', 'htmlattributes']
         },
         image:  {
             min:['source', 'alt'],
@@ -1483,11 +1813,11 @@ export class HTMLPropertiesData{
         },
         video: {
             min: ['videosource'],
-            all: ['bs-general', 'bs-spacing', 'bs-border', 'videosource', 'layout', 'htmlattributes']
+            all: ['bs-general', 'bs-spacing', 'bs-border', 'videosource', 'layout', 'background', 'htmlattributes']
         },
         icon: {
             min: ['icon'],
-            all: ['icon', 'font', 'bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'htmlattributes']
+            all: ['icon', 'font', 'bs-general', 'bs-text', 'bs-spacing', 'bs-border', 'background', 'htmlattributes']
         },
         link: {
             min: ['link', 'bs-button'],

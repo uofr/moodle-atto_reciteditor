@@ -35,7 +35,7 @@ class CanvasState{
         this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
-        this.onInsertNode = this.onInsertNode.bind(this);
+        this.onAfterInsertNode = this.onAfterInsertNode.bind(this);
         this.onLoadFrame = this.onLoadFrame.bind(this);
         this.htmlCleaning = this.htmlCleaning.bind(this);
         this.onKey = this.onKey.bind(this);
@@ -56,7 +56,8 @@ class CanvasState{
     onMoveNodeUp(selectedElement){}
     onMoveNodeDown(selectedElement){}
     onCloneNode(selectedElement){}
-    onInsertNode(elems){}
+    onAfterInsertNode(elems){}
+    onInsertTemplate(position, item){}
     onStartEditingNodeText(selectedElement){}
     onFinishEditingNodeText(html){}
     onKey(e, editingElement){}
@@ -70,7 +71,7 @@ class CanvasState{
         return result;
     }  
 
-    htmlCleaning(htmlDoc){
+    htmlCleaning(htmlDoc, keepSelectedElement){
         htmlDoc = htmlDoc || null;
         if(htmlDoc === null){
             return;
@@ -90,8 +91,10 @@ class CanvasState{
             
             item.removeAttribute("data-hovering");
             item.removeAttribute("contenteditable");
-            item.removeAttribute("data-selected");
-            item.removeAttribute("draggable");
+            if (!keepSelectedElement){
+                item.removeAttribute("data-selected");
+                item.removeAttribute("draggable");
+            }
         });
     }
 
@@ -114,11 +117,7 @@ export class SourceCodeDesignerState extends CanvasState{
         this.sourceCode = sourceCodeState;
     }
 
-
     render(view, selectedElement){
-        this.view = view;
-        this.selectedElement = selectedElement;
-
         let col = "";
         let sourceCodeWidth = null;
         let sourceCodeHeight = null;
@@ -142,11 +141,10 @@ export class SourceCodeDesignerState extends CanvasState{
     
     onContentChange(val, origin){
         if (origin == 'designer'){
-            this.sourceCode.setData(val)
+            this.sourceCode.setData(val);
         }else if (origin == 'sourceCode'){
             this.designer.setData(val)
         }
-
     }
 
     getData(){
@@ -190,8 +188,8 @@ export class SourceCodeDesignerState extends CanvasState{
         this.designer.onCloneNode(el);
     }
 
-    onInsertNode(elems){
-        this.designer.onInsertNode(elems);
+    onAfterInsertNode(elems){
+        this.designer.onAfterInsertNode(elems);
     }
 
     onStartEditingNodeText(el){
@@ -269,9 +267,8 @@ export class DesignerState extends CanvasState{
 		el.setAttribute("rel", "stylesheet");
 		head.appendChild(el);
 
-
         // pure JS
-        CanvasElement.create(body, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
+        CanvasElement.create(body, this.mainView.onSelectElement, this.mainView.onDrop, this.mainView.onStartEditingNodeText);
 
         // React JS
         //body.appendChild(doc.firstChild);        
@@ -298,9 +295,10 @@ export class DesignerState extends CanvasState{
     onSelectElement(el, selectedElement, panels){
         let result = {el: el, panels: panels};
 
-        if((result.el !== null) && (result.el.tagName.toLowerCase() === 'body')){ 
-            result.el = null;
-        }
+        //We allow body to be selected for save template button
+        //if((result.el !== null) && (result.el.tagName.toLowerCase() === 'body')){ 
+            //result.el = null;
+        //}
 
         // if the selected element receives another click then it deselects it
         if(Object.is(result.el, selectedElement)){
@@ -357,12 +355,12 @@ export class DesignerState extends CanvasState{
     }
 
     onAfterChange(){
-        this.mainView.onContentChange(this.getData(), 'designer')
+        this.mainView.onContentChange(this.getData(), 'designer');
     }
     
     onDragEnd(){
         this.onBeforeChange();
-        this.htmlCleaning(this.window.document);
+        this.htmlCleaning(this.window.document, true);
         this.onAfterChange();
     }
 
@@ -419,17 +417,27 @@ export class DesignerState extends CanvasState{
         el.removeAttribute("data-selected");
         el.removeAttribute("contenteditable");
         parent.appendChild(el);
-        CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
+        CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDrop, this.mainView.onStartEditingNodeText);
         this.onAfterChange();
     }
 
-    onInsertNode(elems){
+    onAfterInsertNode(elems){
         this.onBeforeChange();
 
         for(let el of elems){
-            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
+            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDrop, this.mainView.onStartEditingNodeText);
         }
         this.onAfterChange();
+    }
+
+    onInsertTemplate(position, item){
+        let body = this.getBody();
+        if (position == 'top'){
+            body.insertAdjacentHTML('afterbegin', item);
+        }else{  
+            body.insertAdjacentHTML('beforeend', item);
+        }
+        this.onAfterInsertNode(body.children);
     }
    
     getData(htmlCleaning){
@@ -455,7 +463,7 @@ export class DesignerState extends CanvasState{
             if(that.window){
                 let body = that.window.document.body;
                 body.innerHTML = value;
-                CanvasElement.create(body, that.mainView.onSelectElement, that.mainView.onDragEnd, that.mainView.onStartEditingNodeText);
+                CanvasElement.create(body, that.mainView.onSelectElement, that.mainView.onDrop, that.mainView.onStartEditingNodeText);
             }
             else{
                 console.log("Loading designer canvas...");
@@ -466,13 +474,35 @@ export class DesignerState extends CanvasState{
     }
 
     onStartEditingNodeText(selectedElement){ 
-        if (!TextEditorModal.isTagEditable(selectedElement.tagName)) return;
-        this.editingElement = selectedElement;
+        if (TextEditorModal.isTagEditable(selectedElement.tagName)){
+            this.editingElement = selectedElement;
+        }else{
+            let that = this;     
+        
+            let setCaretToEnd = function(el) {
+                el.focus();
+                
+                let range = document.createRange();
+                range.selectNodeContents(el);
+                range.collapse(true);
+                let sel = that.window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            
+                // set scroll to the end if multiline
+                el.scrollTop = el.scrollHeight; 
+            }    
+            if(selectedElement === null){
+                return;
+            }
+            selectedElement.setAttribute('contenteditable', 'true');
+            setCaretToEnd(selectedElement);
+        }
     }
 
     onFinishEditingNodeText(el){
         if (el){
-            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDragEnd, this.mainView.onStartEditingNodeText);
+            CanvasElement.create(el, this.mainView.onSelectElement, this.mainView.onDrop, this.mainView.onStartEditingNodeText);
         }
         this.editingElement = null;
         this.onAfterChange();
@@ -503,7 +533,7 @@ export class SourceCodeState extends CanvasState{
     constructor(mainView){
         super(mainView);
 
-        this.onAfterChange = this.onAfterChange.bind(this);
+        this.onChange = this.onChange.bind(this);
 
         this.queryStr = "";
         this.data = "";
@@ -517,12 +547,12 @@ export class SourceCodeState extends CanvasState{
             overflowY: 'auto'
         };
         
-        return <SourceCodeEditor queryStr={this.queryStr} style={style} value={this.data} onChange={this.onAfterChange}/>
+        return <SourceCodeEditor queryStr={this.queryStr} style={style} value={this.data} onChange={this.onChange}/>
     }
 
-    onAfterChange(value){
+    onChange(value){
         this.data = value;
-        this.mainView.onContentChange(value, 'sourceCode')
+        this.mainView.onContentChange(value, 'sourceCode');
     }
 
     htmlCleaning(){

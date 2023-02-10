@@ -25,7 +25,7 @@ import React, { Component } from 'react';
 import { Nav, Navbar, Button, ButtonToolbar, ButtonGroup } from 'react-bootstrap';
 import {faMobileAlt, faTabletAlt, faTh, faLaptop, faDesktop, faFileWord, faEye, faCode, faSave, faRedo, faUndo, faColumns, faCloud, faPuzzlePiece,  faFileCode, faSitemap, faObjectGroup, faCubes} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {TreeView, CanvasElement, ComponentProperties, VisualComponentList, Assets, Templates, HistoryManager, Utils, i18n, DesignerState, PreviewState, SourceCodeDesignerState, SourceCodeState, JsNx, Storage} from '../RecitEditor';
+import {HTMLElementData, TreeView, CanvasElement, ComponentProperties, VisualComponentList, Assets, $glVars, Templates, HistoryManager, Utils, i18n, DesignerState, PreviewState, SourceCodeDesignerState, SourceCodeState, JsNx, Storage} from '../RecitEditor';
 import html2canvas from 'html2canvas';
 
 export class LayoutBuilder extends Component
@@ -108,11 +108,11 @@ export class LayoutBuilder extends Component
                         }
 
                         <Nav activeKey={this.state.device}>
-                            <Nav.Link eventKey="xs"><FontAwesomeIcon icon={faMobileAlt} title="XS"/></Nav.Link>
-                            <Nav.Link eventKey="sm"><FontAwesomeIcon icon={faTabletAlt} title="SM"/></Nav.Link>
-                            <Nav.Link eventKey="md"><FontAwesomeIcon icon={faTabletAlt} title="MD" style={{transform: 'rotate(90deg)'}}/></Nav.Link>
-                            <Nav.Link eventKey="lg"><FontAwesomeIcon icon={faLaptop} title="LG"/></Nav.Link>
-                            <Nav.Link eventKey="xl"><FontAwesomeIcon icon={faDesktop} title="XL"/></Nav.Link>    
+                            <Nav.Link eventKey="xs"><FontAwesomeIcon icon={faMobileAlt} title={i18n.get_string('smartphone')}/></Nav.Link>
+                            <Nav.Link eventKey="sm"><FontAwesomeIcon icon={faTabletAlt} title={i18n.get_string('verticaltablet')}/></Nav.Link>
+                            <Nav.Link eventKey="md"><FontAwesomeIcon icon={faTabletAlt} title={i18n.get_string('horizontaltablet')} style={{transform: 'rotate(90deg)'}}/></Nav.Link>
+                            <Nav.Link eventKey="lg"><FontAwesomeIcon icon={faLaptop} title={i18n.get_string('hdscreen')}/></Nav.Link>
+                            <Nav.Link eventKey="xl"><FontAwesomeIcon icon={faDesktop} title={i18n.get_string('fhdscreen')}/></Nav.Link>    
                         </Nav>
                         <Nav className="separator"></Nav>
                         <Button variant="success" size="sm"  onClick={this.onSaveAndClose}><FontAwesomeIcon icon={faSave} title={i18n.get_string('save')}/> {i18n.get_string('save')}</Button>
@@ -151,7 +151,6 @@ export class LayoutBuilder extends Component
     }
 
     onWindowResize(){
-        console.log("res")
         this.forceUpdate();
     }
 
@@ -164,28 +163,25 @@ export class LayoutBuilder extends Component
         let device = null;
         
         function getScale(device){
-            let result = 1;
-            
-            if(window.innerWidth - LayoutBuilder.properties.leftPanel.width <= device.width){
-                result = (window.innerWidth - LayoutBuilder.properties.leftPanel.width) / device.width;
-            }
-            else if(window.innerHeight <= device.height){
-                result = (window.innerHeight - LayoutBuilder.properties.topNavBar.height) / device.height;
-            }
-
-            return result;
+            return Math.min(1, (window.innerWidth - LayoutBuilder.properties.leftPanel.width) / device.width);
         }
 
+        let deviceHeight = window.innerHeight - LayoutBuilder.properties.topNavBar.height;
+
         switch(this.state.device){
-            case 'xs': device = {name: 'xs', width: 375, height: 667, scale: 1}; break;
-            case 'sm': device = {name: 'sm', width: 768, height: 1024, scale: 1}; break;
-            case 'md': device = {name: 'md', width: 1024, height: 768, scale: 1}; break;
-            case 'lg': device = {name: 'lg', width: 1366, height: 768, scale: 1}; break;
+            case 'xs': device = {name: 'xs', width: 375, height: deviceHeight, scale: 1}; break;
+            case 'sm': device = {name: 'sm', width: 768, height: deviceHeight, scale: 1}; break;
+            case 'md': device = {name: 'md', width: 1024, height: deviceHeight, scale: 1}; break;
+            case 'lg': device = {name: 'lg', width: 1366, height: deviceHeight, scale: 1}; break;
             case 'xl':
-            default: device = {name: 'xl', width: 1500, height: 1050, scale: 1}; 
+            default: device = {name: 'xl', width: 1500, height: deviceHeight, scale: 1}; 
         }
 
         device.scale = getScale(device);
+
+        if(device.scale < 1){
+            device.height = deviceHeight / device.scale;
+        }
 
         return device;
     }
@@ -208,12 +204,16 @@ class MainView extends Component{
         this.onMoveNodeUp = this.onMoveNodeUp.bind(this);
         this.onMoveNodeDown = this.onMoveNodeDown.bind(this);
         this.onCloneNode = this.onCloneNode.bind(this);
-        this.onInsertNode = this.onInsertNode.bind(this);
+        this.onAfterInsertNode = this.onAfterInsertNode.bind(this);
+        this.onAfterReplaceNode = this.onAfterReplaceNode.bind(this);
+        this.onAfterAssignProperty = this.onAfterAssignProperty.bind(this);
         this.onStartEditingNodeText = this.onStartEditingNodeText.bind(this);
         this.onFinishEditingNodeText = this.onFinishEditingNodeText.bind(this);
+        this.onInsertTemplate = this.onInsertTemplate.bind(this);
         this.onSaveTemplate = this.onSaveTemplate.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
+        this.onDrop = this.onDrop.bind(this);
         this.getData = this.getData.bind(this);
         this.setData = this.setData.bind(this);
         this.onKey = this.onKey.bind(this);
@@ -276,7 +276,7 @@ class MainView extends Component{
             this.setState({canvasState: view},  this.onPanelChange);
         }
 
-        if(prevProps.device.name !== this.props.device.name){
+        if((prevProps.device.name !== this.props.device.name) || (prevProps.view !== this.props.view)){
             this.onUnselectElement();
         }
 
@@ -320,13 +320,13 @@ class MainView extends Component{
                     </ButtonToolbar>
                     {(this.state.panels.components | this.state.panels.properties | this.state.panels.treeView) >= 1 &&
                         <div className='panel-list' style={{width: `${LayoutBuilder.properties.leftPanel.panelList.width}px`}}>
-                            {this.state.panels.components === 1 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='tpl'/>}
-                            {this.state.panels.components === 3 && <VisualComponentList onDragEnd={this.onDragEnd} onSaveTemplate={this.onSaveTemplate} tab='comp'/>}
-                            {this.state.panels.properties === 1 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bs'/>}
-                            {this.state.panels.properties === 2 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='html'/>}
-                            {this.state.panels.properties === 3 && <ComponentProperties onInsertNode={this.onInsertNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bm'/>}
+                            {this.state.panels.components === 1 && <VisualComponentList onDragEnd={this.onDragEnd} onInsert={this.onInsertTemplate} onSaveTemplate={this.onSaveTemplate} tab='tpl'/>}
+                            {this.state.panels.components === 3 && <VisualComponentList onDragEnd={this.onDragEnd} onInsert={this.onInsertTemplate} onSaveTemplate={this.onSaveTemplate} tab='comp'/>}
+                            {this.state.panels.properties === 1 && <ComponentProperties onAfterInsertNode={this.onAfterInsertNode} onAfterAssignProperty={this.onAfterAssignProperty} onAfterReplaceNode={this.onAfterReplaceNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bs'/>}
+                            {this.state.panels.properties === 2 && <ComponentProperties onAfterInsertNode={this.onAfterInsertNode} onAfterAssignProperty={this.onAfterAssignProperty} onAfterReplaceNode={this.onAfterReplaceNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='html'/>}
+                            {this.state.panels.properties === 3 && <ComponentProperties onAfterInsertNode={this.onAfterInsertNode} onAfterAssignProperty={this.onAfterAssignProperty} onAfterReplaceNode={this.onAfterReplaceNode} onDeleteElement={this.onDeleteElement} element={this.state.selectedElement} tab='bm'/>}
                             {this.state.panels.treeView === 1 && <TreeView data={this.canvasState.designer.getBody()} onSelect={this.onSelectElement} selectedElement={this.state.selectedElement} 
-                                                                    view={this.props.view} onDeleteElement={this.onDeleteElement} onMoveNodeUp={this.onMoveNodeUp} onMoveNodeDown={this.onMoveNodeDown} />}
+                                                                    view={this.props.view} onSaveElement={this.onSaveTemplate} onDeleteElement={this.onDeleteElement} onMoveNodeUp={this.onMoveNodeUp} onMoveNodeDown={this.onMoveNodeDown} />}
                         </div>
                     }
                 </div>
@@ -369,9 +369,28 @@ class MainView extends Component{
         this.canvasState[this.state.canvasState].onContentChange(data, origin);
     }
 
+    onDrop(dom, newEl){
+        if (newEl){
+            let cl = HTMLElementData.getElementClass(null, newEl);
+            if (cl && cl.modalCreation){
+                this.onSelectElement(newEl);
+            }else{
+                this.setState({selectedElement: null})
+            }
+        }
+    }
+
     onDragEnd(){
         this.canvasState[this.state.canvasState].onDragEnd();
-        this.setState({selectedElement: null});
+    }
+
+    onAfterAssignProperty(){
+        // When sourceCodeDesigner view is open, we should refresh the code source after assigning a property
+        /*if (this.props.view == 'sourceCodeDesigner'){
+            let data = this.canvasState.designer.getData(false);
+            this.canvasState.sourceCode.setData(data);
+            this.canvasState.sourceCode.refresh();
+        }*/
     }
 
     onUnselectElement(){
@@ -408,8 +427,18 @@ class MainView extends Component{
         this.forceUpdate();
     }
 
-    onInsertNode(elems){
-        this.canvasState[this.state.canvasState].onInsertNode(elems);
+    onAfterInsertNode(elems){
+        this.canvasState[this.state.canvasState].onAfterInsertNode(elems);
+        this.forceUpdate();
+    }
+
+    onAfterReplaceNode(elems){
+        this.canvasState[this.state.canvasState].onAfterInsertNode(elems);
+        this.forceUpdate();
+    }
+
+    onInsertTemplate(position, item){
+        this.canvasState[this.state.canvasState].onInsertTemplate(position, item);
         this.forceUpdate();
     }
 
@@ -436,14 +465,14 @@ class MainView extends Component{
         this.forceUpdate();
     }
 
-    onSaveTemplate(name, type){
+    onSaveTemplate(name, type, ele){
         let p = null;
 
         if(type === 'l'){
-            let el = this.canvasState.designer.getBody() || null;
+            let el = ele || this.canvasState.designer.getBody() || null;
             if(el === null){ return; }
 
-            p = html2canvas(el.firstChild, {useCORS: true}).then((canvas) => {
+            p = html2canvas(el, {useCORS: true}).then((canvas) => {
                 let data = canvas.toDataURL();
                 let MAX_WIDTH = 600;
                 let MAX_HEIGHT = 600;
@@ -460,10 +489,11 @@ class MainView extends Component{
 
         p.then((webApiResult) => {
             if(!webApiResult.error){
+                $glVars.feedback.showInfo(i18n.get_string('pluginname'), i18n.get_string('msgsuccess'), 3);
                 that.loadTemplates();                
             }
             else{
-                alert(`Error: ${webApiResult.msg}`);
+                $glVars.feedback.showError(i18n.get_string('pluginname'), webApiResult.msg);
         }
         });
     }
